@@ -1,7 +1,7 @@
 {
-  "name": "airbitz-core-js-ui",
+  "name": "edge-login-ui-rn",
   "version": "0.1.5",
-  "description": "Airbitz login UI components, as a library",
+  "description": "Edge login UI components, as a React Native library",
   "keywords": [
     "Airbitz",
     "bitcoin",
@@ -23,13 +23,10 @@
   "main": "lib/abcui.cjs.js",
   "module": "lib/abcui.es6.js",
   "scripts": {
-    "build": "rimraf assets lib && rollup -c && webpack -p --color --progress",
     "fix": "standard --parser babel-eslint --fix",
     "lint": "standard --parser babel-eslint",
     "lint:fix": "standard --parser babel-eslint --fix",
-    "precommit": "npm run lint",
-    "diabled-prepare": "npm run build",
-    "start": "webpack-dev-server --open"
+    "precommit": "npm run lint"
   },
   "dependencies": {
     "async": "~2.0.1",
