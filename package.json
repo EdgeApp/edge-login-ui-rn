@@ -62,7 +62,6 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "@react-native-community/art": "^1.0.4",
     "@types/react-native": "^0.64.4",
     "@types/react-native-share": "^3.3.3",
     "@types/react-native-vector-icons": "^6.4.8",
