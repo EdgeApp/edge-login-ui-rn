@@ -1,6 +1,18 @@
 {
   "extends": [
-    "plugin:react-native/all"
+    "plugin:react-native/all",
+    "standard-kit/prettier",
+    "standard-kit/prettier/flow",
+    "standard-kit/prettier/jsx",
+    "standard-kit/prettier/node",
+    "standard-kit/prettier/react",
+    "standard-kit/prettier/typescript"
+  ],
+  "parserOptions": {
+    "project": "tsconfig.json"
+  },
+  "plugins": [
+    "simple-import-sort"
   ],
   "rules": {
     "@typescript-eslint/default-param-last": "off",
@@ -15,6 +27,12 @@
     "@typescript-eslint/restrict-template-expressions": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
     "react-native/no-inline-styles": "off",
-    "react-native/no-raw-text": ["error", { "skip": ["EdgeText"] }]
+    "react-native/no-raw-text": ["error", { "skip": ["EdgeText"] }],
+    "simple-import-sort/imports": "error"
+  },
+  "settings": {
+    "react": {
+      "version": "16.2"
+    }
   }
 }

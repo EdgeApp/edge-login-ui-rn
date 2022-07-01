@@ -1,0 +1,22 @@
+#
+# Your crowdin's credentials
+#
+"project_identifier" : "edge"
+"api_key_env" : CROWDIN_API_KEY
+"base_path" : "./"
+#"base_url" : ""
+
+#
+# Choose file structure in crowdin
+# e.g. true or false
+#
+"preserve_hierarchy": true
+
+#
+# Files configuration
+#
+
+files: [
+  { "source" : "/src/common/locales/strings/enUS.json",
+    "translation" : "/src/common/locales/strings/%two_letters_code%.json" },
+]
