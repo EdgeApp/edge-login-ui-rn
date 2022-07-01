@@ -11,6 +11,7 @@ import {
 import { passwordStatus, PasswordStatusState } from './PasswordStatusReducer'
 import { previousUsers, PreviousUsersState } from './PreviousUsersReducer'
 import { scene, SceneState } from './SceneReducer'
+import { touch, TouchState } from './TouchReducer'
 
 export interface RootState {
   create: CreateState
@@ -19,22 +20,20 @@ export interface RootState {
   passwordStatus: PasswordStatusState | null
   previousUsers: PreviousUsersState
   scene: SceneState
+  touch: TouchState
 
   // Local reducers:
   readonly account: EdgeAccount | null
-  readonly touch: 'FaceID' | 'TouchID' | false
 }
 
-export const rootReducer: (
-  state: RootState,
-  action: Action
-) => RootState = combineReducers({
+export const rootReducer = combineReducers<RootState>({
   create,
   login,
   passwordRecovery,
   passwordStatus,
   previousUsers,
   scene,
+  touch,
 
   account(
     state: EdgeAccount | null = null,
@@ -52,9 +51,5 @@ export const rootReducer: (
         return action.data.account
     }
     return state
-  },
-
-  touch(state = false, action: Action) {
-    return action.type === 'SET_TOUCH' ? action.data : state
   }
 })

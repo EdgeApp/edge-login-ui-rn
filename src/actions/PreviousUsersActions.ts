@@ -1,12 +1,12 @@
 import { asArray, asJSON, asObject, asString } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
 
-import { loadFingerprintFile, supportsTouchId } from '../keychain'
 import {
   LoginUserInfo,
   PreviousUsersState
 } from '../reducers/PreviousUsersReducer'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
+import { loadTouchState } from './TouchActions'
 
 const disklet = makeReactNativeDisklet()
 
@@ -22,8 +22,7 @@ export const getPreviousUsers = () => async (
 
   // Load disk information:
   const lastUsernames: string[] = await getRecentUsers()
-  const fingerprintFile = await loadFingerprintFile()
-  const touchSupported: boolean = await supportsTouchId()
+  const touch = await dispatch(loadTouchState())
 
   // Figure out which users have biometric logins:
   const coreUsers: LoginUserInfo[] = []
@@ -31,8 +30,8 @@ export const getPreviousUsers = () => async (
     const { username, pinLoginEnabled, keyLoginEnabled = true } = userInfo
     const touchEnabled =
       keyLoginEnabled &&
-      touchSupported &&
-      fingerprintFile.enabledUsers.includes(username)
+      touch.supported &&
+      touch.enabledUsers.includes(username)
     coreUsers.push({ username, pinEnabled: pinLoginEnabled, touchEnabled })
   }
 

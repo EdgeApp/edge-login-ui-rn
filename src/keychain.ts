@@ -6,7 +6,7 @@ import { NativeModules, Platform } from 'react-native'
 const { AbcCoreJsUi } = NativeModules
 const disklet = makeReactNativeDisklet()
 
-type BiometryType = 'Fingerprint' | 'TouchID' | 'FaceID'
+export type BiometryType = 'FaceID' | 'TouchID' | false
 
 function createKeyWithUsername(username: string) {
   return username + '___key_loginkey'
@@ -81,16 +81,26 @@ export async function disableTouchId(account: EdgeAccount): Promise<void> {
   await saveFingerprintFile(file)
 }
 
-export async function getSupportedBiometryType(): Promise<BiometryType | null> {
+export async function getSupportedBiometryType(): Promise<BiometryType> {
   try {
     const biometryType = await AbcCoreJsUi.getSupportedBiometryType()
-    if (biometryType) {
-      return biometryType
+    switch (biometryType) {
+      // Keep these as-is:
+      case 'FaceID':
+      case 'TouchID':
+        return biometryType
+
+      // Android sends this one:
+      case 'Fingerprint':
+        return 'TouchID'
+
+      // Translate anything truthy to 'TouchID':
+      default:
+        return biometryType ? 'TouchID' : false
     }
-    return null
   } catch (error) {
     console.log(error)
-    return null
+    return false
   }
 }
 

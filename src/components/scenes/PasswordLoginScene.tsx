@@ -16,6 +16,7 @@ import { sprintf } from 'sprintf-js'
 import { launchPasswordRecovery, login } from '../../actions/LoginAction'
 import { deleteUserFromDevice } from '../../actions/UserActions'
 import s from '../../common/locales/strings'
+import { BiometryType } from '../../keychain'
 import { LoginUserInfo } from '../../reducers/PreviousUsersReducer'
 import { Branding } from '../../types/Branding'
 import { Dispatch, RootState } from '../../types/ReduxTypes'
@@ -39,7 +40,7 @@ interface OwnProps {
 interface StateProps {
   loginSuccess: boolean
   previousUsers: LoginUserInfo[]
-  touch: RootState['touch']
+  touch: BiometryType
   username: string
   usernameOnlyList: string[]
 }
@@ -421,7 +422,7 @@ export const PasswordLoginScene = connect<StateProps, DispatchProps, OwnProps>(
   (state: RootState) => ({
     loginSuccess: state.login.loginSuccess,
     previousUsers: state.previousUsers.userList,
-    touch: state.touch,
+    touch: state.touch.type,
     username: state.login.username,
     usernameOnlyList: state.previousUsers.usernameOnlyList
   }),

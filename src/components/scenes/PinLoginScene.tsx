@@ -18,6 +18,7 @@ import { loginWithPin, loginWithTouch } from '../../actions/LoginAction'
 import { deleteUserFromDevice } from '../../actions/UserActions'
 import { FaceIdXml } from '../../assets/xml/FaceId'
 import s from '../../common/locales/strings'
+import { BiometryType } from '../../keychain'
 import { LoginUserInfo } from '../../reducers/PreviousUsersReducer'
 import { Branding } from '../../types/Branding'
 import { Dispatch, RootState } from '../../types/ReduxTypes'
@@ -41,7 +42,7 @@ interface StateProps {
   isTouchIdDisabled: boolean
   loginSuccess: boolean
   pin: string
-  touch: RootState['touch']
+  touch: BiometryType
   userDetails: LoginUserInfo
   userList: LoginUserInfo[]
   username: string
@@ -397,7 +398,7 @@ export const PinLoginScene = connect<StateProps, DispatchProps, OwnProps>(
       (state.login.pin ? state.login.pin.length : 0) === 4,
     loginSuccess: state.login.loginSuccess,
     pin: state.login.pin || '',
-    touch: state.touch,
+    touch: state.touch.type,
     userDetails: state.previousUsers.userList.find(
       user => user.username === state.login.username
     ) ?? {
