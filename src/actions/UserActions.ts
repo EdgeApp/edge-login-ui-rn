@@ -1,5 +1,4 @@
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
-import { getPreviousUsers } from './PreviousUsersActions'
 
 export const deleteUserFromDevice = (username: string) => async (
   dispatch: Dispatch,
@@ -8,5 +7,4 @@ export const deleteUserFromDevice = (username: string) => async (
 ) => {
   const { context } = imports
   await context.deleteLocalAccount(username)
-  await dispatch(getPreviousUsers())
 }

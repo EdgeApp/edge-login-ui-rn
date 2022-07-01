@@ -30,6 +30,7 @@ import { PasswordLoginScene } from '../scenes/PasswordLoginScene'
 import { PinLoginScene } from '../scenes/PinLoginScene'
 import { RecoveryLoginScene } from '../scenes/RecoveryLoginScene'
 import { WaitScene } from '../scenes/WaitScene'
+import { WatchUsernames } from '../services/WatchUsernames'
 
 interface Props {
   branding: Branding
@@ -98,6 +99,7 @@ export function Router(props: Props) {
   return (
     <MaybeProvideLoginUi>
       <View accessible style={SceneStyle}>
+        <WatchUsernames />
         {renderContent()}
       </View>
     </MaybeProvideLoginUi>

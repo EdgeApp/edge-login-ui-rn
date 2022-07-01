@@ -18,7 +18,7 @@ import { Branding } from '../types/Branding'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
 import { Theme } from '../types/Theme'
 import { launchPasswordRecovery } from './LoginAction'
-import { getPreviousUsers } from './PreviousUsersActions'
+import { loadTouchState } from './TouchActions'
 
 const { AbcCoreJsUi } = NativeModules
 
@@ -34,7 +34,7 @@ export const initializeLogin = (theme: Theme, branding: Branding) => async (
   imports: Imports
 ) => {
   const { customPermissionsFunction } = imports
-  const usersPromise = dispatch(getPreviousUsers())
+  const touchPromise = dispatch(loadTouchState())
   dispatch(checkSecurityMessages()).catch(error => console.log(error))
   customPermissionsFunction
     ? customPermissionsFunction()
@@ -42,7 +42,7 @@ export const initializeLogin = (theme: Theme, branding: Branding) => async (
         console.log(error)
       )
 
-  await usersPromise
+  await touchPromise
   const state = getState()
 
   // Loading is done, so send the user to the initial route:
