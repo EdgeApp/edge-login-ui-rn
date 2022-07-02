@@ -11,7 +11,7 @@
     "key management",
     "security"
   ],
-  "homepage": "https://github.com/EdgeApp/edge-login-ui",
+  "homepage": "https://github.com/EdgeApp/edge-login-ui-rn",
   "license": "SEE LICENSE IN LICENSE",
   "author": "Airbitz, Inc.",
   "main": "lib/index.js",
