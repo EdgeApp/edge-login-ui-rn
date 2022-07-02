@@ -21,13 +21,12 @@ type Props = OwnProps & ThemeProps
 
 class SecurityAlertsModalComponent extends React.Component<Props> {
   render() {
-    const { bridge, theme } = this.props
+    const { bridge } = this.props
 
     return (
       <ThemedModal
-        borderColor={theme.warningText}
-        borderWidth={4}
         bridge={bridge}
+        warning
         onCancel={() => bridge.resolve(undefined)}
       >
         <TitleText>{s.strings.alert_modal_title}</TitleText>
