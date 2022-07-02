@@ -1,6 +1,6 @@
-import { Shape, Surface } from '@react-native-community/art'
 import qrcodeGenerator from 'qrcode-generator'
 import * as React from 'react'
+import Svg, { Path } from 'react-native-svg'
 
 interface Props {
   data: string
@@ -32,9 +32,15 @@ export function QrCode(props: Props) {
   // Create a drawing transform to scale QR cells to device pixels:
   const sizeInCells = code.getModuleCount() + 2 * padding
 
+  const viewBox = `0 0 ${sizeInCells} ${sizeInCells}`
   return (
-    <Surface height={size} width={size} style={{ backgroundColor }}>
-      <Shape d={path} fill={foregroundColor} scale={size / sizeInCells} />
-    </Surface>
+    <Svg
+      height={size}
+      width={size}
+      style={{ backgroundColor }}
+      viewBox={viewBox}
+    >
+      <Path d={path} fill={foregroundColor} />
+    </Svg>
   )
 }
