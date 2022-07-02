@@ -113,7 +113,9 @@ const TermsAndConditionsSceneComponent = ({
         <EdgeText
           style={styles.agreeText}
           numberOfLines={2}
-          onPress={() => Linking.openURL('https://edge.app/terms-of-service/')}
+          onPress={async () =>
+            await Linking.openURL('https://edge.app/terms-of-service/')
+          }
         >
           {s.strings.read_understod_1}
           <EdgeText style={styles.agreeTextLink}>
