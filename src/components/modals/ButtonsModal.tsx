@@ -39,8 +39,7 @@ export function ButtonsModal<
   closeArrow?: boolean
   message?: string
   title?: string
-  borderColor?: string
-  borderWidth?: number
+  warning?: boolean
 }) {
   const {
     bridge,
@@ -48,16 +47,16 @@ export function ButtonsModal<
     children,
     closeArrow = false,
     message,
-    title
+    title,
+    warning = false
   } = props
   const handleCancel = () => bridge.resolve(undefined)
 
   return (
     <ThemedModal
       bridge={bridge}
-      borderColor={props.borderColor}
-      borderWidth={props.borderWidth}
       paddingRem={1}
+      warning={warning}
       onCancel={handleCancel}
     >
       {title != null ? <TitleText>{title}</TitleText> : null}

@@ -188,8 +188,7 @@ const checkAndRequestNotifications = (
         bridge={bridge}
         title={s.strings.alert_modal_title}
         message={message}
-        borderColor={theme.warningText}
-        borderWidth={4}
+        warning
         buttons={{
           enable: { label: s.strings.enable },
           cancel: { label: s.strings.cancel, type: 'escape' }
