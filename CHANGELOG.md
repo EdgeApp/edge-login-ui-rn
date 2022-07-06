@@ -1,5 +1,12 @@
 # edge-login-ui-rn
 
+## 0.10.4 (2022-07-05)
+
+- changed: Move this library to its own Git repository.
+- fixed: Correctly document the native dependencies this library requires.
+- fixed: Automatically update the user list when it changes.
+- removed: No longer depend on @react-native-community/art.
+
 ## 0.10.3 (2022-06-29)
 
 - rn: Create a UI2 ChangePinScene and reuse it for creating, changing and resecuring the pin code
