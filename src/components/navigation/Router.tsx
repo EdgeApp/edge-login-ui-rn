@@ -2,10 +2,9 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import s from '../../common/locales/strings'
-import { SceneState } from '../../reducers/SceneReducer'
 import * as Styles from '../../styles/index'
 import { Branding } from '../../types/Branding'
-import { Dispatch, RootState } from '../../types/ReduxTypes'
+import { useSelector } from '../../types/ReduxTypes'
 import { MaybeProvideLoginUi } from '../publicApi/LoginUiProvider'
 import {
   ChangePasswordScene,
@@ -31,31 +30,19 @@ import { PasswordLoginScene } from '../scenes/PasswordLoginScene'
 import { PinLoginScene } from '../scenes/PinLoginScene'
 import { RecoveryLoginScene } from '../scenes/RecoveryLoginScene'
 import { WaitScene } from '../scenes/WaitScene'
-import { connect } from '../services/ReduxStore'
+import { WatchUsernames } from '../services/WatchUsernames'
 
-interface OwnProps {
+interface Props {
   branding: Branding
   showHeader: boolean
 }
-interface StateProps {
-  scene: SceneState
-}
-type Props = OwnProps & StateProps
 
-class RouterComponent extends React.Component<Props> {
-  render() {
-    const { SceneStyle } = Styles
-    return (
-      <MaybeProvideLoginUi>
-        <View accessible style={SceneStyle}>
-          {this.renderContent()}
-        </View>
-      </MaybeProvideLoginUi>
-    )
-  }
+export function Router(props: Props) {
+  const scene = useSelector(state => state.scene)
+  const { SceneStyle } = Styles
 
-  renderContent() {
-    switch (this.props.scene.currentScene) {
+  function renderContent() {
+    switch (scene.currentScene) {
       case 'ChangePasswordScene':
         return <ChangePasswordScene />
       case 'ChangePinScene':
@@ -63,20 +50,20 @@ class RouterComponent extends React.Component<Props> {
       case 'ChangeRecoveryScene':
         return (
           <PublicChangeRecoveryScene
-            branding={this.props.branding}
-            showHeader={this.props.showHeader}
+            branding={props.branding}
+            showHeader={props.showHeader}
           />
         )
       case 'NewAccountWelcomeScene':
-        return <NewAccountWelcomeScene branding={this.props.branding} />
+        return <NewAccountWelcomeScene branding={props.branding} />
       case 'NewAccountUsernameScene':
-        return <NewAccountUsernameScene branding={this.props.branding} />
+        return <NewAccountUsernameScene branding={props.branding} />
       case 'NewAccountPasswordScene':
         return <NewAccountPasswordScene />
       case 'NewAccountPinScene':
         return <NewAccountPinScene />
       case 'NewAccountTosScene':
-        return <NewAccountTosScene branding={this.props.branding} />
+        return <NewAccountTosScene branding={props.branding} />
       case 'NewAccountWaitScene':
         return (
           <WaitScene
@@ -87,17 +74,17 @@ class RouterComponent extends React.Component<Props> {
       case 'NewAccountReviewScene':
         return <NewAccountReviewScene />
       case 'LandingScene':
-        return <LandingScene branding={this.props.branding} />
+        return <LandingScene branding={props.branding} />
       case 'LoadingScene':
-        return <LoadingScene branding={this.props.branding} />
+        return <LoadingScene branding={props.branding} />
       case 'OtpScene':
         return <OtpErrorScene />
       case 'OtpRepairScene':
-        return <OtpRepairScene branding={this.props.branding} />
+        return <OtpRepairScene branding={props.branding} />
       case 'PasswordScene':
-        return <PasswordLoginScene branding={this.props.branding} />
+        return <PasswordLoginScene branding={props.branding} />
       case 'PinScene':
-        return <PinLoginScene branding={this.props.branding} />
+        return <PinLoginScene branding={props.branding} />
       case 'RecoveryLoginScene':
         return <RecoveryLoginScene />
       case 'ResecurePasswordScene':
@@ -108,11 +95,13 @@ class RouterComponent extends React.Component<Props> {
         return <SecurityAlertsScene />
     }
   }
-}
 
-export const Router = connect<StateProps, {}, OwnProps>(
-  (state: RootState) => ({
-    scene: state.scene
-  }),
-  (dispatch: Dispatch) => ({})
-)(RouterComponent)
+  return (
+    <MaybeProvideLoginUi>
+      <View accessible style={SceneStyle}>
+        <WatchUsernames />
+        {renderContent()}
+      </View>
+    </MaybeProvideLoginUi>
+  )
+}

@@ -15,7 +15,6 @@ import {
 } from '../keychain'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
 import { hasSecurityAlerts } from '../util/hasSecurityAlerts'
-import { setMostRecentUsers } from './PreviousUsersActions'
 
 /**
  * The user has just logged in, so figure out what do to next.
@@ -25,8 +24,6 @@ export const completeLogin = (account: EdgeAccount) => async (
   getState: GetState,
   imports: Imports
 ) => {
-  await setMostRecentUsers(account.username)
-
   // Problem logins:
   const { skipSecurityAlerts = false } = imports
   if (!skipSecurityAlerts && hasSecurityAlerts(account)) {

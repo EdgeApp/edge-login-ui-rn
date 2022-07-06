@@ -7,7 +7,7 @@ import * as Constants from '../constants/index'
 import { enableTouchId, isTouchDisabled } from '../keychain'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
 import { logEvent } from '../util/analytics'
-import { getPreviousUsers, setMostRecentUsers } from './PreviousUsersActions'
+import { loadTouchState } from './TouchActions'
 
 export interface CreateUserData {
   username: string
@@ -153,13 +153,12 @@ export function createUser(data: CreateUserData) {
         dispatch({ type: 'CREATE_ACCOUNT_SUCCESS', data: abcAccount })
         dispatch({ type: 'NEW_ACCOUNT_REVIEW' })
         logEvent('Signup_Create_User_Success')
-        await setMostRecentUsers(abcAccount.username)
         await abcAccount.dataStore.setItem(
           Constants.OTP_REMINDER_STORE_NAME,
           Constants.OTP_REMINDER_KEY_NAME_CREATED_AT,
           Date.now().toString()
         )
-        dispatch(getPreviousUsers())
+        dispatch(loadTouchState())
       } catch (e) {
         console.log(e)
         dispatch({ type: 'CREATE_ACCOUNT_FAIL', data: e.message })

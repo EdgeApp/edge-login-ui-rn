@@ -21,7 +21,7 @@ class HeaderParentButtonsComponent extends React.Component<Props> {
 
   render() {
     const { parentButton, appId } = this.props.branding
-    const openEdgeSite = () => Linking.openURL(s.strings.edge_site)
+    const openEdgeSite = async () => await Linking.openURL(s.strings.edge_site)
     const styles = getStyles(this.props.theme)
 
     return (

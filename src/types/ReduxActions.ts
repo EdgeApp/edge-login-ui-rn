@@ -6,7 +6,7 @@ import {
 } from 'edge-core-js'
 
 import { PreviousUsersState } from '../reducers/PreviousUsersReducer'
-import { RootState } from '../reducers/RootReducer'
+import { TouchState } from '../reducers/TouchReducer'
 import { LoginAttempt } from '../util/loginAttempt'
 
 // Actions with no payload:
@@ -85,7 +85,7 @@ export type Action =
     }
   | { type: 'OTP_RESET_REQUEST'; data: Date }
   | { type: 'SET_PREVIOUS_USERS'; data: PreviousUsersState }
-  | { type: 'SET_TOUCH'; data: RootState['touch'] }
+  | { type: 'SET_TOUCH'; data: TouchState }
   | { type: 'START_CHANGE_PASSWORD'; data: EdgeAccount }
   | { type: 'START_CHANGE_PIN'; data: EdgeAccount }
   | {

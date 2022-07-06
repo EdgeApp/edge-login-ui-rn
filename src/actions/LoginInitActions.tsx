@@ -14,12 +14,11 @@ import s from '../common/locales/strings'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { SecurityAlertsModal } from '../components/modals/SecurityAlertsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { getSupportedBiometryType } from '../keychain'
 import { Branding } from '../types/Branding'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
 import { Theme } from '../types/Theme'
 import { launchPasswordRecovery } from './LoginAction'
-import { getPreviousUsers } from './PreviousUsersActions'
+import { loadTouchState } from './TouchActions'
 
 const { AbcCoreJsUi } = NativeModules
 
@@ -35,8 +34,7 @@ export const initializeLogin = (theme: Theme, branding: Branding) => async (
   imports: Imports
 ) => {
   const { customPermissionsFunction } = imports
-  const touchPromise = dispatch(getTouchMode())
-  const usersPromise = dispatch(getPreviousUsers())
+  const touchPromise = dispatch(loadTouchState())
   dispatch(checkSecurityMessages()).catch(error => console.log(error))
   customPermissionsFunction
     ? customPermissionsFunction()
@@ -44,12 +42,12 @@ export const initializeLogin = (theme: Theme, branding: Branding) => async (
         console.log(error)
       )
 
-  await Promise.all([touchPromise, usersPromise])
+  await touchPromise
   const state = getState()
 
   // Loading is done, so send the user to the initial route:
-  const { previousUsers, touch } = state
-  const { startupUser } = previousUsers
+  const biometryType = state.touch.type
+  const { startupUser } = state.previousUsers
 
   const { recoveryKey } = imports
   if (recoveryKey) {
@@ -59,7 +57,7 @@ export const initializeLogin = (theme: Theme, branding: Branding) => async (
     dispatch({ type: 'START_LANDING' })
   } else if (
     startupUser.pinEnabled ||
-    (startupUser.touchEnabled && touch !== false)
+    (startupUser.touchEnabled && biometryType !== false)
   ) {
     dispatch({ type: 'START_PIN_LOGIN' })
   } else {
@@ -217,29 +215,5 @@ const checkAndRequestNotifications = (
         }
       })
       .catch(showError)
-  }
-}
-
-/**
- * Figures out whether or not biometric logins are available.
- */
-const getTouchMode = () => async (dispatch: Dispatch, getState: GetState) => {
-  try {
-    const touch = await getSupportedBiometryType()
-    switch (touch) {
-      case 'FaceID':
-      case 'TouchID':
-        return dispatch({ type: 'SET_TOUCH', data: touch })
-      case 'Fingerprint':
-        return dispatch({ type: 'SET_TOUCH', data: 'TouchID' })
-      default:
-        return dispatch({
-          type: 'SET_TOUCH',
-          data: touch ? 'TouchID' : false
-        })
-    }
-  } catch (error) {
-    console.log(error)
-    return dispatch({ type: 'SET_TOUCH', data: false })
   }
 }
