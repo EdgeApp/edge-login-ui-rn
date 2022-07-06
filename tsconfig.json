@@ -5,7 +5,7 @@
 
     "esModuleInterop": true,
     "jsx": "react",
-    "lib": ["es2015"],
+    "lib": ["es2016"],
     "module": "es2015",
     "moduleResolution": "node",
     "resolveJsonModule": true,
