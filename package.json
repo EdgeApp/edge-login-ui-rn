@@ -24,7 +24,7 @@
     "/README.md"
   ],
   "scripts": {
-    "fix": "npm run lint -- --fix",
+    "fix": "npm run lint -- --fix && yarn-deduplicate",
     "flow": "flow",
     "lint": "eslint .",
     "precommit": "lint-staged && flow && tsc",
@@ -90,7 +90,8 @@
     "prettier": "^2.2.0",
     "rimraf": "^3.0.2",
     "sucrase": "^3.19.0",
-    "typescript": "^4.1.2"
+    "typescript": "^4.1.2",
+    "yarn-deduplicate": "^5.0.0"
   },
   "peerDependencies": {
     "@react-native-community/art": "*",
