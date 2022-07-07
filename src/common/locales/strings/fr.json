@@ -34,6 +34,8 @@
   "cancel": "Annuler",
   "enable": "Activer",
   "continue": "Continue",
+  "change_password": "Changer le mot de passe",
+  "change_pin": "Modifier le code PIN",
   "pin_changed": "Code PIN modifié",
   "delete_account": "Supprimer ce compte?",
   "pin_successfully_changed": "Le code PIN a bien été modifié",

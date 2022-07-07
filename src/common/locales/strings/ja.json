@@ -34,6 +34,8 @@
   "cancel": "キャンセル",
   "enable": "有効にする",
   "continue": "Continue",
+  "change_password": "パスワードを変更",
+  "change_pin": "PINを変更",
   "pin_changed": "PINが変更されました",
   "delete_account": "アカウントを削除しますか？",
   "pin_successfully_changed": "PINが正常に変更されました",

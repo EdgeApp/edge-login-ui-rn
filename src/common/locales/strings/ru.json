@@ -34,6 +34,8 @@
   "cancel": "Отмена",
   "enable": "Включить",
   "continue": "Continue",
+  "change_password": "Сменить пароль",
+  "change_pin": "Сменить PIN",
   "pin_changed": "PIN изменен",
   "delete_account": "Удалить учетную запись?",
   "pin_successfully_changed": "PIN-код успешно изменен",

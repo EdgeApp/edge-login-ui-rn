@@ -34,6 +34,8 @@
   "cancel": "취소",
   "enable": "활성화",
   "continue": "Continue",
+  "change_password": "암호 변경",
+  "change_pin": "PIN 변경",
   "pin_changed": "PIN 변경됨",
   "delete_account": "계정을 삭제하시겠습니까?",
   "pin_successfully_changed": "PIN이 성공적으로 변경되었습니다.",

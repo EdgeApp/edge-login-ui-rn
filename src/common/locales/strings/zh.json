@@ -34,6 +34,8 @@
   "cancel": "取消",
   "enable": "启用",
   "continue": "Continue",
+  "change_password": "更改密码",
+  "change_pin": "更改PIN码",
   "pin_changed": "PIN码已改变",
   "delete_account": "删除帐户?",
   "pin_successfully_changed": "PIN码修改成功",
