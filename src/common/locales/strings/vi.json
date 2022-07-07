@@ -34,6 +34,8 @@
   "cancel": "Huỷ",
   "enable": "Kích hoạt",
   "continue": "Continue",
+  "change_password": "Thay đổi mật khẩu",
+  "change_pin": "Thay đổi mã PIN",
   "pin_changed": "Mã PIN đã được đổi",
   "delete_account": "Xoá tài khoản?",
   "pin_successfully_changed": "Thay đổi mật khẩu thành công",

@@ -25,6 +25,7 @@ import { ThemedScene } from '../themed/ThemedScene'
 interface Props {
   title?: string | undefined
   onBack?: (() => void) | undefined
+  onSkip?: (() => void) | undefined
   onSubmit: (password: string) => void
   mainButtonLabel?: string
 }
@@ -32,6 +33,7 @@ interface Props {
 const ChangePasswordSceneComponent = ({
   title,
   onBack,
+  onSkip,
   onSubmit,
   mainButtonLabel = s.strings.done
 }: Props) => {
@@ -141,7 +143,7 @@ const ChangePasswordSceneComponent = ({
   }
 
   return (
-    <ThemedScene onBack={onBack} title={title}>
+    <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
       {focusSecond ? (
         <KeyboardAvoidingView
           style={styles.container}
@@ -176,7 +178,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const CommonChangePasswordScene = (action: any) => {
+// The scene for existing users to change their password
+export const ChangePasswordScene = () => {
   const dispatch = useDispatch()
   const account = useSelector(state => state.account ?? undefined)
 
@@ -193,7 +196,7 @@ const CommonChangePasswordScene = (action: any) => {
           buttons={{ ok: { label: s.strings.ok } }}
         />
       ))
-      dispatch(action())
+      dispatch(onComplete())
     } catch (e) {
       showError(e)
     }
@@ -202,12 +205,42 @@ const CommonChangePasswordScene = (action: any) => {
   return <ChangePasswordSceneComponent onSubmit={handleSubmit} />
 }
 
-// The scene for existing users to change their password
-export const ChangePasswordScene = () => CommonChangePasswordScene(onComplete)
-
 // The scene for existing users to recover their password
-export const ResecurePasswordScene = () =>
-  CommonChangePasswordScene(() => ({ type: 'RESECURE_PIN' }))
+export const ResecurePasswordScene = () => {
+  const dispatch = useDispatch()
+  const account = useSelector(state => state.account ?? undefined)
+
+  const handleSkip = useHandler(() => {
+    dispatch({ type: 'RESECURE_PIN' })
+  })
+
+  const handleSubmit = useHandler(async (password: string) => {
+    Keyboard.dismiss()
+    if (account == null) return
+    try {
+      await account.changePassword(password)
+      await Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.password_changed}
+          message={s.strings.pwd_change_modal}
+          buttons={{ ok: { label: s.strings.ok } }}
+        />
+      ))
+      dispatch({ type: 'RESECURE_PIN' })
+    } catch (e) {
+      showError(e)
+    }
+  })
+
+  return (
+    <ChangePasswordSceneComponent
+      onSkip={handleSkip}
+      title={s.strings.change_password}
+      onSubmit={handleSubmit}
+    />
+  )
+}
 
 // The scene for new users to create a password
 export const NewAccountPasswordScene = () => {

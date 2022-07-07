@@ -34,6 +34,8 @@
   "cancel": "Annulla",
   "enable": "Abilita",
   "continue": "Continua",
+  "change_password": "Cambia password",
+  "change_pin": "Cambia PIN",
   "pin_changed": "PIN modificato",
   "delete_account": "Rimuovere l'account?",
   "pin_successfully_changed": "PIN modificato con successo",

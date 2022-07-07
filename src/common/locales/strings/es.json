@@ -34,6 +34,8 @@
   "cancel": "Cancelar",
   "enable": "Habilitar",
   "continue": "Continuar",
+  "change_password": "Cambiar contraseña",
+  "change_pin": "Cambiar NIP",
   "pin_changed": "NIP cambiado",
   "delete_account": "¿Borrar cuenta?",
   "pin_successfully_changed": "PIN cambiado con éxito",

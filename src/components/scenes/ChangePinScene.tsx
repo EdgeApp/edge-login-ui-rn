@@ -20,6 +20,7 @@ import { ThemedScene } from '../themed/ThemedScene'
 interface Props {
   title?: string
   onBack?: () => void
+  onSkip?: (() => void) | undefined
   onSubmit: (pin: string) => void
   mainButtonLabel?: string
 }
@@ -27,6 +28,7 @@ interface Props {
 const ChangePinSceneComponent = ({
   title,
   onBack,
+  onSkip,
   onSubmit,
   mainButtonLabel = s.strings.done
 }: Props) => {
@@ -43,7 +45,7 @@ const ChangePinSceneComponent = ({
   const scrollViewRef = useScrollToEnd(isValidPin)
 
   return (
-    <ThemedScene onBack={onBack} title={title}>
+    <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
       <ScrollView ref={scrollViewRef} style={styles.content}>
         <EdgeText style={styles.description} numberOfLines={2}>
           {s.strings.pin_desc}
@@ -82,7 +84,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const CommonChangePinScene = (action: any) => {
+// The scene for existing users to change their PIN
+export const ChangePinScene = () => {
   const dispatch = useDispatch()
   const account = useSelector(state => state.account ?? undefined)
 
@@ -99,20 +102,49 @@ const CommonChangePinScene = (action: any) => {
           buttons={{ ok: { label: s.strings.ok } }}
         />
       ))
-      dispatch(action())
+      dispatch(onComplete())
     } catch (e) {
       showError(e)
     }
   })
-
   return <ChangePinSceneComponent onSubmit={handleSubmit} />
 }
 
-// The scene for existing users to change their PIN
-export const ChangePinScene = () => CommonChangePinScene(onComplete)
-
 // The scene for new users to recover their PIN
-export const ResecurePinScene = () => CommonChangePinScene(completeResecure)
+export const ResecurePinScene = () => {
+  const dispatch = useDispatch()
+  const account = useSelector(state => state.account ?? undefined)
+
+  const handleSkip = () => {
+    dispatch(completeResecure())
+  }
+
+  const handleSubmit = useHandler(async (pin: string) => {
+    Keyboard.dismiss()
+    if (account == null) return
+    try {
+      await account.changePin({ pin })
+      await Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.pin_changed}
+          message={s.strings.pin_successfully_changed}
+          buttons={{ ok: { label: s.strings.ok } }}
+        />
+      ))
+      dispatch(completeResecure())
+    } catch (e) {
+      showError(e)
+    }
+  })
+  return (
+    <ChangePinSceneComponent
+      onSkip={handleSkip}
+      title={s.strings.change_pin}
+      onSubmit={handleSubmit}
+    />
+  )
+}
 
 // The scene for new users to set their PIN
 export const NewAccountPinScene = () => {
