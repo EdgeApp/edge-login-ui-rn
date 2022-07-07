@@ -234,7 +234,11 @@ export const ResecurePasswordScene = () => {
   })
 
   return (
-    <ChangePasswordSceneComponent onSkip={handleSkip} onSubmit={handleSubmit} />
+    <ChangePasswordSceneComponent
+      onSkip={handleSkip}
+      title={s.strings.change_password}
+      onSubmit={handleSubmit}
+    />
   )
 }
 

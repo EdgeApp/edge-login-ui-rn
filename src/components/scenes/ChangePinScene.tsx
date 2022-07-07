@@ -137,7 +137,13 @@ export const ResecurePinScene = () => {
       showError(e)
     }
   })
-  return <ChangePinSceneComponent onSkip={handleSkip} onSubmit={handleSubmit} />
+  return (
+    <ChangePinSceneComponent
+      onSkip={handleSkip}
+      title={s.strings.change_pin}
+      onSubmit={handleSubmit}
+    />
+  )
 }
 
 // The scene for new users to set their PIN
