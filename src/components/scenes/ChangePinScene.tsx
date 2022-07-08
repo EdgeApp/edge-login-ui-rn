@@ -47,7 +47,7 @@ const ChangePinSceneComponent = ({
   return (
     <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
       <ScrollView ref={scrollViewRef} style={styles.content}>
-        <EdgeText style={styles.description} numberOfLines={2}>
+        <EdgeText style={styles.description} numberOfLines={0}>
           {s.strings.pin_desc}
         </EdgeText>
         <DigitInput />
