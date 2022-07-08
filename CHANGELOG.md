@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 0.10.6 (2022-07-08)
+
+- changed: Update PIN description text
+
 ## 0.10.5 (2022-07-08)
 
 - changed: Add titles for resecure password/pin scenes
