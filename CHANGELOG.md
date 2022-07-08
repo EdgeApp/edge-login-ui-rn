@@ -1,5 +1,10 @@
 # edge-login-ui-rn
 
+## 0.10.5 (2022-07-08)
+
+- changed: Add titles for resecure password/pin scenes
+- changed: Add SKIP button for resecure password and pin scenes
+
 ## 0.10.4 (2022-07-05)
 
 - changed: Move this library to its own Git repository.
