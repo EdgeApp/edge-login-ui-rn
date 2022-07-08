@@ -69,7 +69,7 @@
   "show_account_info": "View account information",
   "hide_account_info": "Hide account information",
   "password_desc": "The password is used to log in and change sensitive settings. Be sure to write it down!",
-  "pin_desc": "Your PIN is a 4 digit code used to quickly log back into your account.",
+  "pin_desc": "Your PIN is a 4 digit code used to quickly log back into your account.\n\nPIN login is only usable on a device after first login with password.",
   "recovery_successful": "Recovery successful! Please change your password and PIN.",
   "recover_by_username": "Please enter the username of the account you want to recover.",
   "recovery_by_username_error": "Invalid recovery link or username does not exist",
