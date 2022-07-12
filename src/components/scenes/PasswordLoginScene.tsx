@@ -114,10 +114,10 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.delete_account}
-        message={sprintf(s.strings.delete_username_account, username)}
+        title={s.strings.forget_account}
+        message={sprintf(s.strings.forget_username_account, username)}
         buttons={{
-          ok: { label: s.strings.delete },
+          ok: { label: s.strings.forget },
           cancel: { label: s.strings.cancel, type: 'secondary' }
         }}
       />
