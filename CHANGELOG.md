@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 0.10.7 (2022-07-12)
+
+- changed: Update forget account description text
+
 ## 0.10.6 (2022-07-08)
 
 - changed: Update PIN description text
