@@ -63,7 +63,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   text: {
     fontSize: theme.rem(0.75),
     color: theme.dropdownText,
-    marginHorizontal: theme.rem(0.5)
+    marginHorizontal: theme.rem(0.5),
+    flexShrink: 1
   },
   boldText: {
     fontWeight: theme.fontWeightBold
