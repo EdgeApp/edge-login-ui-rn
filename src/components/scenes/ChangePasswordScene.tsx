@@ -28,6 +28,7 @@ interface Props {
   onSkip?: (() => void) | undefined
   onSubmit: (password: string) => void
   mainButtonLabel?: string
+  spinning?: boolean | undefined
 }
 
 const ChangePasswordSceneComponent = ({
@@ -35,7 +36,8 @@ const ChangePasswordSceneComponent = ({
   onBack,
   onSkip,
   onSubmit,
-  mainButtonLabel = s.strings.done
+  mainButtonLabel = s.strings.done,
+  spinning = false
 }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -131,11 +133,23 @@ const ChangePasswordSceneComponent = ({
         </FormError>
         <View style={styles.actions}>
           <Fade visible={isValidPassword} hidden>
-            <MainButton
-              label={mainButtonLabel}
-              type="secondary"
-              onPress={handlePress}
-            />
+            {spinning ? (
+              <MainButton
+                alignSelf="center"
+                disabled
+                marginRem={0.5}
+                type="secondary"
+                spinner
+              />
+            ) : (
+              <MainButton
+                alignSelf="center"
+                label={mainButtonLabel}
+                marginRem={0.5}
+                onPress={handlePress}
+                type="secondary"
+              />
+            )}
           </Fade>
         </View>
       </>
@@ -182,10 +196,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const ChangePasswordScene = () => {
   const dispatch = useDispatch()
   const account = useSelector(state => state.account ?? undefined)
-
+  const [spinning, setSpinning] = React.useState(false)
   const handleSubmit = useHandler(async (password: string) => {
     Keyboard.dismiss()
     if (account == null) return
+    setSpinning(true)
     try {
       await account.changePassword(password)
       await Airship.show(bridge => (
@@ -199,10 +214,14 @@ export const ChangePasswordScene = () => {
       dispatch(onComplete())
     } catch (e) {
       showError(e)
+    } finally {
+      setSpinning(false)
     }
   })
 
-  return <ChangePasswordSceneComponent onSubmit={handleSubmit} />
+  return (
+    <ChangePasswordSceneComponent onSubmit={handleSubmit} spinning={spinning} />
+  )
 }
 
 // The scene for existing users to recover their password
