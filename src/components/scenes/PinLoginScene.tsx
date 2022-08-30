@@ -114,9 +114,12 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
 
   handlePress = (value: string) => {
     const { loginWithPin, onChangeText, pin, username } = this.props
-    const newPin = value === 'back' ? pin.slice(0, -1) : pin.concat(value)
+    const newPin =
+      value === 'back' ? pin.slice(0, -1) : pin.concat(value).slice(0, 4)
+    if (newPin.length === 4 && pin.length === 3) {
+      loginWithPin(username, newPin)
+    }
     onChangeText(newPin)
-    if (newPin.length === 4) loginWithPin(username, newPin)
   }
 
   render() {
