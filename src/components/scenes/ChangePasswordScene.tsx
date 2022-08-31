@@ -44,6 +44,7 @@ const ChangePasswordSceneComponent = ({
   const [focusFirst, setFocusFirst] = React.useState(true)
   const [focusSecond, setFocusSecond] = React.useState(false)
   const [hidePassword, setHidePassword] = React.useState(true)
+  const [spinning, setSpinning] = React.useState(false)
 
   const hasPasswordStatus = useSelector(state => state.passwordStatus != null)
   const passed = useSelector(state => state?.passwordStatus?.passed ?? false)
@@ -57,7 +58,6 @@ const ChangePasswordSceneComponent = ({
   const createError = useSelector(
     state => state.create.createPasswordErrorMessage ?? ''
   )
-
   const hasError = confirmError !== '' || createError !== ''
   const isValidPassword = passed && password === confirmPassword && !hasError
 
@@ -73,7 +73,15 @@ const ChangePasswordSceneComponent = ({
       return
     }
 
-    return onSubmit(password)
+    setSpinning(true)
+
+    try {
+      onSubmit(password)
+    } catch (e) {
+      showError(e)
+    } finally {
+      setSpinning(false)
+    }
   })
 
   const handleFocusSwitch = () => {
@@ -133,11 +141,23 @@ const ChangePasswordSceneComponent = ({
         </FormError>
         <View style={styles.actions}>
           <Fade visible={isValidPassword} hidden>
-            <MainButton
-              label={mainButtonLabel}
-              type="secondary"
-              onPress={handlePress}
-            />
+            {spinning ? (
+              <MainButton
+                alignSelf="center"
+                disabled
+                marginRem={0.5}
+                type="secondary"
+                spinner
+              />
+            ) : (
+              <MainButton
+                alignSelf="center"
+                label={mainButtonLabel}
+                marginRem={0.5}
+                onPress={handlePress}
+                type="secondary"
+              />
+            )}
           </Fade>
         </View>
       </>
@@ -184,7 +204,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const ChangePasswordScene = () => {
   const dispatch = useDispatch()
   const account = useSelector(state => state.account ?? undefined)
-
   const handleSubmit = useHandler(async (password: string) => {
     Keyboard.dismiss()
     if (account == null) return
