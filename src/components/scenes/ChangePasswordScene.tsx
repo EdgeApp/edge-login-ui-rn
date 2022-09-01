@@ -111,6 +111,7 @@ const ChangePasswordSceneComponent = ({
           clearIcon
           searchIcon={false}
           marginRem={[0, 0.75, 1.25]}
+          maxLength={100}
         />
         <OutlinedTextInput
           value={confirmPassword}
@@ -125,6 +126,7 @@ const ChangePasswordSceneComponent = ({
           clearIcon
           searchIcon={false}
           marginRem={[0, 0.75, 1.25]}
+          maxLength={100}
         />
         <FormError marginRem={[0, 0.75]} invisible={!hasError}>
           {confirmError !== '' ? confirmError : createError}
