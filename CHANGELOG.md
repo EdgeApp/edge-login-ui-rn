@@ -1,5 +1,12 @@
 # edge-login-ui-rn
 
+## 0.10.8 (2022-08-05)
+
+- Fix off center alert error text
+- Enforce 100 character max password length
+- Fix >4 digit pin length
+- Update translations
+
 ## 0.10.7 (2022-07-12)
 
 - changed: Update forget account description text
