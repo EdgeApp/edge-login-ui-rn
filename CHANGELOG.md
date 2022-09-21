@@ -1,6 +1,10 @@
 # edge-login-ui-rn
 
-## 0.10.8 (2022-08-05)
+## 0.10.9 (2022-09-21)
+
+- Add a spinner to `ChangePasswordSceneComponent` to prevent double submission
+
+## 0.10.8 (2022-09-05)
 
 - Fix off center alert error text
 - Enforce 100 character max password length
