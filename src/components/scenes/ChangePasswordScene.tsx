@@ -26,7 +26,7 @@ interface Props {
   title?: string | undefined
   onBack?: (() => void) | undefined
   onSkip?: (() => void) | undefined
-  onSubmit: (password: string) => void
+  onSubmit: (password: string) => void | Promise<void>
   mainButtonLabel?: string
 }
 
@@ -65,13 +65,13 @@ const ChangePasswordSceneComponent = ({
     setHidePassword(!hidePassword)
   })
 
-  const handlePress = useHandler(() => {
+  const handlePress = useHandler(async () => {
     if (!isValidPassword) return
 
     setSpinning(true)
 
     try {
-      onSubmit(password)
+      await onSubmit(password)
     } catch (e) {
       showError(e)
     } finally {
