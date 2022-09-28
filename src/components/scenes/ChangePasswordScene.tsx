@@ -74,7 +74,6 @@ const ChangePasswordSceneComponent = ({
       await onSubmit(password)
     } catch (e) {
       showError(e)
-    } finally {
       setSpinning(false)
     }
   })
@@ -202,20 +201,17 @@ export const ChangePasswordScene = () => {
   const handleSubmit = useHandler(async (password: string) => {
     Keyboard.dismiss()
     if (account == null) return
-    try {
-      await account.changePassword(password)
-      await Airship.show(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          title={s.strings.password_changed}
-          message={s.strings.pwd_change_modal}
-          buttons={{ ok: { label: s.strings.ok } }}
-        />
-      ))
-      dispatch(onComplete())
-    } catch (e) {
-      showError(e)
-    }
+
+    await account.changePassword(password)
+    await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.password_changed}
+        message={s.strings.pwd_change_modal}
+        buttons={{ ok: { label: s.strings.ok } }}
+      />
+    ))
+    dispatch(onComplete())
   })
 
   return <ChangePasswordSceneComponent onSubmit={handleSubmit} />
@@ -233,20 +229,17 @@ export const ResecurePasswordScene = () => {
   const handleSubmit = useHandler(async (password: string) => {
     Keyboard.dismiss()
     if (account == null) return
-    try {
-      await account.changePassword(password)
-      await Airship.show(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          title={s.strings.password_changed}
-          message={s.strings.pwd_change_modal}
-          buttons={{ ok: { label: s.strings.ok } }}
-        />
-      ))
-      dispatch({ type: 'RESECURE_PIN' })
-    } catch (e) {
-      showError(e)
-    }
+
+    await account.changePassword(password)
+    await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.password_changed}
+        message={s.strings.pwd_change_modal}
+        buttons={{ ok: { label: s.strings.ok } }}
+      />
+    ))
+    dispatch({ type: 'RESECURE_PIN' })
   })
 
   return (
