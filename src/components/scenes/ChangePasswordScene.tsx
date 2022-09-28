@@ -66,12 +66,7 @@ const ChangePasswordSceneComponent = ({
   })
 
   const handlePress = useHandler(() => {
-    if (hasError) return
-
-    if (password !== '' && password !== confirmPassword) {
-      dispatch(validateConfirmPassword(confirmPassword))
-      return
-    }
+    if (!isValidPassword) return
 
     setSpinning(true)
 
