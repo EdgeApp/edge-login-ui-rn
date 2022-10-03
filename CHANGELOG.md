@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 0.10.10 (2022-10-03)
+
+- Fix password submit handling on `ChangePasswordScene`
+
 ## 0.10.9 (2022-09-21)
 
 - Add a spinner to `ChangePasswordSceneComponent` to prevent double submission
