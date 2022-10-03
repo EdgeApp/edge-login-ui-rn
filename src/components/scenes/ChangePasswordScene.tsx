@@ -26,7 +26,7 @@ interface Props {
   title?: string | undefined
   onBack?: (() => void) | undefined
   onSkip?: (() => void) | undefined
-  onSubmit: (password: string) => void
+  onSubmit: (password: string) => void | Promise<void>
   mainButtonLabel?: string
 }
 
@@ -65,21 +65,15 @@ const ChangePasswordSceneComponent = ({
     setHidePassword(!hidePassword)
   })
 
-  const handlePress = useHandler(() => {
-    if (hasError) return
-
-    if (password !== '' && password !== confirmPassword) {
-      dispatch(validateConfirmPassword(confirmPassword))
-      return
-    }
+  const handlePress = useHandler(async () => {
+    if (!isValidPassword) return
 
     setSpinning(true)
 
     try {
-      onSubmit(password)
+      await onSubmit(password)
     } catch (e) {
       showError(e)
-    } finally {
       setSpinning(false)
     }
   })
@@ -207,20 +201,17 @@ export const ChangePasswordScene = () => {
   const handleSubmit = useHandler(async (password: string) => {
     Keyboard.dismiss()
     if (account == null) return
-    try {
-      await account.changePassword(password)
-      await Airship.show(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          title={s.strings.password_changed}
-          message={s.strings.pwd_change_modal}
-          buttons={{ ok: { label: s.strings.ok } }}
-        />
-      ))
-      dispatch(onComplete())
-    } catch (e) {
-      showError(e)
-    }
+
+    await account.changePassword(password)
+    await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.password_changed}
+        message={s.strings.pwd_change_modal}
+        buttons={{ ok: { label: s.strings.ok } }}
+      />
+    ))
+    dispatch(onComplete())
   })
 
   return <ChangePasswordSceneComponent onSubmit={handleSubmit} />
@@ -238,20 +229,17 @@ export const ResecurePasswordScene = () => {
   const handleSubmit = useHandler(async (password: string) => {
     Keyboard.dismiss()
     if (account == null) return
-    try {
-      await account.changePassword(password)
-      await Airship.show(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          title={s.strings.password_changed}
-          message={s.strings.pwd_change_modal}
-          buttons={{ ok: { label: s.strings.ok } }}
-        />
-      ))
-      dispatch({ type: 'RESECURE_PIN' })
-    } catch (e) {
-      showError(e)
-    }
+
+    await account.changePassword(password)
+    await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.password_changed}
+        message={s.strings.pwd_change_modal}
+        buttons={{ ok: { label: s.strings.ok } }}
+      />
+    ))
+    dispatch({ type: 'RESECURE_PIN' })
   })
 
   return (
