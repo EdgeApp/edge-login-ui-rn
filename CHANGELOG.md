@@ -1,4 +1,7 @@
 # edge-login-ui-rn
+## 0.10.11 (2022-10-19)
+
+- Allow Powered By icon to be disabled by info server
 
 ## 0.10.10 (2022-10-03)
 
