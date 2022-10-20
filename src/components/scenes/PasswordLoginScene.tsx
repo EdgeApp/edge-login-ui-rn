@@ -214,13 +214,13 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
             {this.state.usernameList ? (
               <MaterialIcon
                 name="expand-less"
-                size={theme.rem(1)}
+                size={theme.rem(1.5)}
                 style={styles.iconColor}
               />
             ) : (
               <MaterialIcon
                 name="expand-more"
-                size={theme.rem(1)}
+                size={theme.rem(1.5)}
                 style={styles.iconColor}
               />
             )}
@@ -406,9 +406,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.backgroundGradientColors[0]
   },
   iconContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     position: 'absolute',
-    right: 0,
-    bottom: (theme.rem(16.25) - theme.rem(15.5)) * 1.6
+    right: theme.rem(-0.5),
+    width: theme.rem(2),
+    height: theme.rem(2),
+    bottom: theme.rem(0.5)
   },
   iconColor: {
     color: theme.icon
