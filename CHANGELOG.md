@@ -1,4 +1,8 @@
 # edge-login-ui-rn
+## 0.10.12 (2022-10-31)
+
+- Increase touch area of password login screen dropdown button
+
 ## 0.10.11 (2022-10-19)
 
 - Allow Powered By icon to be disabled by info server
