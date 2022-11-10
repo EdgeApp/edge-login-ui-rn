@@ -77,7 +77,7 @@ export function validateConfirmPassword(confirmPassword: string) {
     // the timeout is a hack until we put in interaction manager.
     let error = null
     if (confirmPassword !== state.create.password) {
-      error = s.strings.confirm_password_error
+      error = s.strings.password_mismatch_error
     }
     dispatch({
       type: 'AUTH_UPDATE_CONFIRM_PASSWORD',
@@ -88,7 +88,7 @@ export function validateConfirmPassword(confirmPassword: string) {
 export function validatePassword(data: string) {
   return (dispatch: Dispatch, getState: GetState, imports: Imports) => {
     const context = imports.context
-    let error = null
+    const error = null
     // dispatch(openLoading()) Legacy dealt with state for showing a spinner
     // the timeout is a hack until we put in interaction manager.
     const passwordEval = context.checkPasswordRules(data)
@@ -111,10 +111,6 @@ export function validatePassword(data: string) {
     )
     if (passwordCheckResult.score < 3) {
       passwordCheckString += s.strings.recommend_choosing_a_stronger
-    }
-
-    if (!passwordEval.passed) {
-      error = s.strings.password_error
     }
 
     dispatch({
@@ -159,7 +155,7 @@ export function createUser(data: CreateUserData) {
           Date.now().toString()
         )
         dispatch(loadTouchState())
-      } catch (e) {
+      } catch (e: any) {
         console.log(e)
         dispatch({ type: 'CREATE_ACCOUNT_FAIL', data: e.message })
         dispatch({ type: 'NEW_ACCOUNT_USERNAME' })

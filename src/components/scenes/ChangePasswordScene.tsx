@@ -45,28 +45,29 @@ const ChangePasswordSceneComponent = ({
   const [focusSecond, setFocusSecond] = React.useState(false)
   const [hidePassword, setHidePassword] = React.useState(true)
   const [spinning, setSpinning] = React.useState(false)
+  const [isShowError, setIsShowError] = React.useState(false)
 
   const hasPasswordStatus = useSelector(state => state.passwordStatus != null)
-  const passed = useSelector(state => state?.passwordStatus?.passed ?? false)
+  const isRequirementsMet = useSelector(
+    state => state.passwordStatus?.passed ?? false
+  )
   const password = useSelector(state => state.create.password ?? '')
   const confirmPassword = useSelector(
     state => state.create.confirmPassword ?? ''
   )
-  const confirmError = useSelector(
+  const confirmPasswordErrorMessage = useSelector(
     state => state.create.confirmPasswordErrorMessage ?? ''
   )
-  const createError = useSelector(
-    state => state.create.createPasswordErrorMessage ?? ''
-  )
-  const hasError = confirmError !== '' || createError !== ''
-  const isValidPassword = passed && password === confirmPassword && !hasError
 
   const handleHidePassword = useHandler(() => {
     setHidePassword(!hidePassword)
   })
 
   const handlePress = useHandler(async () => {
-    if (!isValidPassword) return
+    if (password !== confirmPassword) {
+      setIsShowError(true)
+      return
+    }
 
     setSpinning(true)
 
@@ -84,9 +85,11 @@ const ChangePasswordSceneComponent = ({
   }
 
   const validatePasswordDispatch = (password: string) => {
+    setIsShowError(false)
     dispatch(validatePassword(password))
   }
   const validateConfirmPasswordDispatch = (password: string) => {
+    setIsShowError(false)
     dispatch(validateConfirmPassword(password))
   }
 
@@ -130,11 +133,11 @@ const ChangePasswordSceneComponent = ({
           marginRem={[0, 0.75, 1.25]}
           maxLength={100}
         />
-        <FormError marginRem={[0, 0.75]} invisible={!hasError}>
-          {confirmError !== '' ? confirmError : createError}
+        <FormError marginRem={[0, 0.75]} invisible={!isShowError}>
+          {confirmPasswordErrorMessage}
         </FormError>
         <View style={styles.actions}>
-          <Fade visible={isValidPassword} hidden>
+          <Fade visible={!isShowError} hidden>
             {spinning ? (
               <MainButton
                 alignSelf="center"
@@ -147,6 +150,7 @@ const ChangePasswordSceneComponent = ({
               <MainButton
                 alignSelf="center"
                 label={mainButtonLabel}
+                disabled={!isRequirementsMet || confirmPassword === ''}
                 marginRem={0.5}
                 onPress={handlePress}
                 type="secondary"
