@@ -31,6 +31,9 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext.js'
 
+// The ratio of the maxLength at which the remaining character count is shown
+const MAX_LENGTH_WARNING_THRESHOLD = 0.8
+
 interface Props {
   // Contents:
   value: string
@@ -286,7 +289,8 @@ export const OutlinedTextInput = forwardRef(
       return {
         borderColor: getBorderColor(errorAnimation.value, focusAnimation.value),
         right:
-          maxLength !== undefined
+          maxLength !== undefined &&
+          value.length >= MAX_LENGTH_WARNING_THRESHOLD * maxLength
             ? counterRight +
               counterProgress * (2 * counterPadding + counterWidth)
             : cornerPadding
@@ -354,7 +358,10 @@ export const OutlinedTextInput = forwardRef(
     }))
     // Character limit
     const charLimitLabel =
-      maxLength === undefined ? '' : `${maxLength - value.length}`
+      maxLength === undefined ||
+      value.length < MAX_LENGTH_WARNING_THRESHOLD * maxLength
+        ? ''
+        : `${maxLength - value.length}`
 
     return (
       <TouchableWithoutFeedback onPress={() => focus()}>
