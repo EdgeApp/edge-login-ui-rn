@@ -12,7 +12,7 @@ export function ModalCloseArrow(props: { onPress?: () => void }) {
   return (
     <TouchableOpacity onPress={props.onPress} style={styles.closeArrow}>
       <AntDesignIcon
-        name="down"
+        name="close"
         size={theme.rem(1.25)}
         color={theme.iconTappable}
       />
