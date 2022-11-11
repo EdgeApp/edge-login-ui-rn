@@ -184,6 +184,11 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
   dropdownError: asOptional(asString),
   dropdownText: asOptional(asString),
 
+  // Card
+  cardBorder: asOptional(asNumber),
+  cardBorderColor: asOptional(asString),
+  cardBorderRadius: asOptional(asNumber),
+
   // Lines
   lineDivider: asOptional(asString),
   thinLineWidth: asOptional(asNumber),
@@ -317,6 +322,11 @@ export interface Theme {
   dropdownWarning: string
   dropdownError: string
   dropdownText: string
+
+  // Card
+  cardBorder: number
+  cardBorderColor: string
+  cardBorderRadius: number
 
   // Lines
   lineDivider: string
