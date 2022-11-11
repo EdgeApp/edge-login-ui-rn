@@ -11,6 +11,7 @@ import s from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { logEvent } from '../../util/analytics'
+import { WarningCard } from '../common/WarningCard'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -209,7 +210,13 @@ export const ChangePasswordScene = () => {
         title={s.strings.password_changed}
         message={s.strings.pwd_change_modal}
         buttons={{ ok: { label: s.strings.ok } }}
-      />
+      >
+        <WarningCard
+          title={s.strings.warning}
+          header={s.strings.password_change_warning}
+          marginRem={[1, 0.5]}
+        />
+      </ButtonsModal>
     ))
     dispatch(onComplete())
   })
