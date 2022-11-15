@@ -1,4 +1,11 @@
 # edge-login-ui-rn
+
+## 0.10.14 (2022-11-15)
+
+- Update password error display rules
+- Conditionally show character limit counter in password input field
+- Update translations
+
 ## 0.10.12 (2022-10-31)
 
 - Increase touch area of password login screen dropdown button
