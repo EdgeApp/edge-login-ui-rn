@@ -35,7 +35,7 @@ const FadeComponent = (props: Props) => {
       setMounted(true)
       opacity.value = withTiming(1, { duration })
     } else {
-      opacity.value = withTiming(0, { duration }, (isComplete: boolean) => {
+      opacity.value = withTiming(0, { duration }, (isComplete?: boolean) => {
         if (!isComplete) return
         runOnJS(setMounted)(false)
       })
