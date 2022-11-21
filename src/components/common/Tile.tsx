@@ -22,6 +22,7 @@ interface OwnProps {
   type: 'editable' | 'questionable' | 'loading' | 'static' | 'touchable'
   contentPadding?: boolean
   maximumHeight?: 'small' | 'medium' | 'large'
+  disabled?: boolean
 }
 type Props = OwnProps & ThemeProps
 
@@ -36,7 +37,8 @@ export class TileComponent extends React.PureComponent<Props> {
       type,
       maximumHeight = 'medium',
       error,
-      onPress
+      onPress,
+      disabled
     } = this.props
     const styles = getStyles(theme)
     const numberOfLines = textHeights[maximumHeight]
@@ -86,7 +88,11 @@ export class TileComponent extends React.PureComponent<Props> {
               </EdgeText>
               {typeof body === 'string' && (
                 <EdgeText
-                  style={styles.textBody}
+                  style={
+                    disabled === true
+                      ? styles.textBodyDisabled
+                      : styles.textBody
+                  }
                   numberOfLines={numberOfLines}
                   ellipsizeMode="tail"
                 >
@@ -99,7 +105,11 @@ export class TileComponent extends React.PureComponent<Props> {
               <View style={styles.iconContainer}>
                 <FontAwesomeIcon
                   name="chevron-right"
-                  style={styles.arrowIcon}
+                  style={
+                    disabled === true
+                      ? styles.arrowIconDeactivated
+                      : styles.arrowIcon
+                  }
                 />
               </View>
             )}
@@ -114,9 +124,9 @@ export class TileComponent extends React.PureComponent<Props> {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     backgroundColor: theme.tileBackground,
-    paddingHorizontal: theme.rem(1),
-    marginTop: theme.rem(1),
-    paddingBottom: theme.rem(1),
+    paddingLeft: theme.rem(0.25),
+    marginTop: theme.rem(0.875),
+    paddingBottom: theme.rem(0.875),
     flexDirection: 'row',
     alignItems: 'center'
   },
@@ -130,9 +140,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  arrowIconDeactivated: {
+    color: theme.iconDeactivated,
+    marginRight: theme.rem(0.25),
+    marginLeft: theme.rem(0.75),
+    textAlign: 'center'
+  },
   arrowIcon: {
     color: theme.iconTappable,
-    marginHorizontal: theme.rem(0.5),
+    marginRight: theme.rem(0.25),
+    marginLeft: theme.rem(0.75),
     textAlign: 'center'
   },
   textHeader: {
@@ -148,6 +165,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText,
     fontSize: theme.rem(1)
   },
+  textBodyDisabled: {
+    color: theme.deactivatedText,
+    fontSize: theme.rem(1)
+  },
   editIcon: {
     position: 'absolute',
     color: theme.iconTappable,
@@ -161,7 +182,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   divider: {
     height: theme.thinLineWidth,
-    marginLeft: theme.rem(1),
+    marginLeft: theme.rem(0.25),
     borderBottomWidth: theme.thinLineWidth,
     borderBottomColor: theme.lineDivider
   }
