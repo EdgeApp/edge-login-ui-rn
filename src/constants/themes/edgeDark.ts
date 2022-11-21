@@ -142,6 +142,11 @@ export const edgeDark: Theme = {
   dropdownError: palette.accentRed,
   dropdownText: palette.white,
 
+  // Card
+  cardBorder: 1,
+  cardBorderColor: palette.whiteOp10,
+  cardBorderRadius: 4,
+
   // Lines
   lineDivider: palette.whiteOp10,
   thinLineWidth: 1,
