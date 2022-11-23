@@ -142,6 +142,12 @@ export const edgeDark: Theme = {
   dropdownError: palette.accentRed,
   dropdownText: palette.white,
 
+  // Native iOS date modal:
+  dateModalTextLight: palette.accentBlue,
+  dateModalTextDark: palette.white,
+  dateModalBackgroundLight: palette.white,
+  dateModalBackgroundDark: palette.edgeBlue,
+
   // Card
   cardBorder: 1,
   cardBorderColor: palette.whiteOp10,
