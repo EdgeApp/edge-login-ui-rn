@@ -16,7 +16,7 @@ import {
   NewAccountPinScene,
   ResecurePinScene
 } from '../scenes/ChangePinScene'
-import { PublicChangeRecoveryScene } from '../scenes/existingAccout/ChangeRecoveryScene'
+import { ChangeRecoveryScene } from '../scenes/existingAccout/ChangeRecoveryScene'
 import { OtpRepairScene } from '../scenes/existingAccout/OtpRepairScene'
 import { SecurityAlertsScene } from '../scenes/existingAccout/SecurityAlertsScene'
 import { LandingScene } from '../scenes/LandingScene'
@@ -49,7 +49,7 @@ export function Router(props: Props) {
         return <ChangePinScene />
       case 'ChangeRecoveryScene':
         return (
-          <PublicChangeRecoveryScene
+          <ChangeRecoveryScene
             branding={props.branding}
             showHeader={props.showHeader}
           />

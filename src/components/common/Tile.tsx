@@ -66,7 +66,10 @@ export class TileComponent extends React.PureComponent<Props> {
       )
     }
     return (
-      <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
+      <TouchableWithoutFeedback
+        onPress={onPress}
+        disabled={type === 'static' || disabled}
+      >
         <View>
           <View style={styles.container}>
             <View
