@@ -197,6 +197,7 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
 
   // Font
   fontFaceDefault: asOptional(asString),
+  fontFaceMedium: asOptional(asString),
   fontFaceBold: asOptional(asString),
   fontFaceSymbols: asOptional(asString)
 })
@@ -337,6 +338,7 @@ export interface Theme {
 
   // Font
   fontFaceDefault: string
+  fontFaceMedium: string
   fontFaceBold: string
   fontFaceSymbols: string
 }
