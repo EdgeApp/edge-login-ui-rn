@@ -21,7 +21,7 @@ interface Props {
 
   // Text to show in the modal:
   title?: string
-  message?: string
+  message?: string | React.ReactNode
   initialValue?: string
   inputLabel?: string
   submitLabel?: string
