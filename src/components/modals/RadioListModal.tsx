@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -11,11 +11,7 @@ import { ListModal } from './ListModal'
 interface Props {
   bridge: AirshipBridge<string | undefined>
   title: string
-  items: Array<{
-    icon: string | number | React.ReactNode
-    name: string
-    text?: string
-  }> // Icon strings are image uri, numbers are local files
+  items: string[]
   selected?: string
 }
 
@@ -24,31 +20,21 @@ export function RadioListModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  // @ts-expect-error
-  function renderRow({ name, icon, text }): React.ReactNode {
-    const imageIcon = typeof icon === 'string' ? { uri: icon } : icon
-    const radio =
-      selected === name
-        ? { icon: 'ios-radio-button-on', color: theme.iconTappable }
-        : { icon: 'ios-radio-button-off', color: theme.iconTappable }
-
+  function renderRow(item: string): React.ReactNode {
+    const radio = {
+      icon: `ios-radio-button-${selected === item ? 'on' : 'off'}`,
+      color: theme.iconTappable
+    }
     return (
-      <TouchableOpacity onPress={() => bridge.resolve(name)}>
+      <TouchableOpacity onPress={() => bridge.resolve(item)}>
         <View style={styles.row}>
-          <View style={styles.iconContainer}>
-            {typeof icon === 'number' || typeof icon === 'string' ? (
-              <Image
-                resizeMode="contain"
-                source={imageIcon}
-                style={styles.icon}
-              />
-            ) : (
-              icon
-            )}
+          <View style={styles.textContainer}>
+            <EdgeText style={styles.text} numberOfLines={0} disableFontScaling>
+              {item}
+            </EdgeText>
           </View>
-          <EdgeText style={styles.rowText}>{name}</EdgeText>
-          {text != null ? <Text style={styles.text}>{text}</Text> : null}
           <IonIcon
+            style={styles.radio}
             name={radio.icon}
             color={radio.color}
             size={theme.rem(1.25)}
@@ -63,7 +49,6 @@ export function RadioListModal(props: Props) {
       bridge={bridge}
       title={title}
       textInput={false}
-      // @ts-expect-error
       rowsData={items}
       // @ts-expect-error
       rowComponent={renderRow}
@@ -79,22 +64,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'flex-start',
     margin: theme.rem(0.5)
   },
-  iconContainer: {
-    marginLeft: theme.rem(0.5),
-    marginRight: theme.rem(1)
+  radio: {
+    alignSelf: 'center',
+    marginRight: theme.rem(0.25),
+    marginLeft: theme.rem(0.375)
   },
-  icon: {
-    height: theme.rem(1.25),
-    width: theme.rem(1.25)
+  textContainer: {
+    flex: 1
   },
   text: {
-    color: theme.secondaryText,
-    fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(0.75),
-    marginRight: theme.rem(0.5),
-    includeFontPadding: false
-  },
-  rowText: {
-    flexGrow: 1
+    fontSize: theme.rem(1)
   }
 }))
