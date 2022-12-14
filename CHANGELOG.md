@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 0.10.15 (2022-12-14)
+
+- Add warning message to change password modal
+
 ## 0.10.14 (2022-11-15)
 
 - Update password error display rules
