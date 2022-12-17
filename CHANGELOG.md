@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 0.10.16 (2022-12-16)
+
+- Fixed: No longer allow a user to bypass password requirements with an empty password
+
 ## 0.10.15 (2022-12-14)
 
 - Add warning message to change password modal
@@ -276,7 +280,7 @@
 
 ## 0.8.3 (2021-04-07)
 
-- *Breaking change: This release contains a breaking change that was not indicated in the minor version update*:
+- _Breaking change: This release contains a breaking change that was not indicated in the minor version update_:
   - rn: Prompt for notification permissions to support security features
 - rn: Restrict PIN input to numbers only
 - rn: Show error when recovery questions match
