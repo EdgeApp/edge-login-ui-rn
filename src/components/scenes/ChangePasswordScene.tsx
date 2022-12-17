@@ -65,6 +65,7 @@ const ChangePasswordSceneComponent = ({
   })
 
   const handlePress = useHandler(async () => {
+    if (!isRequirementsMet) return
     if (password !== confirmPassword) {
       setIsShowError(true)
       return
