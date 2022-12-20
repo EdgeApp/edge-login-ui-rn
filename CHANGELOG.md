@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 0.10.17 (2022-12-20)
+
+- Fixed: Add flexGrow to username dropdown in PasswordLoginScene
+
 ## 0.10.16 (2022-12-16)
 
 - Fixed: No longer allow a user to bypass password requirements with an empty password
