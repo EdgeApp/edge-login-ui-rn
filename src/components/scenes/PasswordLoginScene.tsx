@@ -402,6 +402,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row'
   },
   dropDownList: {
+    flexGrow: 0,
     maxHeight: theme.rem(12.5),
     backgroundColor: theme.backgroundGradientColors[0]
   },
