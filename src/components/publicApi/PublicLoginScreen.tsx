@@ -4,7 +4,7 @@ import * as React from 'react'
 import { initializeLogin } from '../../actions/LoginInitActions'
 import { updateFontStyles } from '../../constants/Fonts'
 import { Branding, ParentButton } from '../../types/Branding'
-import { OnLogin } from '../../types/ReduxTypes'
+import { OnLogin, OnNotificationPermit } from '../../types/ReduxTypes'
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
 import { changeFont, useTheme } from '../services/ThemeContext'
@@ -30,6 +30,8 @@ interface Props {
 
   // Called when the login completes:
   onLogin: OnLogin
+  // Called when the user makes a choice from RequestPermissionsModal:
+  onNotificationPermit?: OnNotificationPermit
 
   // The recoveryKey from the user's email, to trigger recovery login:
   recoveryLogin?: string
@@ -81,6 +83,7 @@ export function LoginScreen(props: Props): JSX.Element {
         context: props.context,
         onComplete: () => {},
         onLogin: props.onLogin,
+        onNotificationPermit: props.onNotificationPermit,
         recoveryKey: props.recoveryLogin,
         skipSecurityAlerts: props.skipSecurityAlerts,
         username: props.username,

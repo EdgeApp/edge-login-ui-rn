@@ -1,3 +1,4 @@
+import { asBoolean, asJSON, asObject } from 'cleaners'
 import { EdgeAccount, EdgeAccountOptions, EdgeContext } from 'edge-core-js'
 import * as ReactRedux from 'react-redux'
 
@@ -6,18 +7,40 @@ import { Action } from './ReduxActions'
 
 export type { Action, RootState }
 
+export interface NotificationPermissionsInfo {
+  isNotificationBlocked: boolean
+  notificationOptIns: NotificationOptIns
+}
+export interface NotificationOptIns {
+  ignoreMarketing: boolean
+  ignorePriceChanges: boolean
+}
+export const asNotificationPermissionsInfo = asJSON(
+  asObject<NotificationPermissionsInfo>({
+    isNotificationBlocked: asBoolean,
+    notificationOptIns: asObject({
+      ignoreMarketing: asBoolean,
+      ignorePriceChanges: asBoolean
+    })
+  })
+)
+
 export interface TouchIdInfo {
   isTouchSupported: boolean
   isTouchEnabled: boolean
 }
 
 export type OnLogin = (account: EdgeAccount, touchIdInfo?: TouchIdInfo) => void
+export type OnNotificationPermit = (
+  settings: NotificationPermissionsInfo
+) => void
 
 export interface Imports {
   readonly accountOptions: EdgeAccountOptions
   readonly context: EdgeContext
   readonly onComplete: () => void
   readonly onLogin?: OnLogin
+  readonly onNotificationPermit?: OnNotificationPermit
   readonly recoveryKey?: string
   readonly skipSecurityAlerts?: boolean
   readonly username?: string | null
