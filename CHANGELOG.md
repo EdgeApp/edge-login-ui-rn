@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 0.10.18 (2023-1-10)
+
+- Added: A new RequestPermissionsModal with toggles to opt-in for marketing and/or price notifications.
+
 ## 0.10.17 (2022-12-20)
 
 - Fixed: Add flexGrow to username dropdown in PasswordLoginScene
