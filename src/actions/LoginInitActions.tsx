@@ -1,3 +1,4 @@
+import { asMaybe } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
 import { EdgeLoginMessages } from 'edge-core-js'
 import * as React from 'react'
@@ -11,11 +12,20 @@ import {
 import { sprintf } from 'sprintf-js'
 
 import s from '../common/locales/strings'
-import { ButtonsModal } from '../components/modals/ButtonsModal'
+import {
+  PermissionsModalChoices,
+  RequestPermissionsModal
+} from '../components/modals/RequestPermissionsModal'
 import { SecurityAlertsModal } from '../components/modals/SecurityAlertsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { Branding } from '../types/Branding'
-import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
+import {
+  asNotificationPermissionsInfo,
+  Dispatch,
+  GetState,
+  Imports,
+  NotificationPermissionsInfo
+} from '../types/ReduxTypes'
 import { Theme } from '../types/Theme'
 import { launchPasswordRecovery } from './LoginAction'
 import { loadTouchState } from './TouchActions'
@@ -23,7 +33,7 @@ import { loadTouchState } from './TouchActions'
 const { AbcCoreJsUi } = NativeModules
 
 const disklet = makeReactNativeDisklet()
-const permissionsUserFile = 'notificationsPermisions.json'
+const notificationPermissionsInfoFile = 'notificationsPermisions.json'
 
 /**
  * Fires off all the things we need to do to get the login scene up & running.
@@ -139,6 +149,7 @@ const checkAndRequestNotifications = (
   theme: Theme,
   branding: Branding
 ) => async (dispatch: Dispatch, getState: GetState, imports: Imports) => {
+  const { onNotificationPermit } = imports
   const notificationPermission = await checkNotifications()
   const notificationStatus = notificationPermission.status
   const notifEnabled =
@@ -154,18 +165,22 @@ const checkAndRequestNotifications = (
     : undefined
   const refreshEnabled = statusAppRefresh !== RESULTS.BLOCKED ? 1 : 0
 
-  const userPermissionStatus = await disklet
-    .getText(permissionsUserFile)
+  const notificationPermissionsInfoJson = await disklet
+    .getText(notificationPermissionsInfoFile)
     .catch(error => console.log(error))
-  const notifBlockedBool = userPermissionStatus
-    ? JSON.parse(userPermissionStatus).isNotificationBlocked
+  const notificationPermissionsInfo = asMaybe(asNotificationPermissionsInfo)(
+    notificationPermissionsInfoJson
+  )
+  const isNotificationBlocked = notificationPermissionsInfo
+    ? notificationPermissionsInfo.isNotificationBlocked
     : false
-  const notifBlocked = notifBlockedBool ? 1 : 0
+  const isNotificationBlockedBit = isNotificationBlocked ? 1 : 0
 
   const permissionMessage =
-    logicMap[notifEnabled][notifBlocked][refreshEnabled] != null
+    logicMap[notifEnabled][isNotificationBlockedBit][refreshEnabled] != null
       ? sprintf(
-          logicMap[notifEnabled][notifBlocked][refreshEnabled] ?? '',
+          logicMap[notifEnabled][isNotificationBlockedBit][refreshEnabled] ??
+            '',
           branding.appName
         )
       : undefined
@@ -175,45 +190,69 @@ const checkAndRequestNotifications = (
     `notificationStatus:${notificationStatus} statusAppRefresh:${statusAppRefresh}`
   )
   console.log(
-    `notifEnabled:${notifEnabled} notifBlocked:${notifBlocked} refreshEnabled:${refreshEnabled}`
+    `notifEnabled:${notifEnabled} notifBlocked:${isNotificationBlockedBit} refreshEnabled:${refreshEnabled}`
   )
   console.log(`permissionMessage:${permissionMessage}`)
 
   if (permissionMessage != null) {
-    const message: string = permissionMessage // XXX Typescript hack
-    Airship.show(bridge => (
-      <ButtonsModal
+    const choiceMap: PermissionsModalChoices = {
+      optInPriceChanges: !(
+        notificationPermissionsInfo?.notificationOptIns.ignorePriceChanges ??
+        false
+      ),
+      optInMarketing: !(
+        notificationPermissionsInfo?.notificationOptIns.ignoreMarketing ?? false
+      )
+    }
+    Airship.show<Required<PermissionsModalChoices> | undefined>(bridge => (
+      <RequestPermissionsModal
         bridge={bridge}
-        title={s.strings.alert_modal_title}
-        message={message}
-        warning
-        buttons={{
-          enable: { label: s.strings.enable },
-          cancel: { label: s.strings.cancel, type: 'escape' }
-        }}
+        message={permissionMessage}
+        choices={choiceMap}
       />
     ))
-      .then(async result => {
-        console.log(`checkAndRequestNotifications result ${result}`)
-        if (result === 'cancel') {
-          return await disklet.setText(
-            permissionsUserFile,
-            JSON.stringify({ isNotificationBlocked: true })
-          )
+      .then(async choices => {
+        console.log(
+          `checkAndRequestNotifications result ${JSON.stringify(choices)}`
+        )
+
+        // Don't do anything if the user didn't make a choice (dismissed modal)
+        if (choices == null) return
+
+        const notificationPermissionsInfo: NotificationPermissionsInfo = {
+          isNotificationBlocked: !choices?.enable,
+          notificationOptIns: {
+            ignoreMarketing: !choices.optInMarketing,
+            ignorePriceChanges: !choices.optInPriceChanges
+          }
         }
-        if (result === 'enable' && notificationStatus === RESULTS.DENIED) {
-          requestNotifications(
-            isIos ? ['alert', 'badge', 'sound'] : []
-          ).catch(error => console.log(error))
+
+        await disklet.setText(
+          notificationPermissionsInfoFile,
+          JSON.stringify(notificationPermissionsInfo)
+        )
+
+        if (choices.enable) {
+          if (notificationStatus === RESULTS.DENIED) {
+            requestNotifications(
+              isIos ? ['alert', 'badge', 'sound'] : []
+            ).catch(error => console.log(error))
+          }
+          if (
+            notificationStatus === RESULTS.BLOCKED ||
+            statusAppRefresh === RESULTS.BLOCKED
+          ) {
+            openSettings().catch(error => console.log(error))
+          }
         }
-        if (
-          result === 'enable' &&
-          (notificationStatus === RESULTS.BLOCKED ||
-            statusAppRefresh === RESULTS.BLOCKED)
-        ) {
-          openSettings().catch(error => console.log(error))
-        }
+
+        if (onNotificationPermit != null)
+          onNotificationPermit(notificationPermissionsInfo)
       })
       .catch(showError)
+  } else {
+    if (onNotificationPermit != null && notificationPermissionsInfo != null) {
+      onNotificationPermit(notificationPermissionsInfo)
+    }
   }
 }
