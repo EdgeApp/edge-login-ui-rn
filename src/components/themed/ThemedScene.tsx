@@ -50,8 +50,8 @@ export function ThemedScene(props: Props) {
     <>
       <LinearGradient
         style={StyleSheet.absoluteFill}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
+        start={theme.backgroundGradientStart}
+        end={theme.backgroundGradientEnd}
         colors={theme.backgroundGradientColors}
       />
       <SafeAreaView style={{ flex: 1 }}>

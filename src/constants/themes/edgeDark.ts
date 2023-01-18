@@ -49,6 +49,8 @@ export const edgeDark: Theme = {
 
   // background
   backgroundGradientColors: [palette.edgeNavy, palette.darkBlue],
+  backgroundGradientStart: { x: 0, y: 0 },
+  backgroundGradientEnd: { x: 1, y: 1 },
 
   // modal
   modal: palette.edgeNavy,

@@ -16,8 +16,6 @@ interface Props {
   enableTouch?: boolean
   onPress?: () => void
 }
-const start = { x: 0, y: 0 }
-const end = { x: 1, y: 0 }
 
 export const BackgroundImage = ({
   branding,
@@ -40,8 +38,8 @@ export const BackgroundImage = ({
     return (
       <LinearGradient
         style={styles.backgroundImage}
-        start={start}
-        end={end}
+        start={theme.backgroundGradientStart}
+        end={theme.backgroundGradientEnd}
         colors={theme.backgroundGradientColors}
       >
         {content}
