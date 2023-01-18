@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 0.10.19 (2023-1-18)
+
+- Changed: Orient background gradient using Theme
+
 ## 0.10.18 (2023-1-10)
 
 - Added: A new RequestPermissionsModal with toggles to opt-in for marketing and/or price notifications.
