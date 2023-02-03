@@ -1,5 +1,8 @@
 export type TrackingEventName =
   | 'Login_Password_Forgot_Password'
+  | 'Recovery_Token_Submit'
+  | 'Recovery_Username_Failure'
+  | 'Recovery_Username_Success'
   | 'Signup_Create_Account'
   | 'Signup_Create_User_Success'
   | 'Signup_Password_Valid'
