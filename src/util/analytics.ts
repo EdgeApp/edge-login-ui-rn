@@ -1,4 +1,5 @@
 export type TrackingEventName =
+  | 'Login_Password_Forgot_Password'
   | 'Signup_Create_Account'
   | 'Signup_Create_User_Success'
   | 'Signup_Password_Valid'
