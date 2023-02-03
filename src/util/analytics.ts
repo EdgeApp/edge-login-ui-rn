@@ -9,6 +9,7 @@ export type TrackingEventName =
   | 'Signup_Password_Valid'
   | 'Signup_PIN_Valid'
   | 'Signup_Review_Done'
+  | 'Signup_Signin'
   | 'Signup_Terms_Agree_and_Create_User'
   | 'Signup_Username_Available'
   | 'Signup_Username_Unavailable'
