@@ -56,35 +56,37 @@ interface DispatchProps {
 }
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-interface State {
-  errorMessage: string
-  focusFirst: boolean
-  focusSecond: boolean
-  password: string
-  usernameList: boolean
-}
+const PasswordLoginSceneComponent = ({
+  branding,
+  deleteUserFromDevice,
+  gotoCreatePage,
+  gotoPinLoginPage,
+  handlePasswordRecovery,
+  handleQrModal,
+  login,
+  loginSuccess,
+  previousUsers,
+  saveOtpError,
+  theme,
+  touch,
+  updateUsername,
+  username,
+  usernameOnlyList
+}: Props) => {
+  const styles = getStyles(theme)
+  const [errorMessage, setErrorMessage] = React.useState('')
+  const [focusFirst, setFocusFirst] = React.useState(true)
+  const [focusSecond, setFocusSecond] = React.useState(false)
+  const [password, setPassword] = React.useState('')
+  const [usernameList, setUsernameList] = React.useState(false)
 
-class PasswordLoginSceneComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      errorMessage: '',
-      focusFirst: true,
-      focusSecond: false,
-      password: '',
-      usernameList: false
-    }
+  const handlePasswordChange = (password: string) => {
+    setErrorMessage('')
+    setPassword(password)
   }
 
-  handlePasswordChange = (password: string) => {
-    this.setState({ errorMessage: '', password })
-  }
-
-  handleSubmit = async () => {
-    const { login, saveOtpError, username } = this.props
-    const { password } = this.state
-
-    this.handleBlur()
+  const handleSubmit = async () => {
+    handleBlur()
     Keyboard.dismiss()
 
     const attempt: LoginAttempt = { type: 'password', username, password }
@@ -94,22 +96,18 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
       } else {
         console.log(error)
         const errorMessage = error != null ? error.message : ''
-        this.setState({ errorMessage })
+        setErrorMessage(errorMessage)
       }
     })
   }
 
-  handleBlur = () => {
+  const handleBlur = () => {
     Keyboard.dismiss()
-    this.setState({
-      focusFirst: false,
-      focusSecond: false
-    })
+    setFocusFirst(false)
+    setFocusSecond(false)
   }
 
-  handleDelete = (username: string) => {
-    const { deleteUserFromDevice } = this.props
-
+  const handleDelete = (username: string) => {
     Keyboard.dismiss()
     Airship.show(bridge => (
       <ButtonsModal
@@ -129,89 +127,56 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
       .catch(showError)
   }
 
-  render() {
-    const { theme } = this.props
-    const styles = getStyles(theme)
-
-    return (
-      <KeyboardAwareScrollView
-        style={styles.container}
-        keyboardShouldPersistTaps="always"
-        contentContainerStyle={styles.mainScrollView}
-      >
-        <BackgroundImage
-          branding={this.props.branding}
-          content={this.renderOverImage()}
-          onPress={this.handleBlur}
-        />
-      </KeyboardAwareScrollView>
-    )
-  }
-
-  renderOverImage() {
-    const { theme } = this.props
-    const styles = getStyles(theme)
-
-    if (this.props.loginSuccess) {
-      /* return (
-        <View style={style.featureBox}>
-          <Text>LOGIN SUCCESS</Text>
-        </View>
-      ) */
-      return null
-    }
+  const renderOverImage = () => {
+    if (loginSuccess) return null
     return (
       <View style={styles.featureBoxContainer}>
-        <HeaderParentButtons branding={this.props.branding} />
-        <TouchableWithoutFeedback onPress={this.handleBlur}>
+        <HeaderParentButtons branding={branding} />
+        <TouchableWithoutFeedback onPress={handleBlur}>
           <View style={styles.featureBox}>
-            <LogoImageHeader branding={this.props.branding} />
-            {this.renderUsername()}
+            <LogoImageHeader branding={branding} />
+            {renderUsername()}
             <View style={styles.shimTiny} />
             <LineFormField
               testID="passwordFormField"
-              onChangeText={this.handlePasswordChange}
-              value={this.state.password}
+              onChangeText={handlePasswordChange}
+              value={password}
               label={s.strings.password}
-              error={this.state.errorMessage}
+              error={errorMessage}
               autoCorrect={false}
               secureTextEntry
               returnKeyType="go"
-              forceFocus={this.state.focusSecond}
-              onFocus={this.handleFocus2}
-              onSubmitEditing={this.handleSubmit}
+              autoFocus={focusSecond}
+              onFocus={handleFocus2}
+              onSubmitEditing={handleSubmit}
             />
-            {this.renderButtons()}
+            {renderButtons()}
           </View>
         </TouchableWithoutFeedback>
       </View>
     )
   }
 
-  renderUsername() {
-    const { theme } = this.props
-    const styles = getStyles(theme)
-
+  const renderUsername = () => {
     return (
       <View>
         <View style={styles.usernameWrapper}>
           <LineFormField
             testID="usernameFormField"
-            onChangeText={this.handleChangeUsername}
-            value={this.props.username}
+            onChangeText={handleChangeUsername}
+            value={username}
             label={s.strings.username}
             returnKeyType="next"
             autoCorrect={false}
-            autoFocus={this.state.focusFirst}
-            forceFocus={this.state.focusFirst}
-            onFocus={this.handleFocus1}
-            onSubmitEditing={this.handleSetNextFocus}
+            autoFocus={focusFirst}
+            onFocus={handleFocus1}
+            onSubmitEditing={handleSetNextFocus}
           />
           <TouchableOpacity
             style={styles.iconContainer}
-            onPress={this.handleToggleUsernameList}
+            onPress={handleToggleUsernameList}
           >
-            {this.state.usernameList ? (
+            {usernameList ? (
               <MaterialIcon
                 name="expand-less"
                 size={theme.rem(1.5)}
@@ -226,45 +191,40 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
             )}
           </TouchableOpacity>
         </View>
-        {this.state.usernameList && this.renderDropdownList()}
+        {usernameList && renderDropdownList()}
       </View>
     )
   }
 
-  renderDropdownList() {
-    const { theme } = this.props
-    const styles = getStyles(theme)
-
+  const renderDropdownList = () => {
     return (
       <FlatList
         style={styles.dropDownList}
-        data={this.props.usernameOnlyList}
-        renderItem={this.renderRow}
-        keyExtractor={(item, index) => index.toString()}
+        data={usernameOnlyList}
+        renderItem={renderRow}
+        keyExtractor={(_, index) => index.toString()}
       />
     )
   }
 
-  renderRow = (data: { item: string }) => {
+  const renderRow = (data: { item: string }) => {
     return (
       <UserListItem
         data={data.item}
-        onClick={this.handleSelectUser}
-        onDelete={this.handleDelete}
+        onClick={handleSelectUser}
+        onDelete={handleDelete}
       />
     )
   }
 
-  renderButtons() {
-    const { handleQrModal, theme } = this.props
-    const styles = getStyles(theme)
+  const renderButtons = () => {
     const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
 
     return (
       <View style={styles.buttonsBox}>
         <MainButton
           type="textOnly"
-          onPress={this.handleForgotPassword}
+          onPress={handleForgotPassword}
           label={s.strings.forgot_password}
         />
         <View style={styles.loginButtonBox}>
@@ -272,13 +232,13 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
             label={s.strings.login_button}
             testID="loginButton"
             type={buttonType}
-            onPress={this.handleSubmit}
+            onPress={handleSubmit}
           />
         </View>
         <MainButton
           type="textOnly"
           testID="createAccountButton"
-          onPress={this.handleCreateAccount}
+          onPress={handleCreateAccount}
           label={s.strings.create_an_account}
         />
         <TouchableOpacity onPress={handleQrModal}>
@@ -292,66 +252,56 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     )
   }
 
-  handleToggleUsernameList = () => {
+  const handleToggleUsernameList = () => {
     Keyboard.dismiss()
-    this.setState({
-      focusFirst: false,
-      focusSecond: false,
-      usernameList: !this.state.usernameList
-    })
+    setFocusFirst(false)
+    setFocusSecond(false)
+    setUsernameList(!usernameList)
   }
 
-  handleFocus1 = () => {
-    this.setState({
-      focusFirst: true,
-      focusSecond: false
-    })
+  const handleFocus1 = () => {
+    setFocusFirst(true)
+    setFocusSecond(false)
   }
 
-  handleFocus2 = () => {
-    this.setState({
-      focusFirst: false,
-      focusSecond: true
-    })
+  const handleFocus2 = () => {
+    setFocusFirst(false)
+    setFocusSecond(true)
   }
 
-  handleSetNextFocus = () => {
-    this.setState({
-      focusFirst: false,
-      focusSecond: true
-    })
+  const handleSetNextFocus = () => {
+    setFocusFirst(false)
+    setFocusSecond(true)
   }
 
-  handleSelectUser = (username: string) => {
-    this.handleChangeUsername(username)
-    this.setState({
-      usernameList: false
-    })
+  const handleSelectUser = (username: string) => {
+    handleChangeUsername(username)
+    setUsernameList(false)
 
-    const details: LoginUserInfo | undefined = this.props.previousUsers.find(
+    const details: LoginUserInfo | undefined = previousUsers.find(
       info => info.username === username
     )
     if (
       details != null &&
-      (details.pinEnabled || (details.touchEnabled && this.props.touch))
+      (details.pinEnabled || (details.touchEnabled && touch))
     ) {
-      this.props.gotoPinLoginPage()
+      gotoPinLoginPage()
       return
     }
-    this.handleSetNextFocus()
+    handleSetNextFocus()
   }
 
-  handleChangeUsername = (data: string) => {
-    this.setState({ errorMessage: '' })
-    this.props.updateUsername(data)
+  const handleChangeUsername = (data: string) => {
+    setErrorMessage('')
+    updateUsername(data)
   }
 
-  handleForgotPassword = () => {
+  const handleForgotPassword = () => {
     Keyboard.dismiss()
     Airship.show(bridge => (
       <TextInputModal
         bridge={bridge}
-        onSubmit={this.props.handlePasswordRecovery}
+        onSubmit={handlePasswordRecovery}
         title={s.strings.password_recovery}
         message={s.strings.initiate_password_recovery}
         inputLabel={s.strings.recovery_token}
@@ -359,9 +309,22 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     ))
   }
 
-  handleCreateAccount = () => {
-    this.props.gotoCreatePage()
+  const handleCreateAccount = () => {
+    gotoCreatePage()
   }
+  return (
+    <KeyboardAwareScrollView
+      style={styles.container}
+      keyboardShouldPersistTaps="always"
+      contentContainerStyle={styles.mainScrollView}
+    >
+      <BackgroundImage
+        branding={branding}
+        content={renderOverImage()}
+        onPress={handleBlur}
+      />
+    </KeyboardAwareScrollView>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
