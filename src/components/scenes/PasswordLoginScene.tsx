@@ -54,6 +54,7 @@ interface DispatchProps {
   updateUsername: (username: string) => void
   handlePasswordRecovery: (recoveryKey: string) => Promise<boolean>
 }
+
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 const PasswordLoginSceneComponent = ({
@@ -75,8 +76,8 @@ const PasswordLoginSceneComponent = ({
 }: Props) => {
   const styles = getStyles(theme)
   const [errorMessage, setErrorMessage] = React.useState('')
-  const [focusFirst, setFocusFirst] = React.useState(true)
-  const [focusSecond, setFocusSecond] = React.useState(false)
+  const [focusUsername, setFocusUsername] = React.useState(true)
+  const [focusPassword, setFocusPassword] = React.useState(false)
   const [password, setPassword] = React.useState('')
   const [usernameList, setUsernameList] = React.useState(false)
 
@@ -84,11 +85,21 @@ const PasswordLoginSceneComponent = ({
     setErrorMessage('')
     setPassword(password)
   }
+  const changeFocus = (
+    hideKeyboard: boolean = true,
+    toUsername: boolean = false,
+    toPassword: boolean = false
+  ) => {
+    if (hideKeyboard) Keyboard.dismiss()
+    if (toUsername) setFocusUsername(toUsername)
+    if (toPassword) setFocusPassword(toPassword)
+  }
+  const handleBlur = () => changeFocus(true, false, false)
+  const handleFocusUsername = () => changeFocus(false, true, false)
+  const handleFocusPassword = () => changeFocus(false, false, true)
 
   const handleSubmit = async () => {
     handleBlur()
-    Keyboard.dismiss()
-
     const attempt: LoginAttempt = { type: 'password', username, password }
     await login(attempt).catch(error => {
       if (error != null && error.name === 'OtpError') {
@@ -101,14 +112,8 @@ const PasswordLoginSceneComponent = ({
     })
   }
 
-  const handleBlur = () => {
-    Keyboard.dismiss()
-    setFocusFirst(false)
-    setFocusSecond(false)
-  }
-
   const handleDelete = (username: string) => {
-    Keyboard.dismiss()
+    handleBlur()
     Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -126,7 +131,6 @@ const PasswordLoginSceneComponent = ({
       })
       .catch(showError)
   }
-
   const renderOverImage = () => {
     if (loginSuccess) return null
     return (
@@ -146,8 +150,7 @@ const PasswordLoginSceneComponent = ({
               autoCorrect={false}
               secureTextEntry
               returnKeyType="go"
-              autoFocus={focusSecond}
-              onFocus={handleFocus2}
+              autoFocus={focusPassword}
               onSubmitEditing={handleSubmit}
             />
             {renderButtons()}
@@ -156,7 +159,6 @@ const PasswordLoginSceneComponent = ({
       </View>
     )
   }
-
   const renderUsername = () => {
     return (
       <View>
@@ -168,9 +170,9 @@ const PasswordLoginSceneComponent = ({
             label={s.strings.username}
             returnKeyType="next"
             autoCorrect={false}
-            autoFocus={focusFirst}
-            onFocus={handleFocus1}
-            onSubmitEditing={handleSetNextFocus}
+            autoFocus={focusUsername}
+            onFocus={handleFocusUsername}
+            onSubmitEditing={handleFocusPassword}
           />
           <TouchableOpacity
             style={styles.iconContainer}
@@ -253,25 +255,8 @@ const PasswordLoginSceneComponent = ({
   }
 
   const handleToggleUsernameList = () => {
-    Keyboard.dismiss()
-    setFocusFirst(false)
-    setFocusSecond(false)
+    handleBlur()
     setUsernameList(!usernameList)
-  }
-
-  const handleFocus1 = () => {
-    setFocusFirst(true)
-    setFocusSecond(false)
-  }
-
-  const handleFocus2 = () => {
-    setFocusFirst(false)
-    setFocusSecond(true)
-  }
-
-  const handleSetNextFocus = () => {
-    setFocusFirst(false)
-    setFocusSecond(true)
   }
 
   const handleSelectUser = (username: string) => {
@@ -288,7 +273,7 @@ const PasswordLoginSceneComponent = ({
       gotoPinLoginPage()
       return
     }
-    handleSetNextFocus()
+    handleFocusPassword()
   }
 
   const handleChangeUsername = (data: string) => {
