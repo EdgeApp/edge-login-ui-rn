@@ -3,6 +3,7 @@ export type TrackingEventName =
   | 'Signup_Create_Account'
   | 'Signup_Create_User_Success'
   | 'Signup_Password_Valid'
+  | 'Signup_PIN_Valid'
   | 'Signup_Review_Done'
   | 'Signup_Terms_Agree_and_Create_User'
   | 'Signup_Username_Available'
