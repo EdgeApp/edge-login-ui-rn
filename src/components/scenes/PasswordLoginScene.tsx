@@ -362,6 +362,7 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
   }
 
   handleCreateAccount = () => {
+    logEvent('Login_Password_Create_Account')
     this.props.gotoCreatePage()
   }
 }
