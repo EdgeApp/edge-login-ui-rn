@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { ScrollView } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
@@ -23,7 +23,7 @@ import { Dispatch, RootState } from '../../types/ReduxTypes'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
-import { BackgroundImage } from '../common/BackgroundImage'
+import { ThemedScene } from '../themed/ThemedScene'
 import { HeaderParentButtons } from '../common/HeaderParentButtons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { showQrCodeModal } from '../modals/QrCodeModal'
@@ -131,71 +131,32 @@ const PasswordLoginSceneComponent = ({
       })
       .catch(showError)
   }
-  const renderOverImage = () => {
-    if (loginSuccess) return null
+
+  const renderCaretDropdown = () => {
     return (
-      <View style={styles.featureBoxContainer}>
-        <HeaderParentButtons branding={branding} />
-        <TouchableWithoutFeedback onPress={handleBlur}>
-          <View style={styles.featureBox}>
-            <LogoImageHeader branding={branding} />
-            {renderUsername()}
-            <View style={styles.shimTiny} />
-            <LineFormField
-              testID="passwordFormField"
-              onChangeText={handlePasswordChange}
-              value={password}
-              label={s.strings.password}
-              error={errorMessage}
-              autoCorrect={false}
-              secureTextEntry
-              returnKeyType="go"
-              autoFocus={focusPassword}
-              onSubmitEditing={handleSubmit}
-            />
-            {renderButtons()}
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
+      <TouchableOpacity
+        style={styles.iconContainer}
+        onPress={handleToggleUsernameList}
+      >
+        {usernameList ? (
+          <MaterialIcon
+            name="expand-less"
+            size={theme.rem(1.5)}
+            style={styles.iconColor}
+          />
+        ) : (
+          <MaterialIcon
+            name="expand-more"
+            size={theme.rem(1.5)}
+            style={styles.iconColor}
+          />
+        )}
+      </TouchableOpacity>
     )
   }
-  const renderUsername = () => {
-    return (
-      <View>
-        <View style={styles.usernameWrapper}>
-          <LineFormField
-            testID="usernameFormField"
-            onChangeText={handleChangeUsername}
-            value={username}
-            label={s.strings.username}
-            returnKeyType="next"
-            autoCorrect={false}
-            autoFocus={focusUsername}
-            onFocus={handleFocusUsername}
-            onSubmitEditing={handleFocusPassword}
-          />
-          <TouchableOpacity
-            style={styles.iconContainer}
-            onPress={handleToggleUsernameList}
-          >
-            {usernameList ? (
-              <MaterialIcon
-                name="expand-less"
-                size={theme.rem(1.5)}
-                style={styles.iconColor}
-              />
-            ) : (
-              <MaterialIcon
-                name="expand-more"
-                size={theme.rem(1.5)}
-                style={styles.iconColor}
-              />
-            )}
-          </TouchableOpacity>
-        </View>
-        {usernameList && renderDropdownList()}
-      </View>
-    )
+
+  {
+    /* {usernameList && renderDropdownList()} */
   }
 
   const renderDropdownList = () => {
@@ -297,57 +258,88 @@ const PasswordLoginSceneComponent = ({
   const handleCreateAccount = () => {
     gotoCreatePage()
   }
+  if (loginSuccess) return null
   return (
-    <KeyboardAwareScrollView
-      style={styles.container}
-      keyboardShouldPersistTaps="always"
-      contentContainerStyle={styles.mainScrollView}
-    >
-      <BackgroundImage
-        branding={branding}
-        content={renderOverImage()}
-        onPress={handleBlur}
-      />
-    </KeyboardAwareScrollView>
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <HeaderParentButtons branding={branding} />
+      </View>
+      <View style={styles.loginContainer}>
+        <LogoImageHeader branding={branding} />
+        <LineFormField
+          onChangeText={handleChangeUsername}
+          value={username}
+          label={s.strings.username}
+          returnKeyType="next"
+          autoCorrect={false}
+          autoFocus={focusUsername}
+          onFocus={handleFocusUsername}
+          onSubmitEditing={handleFocusPassword}
+          multiline={false}
+        />
+        <View style={styles.shimTiny} />
+        <LineFormField
+          onChangeText={handlePasswordChange}
+          value={password}
+          label={s.strings.password}
+          error={errorMessage}
+          autoCorrect={false}
+          secureTextEntry
+          returnKeyType="go"
+          autoFocus={focusPassword}
+          onSubmitEditing={handleSubmit}
+          multiline={false}
+        />
+        {renderButtons()}
+      </View>
+    </View>
   )
 }
 
+{
+  /* <BackgroundImage
+        branding={branding}
+        content={renderOverImage()}
+        onPress={handleBlur}
+      /> */
+}
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
-    width: '100%',
-    height: '100%',
-    backgroundColor: theme.backgroundGradientColors[0]
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    backgroundColor: theme.backgroundGradientColors[0],
+    flexWrap: 'nowrap',
+    flexGrow: 1
   },
-  mainScrollView: {
-    position: 'relative',
-    width: '100%',
-    height: '100%'
+  headerContainer: {
+    height: theme.rem(2),
   },
-  featureBoxContainer: {
-    width: '100%'
+  footerContainer: {
+    height: theme.rem(2)
   },
-  featureBox: {
-    position: 'relative',
-    top: theme.rem(3.5),
-    width: '100%',
-    alignItems: 'center'
+  loginContainer: {
+    alignSelf: 'center',
+    marginTop: theme.rem(5),
+    width: '70%'
   },
+  featureBox: {},
   shimTiny: {
     width: '100%',
-    height: theme.rem(0.75)
-  },
-  loginButtonBox: {
-    marginVertical: theme.rem(0.25),
-    width: '70%'
+    height: theme.rem(0)
   },
   buttonsBox: {
     width: '100%',
     alignItems: 'center'
   },
+  loginButtonBox: {
+    marginVertical: theme.rem(0.25),
+    width: '70%'
+  },
   usernameWrapper: {
     width: '100%',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    backgroundColor: 'black'
   },
   dropDownList: {
     flexGrow: 0,
