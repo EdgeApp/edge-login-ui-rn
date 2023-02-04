@@ -5,6 +5,7 @@ import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { getLoginKey } from '../keychain'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
+import { logEvent } from '../util/analytics'
 import { attemptLogin, LoginAttempt } from '../util/loginAttempt'
 import { completeLogin } from './LoginCompleteActions'
 
@@ -56,7 +57,7 @@ export function loginWithPin(username: string, pin: string) {
           imports.accountOptions
         )
         dispatch(completeLogin(abcAccount))
-      } catch (e) {
+      } catch (e: any) {
         console.log('LOG IN WITH PIN ERROR ', e)
         if (e.name === 'OtpError') {
           dispatch({
@@ -135,13 +136,15 @@ export const launchPasswordRecovery = (recoveryKey: string) => async (
         type: 'START_RECOVERY_LOGIN',
         data: { recoveryKey, userQuestions: questions, username }
       })
+      logEvent('Recovery_Username_Success')
       return true
-    } catch (error) {
+    } catch (error: any) {
       showError(
         error != null && error.name === 'UsernameError'
           ? s.strings.recovery_by_username_error
           : error
       )
+      logEvent('Recovery_Username_Failure')
       return false
     }
   }

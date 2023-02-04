@@ -8,6 +8,7 @@ import s from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useScrollToEnd } from '../../hooks/useScrollToEnd'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { logEvent } from '../../util/analytics'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -154,6 +155,7 @@ export const NewAccountPinScene = () => {
     dispatch({ type: 'NEW_ACCOUNT_PASSWORD' })
   })
   const handleSubmit = useHandler(() => {
+    logEvent('Signup_PIN_Valid')
     dispatch({ type: 'NEW_ACCOUNT_TOS' })
   })
 

@@ -20,6 +20,7 @@ import { BiometryType } from '../../keychain'
 import { LoginUserInfo } from '../../reducers/PreviousUsersReducer'
 import { Branding } from '../../types/Branding'
 import { Dispatch, RootState } from '../../types/ReduxTypes'
+import { logEvent } from '../../util/analytics'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
@@ -348,6 +349,7 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
 
   handleForgotPassword = () => {
     Keyboard.dismiss()
+    logEvent('Login_Password_Forgot_Password')
     Airship.show(bridge => (
       <TextInputModal
         bridge={bridge}
@@ -360,6 +362,7 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
   }
 
   handleCreateAccount = () => {
+    logEvent('Login_Password_Create_Account')
     this.props.gotoCreatePage()
   }
 }

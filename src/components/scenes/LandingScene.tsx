@@ -142,6 +142,7 @@ export const LandingScene = connect<{}, DispatchProps, OwnProps>(
       dispatch({ type: 'NEW_ACCOUNT_WELCOME' })
     },
     handlePassword() {
+      logEvent('Signup_Signin')
       dispatch({ type: 'START_PASSWORD_LOGIN' })
     }
   })
