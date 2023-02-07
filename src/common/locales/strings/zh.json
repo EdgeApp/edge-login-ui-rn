@@ -89,7 +89,7 @@
   "recovery_instructions_complete": "要完成账户复原设置，您必须设置复原代码。进行账户复原时除了需要您的复原代码，还需要您的用户名和复原答案。\n\n请输入您的电子邮件，我们将向您发送恢复代码。",
   "recovery_error": "The answers you provided are incorrect.",
   "read_understod_1": "我已阅读、 理解并同意本 ",
-  "read_understod_2": "使用条款",
+  "read_understod_2": "Terms of Use  (Tap each circle to agree)",
   "confirm_email": "Confirm & Email",
   "confirm_share": "Confirm & Share",
   "welcome": "Welcome to %s!",
