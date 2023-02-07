@@ -89,7 +89,7 @@
   "recovery_instructions_complete": "Para concluir a configuração de recuperação de conta, você DEVE salvar o token de recuperação. Isso é necessário para recuperar sua conta além de seus nome de usuário e as respostas de recuperação. \n\n Por favor digite o seu e-mail para ser enviado o token de recuperação.",
   "recovery_error": "The answers you provided are incorrect.",
   "read_understod_1": "Li, compreendi e aceito os ",
-  "read_understod_2": "Termos de Utilização",
+  "read_understod_2": "Terms of Use  (Tap each circle to agree)",
   "confirm_email": "Confirm & Email",
   "confirm_share": "Confirm & Share",
   "welcome": "Welcome to %s!",
