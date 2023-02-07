@@ -89,7 +89,7 @@
   "recovery_instructions_complete": "Pour terminer la configuration de récupération de compte, vous devez enregistrer un token de récupération de compte. Cela sera nécessaire pour récupérer votre compte et votre nom d'utilisateur, et la récupération des réponses. Veuillez entrer votre address mail ci-dessous pour envoyer la récupération de token.",
   "recovery_error": "The answers you provided are incorrect.",
   "read_understod_1": "J'ai lu, compris et Et je donne mon accord sur les ",
-  "read_understod_2": "Conditions d'utilisation",
+  "read_understod_2": "Terms of Use  (Tap each circle to agree)",
   "confirm_email": "Confirm & Email",
   "confirm_share": "Confirm & Share",
   "welcome": "Welcome to %s!",
