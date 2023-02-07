@@ -89,7 +89,7 @@
   "recovery_instructions_complete": "Để hoàn tất thiết lập phục hồi tài khoản, bạn phải lưu mã thông báo hồi phục. Điều này cần thiết để phục hồi tài khoản của bạn hơn \n\ncác bạn xin vui lòng nhập email của bạn để gửi mã thông báo thu hồi.",
   "recovery_error": "The answers you provided are incorrect.",
   "read_understod_1": "I have read, understood, and agree to the ",
-  "read_understod_2": "Điều khoản sử dụng",
+  "read_understod_2": "Terms of Use  (Tap each circle to agree)",
   "confirm_email": "Confirm & Email",
   "confirm_share": "Confirm & Share",
   "welcome": "Welcome to %s!",
