@@ -89,7 +89,7 @@
   "recovery_instructions_complete": "Um die Benutzerkontowiederherstellungseinstellung abzuschließen, müssen Sie den Wiederherstellungs-Token sichern. Dieser ist, zusammen mit Ihrem Benutzernamen und den Wiederherstellungsantworten, erforderlich, um Ihr Benutzerkonto wiederherzustellen.\n\nBitte geben Sie die E-Mailadresse an, an welche der Wiederherstellungs-Token gesendet werden soll.",
   "recovery_error": "Die Antworten, die Sie gegeben haben, sind falsch.",
   "read_understod_1": "Ich habe die Nutzungsbedingungen gelesen, verstanden und stimme diesen zu ",
-  "read_understod_2": "Nutzungsbedingungen",
+  "read_understod_2": "Terms of Use  (Tap each circle to agree)",
   "confirm_email": "Bestätigen & E-Mail",
   "confirm_share": "Bestätigen & teilen",
   "welcome": "Willkommen bei %s",
