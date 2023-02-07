@@ -89,7 +89,7 @@
   "recovery_instructions_complete": "계정 복구 설정을 완료하려면 복구 토큰을 반드시 저장해야 합니다. 이 토큰은 계정을 복구할 시 사용자명과 암호와 더불어 필요합니다.",
   "recovery_error": "The answers you provided are incorrect.",
   "read_understod_1": "I have read, understood, and agree to the ",
-  "read_understod_2": "이용 약관",
+  "read_understod_2": "Terms of Use  (Tap each circle to agree)",
   "confirm_email": "Confirm & Email",
   "confirm_share": "Confirm & Share",
   "welcome": "Welcome to %s!",
