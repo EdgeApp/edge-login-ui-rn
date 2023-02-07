@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 0.10.20 (2023-01-06)
+
+- Added: Instructions to Terms of Use
+- Added: Conversion event tracking to login and account creation
 ## 0.10.19 (2023-1-18)
 
 - Changed: Orient background gradient using Theme
