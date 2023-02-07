@@ -89,7 +89,7 @@
   "recovery_instructions_complete": "アカウント復元セットアップを完了するには、復元トークンを保存する必要があります。トークンはあなたのアカウントを復元する際に、ユーザー名と復元解答に加え必要になります。\n\n 復元トークンを受け取るためのメールアドレスを入力してください。",
   "recovery_error": "The answers you provided are incorrect.",
   "read_understod_1": "I have read, understood, and agree to the ",
-  "read_understod_2": "利用規約使用",
+  "read_understod_2": "Terms of Use  (Tap each circle to agree)",
   "confirm_email": "Confirm & Email",
   "confirm_share": "Confirm & Share",
   "welcome": "Welcome to %s!",
