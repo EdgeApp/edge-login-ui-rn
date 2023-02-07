@@ -89,7 +89,7 @@
   "recovery_instructions_complete": "Для завершения процедуры восстановления доступа к учетной записи вы ДОЛЖНЫ сохранить токен восстановления. Он будет необходим для восстановления учетной записи в дополнении к имени пользователя и ответам восстановления.\nПожалуйста, введите адрес электронной почты для отправки самому себе токена восстановления.",
   "recovery_error": "The answers you provided are incorrect.",
   "read_understod_1": "Подтверждаю свое ознакомление и согласие с ",
-  "read_understod_2": "Лицензионное соглашение",
+  "read_understod_2": "Terms of Use  (Tap each circle to agree)",
   "confirm_email": "Confirm & Email",
   "confirm_share": "Confirm & Share",
   "welcome": "Welcome to %s!",
