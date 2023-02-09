@@ -18,7 +18,6 @@ import { scale } from '../../../util/scaling'
 import { getAccount } from '../../../util/selectors'
 import { Button } from '../../common/Button'
 import { FormField } from '../../common/FormField'
-import { Header } from '../../common/Header'
 import { TextRowComponent } from '../../common/ListItems/TextRowComponent'
 import { TextAndIconButton } from '../../common/TextAndIconButton'
 import { ButtonInfo, ButtonsModal } from '../../modals/ButtonsModal'
@@ -28,7 +27,6 @@ import { connect } from '../../services/ReduxStore'
 import { MessageText, Strong } from '../../themed/ThemedText'
 
 interface OwnProps {
-  showHeader: boolean
   branding: Branding
 }
 interface StateProps {
@@ -77,13 +75,6 @@ class ChangeRecoverySceneComponent extends React.Component<Props, State> {
       errorQuestionOne: false,
       errorQuestionTwo: false
     }
-  }
-
-  renderHeader = () => {
-    if (this.props.showHeader) {
-      return <Header onBack={this.props.onBack} title={s.strings.recovery} />
-    }
-    return null
   }
 
   handleDisable = () => {
@@ -411,12 +402,7 @@ class ChangeRecoverySceneComponent extends React.Component<Props, State> {
     const middle = this.state.showQuestionPicker
       ? this.renderQuestions()
       : this.renderForm()
-    return (
-      <View style={styles.scene}>
-        {this.renderHeader()}
-        {middle}
-      </View>
-    )
+    return <View style={styles.scene}>{middle}</View>
   }
 }
 

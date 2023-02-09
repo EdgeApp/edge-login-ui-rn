@@ -91,7 +91,7 @@ export function LoginScreen(props: Props): JSX.Element {
       }}
       initialAction={initializeLogin(theme, branding)}
     >
-      <Router branding={branding} showHeader />
+      <Router branding={branding} />
     </ReduxStore>
   )
 }

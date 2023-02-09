@@ -11,12 +11,11 @@ interface Props {
   account: EdgeAccount
   branding: Branding
   context: EdgeContext
-  showHeader?: boolean
   onComplete: () => void
 }
 
 export function PasswordRecoveryScreen(props: Props): JSX.Element {
-  const { account, branding, context, onComplete, showHeader = false } = props
+  const { account, branding, context, onComplete } = props
   useClearOnUnmount()
 
   return (
@@ -28,7 +27,7 @@ export function PasswordRecoveryScreen(props: Props): JSX.Element {
       }}
       initialAction={initializeChangeRecovery(account)}
     >
-      <Router branding={branding} showHeader={showHeader} />
+      <Router branding={branding} />
     </ReduxStore>
   )
 }

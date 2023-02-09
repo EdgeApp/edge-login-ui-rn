@@ -9,14 +9,11 @@ import * as Styles from '../../styles/index'
 import { Dispatch, RootState } from '../../types/ReduxTypes'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { FormField } from '../common/FormField'
-import { Header } from '../common/Header'
 import SafeAreaViewGradient from '../common/SafeAreaViewGradient'
 import { connect } from '../services/ReduxStore'
 import { MainButton } from '../themed/MainButton'
 
-interface OwnProps {
-  showHeader?: boolean
-}
+interface OwnProps {}
 interface StateProps {
   question1: string
   question2: string
@@ -48,13 +45,6 @@ class RecoveryLoginSceneComponent extends React.Component<Props, State> {
       errorTwo: false,
       errorMessage: ''
     }
-  }
-
-  renderHeader = () => {
-    if (this.props.showHeader) {
-      return <Header onBack={this.props.onBack} title={s.strings.recovery} />
-    }
-    return null
   }
 
   handleSubmit = () => {
@@ -120,7 +110,6 @@ class RecoveryLoginSceneComponent extends React.Component<Props, State> {
     return (
       <SafeAreaViewGradient>
         <View style={styles.scene}>
-          {this.renderHeader()}
           <View style={styles.body}>
             <View style={styles.questionRow}>
               <Text style={styles.questionText}>{this.props.question1}</Text>
@@ -248,7 +237,6 @@ export const RecoveryLoginScene = connect<StateProps, DispatchProps, OwnProps>(
         ? state.passwordRecovery.userQuestions[1]
         : s.strings.choose_recovery_question,
     recoveryKey: state.passwordRecovery.recoveryKey || '',
-    showHeader: true,
     username: state.login.username
   }),
   (dispatch: Dispatch) => ({

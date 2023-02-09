@@ -27,7 +27,7 @@ export function SecurityAlertsScreen(props: Props): JSX.Element {
         data: account
       }}
     >
-      <Router branding={{}} showHeader />
+      <Router branding={{}} />
     </ReduxStore>
   )
 }

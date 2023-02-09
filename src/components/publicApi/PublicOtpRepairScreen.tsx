@@ -30,7 +30,7 @@ export function OtpRepairScreen(props: Props): JSX.Element {
         data: { account, error: otpError }
       }}
     >
-      <Router branding={branding} showHeader />
+      <Router branding={branding} />
     </ReduxStore>
   )
 }
