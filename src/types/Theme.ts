@@ -187,6 +187,12 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
   dropdownError: asOptional(asString),
   dropdownText: asOptional(asString),
 
+  // Native iOS date modal:
+  dateModalTextLight: asOptional(asString),
+  dateModalTextDark: asOptional(asString),
+  dateModalBackgroundLight: asOptional(asString),
+  dateModalBackgroundDark: asOptional(asString),
+
   // Card
   cardBorder: asOptional(asNumber),
   cardBorderColor: asOptional(asString),
@@ -329,6 +335,12 @@ export interface Theme {
   dropdownWarning: string
   dropdownError: string
   dropdownText: string
+
+  // Native iOS date modal:
+  dateModalTextLight: string
+  dateModalTextDark: string
+  dateModalBackgroundLight: string
+  dateModalBackgroundDark: string
 
   // Card
   cardBorder: number
