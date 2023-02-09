@@ -156,6 +156,7 @@ export const edgeDark: Theme = {
 
   // Fonts
   fontFaceDefault: 'System',
+  fontFaceMedium: 'System',
   fontFaceBold: 'System',
   fontFaceSymbols:
     Platform.OS === 'android' ? palette.SFUITextRegular : 'System'
