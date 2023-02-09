@@ -5,6 +5,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
+import { GradientFadeOut } from './GradientFadeout'
 
 interface Props<T> {
   bridge: AirshipBridge<any>
@@ -102,6 +103,7 @@ export function ListModal<T>({
         keyExtractor={(_, i) => `${i}`}
         onViewableItemsChanged={onViewableItemsChanged}
       />
+      <GradientFadeOut />
       {closeArrow ? <ModalCloseArrow onPress={handleCancel} /> : null}
     </ThemedModal>
   )
