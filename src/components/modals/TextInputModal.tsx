@@ -4,11 +4,11 @@ import { AirshipBridge } from 'react-native-airship'
 
 import s from '../../common/locales/strings'
 import { showError } from '../services/AirshipInstance'
+import { Alert } from '../themed/Alert'
 import { MainButton } from '../themed/MainButton'
-import { ModalCloseArrow } from '../themed/ModalParts'
+import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
-import { MessageText, TitleText } from '../themed/ThemedText'
 
 interface Props {
   // Resolves to the entered string, or void if cancelled.
@@ -22,11 +22,17 @@ interface Props {
   // Text to show in the modal:
   title?: string
   message?: string
-  inputLabel: string
+  initialValue?: string
+  inputLabel?: string
   submitLabel?: string
+  warningMessage?: string
+
+  // Adds a border:
+  warning?: boolean
 
   // Text input options:
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters'
+  autoFocus?: boolean
   autoCorrect?: boolean
   keyboardType?:
     | 'default'
@@ -37,103 +43,116 @@ interface Props {
     | 'phone-pad'
   returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
   secureTextEntry?: boolean
+  multiline?: boolean
+  maxLength?: number
 }
 
-interface State {
-  errorMessage?: string
-  text: string
-  spinning: boolean
-}
+export function TextInputModal(props: Props) {
+  const {
+    autoCapitalize,
+    autoFocus = true,
+    autoCorrect,
+    bridge,
+    initialValue = '',
+    inputLabel,
+    keyboardType,
+    message,
+    onSubmit,
+    returnKeyType,
+    secureTextEntry,
+    multiline = false,
+    submitLabel = s.strings.submit,
+    title,
+    maxLength,
+    warning,
+    warningMessage
+  } = props
 
-export class TextInputModal extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = { spinning: false, text: '' }
+  const [errorMessage, setErrorMessage] = React.useState<string | undefined>()
+  const [spinning, setSpinning] = React.useState(false)
+  const [text, setText] = React.useState(initialValue)
+
+  const handleChangeText = (text: string) => {
+    setText(text)
+    setErrorMessage(undefined)
   }
 
-  handleCancel = () => {
-    const { bridge } = this.props
-    if (!this.state.spinning) bridge.resolve(undefined)
-  }
-
-  handleChangeText = (text: string) => {
-    this.setState({ errorMessage: undefined, text })
-  }
-
-  handleSubmit = () => {
-    const { bridge, onSubmit } = this.props
-
-    if (onSubmit == null) return bridge.resolve(this.state.text)
-    this.setState({ spinning: true })
-    onSubmit(this.state.text).then(
+  const handleSubmit = () => {
+    if (onSubmit == null) return bridge.resolve(text)
+    setSpinning(true)
+    onSubmit(text).then(
       result => {
-        if (result === true) {
-          bridge.resolve(this.state.text)
-        } else if (result === false) {
-          this.setState({ spinning: false })
-        } else {
-          this.setState({ errorMessage: result, spinning: false })
+        setSpinning(false)
+        if (typeof result === 'string') {
+          setErrorMessage(result)
+        } else if (result) {
+          bridge.resolve(text)
         }
       },
       error => {
-        this.setState({ spinning: false })
+        setSpinning(false)
         showError(error)
       }
     )
   }
 
-  render() {
-    const {
-      bridge,
-      inputLabel,
-      message,
-      submitLabel = s.strings.submit,
-      title,
-      autoCapitalize,
-      autoCorrect,
-      keyboardType,
-      returnKeyType,
-      secureTextEntry
-    } = this.props
-    const { errorMessage, text, spinning } = this.state
-
-    return (
-      <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
-        {title == null ? null : <TitleText>{title}</TitleText>}
-        {message == null ? null : <MessageText>{message}</MessageText>}
-        <OutlinedTextInput
-          // Text input props:
-          autoCapitalize={autoCapitalize}
-          autoCorrect={autoCorrect}
-          keyboardType={keyboardType}
-          label={inputLabel}
-          returnKeyType={returnKeyType}
-          secureTextEntry={secureTextEntry}
-          // Our props:
-          autoFocus
-          error={errorMessage}
-          marginRem={1}
-          onChangeText={this.handleChangeText}
-          onSubmitEditing={this.handleSubmit}
-          searchIcon={false}
-          value={text}
+  return (
+    <ThemedModal
+      warning={warning}
+      bridge={bridge}
+      onCancel={() => bridge.resolve(undefined)}
+    >
+      {title == null ? null : <ModalTitle>{title}</ModalTitle>}
+      {message == null ? null : <ModalMessage>{message}</ModalMessage>}
+      {warningMessage == null ? null : (
+        <Alert
+          type="warning"
+          title={s.strings.warning}
+          marginRem={0.5}
+          message={warningMessage}
+          numberOfLines={0}
         />
-        {
-          // Hack around the Android keyboard glitch:
-          Platform.OS === 'android' ? <View style={{ flex: 1 }} /> : null
-        }
-        {spinning ? (
-          <MainButton alignSelf="center" disabled marginRem={0.5} spinner />
-        ) : (
-          <MainButton
-            alignSelf="center"
-            label={submitLabel}
-            marginRem={0.5}
-            onPress={this.handleSubmit}
-          />
-        )}
-        <ModalCloseArrow onPress={this.handleCancel} />
-      </ThemedModal>
-    )
-  }
+      )}
+      <OutlinedTextInput
+        // Text input props:
+        autoCapitalize={autoCapitalize}
+        autoFocus={autoFocus}
+        autoCorrect={autoCorrect}
+        keyboardType={keyboardType}
+        label={inputLabel}
+        returnKeyType={returnKeyType}
+        secureTextEntry={secureTextEntry}
+        multiline={multiline}
+        // Our props:
+        error={errorMessage}
+        marginRem={[1, 0.5, 1.5, 0.5]}
+        onChangeText={handleChangeText}
+        onSubmitEditing={handleSubmit}
+        value={text}
+        maxLength={maxLength}
+      />
+      {
+        // Hack around the android:windowSoftInputMode="adjustPan" glitch:
+        Platform.OS === 'android' ? <View style={{ flex: 2 }} /> : null
+      }
+      {spinning ? (
+        <MainButton
+          alignSelf="center"
+          disabled
+          marginRem={0.5}
+          type="secondary"
+          spinner
+        />
+      ) : (
+        <MainButton
+          alignSelf="center"
+          label={submitLabel}
+          marginRem={0.5}
+          onPress={handleSubmit}
+          type="secondary"
+        />
+      )}
+      <ModalCloseArrow onPress={() => bridge.resolve(undefined)} />
+    </ThemedModal>
+  )
 }
