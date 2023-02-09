@@ -89,7 +89,7 @@
   "recovery_instructions_complete": "Per completare l'impostazione del recupero dell'account DEVI salvare il token di ripristino. Questo sarà richiesto per ripristinare il tuo account assieme al tuo nome utente e alle risposte di recupero.\n\n Inserisci la tua mail qui sotto per inviare a te stesso il token di ripristino.",
   "recovery_error": "Le risposte che hai inserito non sono corrette.",
   "read_understod_1": "Ho letto, compreso, e accetto i ",
-  "read_understod_2": "Terms of Use  (Tap each circle to agree)",
+  "read_understod_2": "Termini di utilizzo (seleziona ogni cerchio per accettare)",
   "confirm_email": "Conferma & Invia email",
   "confirm_share": "Conferma & Condividi",
   "welcome": "Benvenuto/a su %s!",
