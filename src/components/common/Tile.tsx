@@ -66,7 +66,10 @@ export class TileComponent extends React.PureComponent<Props> {
       )
     }
     return (
-      <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
+      <TouchableWithoutFeedback
+        onPress={onPress}
+        disabled={type === 'static' || disabled}
+      >
         <View>
           <View style={styles.container}>
             <View
@@ -124,9 +127,9 @@ export class TileComponent extends React.PureComponent<Props> {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     backgroundColor: theme.tileBackground,
-    paddingLeft: theme.rem(0.25),
-    marginTop: theme.rem(0.875),
-    paddingBottom: theme.rem(0.875),
+    paddingHorizontal: theme.rem(1),
+    marginTop: theme.rem(1),
+    paddingBottom: theme.rem(1),
     flexDirection: 'row',
     alignItems: 'center'
   },
@@ -140,22 +143,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  arrowIconDeactivated: {
-    color: theme.iconDeactivated,
-    marginRight: theme.rem(0.25),
-    marginLeft: theme.rem(0.75),
-    textAlign: 'center'
-  },
   arrowIcon: {
     color: theme.iconTappable,
-    marginRight: theme.rem(0.25),
-    marginLeft: theme.rem(0.75),
+    marginHorizontal: theme.rem(0.5),
     textAlign: 'center'
   },
   textHeader: {
     color: theme.secondaryText,
     fontSize: theme.rem(0.75),
-    paddingBottom: theme.rem(0.25)
+    paddingBottom: theme.rem(0.25),
+    paddingRight: theme.rem(1)
   },
   textHeaderError: {
     color: theme.dangerText,
@@ -163,10 +160,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   textBody: {
     color: theme.primaryText,
-    fontSize: theme.rem(1)
-  },
-  textBodyDisabled: {
-    color: theme.deactivatedText,
     fontSize: theme.rem(1)
   },
   editIcon: {
@@ -182,9 +175,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   divider: {
     height: theme.thinLineWidth,
-    marginLeft: theme.rem(0.25),
+    marginLeft: theme.rem(1),
     borderBottomWidth: theme.thinLineWidth,
     borderBottomColor: theme.lineDivider
+  },
+  arrowIconDeactivated: {
+    color: theme.iconDeactivated,
+    marginRight: theme.rem(0.25),
+    marginLeft: theme.rem(0.75),
+    textAlign: 'center'
+  },
+  textBodyDisabled: {
+    color: theme.deactivatedText,
+    fontSize: theme.rem(1)
   }
 }))
 

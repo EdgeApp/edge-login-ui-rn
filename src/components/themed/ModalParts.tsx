@@ -94,7 +94,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
-    margin: theme.rem(0.5),
+    marginVertical: theme.rem(0.5),
     textAlign: 'left'
   }
 }))
