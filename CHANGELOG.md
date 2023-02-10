@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 0.10.21 (2023-02-10)
+
+- changed: Re-format the new-account username screen to work better on small screens.
+
 ## 0.10.20 (2023-01-06)
 
 - added: Instructions to Terms of Use
