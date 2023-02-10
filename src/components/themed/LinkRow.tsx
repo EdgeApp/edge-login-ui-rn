@@ -41,7 +41,7 @@ export function LinkRow(props: Props) {
       style={[styles.container, spacingStyles]}
       onPress={onPress}
     >
-      {label != null ? <Text style={styles.text}>{label}</Text> : null}
+      {label == null ? null : <Text style={styles.text}>{label}</Text>}
       <Text style={styles.icon}>{renderIcon(theme)}</Text>
     </TouchableOpacity>
   )

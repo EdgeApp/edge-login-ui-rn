@@ -59,8 +59,8 @@ export function ButtonsModal<
       warning={warning}
       onCancel={handleCancel}
     >
-      {title != null ? <TitleText>{title}</TitleText> : null}
-      {message != null ? <MessageText>{message}</MessageText> : null}
+      {title == null ? null : <TitleText>{title}</TitleText>}
+      {message == null ? null : <MessageText>{message}</MessageText>}
       {children}
       {Object.keys(buttons).map(key => {
         const { type = 'primary', label, onPress } = buttons[key]
@@ -85,7 +85,7 @@ export function ButtonsModal<
           />
         )
       })}
-      {closeArrow ? <ModalCloseArrow onPress={handleCancel} /> : null}
+      {!closeArrow ? null : <ModalCloseArrow onPress={handleCancel} />}
     </ThemedModal>
   )
 }

@@ -66,7 +66,7 @@ export function PinButton(props: Props) {
         end={end}
         style={[touchableStyle, dynamicStyles, styles.linearGradient]}
       >
-        {label != null && !pending ? (
+        {label == null || pending ? null : (
           <Text
             adjustsFontSizeToFit
             minimumFontScale={0.75}
@@ -75,8 +75,8 @@ export function PinButton(props: Props) {
           >
             {label}
           </Text>
-        ) : null}
-        {!pending ? children : null}
+        )}
+        {pending ? null : children}
       </LinearGradient>
     </TouchableWithoutFeedback>
   )

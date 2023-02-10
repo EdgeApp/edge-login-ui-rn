@@ -227,7 +227,7 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
             )}
           </TouchableOpacity>
         </View>
-        {this.state.usernameList && this.renderDropdownList()}
+        {!this.state.usernameList ? null : this.renderDropdownList()}
       </View>
     )
   }

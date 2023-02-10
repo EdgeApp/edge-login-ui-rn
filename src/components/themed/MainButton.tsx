@@ -130,7 +130,7 @@ export function MainButton(props: Props) {
         end={end}
         style={[touchableStyle, dynamicStyles, styles.linearGradient]}
       >
-        {label != null && !pending ? (
+        {label == null || pending ? null : (
           <Text
             adjustsFontSizeToFit
             minimumFontScale={0.75}
@@ -139,11 +139,11 @@ export function MainButton(props: Props) {
           >
             {label}
           </Text>
-        ) : null}
-        {!pending ? children : null}
-        {spinner || pending ? (
+        )}
+        {pending ? null : children}
+        {!spinner && !pending ? null : (
           <ActivityIndicator color={spinnerColor} style={styles.spinner} />
-        ) : null}
+        )}
       </LinearGradient>
     </TouchableOpacity>
   )

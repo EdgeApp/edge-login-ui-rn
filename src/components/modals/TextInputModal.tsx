@@ -99,8 +99,8 @@ export class TextInputModal extends React.Component<Props, State> {
 
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
-        {title != null ? <TitleText>{title}</TitleText> : null}
-        {message != null ? <MessageText>{message}</MessageText> : null}
+        {title == null ? null : <TitleText>{title}</TitleText>}
+        {message == null ? null : <MessageText>{message}</MessageText>}
         <OutlinedTextInput
           // Text input props:
           autoCapitalize={autoCapitalize}

@@ -44,7 +44,7 @@ const FadeComponent = (props: Props) => {
 
   return (
     <Animated.View style={style}>
-      {mounted || hidden ? children : null}
+      {!mounted && !hidden ? null : children}
     </Animated.View>
   )
 }

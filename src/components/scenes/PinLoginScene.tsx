@@ -160,7 +160,7 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
           </View>
         </TouchableWithoutFeedback>
         <View style={styles.spacer_full} />
-        {this.props.userDetails.pinEnabled && (
+        {!this.props.userDetails.pinEnabled ? null : (
           <PinKeypad
             disabled={wait > 0 || pin.length === 4}
             onPress={this.handlePress}
@@ -172,7 +172,6 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
 
   renderBottomHalf() {
     const { errorMessage, isLoggingInWithPin, pin, wait, theme } = this.props
-
     const styles = getStyles(theme)
     if (this.state.focusOn === 'pin') {
       return (
@@ -197,7 +196,7 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
               </Text>
             </LinearGradient>
           </TouchableOpacity>
-          {this.props.userDetails.pinEnabled && (
+          {!this.props.userDetails.pinEnabled ? null : (
             <FourDigit
               error={
                 wait > 0
@@ -211,7 +210,9 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
               spinner={wait > 0 || pin.length === 4 || isLoggingInWithPin}
             />
           )}
-          {!this.props.userDetails.pinEnabled && <View style={styles.spacer} />}
+          {this.props.userDetails.pinEnabled ? null : (
+            <View style={styles.spacer} />
+          )}
           {this.renderTouchImage()}
           <Text style={styles.touchImageText}>
             {this.renderTouchImageText()}

@@ -76,7 +76,7 @@ class HeaderParentButtonsComponent extends React.Component<Props, State> {
 
     return (
       <View style={styles.container}>
-        {parentButton && parentButton.text && (
+        {parentButton == null || parentButton.text == null ? null : (
           <TouchableOpacity onPress={this.handlePress}>
             <View style={styles.leftButtonContainer}>
               <Text style={parentButton.style || styles.leftButtonText}>
@@ -86,7 +86,7 @@ class HeaderParentButtonsComponent extends React.Component<Props, State> {
           </TouchableOpacity>
         )}
         <View style={styles.spacer} />
-        {appId && !hidePoweredBy && (
+        {appId == null || appId === '' || hidePoweredBy ? null : (
           <TouchableOpacity onPress={openEdgeSite}>
             <View style={styles.rightButtonContainer}>
               <Text style={styles.rightButtonText}>{s.strings.powered_by}</Text>
