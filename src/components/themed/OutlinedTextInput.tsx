@@ -392,18 +392,18 @@ export const OutlinedTextInput = forwardRef(
           >
             {charLimitLabel}
           </Animated.Text>
-          {searchIcon ? (
+          {!searchIcon ? null : (
             <AntDesignIcon name="search1" style={styles.searchIcon} />
-          ) : null}
-          {clearIcon && hasValue && !secureTextEntry ? (
+          )}
+          {!clearIcon || !hasValue || secureTextEntry ? null : (
             <TouchableOpacity
               style={styles.clearTapArea}
               onPress={() => clear()}
             >
               <AntDesignIcon name="close" style={styles.clearIcon} />
             </TouchableOpacity>
-          ) : null}
-          {secureTextEntry ? (
+          )}
+          {!secureTextEntry ? null : (
             <TouchableWithoutFeedback onPress={handleHidePassword}>
               <View style={styles.clearTapArea}>
                 <Animated.View
@@ -412,7 +412,7 @@ export const OutlinedTextInput = forwardRef(
                 <IonIcon name="eye-outline" style={styles.eyeIcon} />
               </View>
             </TouchableWithoutFeedback>
-          ) : null}
+          )}
           <TextInput
             ref={inputRef}
             {...inputProps}

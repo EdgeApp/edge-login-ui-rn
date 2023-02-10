@@ -73,17 +73,17 @@ export function WarningCard({
         />
         <EdgeText style={styles.title}>{title}</EdgeText>
       </View>
-      {header != null && (
+      {header == null ? null : (
         <EdgeText style={styles.text} numberOfLines={0}>
           {header}
         </EdgeText>
       )}
-      {points != null && points.length > 0 && (
+      {points == null || points.length === 0 ? null : (
         <View style={styles.bulletpoints}>
           {points?.map(point => renderBulletpoint(point))}
         </View>
       )}
-      {footer != null && (
+      {footer == null ? null : (
         <EdgeText style={styles.text} numberOfLines={0}>
           {footer}
         </EdgeText>
