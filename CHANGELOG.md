@@ -2,23 +2,24 @@
 
 ## 0.10.20 (2023-01-06)
 
-- Added: Instructions to Terms of Use
-- Added: Conversion event tracking to login and account creation
+- added: Instructions to Terms of Use
+- added: Conversion event tracking to login and account creation
+
 ## 0.10.19 (2023-1-18)
 
-- Changed: Orient background gradient using Theme
+- changed: Orient background gradient using Theme
 
 ## 0.10.18 (2023-1-10)
 
-- Added: A new RequestPermissionsModal with toggles to opt-in for marketing and/or price notifications.
+- added: A new RequestPermissionsModal with toggles to opt-in for marketing and/or price notifications.
 
 ## 0.10.17 (2022-12-20)
 
-- Fixed: Add flexGrow to username dropdown in PasswordLoginScene
+- fixed: Add flexGrow to username dropdown in PasswordLoginScene
 
 ## 0.10.16 (2022-12-16)
 
-- Fixed: No longer allow a user to bypass password requirements with an empty password
+- fixed: No longer allow a user to bypass password requirements with an empty password
 
 ## 0.10.15 (2022-12-14)
 
