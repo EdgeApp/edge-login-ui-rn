@@ -1,9 +1,4 @@
-import {
-  EdgeAccount,
-  EdgePasswordRules,
-  EdgeRecoveryQuestionChoice,
-  OtpError
-} from 'edge-core-js'
+import { EdgeAccount, EdgePasswordRules, OtpError } from 'edge-core-js'
 
 import { PreviousUsersState } from '../reducers/PreviousUsersReducer'
 import { TouchState } from '../reducers/TouchReducer'
@@ -91,7 +86,7 @@ export type Action =
   | {
       type: 'START_CHANGE_RECOVERY'
       data: {
-        questionsList: EdgeRecoveryQuestionChoice[]
+        questionsList: string[]
         userQuestions: string[]
         account: EdgeAccount
       }

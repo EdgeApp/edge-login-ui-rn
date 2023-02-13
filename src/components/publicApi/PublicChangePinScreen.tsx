@@ -8,12 +8,11 @@ import { ReduxStore } from '../services/ReduxStore'
 interface Props {
   account: EdgeAccount
   context: EdgeContext
-  showHeader?: boolean
   onComplete: () => void
 }
 
 export function ChangePinScreen(props: Props): JSX.Element {
-  const { account, context, onComplete, showHeader = false } = props
+  const { account, context, onComplete } = props
   useClearOnUnmount()
 
   return (
@@ -28,7 +27,7 @@ export function ChangePinScreen(props: Props): JSX.Element {
         data: account
       }}
     >
-      <Router branding={{}} showHeader={showHeader} />
+      <Router branding={{}} />
     </ReduxStore>
   )
 }

@@ -108,6 +108,7 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
   warningText: asOptional(asString),
   linkText: asOptional(asString),
   positiveText: asOptional(asString),
+  deactivatedText: asOptional(asString),
 
   // Tile:
   tileBackground: asOptional(asString),
@@ -186,6 +187,12 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
   dropdownError: asOptional(asString),
   dropdownText: asOptional(asString),
 
+  // Native iOS date modal:
+  dateModalTextLight: asOptional(asString),
+  dateModalTextDark: asOptional(asString),
+  dateModalBackgroundLight: asOptional(asString),
+  dateModalBackgroundDark: asOptional(asString),
+
   // Card
   cardBorder: asOptional(asNumber),
   cardBorderColor: asOptional(asString),
@@ -198,6 +205,7 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
 
   // Font
   fontFaceDefault: asOptional(asString),
+  fontFaceMedium: asOptional(asString),
   fontFaceBold: asOptional(asString),
   fontFaceSymbols: asOptional(asString)
 })
@@ -249,6 +257,7 @@ export interface Theme {
   warningText: string
   linkText: string
   positiveText: string
+  deactivatedText: string
 
   // Tile:
   tileBackground: string
@@ -327,6 +336,12 @@ export interface Theme {
   dropdownError: string
   dropdownText: string
 
+  // Native iOS date modal:
+  dateModalTextLight: string
+  dateModalTextDark: string
+  dateModalBackgroundLight: string
+  dateModalBackgroundDark: string
+
   // Card
   cardBorder: number
   cardBorderColor: string
@@ -339,6 +354,7 @@ export interface Theme {
 
   // Font
   fontFaceDefault: string
+  fontFaceMedium: string
   fontFaceBold: string
   fontFaceSymbols: string
 }

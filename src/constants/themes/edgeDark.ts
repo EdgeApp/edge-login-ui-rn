@@ -66,6 +66,7 @@ export const edgeDark: Theme = {
   warningText: palette.accentOrange,
   linkText: palette.edgeMint,
   positiveText: palette.accentGreen,
+  deactivatedText: palette.gray,
 
   // tile
   tileBackground: palette.edgeBlue,
@@ -143,6 +144,12 @@ export const edgeDark: Theme = {
   dropdownError: palette.accentRed,
   dropdownText: palette.white,
 
+  // Native iOS date modal:
+  dateModalTextLight: palette.accentBlue,
+  dateModalTextDark: palette.white,
+  dateModalBackgroundLight: palette.white,
+  dateModalBackgroundDark: palette.edgeBlue,
+
   // Card
   cardBorder: 1,
   cardBorderColor: palette.whiteOp10,
@@ -155,6 +162,7 @@ export const edgeDark: Theme = {
 
   // Fonts
   fontFaceDefault: 'System',
+  fontFaceMedium: 'System',
   fontFaceBold: 'System',
   fontFaceSymbols:
     Platform.OS === 'android' ? palette.SFUITextRegular : 'System'

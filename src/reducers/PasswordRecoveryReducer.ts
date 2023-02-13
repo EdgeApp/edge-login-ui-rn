@@ -1,9 +1,7 @@
-import { EdgeRecoveryQuestionChoice } from 'edge-core-js'
-
 import { Action } from '../types/ReduxTypes'
 
 export interface PasswordRecoveryState {
-  readonly questionsList: EdgeRecoveryQuestionChoice[] // For changing settings
+  readonly questionsList: string[] // For changing settings
   readonly recoveryKey?: string // For login
   readonly userQuestions: string[] // For login & changing settings
 }

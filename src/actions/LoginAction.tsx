@@ -156,6 +156,9 @@ export const launchPasswordRecovery = (recoveryKey: string) => async (
       title={s.strings.password_recovery}
       message={s.strings.recover_by_username}
       inputLabel={s.strings.username}
+      autoCapitalize="none"
+      autoCorrect={false}
+      autoFocus
     />
   ))
 }

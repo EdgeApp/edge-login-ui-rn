@@ -16,7 +16,7 @@ import {
   NewAccountPinScene,
   ResecurePinScene
 } from '../scenes/ChangePinScene'
-import { PublicChangeRecoveryScene } from '../scenes/existingAccout/ChangeRecoveryScene'
+import { ChangeRecoveryScene } from '../scenes/existingAccout/ChangeRecoveryScene'
 import { OtpRepairScene } from '../scenes/existingAccout/OtpRepairScene'
 import { SecurityAlertsScene } from '../scenes/existingAccout/SecurityAlertsScene'
 import { LandingScene } from '../scenes/LandingScene'
@@ -34,7 +34,6 @@ import { WatchUsernames } from '../services/WatchUsernames'
 
 interface Props {
   branding: Branding
-  showHeader: boolean
 }
 
 export function Router(props: Props) {
@@ -48,12 +47,7 @@ export function Router(props: Props) {
       case 'ChangePinScene':
         return <ChangePinScene />
       case 'ChangeRecoveryScene':
-        return (
-          <PublicChangeRecoveryScene
-            branding={props.branding}
-            showHeader={props.showHeader}
-          />
-        )
+        return <ChangeRecoveryScene branding={props.branding} />
       case 'NewAccountWelcomeScene':
         return <NewAccountWelcomeScene branding={props.branding} />
       case 'NewAccountUsernameScene':
