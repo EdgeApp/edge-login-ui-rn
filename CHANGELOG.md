@@ -1,5 +1,11 @@
 # edge-login-ui-rn
 
+## 0.11.0 (2023-02-13)
+
+- added: Depend on the native `@react-native-community/datetimepicker` library, which must be installed manually.
+- changed: Re-theme the recovery login scenes to match the rest of the app.
+- removed: Scene components no longer accept a `showHeader` prop. With the final scene being themed, this prop no longer does anything.
+
 ## 0.10.21 (2023-02-10)
 
 - changed: Re-format the new-account username screen to work better on small screens.
