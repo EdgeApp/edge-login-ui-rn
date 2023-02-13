@@ -12,7 +12,9 @@ First, add the Edge libraries to your project:
 
 The login UI depends on some extra external native libraries, which you will have to install as well:
 
-- disklet
+- @react-native-community/datetimepicker v6
+- disklet v0.5
+- react-native-gesture-handler v2
 - react-native-linear-gradient v2
 - react-native-localize v2
 - react-native-mail v6
@@ -27,7 +29,7 @@ The login UI depends on some extra external native libraries, which you will hav
   - Follow the [extra installation steps](https://www.npmjs.com/package/react-native-vector-icons#installation).
   - We use AntDesign, Entypo, MaterialIcons, FontAwesome, FontAwesome5, and SimpleLineIcons.
 
-To initialize the Edge core library, your application needs to mount the `MakeEdgeContext` component and keep it around for the lifetime of the app. This component will create and manage an `EdgeContext` object.
+To initialize the Edge core library, your application needs to mount the `MakeEdgeContext` component and keep it around for the lifetime of the app. The `MakeEdgeContext` component will create and manage an `EdgeContext` object.
 
 You should also wrap your entire application in a `LoginUiProvider` component, which the login scene needs to display modals, error alerts, and similar floating UI:
 
