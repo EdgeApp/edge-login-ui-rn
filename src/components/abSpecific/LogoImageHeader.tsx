@@ -41,7 +41,12 @@ export class LogoImageHeader extends React.Component<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={this.handlePress}>
         <View style={styles.container}>
-          <Image source={src} style={styles.image} resizeMode="contain" />
+          <Image
+            accessibilityHint="Edge Logo"
+            source={src}
+            style={styles.image}
+            resizeMode="contain"
+          />
         </View>
       </TouchableWithoutFeedback>
     )
