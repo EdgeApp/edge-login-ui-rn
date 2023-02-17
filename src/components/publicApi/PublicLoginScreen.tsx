@@ -8,9 +8,11 @@ import { OnLogin, OnNotificationPermit } from '../../types/ReduxTypes'
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
 import { changeFont, useTheme } from '../services/ThemeContext'
+import { InitialRouteName } from './types'
 
 interface Props {
   context: EdgeContext
+  initialRoute?: InitialRouteName
 
   // Branding stuff:
   appId?: string
@@ -89,7 +91,7 @@ export function LoginScreen(props: Props): JSX.Element {
         username: props.username,
         customPermissionsFunction: props.customPermissionsFunction
       }}
-      initialAction={initializeLogin(theme, branding)}
+      initialAction={initializeLogin(theme, branding, props.initialRoute)}
     >
       <Router branding={branding} />
     </ReduxStore>

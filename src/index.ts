@@ -7,6 +7,7 @@ export * from './components/publicApi/PublicChangeRecoveryScreen'
 export * from './components/publicApi/PublicLoginScreen'
 export * from './components/publicApi/PublicOtpRepairScreen'
 export * from './components/publicApi/PublicSecurityAlertsScreen'
+export * from './components/publicApi/types'
 
 export {
   isTouchEnabled,

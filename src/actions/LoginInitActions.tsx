@@ -17,9 +17,11 @@ import {
   RequestPermissionsModal
 } from '../components/modals/RequestPermissionsModal'
 import { SecurityAlertsModal } from '../components/modals/SecurityAlertsModal'
+import { InitialRouteName } from '../components/publicApi/types'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { Branding } from '../types/Branding'
 import {
+  Action,
   asNotificationPermissionsInfo,
   Dispatch,
   GetState,
@@ -38,11 +40,11 @@ const notificationPermissionsInfoFile = 'notificationsPermisions.json'
 /**
  * Fires off all the things we need to do to get the login scene up & running.
  */
-export const initializeLogin = (theme: Theme, branding: Branding) => async (
-  dispatch: Dispatch,
-  getState: GetState,
-  imports: Imports
-) => {
+export const initializeLogin = (
+  theme: Theme,
+  branding: Branding,
+  initialRoute?: InitialRouteName
+) => async (dispatch: Dispatch, getState: GetState, imports: Imports) => {
   const { customPermissionsFunction } = imports
   const touchPromise = dispatch(loadTouchState())
   dispatch(checkSecurityMessages()).catch(error => console.log(error))
@@ -59,6 +61,10 @@ export const initializeLogin = (theme: Theme, branding: Branding) => async (
   const biometryType = state.touch.type
   const { startupUser } = state.previousUsers
 
+  if (initialRoute != null) {
+    return dispatch(initialRouteNameToAction(initialRoute))
+  }
+
   const { recoveryKey } = imports
   if (recoveryKey) {
     dispatch({ type: 'START_LANDING' })
@@ -72,6 +78,19 @@ export const initializeLogin = (theme: Theme, branding: Branding) => async (
     dispatch({ type: 'START_PIN_LOGIN' })
   } else {
     dispatch({ type: 'START_PASSWORD_LOGIN' })
+  }
+}
+
+function initialRouteNameToAction(routeName: InitialRouteName): Action {
+  switch (routeName) {
+    case 'login-password':
+      return {
+        type: 'START_PASSWORD_LOGIN'
+      }
+    case 'new-account':
+      return {
+        type: 'NEW_ACCOUNT_WELCOME'
+      }
   }
 }
 
