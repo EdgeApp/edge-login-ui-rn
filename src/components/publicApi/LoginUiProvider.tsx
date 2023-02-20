@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import { asOptionalTheme, Theme } from '../../types/Theme'
 import { Airship } from '../services/AirshipInstance'
@@ -37,9 +38,11 @@ function LoginUiProviderComponent(props: Props): JSX.Element {
 
   return (
     <loginUiContext.Provider value>
-      <ThemeProvider>
-        <Airship>{props.children}</Airship>
-      </ThemeProvider>
+      <SafeAreaProvider>
+        <ThemeProvider>
+          <Airship>{props.children}</Airship>
+        </ThemeProvider>
+      </SafeAreaProvider>
     </loginUiContext.Provider>
   )
 }

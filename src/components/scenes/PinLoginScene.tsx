@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { SvgXml } from 'react-native-svg'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { sprintf } from 'sprintf-js'
@@ -166,6 +167,7 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
             onPress={this.handlePress}
           />
         )}
+        <SafeAreaView edges={['bottom']} />
       </View>
     )
   }

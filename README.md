@@ -23,6 +23,7 @@ The login UI depends on some extra external native libraries, which you will hav
 - react-native-reanimated v2
   - Follow the [extra installation steps](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/installation/).
   - Setting up reanimated also involves setting up react-native-gesture-handler.
+- react-native-safe-area-context (4.5.0+)
 - react-native-share v5 (v7 also works)
 - react-native-svg v12
 - react-native-vector-icons v7 (v9 also works)
