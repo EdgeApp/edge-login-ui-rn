@@ -4,7 +4,6 @@ import { cacheStyles } from 'react-native-patina'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import s from '../../common/locales/strings'
-import { isIphoneX } from '../../util/isIphoneX'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { PinButton } from '../themed/PinButton'
 
@@ -121,8 +120,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1,
     maxWidth: theme.rem(22),
     height: theme.rem(13),
-    maxHeight: theme.rem(19),
-    marginBottom: isIphoneX ? theme.rem(1.75) : 0
+    maxHeight: theme.rem(19)
   },
   keypadRow: {
     flex: 1,
