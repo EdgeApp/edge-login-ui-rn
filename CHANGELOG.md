@@ -1,5 +1,14 @@
 # edge-login-ui-rn
 
+## 1.1.0 (2023-03-09)
+
+- added: `PublicLoginScreen` takes a `initialRoute` prop to allow for control over the scene that it will initially show
+
+## 1.0.0 (2023-03-03)
+
+- added: Accessibility hint to Edge logo
+- fixed: Safe area for iPhone 14+
+
 ## 0.11.0 (2023-02-13)
 
 - added: Depend on the native `@react-native-community/datetimepicker` library, which must be installed manually.
