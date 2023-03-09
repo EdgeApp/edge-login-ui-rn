@@ -165,7 +165,10 @@ export const RecoveryLoginScene = () => {
   }
 
   return (
-    <ThemedScene paddingRem={0}>
+    <ThemedScene
+      paddingRem={0}
+      onBack={() => dispatch({ type: 'START_PASSWORD_LOGIN' })}
+    >
       <ScrollView contentContainerStyle={styles.content}>
         {renderForm()}
         {renderSubmitButton()}
