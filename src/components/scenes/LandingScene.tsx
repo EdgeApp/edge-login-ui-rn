@@ -3,49 +3,44 @@ import { Text, View } from 'react-native'
 
 import s from '../../common/locales/strings'
 import * as Constants from '../../constants/index'
+import { useHandler } from '../../hooks/useHandler'
 import * as Styles from '../../styles/index'
 import { Branding } from '../../types/Branding'
-import { Dispatch, RootState } from '../../types/ReduxTypes'
+import { useDispatch } from '../../types/ReduxTypes'
 import { logEvent } from '../../util/analytics'
 import { scale } from '../../util/scaling'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { BackgroundImage } from '../common/BackgroundImage'
 import { HeaderParentButtons } from '../common/HeaderParentButtons'
-import { connect } from '../services/ReduxStore'
 import { MainButton } from '../themed/MainButton'
 
-interface OwnProps {
+interface Props {
   branding: Branding
   landingSceneText?: string
 }
-interface DispatchProps {
-  handleCreate: () => void
-  handlePassword: () => void
-}
-type Props = OwnProps & DispatchProps
 
-class LandingSceneComponent extends React.Component<Props> {
-  render() {
-    return (
-      <View style={styles.container}>
-        <BackgroundImage
-          branding={this.props.branding}
-          content={this.renderOverImage()}
-        />
-      </View>
-    )
-  }
+export const LandingScene = (props: Props) => {
+  const dispatch = useDispatch()
 
-  renderOverImage() {
-    return (
+  const handleCreate = useHandler(() => {
+    logEvent('Signup_Create_Account')
+    dispatch({ type: 'NEW_ACCOUNT_WELCOME' })
+  })
+  const handlePassword = useHandler(() => {
+    logEvent('Signup_Signin')
+    dispatch({ type: 'START_PASSWORD_LOGIN' })
+  })
+
+  return (
+    <BackgroundImageView branding={props.branding}>
       <View style={styles.inner}>
-        <HeaderParentButtons branding={this.props.branding} />
+        <HeaderParentButtons branding={props.branding} />
         <View style={styles.featureBox}>
-          <LogoImageHeader branding={this.props.branding} />
+          <LogoImageHeader branding={props.branding} />
           <View style={styles.featureBoxContent}>
             <View style={styles.featureBoxDescription}>
               <Text style={styles.tagText}>
-                {this.props.landingSceneText || s.strings.landing_tagline}
+                {props.landingSceneText || s.strings.landing_tagline}
               </Text>
             </View>
           </View>
@@ -54,21 +49,32 @@ class LandingSceneComponent extends React.Component<Props> {
               testID="createAccountButton"
               label={s.strings.landing_create_account_button}
               type="secondary"
-              onPress={this.props.handleCreate}
+              onPress={handleCreate}
             />
           </View>
           <View style={styles.loginButtonBox}>
             <MainButton
               testID="alreadyHaveAccountButton"
-              onPress={this.props.handlePassword}
+              onPress={handlePassword}
               label={s.strings.landing_already_have_account}
               type="textOnly"
             />
           </View>
         </View>
       </View>
-    )
-  }
+    </BackgroundImageView>
+  )
+}
+
+const BackgroundImageView = (props: {
+  branding: Branding
+  children: React.ReactNode
+}) => {
+  return (
+    <View style={styles.container}>
+      <BackgroundImage branding={props.branding} content={props.children} />
+    </View>
+  )
 }
 
 const styles = {
@@ -133,17 +139,3 @@ const styles = {
     downStyle: Styles.TextOnlyButtonDownStyle
   }
 } as const
-
-export const LandingScene = connect<{}, DispatchProps, OwnProps>(
-  (state: RootState) => ({}),
-  (dispatch: Dispatch): DispatchProps => ({
-    handleCreate() {
-      logEvent('Signup_Create_Account')
-      dispatch({ type: 'NEW_ACCOUNT_WELCOME' })
-    },
-    handlePassword() {
-      logEvent('Signup_Signin')
-      dispatch({ type: 'START_PASSWORD_LOGIN' })
-    }
-  })
-)(LandingSceneComponent)
