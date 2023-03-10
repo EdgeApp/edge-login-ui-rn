@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 1.2.0 (2023-03-10)
+
+- fixed: Missing back button on password recovery login
+
 ## 1.1.0 (2023-03-09)
 
 - added: `PublicLoginScreen` takes a `initialRoute` prop to allow for control over the scene that it will initially show
