@@ -1,5 +1,10 @@
 # edge-login-ui-rn
 
+## 1.2.1 (2023-03-15)
+
+- changed: Don't require showing acct creds to continue acct creation
+- changed: Change wording to not require writing down password on acct creation
+
 ## 1.2.0 (2023-03-10)
 
 - fixed: Missing back button on password recovery login
