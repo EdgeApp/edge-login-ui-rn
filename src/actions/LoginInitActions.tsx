@@ -89,7 +89,7 @@ function initialRouteNameToAction(routeName: InitialRouteName): Action {
       }
     case 'new-account':
       return {
-        type: 'NEW_ACCOUNT_WELCOME'
+        type: 'NEW_ACCOUNT_USERNAME'
       }
   }
 }
