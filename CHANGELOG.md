@@ -1,5 +1,10 @@
 # edge-login-ui-rn
 
+## 1.2.2 (2023-03-20)
+
+- changed: Change `'new-account'` value for `initialRoute` prop to route to the username screen
+- changed: Updated password description verbaige
+
 ## 1.2.1 (2023-03-15)
 
 - changed: Don't require showing acct creds to continue acct creation
