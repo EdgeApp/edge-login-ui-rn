@@ -199,13 +199,13 @@ const logicMap: Array<Array<Array<string | undefined>>> = [
   [[], []]
 ]
 
-logicMap[0][0][0] = s.strings.notifications_and_refresh_permissions_branded
-logicMap[0][0][1] = s.strings.notifications_permissions_branded
-logicMap[0][1][0] = s.strings.refresh_permission_branded
+logicMap[0][0][0] = s.strings.notifications_and_refresh_permissions_branded_s
+logicMap[0][0][1] = s.strings.notifications_permissions_branded_s
+logicMap[0][1][0] = s.strings.refresh_permission_branded_s
 logicMap[0][1][1] = undefined
-logicMap[1][0][0] = s.strings.refresh_permission_branded
+logicMap[1][0][0] = s.strings.refresh_permission_branded_s
 logicMap[1][0][1] = undefined
-logicMap[1][1][0] = s.strings.refresh_permission_branded
+logicMap[1][1][0] = s.strings.refresh_permission_branded_s
 logicMap[1][1][1] = undefined
 
 const checkAndRequestNotifications = (
