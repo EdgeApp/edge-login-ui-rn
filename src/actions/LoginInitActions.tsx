@@ -29,7 +29,6 @@ import {
   NotificationPermissionsInfo,
   RootState
 } from '../types/ReduxTypes'
-import { Theme } from '../types/Theme'
 import { launchPasswordRecovery } from './LoginAction'
 import { loadTouchState } from './TouchActions'
 
@@ -41,7 +40,7 @@ const notificationPermissionsInfoFile = 'notificationsPermisions.json'
 /**
  * Fires off all the things we need to do to get the login scene up & running.
  */
-export const initializeLogin = (theme: Theme, branding: Branding) => async (
+export const initializeLogin = (branding: Branding) => async (
   dispatch: Dispatch,
   getState: GetState,
   imports: Imports
@@ -49,11 +48,7 @@ export const initializeLogin = (theme: Theme, branding: Branding) => async (
   const { customPermissionsFunction } = imports
   const touchPromise = dispatch(loadTouchState())
   dispatch(checkSecurityMessages()).catch(error => console.log(error))
-  customPermissionsFunction
-    ? customPermissionsFunction()
-    : dispatch(checkAndRequestNotifications(theme, branding)).catch(error =>
-        console.log(error)
-      )
+  if (customPermissionsFunction != null) customPermissionsFunction()
 
   await touchPromise
 
@@ -208,10 +203,11 @@ logicMap[1][0][1] = undefined
 logicMap[1][1][0] = s.strings.refresh_permission_branded_s
 logicMap[1][1][1] = undefined
 
-const checkAndRequestNotifications = (
-  theme: Theme,
-  branding: Branding
-) => async (dispatch: Dispatch, getState: GetState, imports: Imports) => {
+export const checkAndRequestNotifications = (branding: Branding) => async (
+  dispatch: Dispatch,
+  getState: GetState,
+  imports: Imports
+) => {
   const { onNotificationPermit } = imports
   const notificationPermission = await checkNotifications()
   const notificationStatus = notificationPermission.status
@@ -244,7 +240,7 @@ const checkAndRequestNotifications = (
       ? sprintf(
           logicMap[notifEnabled][isNotificationBlockedBit][refreshEnabled] ??
             '',
-          branding.appName
+          branding.appName ?? s.strings.app_name_default
         )
       : undefined
 

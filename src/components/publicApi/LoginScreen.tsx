@@ -11,7 +11,7 @@ import {
 } from '../../types/ReduxTypes'
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
-import { changeFont, useTheme } from '../services/ThemeContext'
+import { changeFont } from '../services/ThemeContext'
 import { InitialRouteName } from './types'
 
 interface Props {
@@ -66,8 +66,6 @@ export function LoginScreen(props: Props): JSX.Element {
   } = fontDescription
   const { onComplete = () => {} } = props
 
-  const theme = useTheme()
-
   // Always update legacy fonts:
   updateFontStyles(regularFontFamily, headingFontFamily)
 
@@ -101,7 +99,7 @@ export function LoginScreen(props: Props): JSX.Element {
         username: props.username,
         customPermissionsFunction: props.customPermissionsFunction
       }}
-      initialAction={initializeLogin(theme, branding)}
+      initialAction={initializeLogin(branding)}
     >
       <Router branding={branding} />
     </ReduxStore>

@@ -66,7 +66,7 @@ export function Router(props: Props) {
           />
         )
       case 'NewAccountReviewScene':
-        return <NewAccountReviewScene />
+        return <NewAccountReviewScene branding={props.branding} />
       case 'LandingScene':
         return <LandingScene branding={props.branding} />
       case 'LoadingScene':
