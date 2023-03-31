@@ -4,14 +4,10 @@ import * as React from 'react'
 import { initializeLogin } from '../../actions/LoginInitActions'
 import { updateFontStyles } from '../../constants/Fonts'
 import { Branding, ParentButton } from '../../types/Branding'
-import {
-  OnComplete,
-  OnLogin,
-  OnNotificationPermit
-} from '../../types/ReduxTypes'
+import { OnLogin, OnNotificationPermit } from '../../types/ReduxTypes'
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
-import { changeFont, useTheme } from '../services/ThemeContext'
+import { changeFont } from '../services/ThemeContext'
 import { InitialRouteName } from './types'
 
 interface Props {
@@ -34,10 +30,6 @@ interface Props {
   // Options passed to the core login methods:
   accountOptions: EdgeAccountOptions
 
-  /**
-   * Called when the user navigates back passed the initialRoute if it was set.
-   */
-  onComplete?: OnComplete
   // Called when the login completes:
   onLogin: OnLogin
   // Called when the user makes a choice from RequestPermissionsModal:
@@ -64,9 +56,6 @@ export function LoginScreen(props: Props): JSX.Element {
     regularFontFamily,
     headingFontFamily = regularFontFamily
   } = fontDescription
-  const { onComplete = () => {} } = props
-
-  const theme = useTheme()
 
   // Always update legacy fonts:
   updateFontStyles(regularFontFamily, headingFontFamily)
@@ -92,8 +81,7 @@ export function LoginScreen(props: Props): JSX.Element {
       imports={{
         accountOptions: props.accountOptions,
         context: props.context,
-        initialRoute: props.initialRoute,
-        onComplete,
+        onComplete: () => {},
         onLogin: props.onLogin,
         onNotificationPermit: props.onNotificationPermit,
         recoveryKey: props.recoveryLogin,
@@ -101,7 +89,7 @@ export function LoginScreen(props: Props): JSX.Element {
         username: props.username,
         customPermissionsFunction: props.customPermissionsFunction
       }}
-      initialAction={initializeLogin(theme, branding)}
+      initialAction={initializeLogin(branding, props.initialRoute)}
     >
       <Router branding={branding} />
     </ReduxStore>

@@ -3,7 +3,9 @@ import { ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { confirmAndFinish } from '../../../actions/CreateAccountActions'
+import { checkAndRequestNotifications } from '../../../actions/LoginInitActions'
 import s from '../../../common/locales/strings'
+import { Branding } from '../../../types/Branding'
 import { Dispatch, RootState } from '../../../types/ReduxTypes'
 import { logEvent } from '../../../util/analytics'
 import { connect } from '../../services/ReduxStore'
@@ -14,20 +16,22 @@ import { FormError } from '../../themed/FormError'
 import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-interface OwnProps {}
+interface OwnProps {
+  branding: Branding
+}
 
 interface DispatchProps {
-  onDone: () => void
+  onDone: (branding: Branding) => void
 }
 
 type Props = OwnProps & DispatchProps & ThemeProps
 
-const NewAccountReviewSceneComponent = ({ onDone, theme }: Props) => {
+const NewAccountReviewSceneComponent = ({ branding, onDone, theme }: Props) => {
   const styles = getStyles(theme)
 
   const handleNext = () => {
     logEvent(`Signup_Review_Done`)
-    onDone()
+    onDone(branding)
   }
 
   return (
@@ -78,8 +82,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const NewAccountReviewScene = connect<{}, DispatchProps, OwnProps>(
   (state: RootState) => ({}),
   (dispatch: Dispatch) => ({
-    onDone() {
+    onDone(branding: Branding) {
       dispatch(confirmAndFinish())
+      dispatch(checkAndRequestNotifications(branding)).catch(error =>
+        console.log(error)
+      )
     }
   })
 )(withTheme(NewAccountReviewSceneComponent))
