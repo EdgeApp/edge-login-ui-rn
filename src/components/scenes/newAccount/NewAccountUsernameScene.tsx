@@ -12,51 +12,45 @@ import { maybeRouteComplete } from '../../../actions/LoginInitActions'
 import s from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { Branding } from '../../../types/Branding'
-import { Dispatch, RootState } from '../../../types/ReduxTypes'
-import { connect } from '../../services/ReduxStore'
-import { Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import { useDispatch, useSelector } from '../../../types/ReduxTypes'
+import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { OutlinedTextInput } from '../../themed/OutlinedTextInput'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-interface OwnProps {
+interface Props {
   branding: Branding
+  onBack?: (() => void) | undefined
 }
-interface StateProps {
-  username: string
-  usernameErrorMessage: string | null
-}
-interface DispatchProps {
-  checkUsernameForAvailabilty: (username: string) => Promise<void>
-  validateUsername: (username: string) => void
-  onBack: () => void
-}
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-const NewAccountUsernameSceneComponent = ({
-  theme,
-  onBack,
-  branding,
-  username,
-  usernameErrorMessage,
-  checkUsernameForAvailabilty,
-  validateUsername
-}: Props) => {
+export const NewAccountUsernameScene = ({ branding, onBack }: Props) => {
+  const theme = useTheme()
   const styles = getStyles(theme)
+  const { username, usernameErrorMessage } = useSelector(state => state.create)
+  const dispatch = useDispatch()
 
   const handleNext = useHandler(async () => {
-    if (usernameErrorMessage || !username) {
+    if (usernameErrorMessage != null || username == null) {
       return
     }
     await checkUsernameForAvailabilty(username)
   })
+
+  const handleOnBack = useHandler(async () => {
+    if (onBack != null) {
+      await onBack()
+    } else {
+      await dispatch({ type: 'NEW_ACCOUNT_WELCOME' })
+    }
+  })
+
   const error =
     usernameErrorMessage == null || usernameErrorMessage === ''
       ? undefined
       : usernameErrorMessage
   return (
-    <ThemedScene onBack={onBack} title={s.strings.choose_title_username}>
+    <ThemedScene onBack={handleOnBack} title={s.strings.choose_title_username}>
       <View style={styles.content}>
         <KeyboardAwareScrollView
           contentContainerStyle={styles.mainScrollView}
@@ -77,7 +71,7 @@ const NewAccountUsernameSceneComponent = ({
             onSubmitEditing={handleNext}
             returnKeyType="go"
             marginRem={1}
-            value={username}
+            value={username ?? ''}
             clearIcon
             error={error}
             searchIcon={false}
@@ -113,25 +107,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginBottom: theme.rem(1)
   }
 }))
-
-export const NewAccountUsernameScene = connect<
-  StateProps,
-  DispatchProps,
-  OwnProps
->(
-  (state: RootState) => ({
-    username: state.create.username || '',
-    usernameErrorMessage: state.create.usernameErrorMessage
-  }),
-  (dispatch: Dispatch) => ({
-    onBack() {
-      dispatch(maybeRouteComplete({ type: 'NEW_ACCOUNT_WELCOME' }))
-    },
-    async checkUsernameForAvailabilty(data: string) {
-      return await dispatch(checkUsernameForAvailabilty(data))
-    },
-    validateUsername(username: string): void {
-      dispatch(validateUsername(username))
-    }
-  })
-)(withTheme(NewAccountUsernameSceneComponent))
