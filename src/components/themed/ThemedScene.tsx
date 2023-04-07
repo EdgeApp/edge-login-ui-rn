@@ -11,6 +11,8 @@ import { cacheStyles } from 'react-native-patina'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import s from '../../common/locales/strings'
+import { useHandler } from '../../hooks/useHandler'
+import { Branding } from '../../types/Branding'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
@@ -19,6 +21,7 @@ interface Props {
   children?: React.ReactNode
 
   // Header:
+  branding?: Branding
   noUnderline?: boolean
   onBack?: () => void
   onSkip?: () => void
@@ -30,6 +33,7 @@ interface Props {
 
 export function ThemedScene(props: Props) {
   const {
+    branding = {},
     children,
     onBack,
     onSkip,
@@ -37,10 +41,16 @@ export function ThemedScene(props: Props) {
     title,
     noUnderline = false
   } = props
+  const { parentButton } = branding
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const hasHeader = onBack != null || onSkip != null || title != null
+  const hasHeader =
+    onBack != null || onSkip != null || title != null || parentButton != null
+
+  const handleParentButtonPress = useHandler(() => {
+    if (parentButton != null) parentButton.callback()
+  })
 
   const containerStyle = {
     flex: 1,
@@ -58,7 +68,7 @@ export function ThemedScene(props: Props) {
         {!hasHeader ? null : (
           <View style={styles.headerButtons}>
             {onBack == null ? null : (
-              <TouchableOpacity style={styles.backButton} onPress={onBack}>
+              <TouchableOpacity style={styles.leftButton} onPress={onBack}>
                 <FontAwesome5
                   name="chevron-left"
                   size={theme.rem(1)}
@@ -67,8 +77,18 @@ export function ThemedScene(props: Props) {
               </TouchableOpacity>
             )}
             {onSkip == null ? null : (
-              <TouchableOpacity style={styles.skipButton} onPress={onSkip}>
-                <Text style={styles.skipText}>{s.strings.skip}</Text>
+              <TouchableOpacity style={styles.rightButton} onPress={onSkip}>
+                <Text style={styles.buttonText}>{s.strings.skip}</Text>
+              </TouchableOpacity>
+            )}
+            {parentButton == null || parentButton.text == null ? null : (
+              <TouchableOpacity
+                style={styles.rightButton}
+                onPress={handleParentButtonPress}
+              >
+                <Text style={parentButton.style || styles.buttonText}>
+                  {parentButton.text}
+                </Text>
               </TouchableOpacity>
             )}
           </View>
@@ -89,7 +109,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     height: theme.rem(3)
   },
-  backButton: {
+  leftButton: {
     justifyContent: 'center',
     paddingHorizontal: theme.rem(1),
     position: 'absolute',
@@ -97,7 +117,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     left: 0,
     top: 0
   },
-  skipButton: {
+  rightButton: {
     justifyContent: 'center',
     paddingHorizontal: theme.rem(1),
     position: 'absolute',
@@ -105,7 +125,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     right: 0,
     top: 0
   },
-  skipText: {
+  buttonText: {
     color: theme.primaryText,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1)

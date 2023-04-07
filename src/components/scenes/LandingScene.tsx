@@ -11,8 +11,8 @@ import { logEvent } from '../../util/analytics'
 import { scale } from '../../util/scaling'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { BackgroundImage } from '../common/BackgroundImage'
-import { HeaderParentButtons } from '../common/HeaderParentButtons'
 import { MainButton } from '../themed/MainButton'
+import { ThemedScene } from '../themed/ThemedScene'
 
 interface Props {
   branding: Branding
@@ -32,37 +32,38 @@ export const LandingScene = (props: Props) => {
   })
 
   return (
-    <BackgroundImageView branding={props.branding}>
-      <View style={styles.inner}>
-        <HeaderParentButtons branding={props.branding} />
-        <View style={styles.featureBox}>
-          <LogoImageHeader branding={props.branding} />
-          <View style={styles.featureBoxContent}>
-            <View style={styles.featureBoxDescription}>
-              <Text style={styles.tagText}>
-                {props.landingSceneText || s.strings.landing_tagline}
-              </Text>
+    <ThemedScene branding={props.branding} noUnderline>
+      <BackgroundImageView branding={props.branding}>
+        <View style={styles.inner}>
+          <View style={styles.featureBox}>
+            <LogoImageHeader branding={props.branding} />
+            <View style={styles.featureBoxContent}>
+              <View style={styles.featureBoxDescription}>
+                <Text style={styles.tagText}>
+                  {props.landingSceneText || s.strings.landing_tagline}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.createButtonBox}>
+              <MainButton
+                testID="createAccountButton"
+                label={s.strings.landing_create_account_button}
+                type="secondary"
+                onPress={handleCreate}
+              />
+            </View>
+            <View style={styles.loginButtonBox}>
+              <MainButton
+                testID="alreadyHaveAccountButton"
+                onPress={handlePassword}
+                label={s.strings.landing_already_have_account}
+                type="textOnly"
+              />
             </View>
           </View>
-          <View style={styles.createButtonBox}>
-            <MainButton
-              testID="createAccountButton"
-              label={s.strings.landing_create_account_button}
-              type="secondary"
-              onPress={handleCreate}
-            />
-          </View>
-          <View style={styles.loginButtonBox}>
-            <MainButton
-              testID="alreadyHaveAccountButton"
-              onPress={handlePassword}
-              label={s.strings.landing_already_have_account}
-              type="textOnly"
-            />
-          </View>
         </View>
-      </View>
-    </BackgroundImageView>
+      </BackgroundImageView>
+    </ThemedScene>
   )
 }
 

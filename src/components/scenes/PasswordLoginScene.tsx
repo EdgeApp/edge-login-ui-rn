@@ -25,7 +25,6 @@ import { LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
 import { BackgroundImage } from '../common/BackgroundImage'
-import { HeaderParentButtons } from '../common/HeaderParentButtons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { showQrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -34,6 +33,7 @@ import { connect } from '../services/ReduxStore'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { LineFormField } from '../themed/LineFormField'
 import { MainButton } from '../themed/MainButton'
+import { ThemedScene } from '../themed/ThemedScene'
 
 interface OwnProps {
   branding: Branding
@@ -140,11 +140,13 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
         keyboardShouldPersistTaps="always"
         contentContainerStyle={styles.mainScrollView}
       >
-        <BackgroundImage
-          branding={this.props.branding}
-          content={this.renderOverImage()}
-          onPress={this.handleBlur}
-        />
+        <ThemedScene noUnderline branding={this.props.branding}>
+          <BackgroundImage
+            branding={this.props.branding}
+            content={this.renderOverImage()}
+            onPress={this.handleBlur}
+          />
+        </ThemedScene>
       </KeyboardAwareScrollView>
     )
   }
@@ -163,7 +165,6 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     }
     return (
       <View style={styles.featureBoxContainer}>
-        <HeaderParentButtons branding={this.props.branding} />
         <TouchableWithoutFeedback onPress={this.handleBlur}>
           <View style={styles.featureBox}>
             <LogoImageHeader branding={this.props.branding} />

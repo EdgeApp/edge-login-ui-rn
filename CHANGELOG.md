@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## Unreleased
+
+- changed: Move Help button to the top-right corner for all scenes
+
 ## 1.2.2 (2023-03-20)
 
 - changed: Change `'new-account'` value for `initialRoute` prop to route to the username screen
