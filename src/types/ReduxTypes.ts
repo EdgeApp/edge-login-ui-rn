@@ -2,6 +2,7 @@ import { asBoolean, asJSON, asObject } from 'cleaners'
 import { EdgeAccount, EdgeAccountOptions, EdgeContext } from 'edge-core-js'
 import * as ReactRedux from 'react-redux'
 
+import { InitialRouteName } from '../components/publicApi/types'
 import { RootState } from '../reducers/RootReducer'
 import { Action } from './ReduxActions'
 
@@ -30,6 +31,7 @@ export interface TouchIdInfo {
   isTouchEnabled: boolean
 }
 
+export type OnComplete = () => void
 export type OnLogin = (account: EdgeAccount, touchIdInfo?: TouchIdInfo) => void
 export type OnNotificationPermit = (
   settings: NotificationPermissionsInfo
@@ -38,6 +40,7 @@ export type OnNotificationPermit = (
 export interface Imports {
   readonly accountOptions: EdgeAccountOptions
   readonly context: EdgeContext
+  readonly initialRoute?: InitialRouteName
   readonly onComplete: () => void
   readonly onLogin?: OnLogin
   readonly onNotificationPermit?: OnNotificationPermit

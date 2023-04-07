@@ -3,6 +3,7 @@ import { Keyboard, ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { completeResecure } from '../../actions/LoginCompleteActions'
+import { maybeRouteComplete } from '../../actions/LoginInitActions'
 import { onComplete } from '../../actions/WorkflowActions'
 import s from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler.js'
@@ -152,7 +153,7 @@ export const NewAccountPinScene = () => {
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {
-    dispatch({ type: 'NEW_ACCOUNT_PASSWORD' })
+    maybeRouteComplete({ type: 'NEW_ACCOUNT_PASSWORD' })
   })
   const handleSubmit = useHandler(() => {
     logEvent('Signup_PIN_Valid')

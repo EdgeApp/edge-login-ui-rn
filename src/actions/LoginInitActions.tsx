@@ -17,8 +17,8 @@ import {
   RequestPermissionsModal
 } from '../components/modals/RequestPermissionsModal'
 import { SecurityAlertsModal } from '../components/modals/SecurityAlertsModal'
-import { InitialRouteName } from '../components/publicApi/types'
 import { Airship, showError } from '../components/services/AirshipInstance'
+import { scene as sceneReducer } from '../reducers/SceneReducer'
 import { Branding } from '../types/Branding'
 import {
   Action,
@@ -26,7 +26,8 @@ import {
   Dispatch,
   GetState,
   Imports,
-  NotificationPermissionsInfo
+  NotificationPermissionsInfo,
+  RootState
 } from '../types/ReduxTypes'
 import { Theme } from '../types/Theme'
 import { launchPasswordRecovery } from './LoginAction'
@@ -40,11 +41,11 @@ const notificationPermissionsInfoFile = 'notificationsPermisions.json'
 /**
  * Fires off all the things we need to do to get the login scene up & running.
  */
-export const initializeLogin = (
-  theme: Theme,
-  branding: Branding,
-  initialRoute?: InitialRouteName
-) => async (dispatch: Dispatch, getState: GetState, imports: Imports) => {
+export const initializeLogin = (theme: Theme, branding: Branding) => async (
+  dispatch: Dispatch,
+  getState: GetState,
+  imports: Imports
+) => {
   const { customPermissionsFunction } = imports
   const touchPromise = dispatch(loadTouchState())
   dispatch(checkSecurityMessages()).catch(error => console.log(error))
@@ -55,34 +56,75 @@ export const initializeLogin = (
       )
 
   await touchPromise
+
   const state = getState()
 
+  // Handle routing using given initialRoute:
+  dispatch(routeInitialization(state, imports))
+
+  // Show password recovery if recoveryKey is given:
+  const { recoveryKey } = imports
+  if (
+    (imports.initialRoute == null || imports.initialRoute === 'login') &&
+    recoveryKey
+  ) {
+    dispatch(launchPasswordRecovery(recoveryKey))
+  }
+}
+
+export const maybeRouteComplete = (fallbackAction: Action) => (
+  dispatch: Dispatch,
+  getState: GetState,
+  imports: Imports
+) => {
+  if (imports.initialRoute == null) {
+    dispatch(fallbackAction)
+    return
+  }
+
+  const state = getState()
+  const sceneState = state.scene
+  const initialRouteSceneName = sceneReducer(
+    sceneState,
+    routeInitialization(state, imports)
+  ).currentScene
+
+  if (
+    initialRouteSceneName === sceneState.currentScene ||
+    (imports.initialRoute === 'login' &&
+      sceneState.currentScene === 'PasswordScene')
+  ) {
+    imports.onComplete()
+    return
+  }
+
+  dispatch(fallbackAction)
+}
+
+function routeInitialization(state: RootState, imports: Imports): Action {
   // Loading is done, so send the user to the initial route:
   const biometryType = state.touch.type
   const { startupUser } = state.previousUsers
 
-  if (initialRoute != null) {
-    return dispatch(initialRouteNameToAction(initialRoute))
+  const defaultInitialRoute = (): Action => {
+    const { recoveryKey } = imports
+    if (recoveryKey) {
+      return { type: 'START_LANDING' }
+    } else if (startupUser == null) {
+      return { type: 'START_LANDING' }
+    } else if (
+      startupUser.pinEnabled ||
+      (startupUser.touchEnabled && biometryType !== false)
+    ) {
+      return { type: 'START_PIN_LOGIN' }
+    } else {
+      return { type: 'START_PASSWORD_LOGIN' }
+    }
   }
 
-  const { recoveryKey } = imports
-  if (recoveryKey) {
-    dispatch({ type: 'START_LANDING' })
-    dispatch(launchPasswordRecovery(recoveryKey))
-  } else if (startupUser == null) {
-    dispatch({ type: 'START_LANDING' })
-  } else if (
-    startupUser.pinEnabled ||
-    (startupUser.touchEnabled && biometryType !== false)
-  ) {
-    dispatch({ type: 'START_PIN_LOGIN' })
-  } else {
-    dispatch({ type: 'START_PASSWORD_LOGIN' })
-  }
-}
-
-function initialRouteNameToAction(routeName: InitialRouteName): Action {
-  switch (routeName) {
+  switch (imports.initialRoute) {
+    case 'login':
+      return defaultInitialRoute()
     case 'login-password':
       return {
         type: 'START_PASSWORD_LOGIN'
@@ -91,6 +133,8 @@ function initialRouteNameToAction(routeName: InitialRouteName): Action {
       return {
         type: 'NEW_ACCOUNT_USERNAME'
       }
+    default:
+      return defaultInitialRoute()
   }
 }
 

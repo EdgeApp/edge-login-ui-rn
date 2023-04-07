@@ -14,6 +14,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import { launchPasswordRecovery, login } from '../../actions/LoginAction'
+import { maybeRouteComplete } from '../../actions/LoginInitActions'
 import { deleteUserFromDevice } from '../../actions/UserActions'
 import s from '../../common/locales/strings'
 import { BiometryType } from '../../keychain'
@@ -463,7 +464,7 @@ export const PasswordLoginScene = connect<StateProps, DispatchProps, OwnProps>(
       return await dispatch(login(attempt))
     },
     exitScene() {
-      dispatch({ type: 'START_LANDING' })
+      dispatch(maybeRouteComplete({ type: 'START_LANDING' }))
     },
     saveOtpError(attempt, error) {
       dispatch({ type: 'OTP_ERROR', data: { attempt, error } })

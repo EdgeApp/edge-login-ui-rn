@@ -1,1 +1,1 @@
-export type InitialRouteName = 'login-password' | 'new-account'
+export type InitialRouteName = 'login' | 'login-password' | 'new-account'

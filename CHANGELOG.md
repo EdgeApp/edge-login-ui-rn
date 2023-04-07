@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Add an onComplete prop to the LoginScene component
 - changed: Add a back button to the `PasswordLoginScene`
 - changed: Move Help button to the top-right corner for all scenes
 
