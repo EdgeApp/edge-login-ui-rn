@@ -266,10 +266,10 @@ export const OutlinedTextInput = forwardRef(
         return interpolateColor(
           errorValue,
           [0, 1],
-          [interFocusColor, hasError ? theme.dangerText : theme.iconTappable]
+          [interFocusColor, hasError ? theme.dangerText : interFocusColor]
         )
       },
-      [hasError, theme]
+      [theme, hasError]
     )
     const getLabelColor = useCallback(
       (errorValue: number, focusValue: number) => {
@@ -285,7 +285,7 @@ export const OutlinedTextInput = forwardRef(
         return interpolateColor(
           errorValue,
           [0, 1],
-          [interFocusColor, hasError ? theme.dangerText : theme.iconTappable]
+          [interFocusColor, hasError ? theme.dangerText : interFocusColor]
         )
       },
       [hasError, theme]
@@ -346,7 +346,9 @@ export const OutlinedTextInput = forwardRef(
           [0, 1],
           [
             theme.secondaryText,
-            hasError ? theme.dangerText : theme.iconTappable
+            hasError
+              ? theme.dangerText
+              : theme.outlineTextInputBorderColorFocused
           ]
         ),
         opacity: counterProgress,
@@ -444,11 +446,7 @@ export const OutlinedTextInput = forwardRef(
             multiline={multiline}
             editable={!showSpinner}
             selectionColor={
-              hasError
-                ? theme.dangerText
-                : hasValid
-                ? theme.iconTappable
-                : theme.outlineTextInputTextColor
+              hasError ? theme.dangerText : theme.outlineTextInputTextColor
             }
             style={[styles.textInput, textInputStyle]}
             textAlignVertical="top"
@@ -609,7 +607,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     validText: {
       ...subtextCommon,
-      color: theme.iconTappable
+      color: theme.outlineTextInputLabelColorFocused
     },
 
     // The counter text splits the bottom right border line:

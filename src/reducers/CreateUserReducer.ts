@@ -36,8 +36,7 @@ export function create(
     case 'CREATE_UPDATE_USERNAME':
       return {
         ...state,
-        username: action.data.username,
-        usernameErrorMessage: action.data.error
+        username: action.data.username
       }
     case 'CREATE_UPDATE_PIN':
       return {

@@ -27,49 +27,27 @@ export function validatePin(pin: string) {
     dispatch({ type: 'CREATE_UPDATE_PIN', data: { pin, error } })
   }
 }
-export function checkUsernameForAvailabilty(data: string) {
-  return async (dispatch: Dispatch, getState: GetState, imports: Imports) =>
-    await imports.context
-      .usernameAvailable(data)
-      .then(async response => {
-        if (response) {
-          const obj = {
-            username: data,
-            error: null
-          }
-          logEvent(`Signup_Username_Available`)
-          dispatch({ type: 'CREATE_UPDATE_USERNAME', data: obj })
-          dispatch({ type: 'NEW_ACCOUNT_PASSWORD' })
-          return
-        }
-        const obj = {
-          username: data,
-          error: s.strings.username_exists_error
-        }
-        logEvent(`Signup_Username_Unavailable`)
-        dispatch({ type: 'CREATE_UPDATE_USERNAME', data: obj })
+
+/**
+ * Fetch whether the username is available
+ */
+export function fetchIsUsernameAvailable(username: string) {
+  return async (
+    dispatch: Dispatch,
+    getState: GetState,
+    imports: Imports
+  ): Promise<boolean> => {
+    return await imports.context
+      .usernameAvailable(username)
+      .then(async isAvailable => {
+        return isAvailable
       })
       .catch(e => {
-        console.log(e.message)
+        throw new Error(e.message)
       })
-}
-
-function isASCII(str: string) {
-  return /^[\x20-\x7E]*$/.test(str)
-}
-
-export function validateUsername(data: string) {
-  return (dispatch: Dispatch, getState: GetState, imports: Imports) => {
-    // TODO evaluate client side evaluations.
-    let error = data.length > 2 ? null : s.strings.username_3_characters_error
-    error = isASCII(data) ? error : s.strings.username_ascii_error
-    const obj = {
-      username: data,
-      error: error
-    }
-    dispatch({ type: 'CREATE_UPDATE_USERNAME', data: obj })
   }
 }
+
 export function validateConfirmPassword(confirmPassword: string) {
   return (dispatch: Dispatch, getState: GetState, imports: Imports) => {
     const state = getState()
