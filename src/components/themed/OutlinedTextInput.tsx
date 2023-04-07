@@ -39,6 +39,7 @@ interface Props {
   // Contents:
   value: string
   error?: string
+  valid?: string
   label?: string
 
   // Appearance:
@@ -101,6 +102,7 @@ export const OutlinedTextInput = forwardRef(
     const {
       // Contents:
       error,
+      valid,
       label,
       value,
 
@@ -130,6 +132,7 @@ export const OutlinedTextInput = forwardRef(
     const styles = getStyles(theme)
 
     const hasError = error != null
+    const hasValid = valid != null
     const hasLabel = label != null
     const hasValue = value !== ''
 
@@ -172,10 +175,10 @@ export const OutlinedTextInput = forwardRef(
       setCounterWidth(event.nativeEvent.layout.width)
 
     // Animates between 0 and 1 based our error state:
-    const errorAnimation = useSharedValue(0)
+    const subtextAnimation = useSharedValue(0)
     useEffect(() => {
-      errorAnimation.value = withTiming(hasError ? 1 : 0)
-    }, [errorAnimation, hasError])
+      subtextAnimation.value = withTiming(hasError || hasValid ? 1 : 0)
+    }, [subtextAnimation, hasError, hasValid])
 
     // Animates between 0 and 1 based on focus:
     const baseDuration = 300
@@ -263,10 +266,10 @@ export const OutlinedTextInput = forwardRef(
         return interpolateColor(
           errorValue,
           [0, 1],
-          [interFocusColor, theme.dangerText]
+          [interFocusColor, hasError ? theme.dangerText : theme.iconTappable]
         )
       },
-      [theme]
+      [hasError, theme]
     )
     const getLabelColor = useCallback(
       (errorValue: number, focusValue: number) => {
@@ -282,15 +285,18 @@ export const OutlinedTextInput = forwardRef(
         return interpolateColor(
           errorValue,
           [0, 1],
-          [interFocusColor, theme.dangerText]
+          [interFocusColor, hasError ? theme.dangerText : theme.iconTappable]
         )
       },
-      [theme]
+      [hasError, theme]
     )
     const bottomStyle = useAnimatedStyle(() => {
       const counterProgress = hasValue ? 1 : focusAnimation.value
       return {
-        borderColor: getBorderColor(errorAnimation.value, focusAnimation.value),
+        borderColor: getBorderColor(
+          subtextAnimation.value,
+          focusAnimation.value
+        ),
         right:
           maxLength !== undefined &&
           value.length >= MAX_LENGTH_WARNING_THRESHOLD * maxLength
@@ -300,10 +306,10 @@ export const OutlinedTextInput = forwardRef(
       }
     })
     const leftStyle = useAnimatedStyle(() => ({
-      borderColor: getBorderColor(errorAnimation.value, focusAnimation.value)
+      borderColor: getBorderColor(subtextAnimation.value, focusAnimation.value)
     }))
     const rightStyle = useAnimatedStyle(() => ({
-      borderColor: getBorderColor(errorAnimation.value, focusAnimation.value)
+      borderColor: getBorderColor(subtextAnimation.value, focusAnimation.value)
     }))
     const topStyle = useAnimatedStyle(() => {
       const counterProgress = hasLabel
@@ -312,7 +318,10 @@ export const OutlinedTextInput = forwardRef(
           : focusAnimation.value
         : 0
       return {
-        borderColor: getBorderColor(errorAnimation.value, focusAnimation.value),
+        borderColor: getBorderColor(
+          subtextAnimation.value,
+          focusAnimation.value
+        ),
         left:
           labelLeft +
           counterProgress * (2 * labelPadding + labelWidth * (1 - labelShrink))
@@ -321,7 +330,7 @@ export const OutlinedTextInput = forwardRef(
     const labelStyle = useAnimatedStyle(() => {
       const labelProgressAlt = hasValue ? 1 : focusAnimationAlt.value
       return {
-        color: getLabelColor(errorAnimation.value, focusAnimation.value),
+        color: getLabelColor(subtextAnimation.value, focusAnimation.value),
         transform: [
           { translateX: labelProgressAlt * labelTranslateX },
           { translateY: labelProgressAlt * labelTranslateY },
@@ -333,9 +342,12 @@ export const OutlinedTextInput = forwardRef(
       const counterProgress = hasValue ? 1 : focusAnimation.value
       return {
         color: interpolateColor(
-          errorAnimation.value,
+          subtextAnimation.value,
           [0, 1],
-          [theme.secondaryText, theme.dangerText]
+          [
+            theme.secondaryText,
+            hasError ? theme.dangerText : theme.iconTappable
+          ]
         ),
         opacity: counterProgress,
         transform: [
@@ -344,12 +356,12 @@ export const OutlinedTextInput = forwardRef(
         ]
       }
     })
-    const errorStyle = useAnimatedStyle(() => ({
-      opacity: errorAnimation.value
+    const subtextStyle = useAnimatedStyle(() => ({
+      opacity: subtextAnimation.value
     }))
     const showPasswordLineStyle = useAnimatedStyle(() => ({
       backgroundColor: getBorderColor(
-        errorAnimation.value,
+        subtextAnimation.value,
         focusAnimation.value
       ),
       transform: [
@@ -384,9 +396,12 @@ export const OutlinedTextInput = forwardRef(
           </View>
           <Animated.Text
             numberOfLines={1}
-            style={[styles.errorText, errorStyle]}
+            style={[
+              hasError ? styles.errorText : styles.validText,
+              subtextStyle
+            ]}
           >
-            {error}
+            {error ?? valid}
           </Animated.Text>
           <Animated.Text
             numberOfLines={1}
@@ -429,7 +444,11 @@ export const OutlinedTextInput = forwardRef(
             multiline={multiline}
             editable={!showSpinner}
             selectionColor={
-              hasError ? theme.dangerText : theme.outlineTextInputTextColor
+              hasError
+                ? theme.dangerText
+                : hasValid
+                ? theme.iconTappable
+                : theme.outlineTextInputTextColor
             }
             style={[styles.textInput, textInputStyle]}
             textAlignVertical="top"
@@ -471,6 +490,11 @@ const getStyles = cacheStyles((theme: Theme) => {
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.75),
     position: 'absolute'
+  }
+  const subtextCommon: TextStyle = {
+    ...footerCommon,
+    left: theme.rem(1.25),
+    bottom: -theme.rem(1.25)
   }
 
   return {
@@ -580,10 +604,12 @@ const getStyles = cacheStyles((theme: Theme) => {
 
     // The error text hangs out in the margin area below the main box:
     errorText: {
-      ...footerCommon,
-      color: theme.dangerText,
-      left: theme.rem(1.25),
-      bottom: -theme.rem(1.25)
+      ...subtextCommon,
+      color: theme.dangerText
+    },
+    validText: {
+      ...subtextCommon,
+      color: theme.iconTappable
     },
 
     // The counter text splits the bottom right border line:
