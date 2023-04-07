@@ -346,7 +346,9 @@ export const OutlinedTextInput = forwardRef(
           [0, 1],
           [
             theme.secondaryText,
-            hasError ? theme.dangerText : theme.iconTappable
+            hasError
+              ? theme.dangerText
+              : theme.outlineTextInputBorderColorFocused
           ]
         ),
         opacity: counterProgress,

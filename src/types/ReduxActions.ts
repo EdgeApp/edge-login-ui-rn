@@ -55,7 +55,7 @@ export type Action =
     }
   | {
       type: 'CREATE_UPDATE_USERNAME'
-      data: { username: string; error: string | null }
+      data: { username: string }
     }
   | {
       type: 'LOGIN_PIN_FAIL'
