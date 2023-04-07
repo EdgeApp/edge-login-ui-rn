@@ -8,6 +8,7 @@ import {
 } from 'react'
 import * as React from 'react'
 import {
+  ActivityIndicator,
   LayoutChangeEvent,
   Platform,
   TextInput,
@@ -45,6 +46,7 @@ interface Props {
   marginRem?: number | number[] // Defaults to 0.5
   multiline?: boolean // Defaults to 'false'
   searchIcon?: boolean // Defaults to 'false'
+  showSpinner?: boolean // Defaults to 'false'
 
   // Callbacks:
   onBlur?: () => void
@@ -108,6 +110,7 @@ export const OutlinedTextInput = forwardRef(
       multiline = false,
       searchIcon = false,
       hidePassword,
+      showSpinner = false,
 
       // Callbacks:
       onBlur,
@@ -392,18 +395,24 @@ export const OutlinedTextInput = forwardRef(
           >
             {charLimitLabel}
           </Animated.Text>
-          {!searchIcon ? null : (
+          {searchIcon ? (
             <AntDesignIcon name="search1" style={styles.searchIcon} />
-          )}
-          {!clearIcon || !hasValue || secureTextEntry ? null : (
+          ) : null}
+          {clearIcon && hasValue && !showSpinner && !secureTextEntry ? (
             <TouchableOpacity
               style={styles.clearTapArea}
               onPress={() => clear()}
             >
               <AntDesignIcon name="close" style={styles.clearIcon} />
             </TouchableOpacity>
-          )}
-          {!secureTextEntry ? null : (
+          ) : null}
+          {showSpinner && !secureTextEntry ? (
+            <View style={styles.clearTapArea}>
+              <ActivityIndicator style={styles.spinnerIcon} />
+            </View>
+          ) : null}
+
+          {secureTextEntry ? (
             <TouchableWithoutFeedback onPress={handleHidePassword}>
               <View style={styles.clearTapArea}>
                 <Animated.View
@@ -412,12 +421,13 @@ export const OutlinedTextInput = forwardRef(
                 <IonIcon name="eye-outline" style={styles.eyeIcon} />
               </View>
             </TouchableWithoutFeedback>
-          )}
+          ) : null}
           <TextInput
             ref={inputRef}
             {...inputProps}
             autoFocus={autoFocus}
             multiline={multiline}
+            editable={!showSpinner}
             selectionColor={
               hasError ? theme.dangerText : theme.outlineTextInputTextColor
             }
@@ -543,6 +553,10 @@ const getStyles = cacheStyles((theme: Theme) => {
     clearIcon: {
       color: theme.iconDeactivated,
       fontSize: theme.rem(1),
+      padding: theme.rem(1)
+    },
+    spinnerIcon: {
+      color: theme.icon,
       padding: theme.rem(1)
     },
     eyeIcon: {
