@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- changed: Add a back button to the `PasswordLoginScene`
 - changed: Move Help button to the top-right corner for all scenes
 
 ## 1.2.2 (2023-03-20)

@@ -51,6 +51,7 @@ interface DispatchProps {
   gotoPinLoginPage: () => void
   handleQrModal: () => void
   login: (attempt: LoginAttempt) => Promise<void>
+  exitScene: () => void
   saveOtpError: (otpAttempt: LoginAttempt, otpError: OtpError) => void
   updateUsername: (username: string) => void
   handlePasswordRecovery: (recoveryKey: string) => Promise<boolean>
@@ -100,6 +101,10 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     })
   }
 
+  handleBack = () => {
+    this.props.exitScene()
+  }
+
   handleBlur = () => {
     Keyboard.dismiss()
     this.setState({
@@ -140,7 +145,11 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
         keyboardShouldPersistTaps="always"
         contentContainerStyle={styles.mainScrollView}
       >
-        <ThemedScene noUnderline branding={this.props.branding}>
+        <ThemedScene
+          onBack={this.handleBack}
+          noUnderline
+          branding={this.props.branding}
+        >
           <BackgroundImage
             branding={this.props.branding}
             content={this.renderOverImage()}
@@ -452,6 +461,9 @@ export const PasswordLoginScene = connect<StateProps, DispatchProps, OwnProps>(
     },
     async login(attempt) {
       return await dispatch(login(attempt))
+    },
+    exitScene() {
+      dispatch({ type: 'START_LANDING' })
     },
     saveOtpError(attempt, error) {
       dispatch({ type: 'OTP_ERROR', data: { attempt, error } })
