@@ -1,5 +1,8 @@
 # edge-login-ui-rn
 
+## 1.4.0 (2023-04-11)
+- fixed: Calculation of minLength for legacy recovery questions
+
 ## 1.3.1 (2023-04-11)
 - changed: Move "Security Alerts" notification prompt to after account creation is completed
 - changed: Update username availability check to be on a per-character-input basis
