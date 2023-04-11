@@ -1,9 +1,15 @@
 # edge-login-ui-rn
 
+## 1.4.1 (2023-04-11)
+
+- fixed: Calculation of minLength for legacy recovery questions in login scene
+
 ## 1.4.0 (2023-04-11)
+
 - fixed: Calculation of minLength for legacy recovery questions
 
 ## 1.3.1 (2023-04-11)
+
 - changed: Move "Security Alerts" notification prompt to after account creation is completed
 - changed: Update username availability check to be on a per-character-input basis
 
@@ -12,6 +18,14 @@
 - added: Add an onComplete prop to the LoginScene component
 - changed: Add a back button to the `PasswordLoginScene`
 - changed: Move Help button to the top-right corner for all scenes
+
+## 1.2.4 (2023-04-11)
+
+- fixed: Calculation of minLength for legacy recovery questions in login scene
+
+## 1.2.3 (2023-04-11)
+
+- fixed: Calculation of minLength for legacy recovery questions
 
 ## 1.2.2 (2023-03-20)
 
