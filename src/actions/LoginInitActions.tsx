@@ -17,6 +17,7 @@ import {
   RequestPermissionsModal
 } from '../components/modals/RequestPermissionsModal'
 import { SecurityAlertsModal } from '../components/modals/SecurityAlertsModal'
+import { InitialRouteName } from '../components/publicApi/types'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { scene as sceneReducer } from '../reducers/SceneReducer'
 import { Branding } from '../types/Branding'
@@ -29,7 +30,6 @@ import {
   NotificationPermissionsInfo,
   RootState
 } from '../types/ReduxTypes'
-import { Theme } from '../types/Theme'
 import { launchPasswordRecovery } from './LoginAction'
 import { loadTouchState } from './TouchActions'
 
@@ -41,19 +41,14 @@ const notificationPermissionsInfoFile = 'notificationsPermisions.json'
 /**
  * Fires off all the things we need to do to get the login scene up & running.
  */
-export const initializeLogin = (theme: Theme, branding: Branding) => async (
-  dispatch: Dispatch,
-  getState: GetState,
-  imports: Imports
-) => {
+export const initializeLogin = (
+  branding: Branding,
+  initialRoute?: InitialRouteName
+) => async (dispatch: Dispatch, getState: GetState, imports: Imports) => {
   const { customPermissionsFunction } = imports
   const touchPromise = dispatch(loadTouchState())
   dispatch(checkSecurityMessages()).catch(error => console.log(error))
-  customPermissionsFunction
-    ? customPermissionsFunction()
-    : dispatch(checkAndRequestNotifications(theme, branding)).catch(error =>
-        console.log(error)
-      )
+  if (customPermissionsFunction != null) customPermissionsFunction()
 
   await touchPromise
 
@@ -199,19 +194,20 @@ const logicMap: Array<Array<Array<string | undefined>>> = [
   [[], []]
 ]
 
-logicMap[0][0][0] = s.strings.notifications_and_refresh_permissions_branded
-logicMap[0][0][1] = s.strings.notifications_permissions_branded
-logicMap[0][1][0] = s.strings.refresh_permission_branded
+logicMap[0][0][0] = s.strings.notifications_and_refresh_permissions_branded_s
+logicMap[0][0][1] = s.strings.notifications_permissions_branded_s
+logicMap[0][1][0] = s.strings.refresh_permission_branded_s
 logicMap[0][1][1] = undefined
-logicMap[1][0][0] = s.strings.refresh_permission_branded
+logicMap[1][0][0] = s.strings.refresh_permission_branded_s
 logicMap[1][0][1] = undefined
-logicMap[1][1][0] = s.strings.refresh_permission_branded
+logicMap[1][1][0] = s.strings.refresh_permission_branded_s
 logicMap[1][1][1] = undefined
 
-const checkAndRequestNotifications = (
-  theme: Theme,
-  branding: Branding
-) => async (dispatch: Dispatch, getState: GetState, imports: Imports) => {
+export const checkAndRequestNotifications = (branding: Branding) => async (
+  dispatch: Dispatch,
+  getState: GetState,
+  imports: Imports
+) => {
   const { onNotificationPermit } = imports
   const notificationPermission = await checkNotifications()
   const notificationStatus = notificationPermission.status
@@ -244,7 +240,7 @@ const checkAndRequestNotifications = (
       ? sprintf(
           logicMap[notifEnabled][isNotificationBlockedBit][refreshEnabled] ??
             '',
-          branding.appName
+          branding.appName ?? s.strings.app_name_default
         )
       : undefined
 

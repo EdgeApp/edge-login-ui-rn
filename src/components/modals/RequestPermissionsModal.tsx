@@ -48,7 +48,7 @@ export function RequestPermissionsModal(props: Props) {
 
   return (
     <ThemedModal bridge={bridge} paddingRem={1} warning onCancel={handleCancel}>
-      <TitleText>{s.strings.alert_modal_title}</TitleText>
+      <TitleText>{s.strings.security_is_our_priority_modal_title}</TitleText>
       <MessageText>{message}</MessageText>
       <Checkbox
         onChange={() => handlePress('optInPriceChanges')}

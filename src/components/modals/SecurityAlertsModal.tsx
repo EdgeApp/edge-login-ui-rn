@@ -29,7 +29,7 @@ class SecurityAlertsModalComponent extends React.Component<Props> {
         warning
         onCancel={() => bridge.resolve(undefined)}
       >
-        <TitleText>{s.strings.alert_modal_title}</TitleText>
+        <TitleText>{s.strings.security_is_our_priority_modal_title}</TitleText>
         {this.renderList()}
         <ModalCloseArrow onPress={() => bridge.resolve(undefined)} />
       </ThemedModal>
