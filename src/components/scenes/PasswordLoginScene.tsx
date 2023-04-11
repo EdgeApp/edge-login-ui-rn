@@ -14,6 +14,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import { launchPasswordRecovery, login } from '../../actions/LoginAction'
+import { maybeRouteComplete } from '../../actions/LoginInitActions'
 import { deleteUserFromDevice } from '../../actions/UserActions'
 import s from '../../common/locales/strings'
 import { BiometryType } from '../../keychain'
@@ -25,7 +26,6 @@ import { LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
 import { BackgroundImage } from '../common/BackgroundImage'
-import { HeaderParentButtons } from '../common/HeaderParentButtons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { showQrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -34,6 +34,7 @@ import { connect } from '../services/ReduxStore'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { LineFormField } from '../themed/LineFormField'
 import { MainButton } from '../themed/MainButton'
+import { ThemedScene } from '../themed/ThemedScene'
 
 interface OwnProps {
   branding: Branding
@@ -51,6 +52,7 @@ interface DispatchProps {
   gotoPinLoginPage: () => void
   handleQrModal: () => void
   login: (attempt: LoginAttempt) => Promise<void>
+  exitScene: () => void
   saveOtpError: (otpAttempt: LoginAttempt, otpError: OtpError) => void
   updateUsername: (username: string) => void
   handlePasswordRecovery: (recoveryKey: string) => Promise<boolean>
@@ -100,6 +102,10 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     })
   }
 
+  handleBack = () => {
+    this.props.exitScene()
+  }
+
   handleBlur = () => {
     Keyboard.dismiss()
     this.setState({
@@ -140,11 +146,17 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
         keyboardShouldPersistTaps="always"
         contentContainerStyle={styles.mainScrollView}
       >
-        <BackgroundImage
+        <ThemedScene
+          onBack={this.handleBack}
+          noUnderline
           branding={this.props.branding}
-          content={this.renderOverImage()}
-          onPress={this.handleBlur}
-        />
+        >
+          <BackgroundImage
+            branding={this.props.branding}
+            content={this.renderOverImage()}
+            onPress={this.handleBlur}
+          />
+        </ThemedScene>
       </KeyboardAwareScrollView>
     )
   }
@@ -163,7 +175,6 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     }
     return (
       <View style={styles.featureBoxContainer}>
-        <HeaderParentButtons branding={this.props.branding} />
         <TouchableWithoutFeedback onPress={this.handleBlur}>
           <View style={styles.featureBox}>
             <LogoImageHeader branding={this.props.branding} />
@@ -451,6 +462,9 @@ export const PasswordLoginScene = connect<StateProps, DispatchProps, OwnProps>(
     },
     async login(attempt) {
       return await dispatch(login(attempt))
+    },
+    exitScene() {
+      dispatch(maybeRouteComplete({ type: 'START_LANDING' }))
     },
     saveOtpError(attempt, error) {
       dispatch({ type: 'OTP_ERROR', data: { attempt, error } })

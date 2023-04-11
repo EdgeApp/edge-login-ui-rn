@@ -1,5 +1,11 @@
 # edge-login-ui-rn
 
+## Unreleased
+
+- added: Add an onComplete prop to the LoginScene component
+- changed: Add a back button to the `PasswordLoginScene`
+- changed: Move Help button to the top-right corner for all scenes
+
 ## 1.2.2 (2023-03-20)
 
 - changed: Change `'new-account'` value for `initialRoute` prop to route to the username screen

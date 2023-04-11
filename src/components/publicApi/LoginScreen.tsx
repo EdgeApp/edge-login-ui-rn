@@ -4,7 +4,11 @@ import * as React from 'react'
 import { initializeLogin } from '../../actions/LoginInitActions'
 import { updateFontStyles } from '../../constants/Fonts'
 import { Branding, ParentButton } from '../../types/Branding'
-import { OnLogin, OnNotificationPermit } from '../../types/ReduxTypes'
+import {
+  OnComplete,
+  OnLogin,
+  OnNotificationPermit
+} from '../../types/ReduxTypes'
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
 import { changeFont, useTheme } from '../services/ThemeContext'
@@ -30,6 +34,10 @@ interface Props {
   // Options passed to the core login methods:
   accountOptions: EdgeAccountOptions
 
+  /**
+   * Called when the user navigates back passed the initialRoute if it was set.
+   */
+  onComplete: OnComplete
   // Called when the login completes:
   onLogin: OnLogin
   // Called when the user makes a choice from RequestPermissionsModal:
@@ -83,7 +91,8 @@ export function LoginScreen(props: Props): JSX.Element {
       imports={{
         accountOptions: props.accountOptions,
         context: props.context,
-        onComplete: () => {},
+        initialRoute: props.initialRoute,
+        onComplete: props.onComplete,
         onLogin: props.onLogin,
         onNotificationPermit: props.onNotificationPermit,
         recoveryKey: props.recoveryLogin,
@@ -91,7 +100,7 @@ export function LoginScreen(props: Props): JSX.Element {
         username: props.username,
         customPermissionsFunction: props.customPermissionsFunction
       }}
-      initialAction={initializeLogin(theme, branding, props.initialRoute)}
+      initialAction={initializeLogin(theme, branding)}
     >
       <Router branding={branding} />
     </ReduxStore>

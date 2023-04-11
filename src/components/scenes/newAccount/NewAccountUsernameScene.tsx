@@ -8,6 +8,7 @@ import {
   checkUsernameForAvailabilty,
   validateUsername
 } from '../../../actions/CreateAccountActions'
+import { maybeRouteComplete } from '../../../actions/LoginInitActions'
 import s from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { Branding } from '../../../types/Branding'
@@ -124,7 +125,7 @@ export const NewAccountUsernameScene = connect<
   }),
   (dispatch: Dispatch) => ({
     onBack() {
-      dispatch({ type: 'NEW_ACCOUNT_WELCOME' })
+      dispatch(maybeRouteComplete({ type: 'NEW_ACCOUNT_WELCOME' }))
     },
     async checkUsernameForAvailabilty(data: string) {
       return await dispatch(checkUsernameForAvailabilty(data))
