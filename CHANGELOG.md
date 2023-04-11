@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 1.2.4 (2023-04-11)
+
+- fixed: Calculation of minLength for legacy recovery questions in login scene
+
 ## 1.2.3 (2023-04-11)
 
 - fixed: Calculation of minLength for legacy recovery questions
