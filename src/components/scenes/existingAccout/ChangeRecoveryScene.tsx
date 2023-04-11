@@ -134,7 +134,12 @@ export const ChangeRecoveryScene = ({ branding }: Props) => {
   const showTextInputModal = async (index: number) => {
     const question = questions[index]
     if (question == null) return
-    const minLength = parseInt(question.split(':')[1] ?? 0)
+
+    let minLengthString = question.split(':')[1]
+    if (minLengthString == null || minLengthString.trim() === '')
+      minLengthString = '0'
+
+    const minLength = parseInt(minLengthString)
 
     const validateAnswer = async (answer: string) => {
       return answer.length >= minLength
