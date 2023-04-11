@@ -1,6 +1,6 @@
 # edge-login-ui-rn
 
-## Unreleased
+## 1.3.0 (2023-04-10)
 
 - added: Add an onComplete prop to the LoginScene component
 - changed: Add a back button to the `PasswordLoginScene`
