@@ -17,7 +17,6 @@ import {
   RequestPermissionsModal
 } from '../components/modals/RequestPermissionsModal'
 import { SecurityAlertsModal } from '../components/modals/SecurityAlertsModal'
-import { InitialRouteName } from '../components/publicApi/types'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { scene as sceneReducer } from '../reducers/SceneReducer'
 import { Branding } from '../types/Branding'
@@ -41,10 +40,11 @@ const notificationPermissionsInfoFile = 'notificationsPermisions.json'
 /**
  * Fires off all the things we need to do to get the login scene up & running.
  */
-export const initializeLogin = (
-  branding: Branding,
-  initialRoute?: InitialRouteName
-) => async (dispatch: Dispatch, getState: GetState, imports: Imports) => {
+export const initializeLogin = () => async (
+  dispatch: Dispatch,
+  getState: GetState,
+  imports: Imports
+) => {
   const { customPermissionsFunction } = imports
   const touchPromise = dispatch(loadTouchState())
   dispatch(checkSecurityMessages()).catch(error => console.log(error))
