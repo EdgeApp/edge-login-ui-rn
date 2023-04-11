@@ -1,5 +1,10 @@
 # edge-login-ui-rn
 
+## 1.4.2 (2023-04-11)
+
+- fixed: Reinstate onComplete handling from 1.3
+- changed: Update translations
+
 ## 1.4.1 (2023-04-11)
 
 - fixed: Calculation of minLength for legacy recovery questions in login scene
