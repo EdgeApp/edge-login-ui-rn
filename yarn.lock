@@ -2525,6 +2525,11 @@ react-native-airship@^0.2.9:
   dependencies:
     yavent "^0.1.1"
 
+react-native-email-link@^1.14.5:
+  version "1.14.5"
+  resolved "https://registry.yarnpkg.com/react-native-email-link/-/react-native-email-link-1.14.5.tgz#05e13002bd850ebaf98477b4cfbfdfa972a57608"
+  integrity sha512-TNi9OeGcJlw6FXl1dWAKEBGJEgKPBfsiB3v8GaHqqCtzmWnKE+8y1Wfhaaloh37OJb2vqp1cwDpW5m6PiTXazA==
+
 react-native-gesture-handler@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.5.0.tgz#61385583570ed0a45a9ed142425e35f8fe8274fb"
