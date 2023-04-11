@@ -5,6 +5,7 @@ import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
 import { fetchIsUsernameAvailable } from '../../../actions/CreateAccountActions'
+import { maybeRouteComplete } from '../../../actions/LoginInitActions'
 import s from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { Branding } from '../../../types/Branding'
@@ -19,15 +20,14 @@ import { ThemedScene } from '../../themed/ThemedScene'
 interface Props {
   branding: Branding
 }
-
 const AVAILABILITY_CHECK_DELAY_MS = 1000
 
 type Timeout = ReturnType<typeof setTimeout>
 
 export const NewAccountUsernameScene = ({ branding }: Props) => {
+  const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
-  const dispatch = useDispatch()
 
   const mounted = React.useRef<boolean>(true)
   const [username, setUsername] = React.useState('')
@@ -68,12 +68,11 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
     errorText != null ||
     username.length === 0
 
+  const handleBack = useHandler(() => {
+    dispatch(maybeRouteComplete({ type: 'NEW_ACCOUNT_WELCOME' }))
+  })
   const handleNext = useHandler(async () => {
     dispatch(completeUsername(username))
-  })
-
-  const handleOnBack = useHandler(async () => {
-    await dispatch({ type: 'NEW_ACCOUNT_WELCOME' })
   })
 
   const handleChangeText = useHandler(async (text: string) => {
@@ -134,7 +133,7 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
   })
 
   return (
-    <ThemedScene onBack={handleOnBack} title={s.strings.choose_title_username}>
+    <ThemedScene onBack={handleBack} title={s.strings.choose_title_username}>
       <View style={styles.content}>
         <KeyboardAwareScrollView
           contentContainerStyle={styles.mainScrollView}
