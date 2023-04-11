@@ -21,6 +21,7 @@ interface Props {
   children?: React.ReactNode
 
   // Header:
+  backButtonText?: string
   branding?: Branding
   noUnderline?: boolean
   onBack?: () => void
@@ -33,6 +34,7 @@ interface Props {
 
 export function ThemedScene(props: Props) {
   const {
+    backButtonText,
     branding = {},
     children,
     onBack,
@@ -72,8 +74,11 @@ export function ThemedScene(props: Props) {
                 <FontAwesome5
                   name="chevron-left"
                   size={theme.rem(1)}
-                  color={theme.primaryText}
+                  style={styles.buttonIcon}
                 />
+                {backButtonText == null ? null : (
+                  <Text style={styles.buttonText}>{backButtonText}</Text>
+                )}
               </TouchableOpacity>
             )}
             {onSkip == null ? null : (
@@ -110,20 +115,27 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(3)
   },
   leftButton: {
+    alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'center',
     paddingHorizontal: theme.rem(1),
     position: 'absolute',
-    bottom: 0,
     left: 0,
     top: 0
   },
   rightButton: {
+    alignContent: 'center',
+    flexDirection: 'row',
     justifyContent: 'center',
     paddingHorizontal: theme.rem(1),
     position: 'absolute',
-    bottom: 0,
     right: 0,
     top: 0
+  },
+  buttonIcon: {
+    color: theme.primaryText,
+    paddingRight: theme.rem(0.5),
+    height: theme.rem(1)
   },
   buttonText: {
     color: theme.primaryText,

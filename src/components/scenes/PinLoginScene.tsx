@@ -28,11 +28,11 @@ import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { PinKeypad } from '../abSpecific/PinKeypad'
 import { UserListItem } from '../abSpecific/UserListItem'
 import { BackgroundImage } from '../common/BackgroundImage'
-import { HeaderParentButtons } from '../common/HeaderParentButtons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { connect } from '../services/ReduxStore'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { ThemedScene } from '../themed/ThemedScene'
 
 interface OwnProps {
   branding: Branding
@@ -86,6 +86,10 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
     }
   }
 
+  handleBack = () => {
+    this.exitPin()
+  }
+
   handleDelete = (username: string) => {
     const { deleteUserFromDevice } = this.props
     this.setState({ focusOn: 'pin' })
@@ -127,12 +131,19 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
     const { theme } = this.props
     const styles = getStyles(theme)
     return (
-      <View style={styles.container}>
-        <BackgroundImage
-          branding={this.props.branding}
-          content={this.renderOverImage()}
-        />
-      </View>
+      <ThemedScene
+        backButtonText={s.strings.exit_pin}
+        onBack={this.handleBack}
+        noUnderline
+        branding={this.props.branding}
+      >
+        <View style={styles.container}>
+          <BackgroundImage
+            branding={this.props.branding}
+            content={this.renderOverImage()}
+          />
+        </View>
+      </ThemedScene>
     )
   }
 
@@ -145,15 +156,6 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
     }
     return (
       <View style={styles.featureBoxContainer}>
-        <HeaderParentButtons
-          branding={{
-            ...this.props.branding,
-            parentButton: {
-              text: s.strings.exit_pin,
-              callback: this.exitPin.bind(this)
-            }
-          }}
-        />
         <TouchableWithoutFeedback onPress={this.handleHideDrop}>
           <View style={styles.featureBox}>
             <LogoImageHeader branding={this.props.branding} />
