@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 1.3.1 (2023-04-11)
+- changed: Move "Security Alerts" notification prompt to after account creation is completed
+- changed: Update username availability check to be on a per-character-input basis
+
 ## 1.3.0 (2023-04-10)
 
 - added: Add an onComplete prop to the LoginScene component
