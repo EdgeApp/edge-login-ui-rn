@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 1.2.3 (2023-04-11)
+
+- fixed: Calculation of minLength for legacy recovery questions
+
 ## 1.2.2 (2023-03-20)
 
 - changed: Change `'new-account'` value for `initialRoute` prop to route to the username screen
