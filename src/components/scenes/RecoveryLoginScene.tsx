@@ -53,8 +53,11 @@ export const RecoveryLoginScene = () => {
   }
 
   const showTextInputModal = (index: number) => {
-    const questionSpec = questions[index].split(':')
-    const minLength = questionSpec[1] === '' ? 0 : parseInt(questionSpec[1])
+    let minLengthString = questions[index].split(':')[1]
+    if (minLengthString == null || minLengthString.trim() === '')
+      minLengthString = '0'
+
+    const minLength = parseInt(minLengthString)
 
     const validateAnswer = async (answer: string) => {
       return answer.length >= minLength
