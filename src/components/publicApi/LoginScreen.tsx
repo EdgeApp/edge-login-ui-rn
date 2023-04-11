@@ -37,7 +37,7 @@ interface Props {
   /**
    * Called when the user navigates back passed the initialRoute if it was set.
    */
-  onComplete: OnComplete
+  onComplete?: OnComplete
   // Called when the login completes:
   onLogin: OnLogin
   // Called when the user makes a choice from RequestPermissionsModal:
@@ -64,6 +64,7 @@ export function LoginScreen(props: Props): JSX.Element {
     regularFontFamily,
     headingFontFamily = regularFontFamily
   } = fontDescription
+  const { onComplete = () => {} } = props
 
   const theme = useTheme()
 
@@ -92,7 +93,7 @@ export function LoginScreen(props: Props): JSX.Element {
         accountOptions: props.accountOptions,
         context: props.context,
         initialRoute: props.initialRoute,
-        onComplete: props.onComplete,
+        onComplete,
         onLogin: props.onLogin,
         onNotificationPermit: props.onNotificationPermit,
         recoveryKey: props.recoveryLogin,
