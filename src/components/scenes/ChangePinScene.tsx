@@ -153,7 +153,7 @@ export const NewAccountPinScene = () => {
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {
-    maybeRouteComplete({ type: 'NEW_ACCOUNT_PASSWORD' })
+    dispatch(maybeRouteComplete({ type: 'NEW_ACCOUNT_PASSWORD' }))
   })
   const handleSubmit = useHandler(() => {
     logEvent('Signup_PIN_Valid')
