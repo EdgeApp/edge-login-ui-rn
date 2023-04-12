@@ -349,8 +349,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'space-around'
   },
   featureBox: {
-    position: 'relative',
-    top: theme.rem(2.5),
     width: '100%',
     alignItems: 'center'
   },
