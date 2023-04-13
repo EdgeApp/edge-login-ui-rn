@@ -20,7 +20,7 @@ import { ThemedScene } from '../../themed/ThemedScene'
 interface Props {
   branding: Branding
 }
-const AVAILABILITY_CHECK_DELAY_MS = 1000
+const AVAILABILITY_CHECK_DELAY_MS = 400
 
 type Timeout = ReturnType<typeof setTimeout>
 
