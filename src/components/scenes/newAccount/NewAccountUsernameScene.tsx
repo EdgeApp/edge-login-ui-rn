@@ -9,7 +9,7 @@ import { maybeRouteComplete } from '../../../actions/LoginInitActions'
 import s from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { Branding } from '../../../types/Branding'
-import { Dispatch, useDispatch } from '../../../types/ReduxTypes'
+import { Dispatch, useDispatch, useSelector } from '../../../types/ReduxTypes'
 import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -31,6 +31,7 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
 
   const [username, setUsername] = React.useState('')
   const [timerId, setTimerId] = React.useState<Timeout | undefined>(undefined)
+  const [isNextInProgress, setIsNextInProgress] = React.useState<boolean>(false)
   const [availableStatus, setAvailableStatus] = React.useState<
     boolean | undefined
   >(false) // True/false on completed check, undefined if unchecked
@@ -62,26 +63,26 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
     return isAvailable
   }
 
-  // TODO:
   // Special considerations for the call to action (next) button:
   // 1. We want to avoid making the user wait for a fetch to check username
   //    availability if the fetch was already done prior to pressing the button.
   // 2. If the user quickly tapped next right after their last keyboard input,
   //    before waiting for the username availability check, then we want to
   //    check availability before proceeding past the scene
-
-  const isNextDisabled =
-    availableStatus == null ||
-    timerId != null ||
-    errorText != null ||
-    username.length === 0
-
   const handleBack = useHandler(() => {
     dispatch(maybeRouteComplete({ type: 'NEW_ACCOUNT_WELCOME' }))
   })
 
   const handleNext = useHandler(async () => {
-    dispatch(completeUsername(username))
+    setIsNextInProgress(true)
+    const isNextSuccess =
+      availableStatus == null
+        ? await fetchIsAvailable(username)
+        : availableStatus
+    if (isNextSuccess) dispatch(completeUsername(username))
+
+    if (!mounted.current) return
+    setIsNextInProgress(false)
   })
 
   const handleChangeText = useHandler(async (text: string) => {
@@ -97,6 +98,7 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
     setUsername(text)
     setErrorText(undefined)
     setAvailableText(undefined)
+    setAvailableStatus(undefined)
 
     // Validate on the actual user input, including if the last character was
     // non-ASCII.
@@ -113,7 +115,9 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
 
         // Start a new timer that will check availability after timer expiration
         const newTimerId = setTimeout(async () => {
-          if (!mounted.current) return
+          // If the user pressed next before this timer triggered, we're already
+          // checking availability on the most recent input
+          if (!mounted.current || isNextInProgress) return
 
           // Tag this fetch with a "counter ID" and sync with the outer context
           fetchCounter.current++
@@ -174,7 +178,7 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
             label={s.strings.next_label}
             type="secondary"
             marginRem={[1.5, 0.5]}
-            disabled={isNextDisabled}
+            disabled={errorText != null || username.length === 0}
             onPress={handleNext}
           />
         </KeyboardAwareScrollView>
