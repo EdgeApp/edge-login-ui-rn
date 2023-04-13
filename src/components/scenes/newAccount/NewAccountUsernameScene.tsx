@@ -29,19 +29,20 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const mounted = React.useRef<boolean>(true)
   const [username, setUsername] = React.useState('')
   const [timerId, setTimerId] = React.useState<Timeout | undefined>(undefined)
-  const fetchCounter = React.useRef<number>(0)
+  const [availableStatus, setAvailableStatus] = React.useState<
+    boolean | undefined
+  >(false) // True/false on completed check, undefined if unchecked
   const [availableText, setAvailableText] = React.useState<string | undefined>(
     undefined
   )
   const [errorText, setErrorText] = React.useState<string | undefined>(
     undefined
   )
-  const [isFetchingAvailability, setIsFetchingAvailability] = React.useState(
-    false
-  )
+
+  const mounted = React.useRef<boolean>(true)
+  const fetchCounter = React.useRef<number>(0)
 
   React.useEffect(
     () => () => {
@@ -51,7 +52,14 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
   )
 
   const fetchIsAvailable = async (username: string): Promise<boolean> => {
-    return await dispatch(fetchIsUsernameAvailable(username))
+    if (!mounted.current) return false
+    setAvailableStatus(undefined)
+
+    const isAvailable = await dispatch(fetchIsUsernameAvailable(username))
+
+    if (!mounted.current) return false
+    setAvailableStatus(isAvailable)
+    return isAvailable
   }
 
   // TODO:
@@ -63,7 +71,7 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
   //    check availability before proceeding past the scene
 
   const isNextDisabled =
-    isFetchingAvailability ||
+    availableStatus == null ||
     timerId != null ||
     errorText != null ||
     username.length === 0
@@ -71,6 +79,7 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
   const handleBack = useHandler(() => {
     dispatch(maybeRouteComplete({ type: 'NEW_ACCOUNT_WELCOME' }))
   })
+
   const handleNext = useHandler(async () => {
     dispatch(completeUsername(username))
   })
@@ -105,14 +114,12 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
         // Start a new timer that will check availability after timer expiration
         const newTimerId = setTimeout(async () => {
           if (!mounted.current) return
-          setIsFetchingAvailability(true)
 
           // Tag this fetch with a "counter ID" and sync with the outer context
           fetchCounter.current++
           const localCounter = fetchCounter
 
           const isAvailable = await fetchIsAvailable(text)
-          if (!mounted.current) return
 
           // This fetch is stale. Another fetch began before this one had a
           // chance to finish. Discard this result.
@@ -123,7 +130,6 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
           // fetchIsAvailable.
 
           // Update UI elements
-          setIsFetchingAvailability(false)
           setTimerId(undefined)
           if (isAvailable) setAvailableText(s.strings.username_available)
           else setErrorText(s.strings.username_exists_error)
@@ -156,8 +162,8 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
             returnKeyType="go"
             marginRem={1}
             value={username ?? ''}
-            clearIcon={!isFetchingAvailability}
-            showSpinner={isFetchingAvailability}
+            clearIcon={availableStatus != null}
+            showSpinner={availableStatus == null}
             editableOnSpinner
             error={errorText}
             valid={availableText}
