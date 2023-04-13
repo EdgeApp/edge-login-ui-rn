@@ -20,7 +20,7 @@ import { ThemedScene } from '../../themed/ThemedScene'
 interface Props {
   branding: Branding
 }
-const AVAILABILITY_CHECK_DELAY_MS = 1000
+const AVAILABILITY_CHECK_DELAY_MS = 400
 
 type Timeout = ReturnType<typeof setTimeout>
 
@@ -104,6 +104,7 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
 
         // Start a new timer that will check availability after timer expiration
         const newTimerId = setTimeout(async () => {
+          if (!mounted.current) return
           setIsFetchingAvailability(true)
 
           // Tag this fetch with a "counter ID" and sync with the outer context
@@ -157,6 +158,7 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
             value={username ?? ''}
             clearIcon={!isFetchingAvailability}
             showSpinner={isFetchingAvailability}
+            editableOnSpinner
             error={errorText}
             valid={availableText}
             searchIcon={false}

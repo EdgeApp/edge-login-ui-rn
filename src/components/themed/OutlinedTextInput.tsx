@@ -80,6 +80,8 @@ interface Props {
 
   // Unless 'blurOnClear' is passed explicitly in the props, Search Bars calls 'blur' when cleared and text inputs don't call 'blur' when cleared.
   blurOnClear?: boolean // Defaults to 'false'
+
+  editableOnSpinner?: boolean // Defaults to 'false'
 }
 
 /**
@@ -126,6 +128,7 @@ export const OutlinedTextInput = forwardRef(
       blurOnClear = searchIcon,
       maxLength,
       secureTextEntry,
+      editableOnSpinner = false,
       ...inputProps
     } = props
     const theme = useTheme()
@@ -444,7 +447,7 @@ export const OutlinedTextInput = forwardRef(
             {...inputProps}
             autoFocus={autoFocus}
             multiline={multiline}
-            editable={!showSpinner}
+            editable={editableOnSpinner || !showSpinner}
             selectionColor={
               hasError ? theme.dangerText : theme.outlineTextInputTextColor
             }
