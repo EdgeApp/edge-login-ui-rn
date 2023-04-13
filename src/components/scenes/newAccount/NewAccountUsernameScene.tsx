@@ -158,6 +158,7 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
             value={username ?? ''}
             clearIcon={!isFetchingAvailability}
             showSpinner={isFetchingAvailability}
+            editableOnSpinner
             error={errorText}
             valid={availableText}
             searchIcon={false}
