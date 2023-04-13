@@ -104,6 +104,7 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
 
         // Start a new timer that will check availability after timer expiration
         const newTimerId = setTimeout(async () => {
+          if (!mounted.current) return
           setIsFetchingAvailability(true)
 
           // Tag this fetch with a "counter ID" and sync with the outer context
