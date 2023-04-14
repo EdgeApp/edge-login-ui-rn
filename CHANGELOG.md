@@ -1,5 +1,15 @@
 # edge-login-ui-rn
 
+## 1.4.3 (2023-04-14)
+
+- added: OutlinedTextInput prop allowing user edits while spinner is active
+- changed: Reduce delay for checking username availability to 400ms
+- fixed: Add missing mount check to the first setState in the timeout to check username availability
+- fixed: Back on `NewAccountPinScene`
+- fixed: New account username input defocuses when auto-checking for availability
+- fixed: Username persistence on back button
+- removed: Too much space above brand image on `PinLoginScene`
+
 ## 1.4.2 (2023-04-11)
 
 - fixed: Reinstate onComplete handling from 1.3
