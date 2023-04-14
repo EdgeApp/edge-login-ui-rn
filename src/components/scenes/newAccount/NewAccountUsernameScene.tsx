@@ -9,7 +9,7 @@ import { maybeRouteComplete } from '../../../actions/LoginInitActions'
 import s from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { Branding } from '../../../types/Branding'
-import { Dispatch, useDispatch } from '../../../types/ReduxTypes'
+import { Dispatch, useDispatch, useSelector } from '../../../types/ReduxTypes'
 import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -29,10 +29,10 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const mounted = React.useRef<boolean>(true)
-  const [username, setUsername] = React.useState('')
+  const initUsername = useSelector(state => state.create.username)
+
+  const [username, setUsername] = React.useState(initUsername ?? '')
   const [timerId, setTimerId] = React.useState<Timeout | undefined>(undefined)
-  const fetchCounter = React.useRef<number>(0)
   const [availableText, setAvailableText] = React.useState<string | undefined>(
     undefined
   )
@@ -42,6 +42,9 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
   const [isFetchingAvailability, setIsFetchingAvailability] = React.useState(
     false
   )
+
+  const mounted = React.useRef<boolean>(true)
+  const fetchCounter = React.useRef<number>(0)
 
   React.useEffect(
     () => () => {
