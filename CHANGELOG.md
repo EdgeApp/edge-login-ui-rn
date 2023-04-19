@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 1.4.4 (2023-04-19)
+
+- fixed: Broken 'Confirm and Email' Recovery setup button
+
 ## 1.4.3 (2023-04-14)
 
 - added: OutlinedTextInput prop allowing user edits while spinner is active
