@@ -14,6 +14,7 @@ The login UI depends on some extra external native libraries, which you will hav
 
 - @react-native-community/datetimepicker v6
 - disklet v0.5
+- react-native-email-link v1
 - react-native-gesture-handler v2
 - react-native-linear-gradient v2
 - react-native-localize v2

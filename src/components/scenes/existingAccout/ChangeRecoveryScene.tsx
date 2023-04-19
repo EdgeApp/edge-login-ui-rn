@@ -165,21 +165,14 @@ export const ChangeRecoveryScene = ({ branding }: Props) => {
     })
   }
   const renderSaveRecoveryMessage = (showEmailPrompt: boolean) => {
-    const paddingRem = [0, 0.5]
     return (
-      <View style={styles.confirmRecoveryMessageContainer}>
-        <ModalMessage paddingRem={paddingRem}>
-          {s.strings.recovery_save_hint_token}
-        </ModalMessage>
-        <ModalMessage isWarning paddingRem={paddingRem}>
-          {s.strings.recovery_save_hint_username_answers}
-        </ModalMessage>
-        {showEmailPrompt ? (
-          <ModalMessage paddingRem={paddingRem}>
-            {s.strings.recovery_save_email_prompt}
-          </ModalMessage>
-        ) : null}
-      </View>
+      <ModalMessage>
+        {s.strings.recovery_save_hint_token + '\n\n'}
+        <Text style={styles.warningText}>
+          {s.strings.recovery_save_hint_username_answers + '\n\n'}
+        </Text>
+        {showEmailPrompt ? s.strings.recovery_save_email_prompt : null}
+      </ModalMessage>
     )
   }
 
@@ -413,11 +406,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   buttonsContainer: {
     marginHorizontal: theme.rem(1)
   },
-  confirmRecoveryMessageContainer: {
-    alignItems: 'flex-start',
-    display: 'flex',
-    flexDirection: 'column'
-  },
   disableButtonContainer: {
     alignSelf: 'center',
     paddingVertical: theme.rem(1)
@@ -427,5 +415,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginBottom: theme.rem(1),
     fontSize: theme.rem(1),
     fontFamily: theme.fontFaceDefault
+  },
+  warningText: {
+    color: theme.warningText
   }
 }))

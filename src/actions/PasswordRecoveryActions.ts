@@ -1,5 +1,5 @@
 import { EdgeAccount } from 'edge-core-js'
-import Mailer from 'react-native-mail'
+import { EmailException, openComposer } from 'react-native-email-link'
 import Share from 'react-native-share'
 import { sprintf } from 'sprintf-js'
 
@@ -49,39 +49,35 @@ export async function sendRecoveryEmail(
   recoveryKey: string,
   branding: Branding
 ): Promise<void> {
-  const body =
-    sprintf(s.strings.otp_email_body_branded, branding.appName) +
-    truncateUsername(username) +
-    '<br><br>' +
-    'iOS <br>edge://recovery?token=' +
-    recoveryKey +
-    '<br><br>' +
-    'Android https://recovery.edgesecure.co/recovery?token=' +
-    recoveryKey +
-    '<br><br>' +
-    s.strings.otp_email_body2 +
-    '<br><br>' +
-    s.strings.recovery_token +
-    `: ${recoveryKey}` +
-    '<br><br>' +
-    sprintf(s.strings.otp_email_body3_branded, branding.appName)
+  const body = `${sprintf(s.strings.otp_email_body_branded, branding.appName)}
+${truncateUsername(username)}
 
-  return await new Promise((resolve, reject) =>
-    Mailer.mail(
-      {
-        subject: sprintf(s.strings.otp_email_subject_branded, branding.appName),
-        recipients: [emailAddress],
-        body: body,
-        isHTML: true
-      },
-      (error, event) => {
-        if (error != null) reject(error)
-        if (event === 'sent') resolve()
-      }
-    )
-  )
+iOS
+edge://recovery?token=${recoveryKey}
+
+Android
+https://deep.edge.app/recovery#${recoveryKey}
+
+${s.strings.otp_email_body2}
+
+${s.strings.recovery_token}: ${recoveryKey}
+
+${sprintf(s.strings.otp_email_body3_branded, branding.appName)}`
+
+  return await new Promise((resolve, reject) => {
+    openComposer({
+      to: emailAddress,
+      subject: sprintf(s.strings.otp_email_subject_branded, branding.appName),
+      body: body
+    })
+      .then(value => {
+        resolve()
+      })
+      .catch((error: EmailException) => {
+        reject(error.message)
+      })
+  })
 }
-
 export async function shareRecovery(
   username: string,
   recoveryKey: string,
@@ -91,16 +87,10 @@ export async function shareRecovery(
     sprintf(s.strings.otp_email_body_branded, branding.appName) +
     '\n' +
     truncateUsername(username) +
-    '\n iOS: edge://recovery?token=' +
-    recoveryKey +
-    '\n Android: https://recovery.edgesecure.co/recovery?token=' +
-    recoveryKey +
-    '\n' +
+    `\n iOS: edge://recovery?token=${recoveryKey}` +
+    `\n Android: https://deep.edge.app/recovery#${recoveryKey}\n` +
     s.strings.otp_email_body2 +
-    '\n' +
-    s.strings.recovery_token +
-    `: ${recoveryKey}` +
-    '\n' +
+    `\n ${s.strings.recovery_token}: ${recoveryKey}\n` +
     sprintf(s.strings.otp_email_body3_branded, branding.appName)
 
   const title = sprintf(s.strings.otp_email_subject_branded, branding.appName)

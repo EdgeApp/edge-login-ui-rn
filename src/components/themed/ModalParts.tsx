@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
+import { GradientFadeOut } from '../modals/GradientFadeout'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 interface ModalTitleProps {
@@ -11,6 +12,10 @@ interface ModalTitleProps {
   center?: boolean
   paddingRem?: number[] | number
   icon?: React.ReactNode
+}
+interface ModalFooterProps {
+  onPress: () => void
+  fadeOut?: boolean | undefined
 }
 
 export function ModalTitle(props: ModalTitleProps) {
@@ -55,7 +60,7 @@ export function ModalCloseArrow(props: { onPress?: () => void }) {
   const styles = getStyles(theme)
 
   return (
-    <TouchableOpacity onPress={props.onPress} style={styles.closeArrow}>
+    <TouchableOpacity onPress={props.onPress} style={styles.closeIcon}>
       <AntDesignIcon
         name="close"
         size={theme.rem(1.25)}
@@ -65,10 +70,60 @@ export function ModalCloseArrow(props: { onPress?: () => void }) {
   )
 }
 
+export function ModalFooter(props: ModalFooterProps) {
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const { fadeOut } = props
+
+  const footerFadeContainer =
+    fadeOut === true ? styles.footerFadeContainer : undefined
+  const footerFade = fadeOut === true ? styles.footerFade : undefined
+
+  return (
+    <View style={footerFadeContainer}>
+      <View style={footerFade}>
+        <TouchableOpacity
+          onPress={props.onPress}
+          style={styles.closeIcon}
+          accessibilityHint="Close Modal"
+        >
+          <AntDesignIcon
+            name="close"
+            size={theme.rem(1.25)}
+            color={theme.iconTappable}
+          />
+        </TouchableOpacity>
+      </View>
+      {fadeOut !== true ? null : <GradientFadeOut />}
+    </View>
+  )
+}
+
+export function ModalScrollArea(props: {
+  children: React.ReactNode
+  onCancel: () => void
+}) {
+  const { children, onCancel } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  return (
+    <View>
+      <ScrollView contentContainerStyle={styles.scrollPadding}>
+        {children}
+      </ScrollView>
+      <ModalFooter onPress={onCancel} fadeOut />
+    </View>
+  )
+}
+
 const getStyles = cacheStyles((theme: Theme) => ({
-  closeArrow: {
+  closeIcon: {
     alignItems: 'center',
     paddingTop: theme.rem(1)
+  },
+  scrollPadding: {
+    paddingBottom: theme.rem(2.5)
   },
   titleContainer: {
     alignItems: 'center',
@@ -96,5 +151,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1),
     marginVertical: theme.rem(0.5),
     textAlign: 'left'
+  },
+  footerFadeContainer: {
+    marginBottom: theme.rem(-1)
+  },
+  footerFade: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1
   }
 }))
