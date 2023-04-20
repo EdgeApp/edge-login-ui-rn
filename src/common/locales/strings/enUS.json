@@ -181,7 +181,7 @@
   "alert_scene_approve": "It was me, grant access",
   "alert_scene_deny": "Not me, deny all",
   "otp_scene_header_2fa": "This device cannot log in because it does not have the right 2-factor code",
-  "otp_scene_header_ip": "This device cannot log in due to an unrecognized IP address",
+  "otp_scene_header_ip": "Username and password are correct. This device cannot log in due to an unrecognized IP address.",
   "otp_scene_approve": "Approve this request from another logged-in device",
   "otp_scene_qr": "Scan QR code with another logged-in device",
   "otp_scene_wait": "Wait until %s when this device will be automatically authorized to log in",
