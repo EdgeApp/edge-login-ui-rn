@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## Unreleased
+
+- Changed: Reword IP OTP warning text
+
 ## 1.4.4 (2023-04-19)
 
 - fixed: Broken 'Confirm and Email' Recovery setup button
