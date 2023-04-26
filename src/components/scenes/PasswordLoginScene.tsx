@@ -1,8 +1,8 @@
 import { OtpError } from 'edge-core-js'
 import * as React from 'react'
 import {
-  FlatList,
   Keyboard,
+  ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View
@@ -248,22 +248,16 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <FlatList
-        style={styles.dropDownList}
-        data={this.props.usernameOnlyList}
-        renderItem={this.renderRow}
-        keyExtractor={(item, index) => index.toString()}
-      />
-    )
-  }
-
-  renderRow = (data: { item: string }) => {
-    return (
-      <UserListItem
-        data={data.item}
-        onClick={this.handleSelectUser}
-        onDelete={this.handleDelete}
-      />
+      <ScrollView style={styles.dropDownList}>
+        {this.props.usernameOnlyList.map(item => (
+          <UserListItem
+            key={item}
+            data={item}
+            onClick={this.handleSelectUser}
+            onDelete={this.handleDelete}
+          />
+        ))}
+      </ScrollView>
     )
   }
 
