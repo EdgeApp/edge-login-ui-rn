@@ -4,7 +4,6 @@ import { ActivityIndicator, View } from 'react-native'
 import * as Colors from '../../constants/Colors'
 import * as Styles from '../../styles/index'
 import { Branding } from '../../types/Branding'
-import { BackgroundImage } from '../common/BackgroundImage'
 
 interface Props {
   branding: Branding
@@ -12,14 +11,7 @@ interface Props {
 
 export class LoadingScene extends React.Component<Props> {
   render() {
-    return (
-      <View style={styles.container}>
-        <BackgroundImage
-          branding={this.props.branding}
-          content={this.renderSpinner()}
-        />
-      </View>
-    )
+    return <View style={styles.container}>{this.renderSpinner()}</View>
   }
 
   renderSpinner = () => {

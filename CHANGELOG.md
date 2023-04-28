@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## Unreleased
+
+- Fixed: Background brand image handling and display.
+
 ## 1.4.5 (2023-04-21)
 
 - Changed: Reword IP OTP warning text
