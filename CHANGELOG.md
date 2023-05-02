@@ -1,6 +1,6 @@
 # edge-login-ui-rn
 
-## Unreleased
+## 1.4.6 (2023-05-02)
 
 - Fixed: Background brand image handling and display.
 
