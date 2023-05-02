@@ -27,7 +27,6 @@ import { FourDigit } from '../abSpecific/FourDigitComponent'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { PinKeypad } from '../abSpecific/PinKeypad'
 import { UserListItem } from '../abSpecific/UserListItem'
-import { BackgroundImage } from '../common/BackgroundImage'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { connect } from '../services/ReduxStore'
@@ -137,12 +136,7 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
         noUnderline
         branding={this.props.branding}
       >
-        <View style={styles.container}>
-          <BackgroundImage
-            branding={this.props.branding}
-            content={this.renderOverImage()}
-          />
-        </View>
+        <View style={styles.container}>{this.renderOverImage()}</View>
       </ThemedScene>
     )
   }
@@ -335,8 +329,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
     width: '100%',
-    height: '100%',
-    backgroundColor: theme.backgroundGradientColors[0]
+    height: '100%'
   },
   listView: {
     height: theme.rem(16),

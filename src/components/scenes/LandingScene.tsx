@@ -10,7 +10,6 @@ import { useDispatch } from '../../types/ReduxTypes'
 import { logEvent } from '../../util/analytics'
 import { scale } from '../../util/scaling'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
-import { BackgroundImage } from '../common/BackgroundImage'
 import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
 
@@ -33,7 +32,7 @@ export const LandingScene = (props: Props) => {
 
   return (
     <ThemedScene branding={props.branding} noUnderline>
-      <BackgroundImageView branding={props.branding}>
+      <View style={styles.container}>
         <View style={styles.inner}>
           <View style={styles.featureBox}>
             <LogoImageHeader branding={props.branding} />
@@ -62,19 +61,8 @@ export const LandingScene = (props: Props) => {
             </View>
           </View>
         </View>
-      </BackgroundImageView>
+      </View>
     </ThemedScene>
-  )
-}
-
-const BackgroundImageView = (props: {
-  branding: Branding
-  children: React.ReactNode
-}) => {
-  return (
-    <View style={styles.container}>
-      <BackgroundImage branding={props.branding} content={props.children} />
-    </View>
   )
 }
 
@@ -119,7 +107,6 @@ const styles = {
     marginLeft: '10%',
     marginRight: '10%',
     color: Constants.WHITE,
-    backgroundColor: Constants.TRANSPARENT,
     fontFamily: Constants.FONTS.fontFamilyRegular,
     textAlign: 'center',
     fontSize: scale(14),

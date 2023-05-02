@@ -25,7 +25,6 @@ import { logEvent } from '../../util/analytics'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
-import { BackgroundImage } from '../common/BackgroundImage'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { showQrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -146,17 +145,15 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
         keyboardShouldPersistTaps="always"
         contentContainerStyle={styles.mainScrollView}
       >
-        <ThemedScene
-          onBack={this.handleBack}
-          noUnderline
-          branding={this.props.branding}
-        >
-          <BackgroundImage
+        <TouchableWithoutFeedback onPress={this.handleBlur}>
+          <ThemedScene
+            onBack={this.handleBack}
+            noUnderline
             branding={this.props.branding}
-            content={this.renderOverImage()}
-            onPress={this.handleBlur}
-          />
-        </ThemedScene>
+          >
+            {this.renderOverImage()}
+          </ThemedScene>
+        </TouchableWithoutFeedback>
       </KeyboardAwareScrollView>
     )
   }

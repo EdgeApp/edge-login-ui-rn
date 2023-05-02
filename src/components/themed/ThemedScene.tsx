@@ -1,5 +1,6 @@
 import * as React from 'react'
 import {
+  ImageBackground,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -58,14 +59,22 @@ export function ThemedScene(props: Props) {
     flex: 1,
     ...sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
   }
+
   return (
     <>
-      <LinearGradient
-        style={StyleSheet.absoluteFill}
-        start={theme.backgroundGradientStart}
-        end={theme.backgroundGradientEnd}
-        colors={theme.backgroundGradientColors}
-      />
+      {branding.backgroundImage ? (
+        <ImageBackground
+          source={branding.backgroundImage}
+          style={StyleSheet.absoluteFill}
+        />
+      ) : (
+        <LinearGradient
+          style={StyleSheet.absoluteFill}
+          start={theme.backgroundGradientStart}
+          end={theme.backgroundGradientEnd}
+          colors={theme.backgroundGradientColors}
+        />
+      )}
       <SafeAreaView style={{ flex: 1 }}>
         {!hasHeader ? null : (
           <View style={styles.headerButtons}>
