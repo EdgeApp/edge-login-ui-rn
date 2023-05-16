@@ -180,7 +180,7 @@
   "alert_scene_date": "Richiesto il: ",
   "alert_scene_approve": "Sono io, concedi l'accesso",
   "alert_scene_deny": "Non sono io, nega tutto",
-  "otp_scene_header_2fa": "Username and password are correct. This device cannot log in because it does not have the right 2-factor code.",
+  "otp_scene_header_2fa": "Nome utente e password sono corretti. Questo dispositivo non può accedere perché non ha il giusto codice a 2 fattori.",
   "otp_scene_header_ip": "Nome utente e password sono corretti. Questo dispositivo non può accedere a causa di un indirizzo IP non riconosciuto.",
   "otp_scene_approve": "Approva questa richiesta da un altro dispositivo già loggato",
   "otp_scene_qr": "Scansiona il codice QR con un altro dispositivo già loggato",
