@@ -3,6 +3,7 @@ import { ActivityIndicator, Text, TouchableOpacity } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
+import s from '../../common/locales/strings'
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { textNoShadow, themeNoShadow } from '../../types/Theme'
 import {
@@ -142,7 +143,11 @@ export function MainButton(props: Props) {
         )}
         {pending ? null : children}
         {!spinner && !pending ? null : (
-          <ActivityIndicator color={spinnerColor} style={styles.spinner} />
+          <ActivityIndicator
+            color={spinnerColor}
+            style={styles.spinner}
+            accessibilityHint={s.strings.spin_load_hint}
+          />
         )}
       </LinearGradient>
     </TouchableOpacity>
