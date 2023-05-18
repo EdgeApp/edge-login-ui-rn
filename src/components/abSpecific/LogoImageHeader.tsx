@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Image, TouchableWithoutFeedback, View } from 'react-native'
 
 import * as Assets from '../../assets/'
+import s from '../../common/locales/strings'
 import { Branding } from '../../types/Branding'
 import { scale } from '../../util/scaling'
 
@@ -42,7 +43,7 @@ export class LogoImageHeader extends React.Component<Props, State> {
       <TouchableWithoutFeedback onPress={this.handlePress}>
         <View style={styles.container}>
           <Image
-            accessibilityHint="Edge Logo"
+            accessibilityHint={s.strings.app_logo_hint}
             source={src}
             style={styles.image}
             resizeMode="contain"
