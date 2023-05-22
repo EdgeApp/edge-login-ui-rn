@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 1.4.7 (2023-05-22)
+
+- added: Accessibility hints to logo and button
+
 ## 1.4.6 (2023-05-02)
 
 - Fixed: Background brand image handling and display.
