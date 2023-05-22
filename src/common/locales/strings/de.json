@@ -180,7 +180,7 @@
   "alert_scene_date": "Angefragt am: ",
   "alert_scene_approve": "Das war ich, Zugriff gewähren",
   "alert_scene_deny": "Das bin nicht ich, alle ablehnen!",
-  "otp_scene_header_2fa": "Dieses Gerät kann sich nicht anmelden, da es nicht den richtigen 2-Faktor-Code hat",
+  "otp_scene_header_2fa": "Username and password are correct. This device cannot log in because it does not have the right 2-factor code.",
   "otp_scene_header_ip": "Username and password are correct. This device cannot log in due to an unrecognized IP address.",
   "otp_scene_approve": "Anfrage von einem anderen eingeloggten Gerät genehmigen",
   "otp_scene_qr": "QR-Code mit einem anderen eingeloggten Gerät scannen",
