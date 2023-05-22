@@ -180,7 +180,7 @@
   "alert_scene_date": "Solicitado el: ",
   "alert_scene_approve": "Fui yo, conceder acceso",
   "alert_scene_deny": "No fui yo, rechazar todo",
-  "otp_scene_header_2fa": "Este dispositivo no puede iniciar sesión porque no tiene el código de doble factor correcto",
+  "otp_scene_header_2fa": "Username and password are correct. This device cannot log in because it does not have the right 2-factor code.",
   "otp_scene_header_ip": "Username and password are correct. This device cannot log in due to an unrecognized IP address.",
   "otp_scene_approve": "Aprobar esta solicitud desde otro dispositivo de inicio de sesión",
   "otp_scene_qr": "Escanear código QR con otro dispositivo de inicio de sesión conectado",
