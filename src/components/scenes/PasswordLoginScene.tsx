@@ -23,6 +23,7 @@ import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/analytics'
+import { base58 } from '../../util/base58'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
@@ -54,7 +55,7 @@ interface DispatchProps {
   exitScene: () => void
   saveOtpError: (otpAttempt: LoginAttempt, otpError: OtpError) => void
   updateUsername: (username: string) => void
-  handlePasswordRecovery: (recoveryKey: string) => Promise<boolean>
+  handleSubmitRecoveryKey: (recoveryKey: string) => Promise<boolean | string>
 }
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
@@ -355,7 +356,7 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     Airship.show(bridge => (
       <TextInputModal
         bridge={bridge}
-        onSubmit={this.props.handlePasswordRecovery}
+        onSubmit={this.props.handleSubmitRecoveryKey}
         title={s.strings.password_recovery}
         message={s.strings.initiate_password_recovery}
         inputLabel={s.strings.recovery_token}
@@ -482,7 +483,11 @@ export function PasswordLoginScene(props: OwnProps) {
     updateUsername(data: string) {
       dispatch({ type: 'AUTH_UPDATE_USERNAME', data: data })
     },
-    async handlePasswordRecovery(recoveryKey: string): Promise<boolean> {
+    async handleSubmitRecoveryKey(
+      recoveryKey: string
+    ): Promise<boolean | string> {
+      if (base58.parseUnsafe(recoveryKey)?.length !== 32)
+        return s.strings.recovery_token_invalid
       dispatch(launchPasswordRecovery(recoveryKey))
       return await Promise.resolve(true)
     }
