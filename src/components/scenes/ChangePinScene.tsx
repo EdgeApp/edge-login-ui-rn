@@ -151,9 +151,14 @@ export const ResecurePinScene = () => {
 // The scene for new users to set their PIN
 export const NewAccountPinScene = () => {
   const dispatch = useDispatch()
+  const isLightAccount = useSelector(state => state.create.username == null)
 
   const handleBack = useHandler(() => {
-    dispatch(maybeRouteComplete({ type: 'NEW_ACCOUNT_PASSWORD' }))
+    dispatch(
+      isLightAccount
+        ? maybeRouteComplete({ type: 'NEW_ACCOUNT_WELCOME' })
+        : maybeRouteComplete({ type: 'NEW_ACCOUNT_PASSWORD' })
+    )
   })
   const handleSubmit = useHandler(() => {
     logEvent('Signup_PIN_Valid')

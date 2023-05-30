@@ -128,6 +128,10 @@ function routeInitialization(state: RootState, imports: Imports): Action {
       return {
         type: 'NEW_ACCOUNT_USERNAME'
       }
+    case 'new-light-account':
+      return {
+        type: 'NEW_ACCOUNT_PIN'
+      }
     default:
       return defaultInitialRoute()
   }

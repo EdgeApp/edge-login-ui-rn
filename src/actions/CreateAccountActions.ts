@@ -10,8 +10,8 @@ import { logEvent } from '../util/analytics'
 import { loadTouchState } from './TouchActions'
 
 export interface CreateUserData {
-  username: string
-  password: string
+  username: string | null
+  password: string | null
   pin: string
 }
 
@@ -110,8 +110,9 @@ export function createUser(data: CreateUserData) {
     setTimeout(async () => {
       try {
         const abcAccount = await context.createAccount(
-          data.username,
-          data.password,
+          // HACK: Temporary workaround pending optional username support
+          data.username ?? `edge_light_account_${Date.now()}`,
+          data.password ?? undefined,
           data.pin,
           imports.accountOptions
         )

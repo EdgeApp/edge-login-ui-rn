@@ -26,9 +26,9 @@ interface OwnProps {
 
 interface StateProps {
   createErrorMessage: string | null
-  password: string
+  password: string | null
   pin: string
-  username: string
+  username: string | null
 }
 
 interface DispatchProps {
@@ -60,6 +60,7 @@ const TermsAndConditionsSceneComponent = ({
   const showNext = !termValues.includes(false)
   const scrollViewRef = useScrollToEnd(showNext)
   const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
+  const isLightAccount = username == null
 
   if (createErrorMessage) {
     Alert.alert(
@@ -74,7 +75,7 @@ const TermsAndConditionsSceneComponent = ({
   const terms: string[] = [
     sprintf(s.strings.terms_one, appName),
     s.strings.terms_two,
-    sprintf(s.strings.terms_three, appName),
+    ...(isLightAccount ? [] : [sprintf(s.strings.terms_three, appName)]),
     sprintf(s.strings.terms_four, appName)
   ]
 
@@ -173,9 +174,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const NewAccountTosScene = connect<StateProps, DispatchProps, OwnProps>(
   (state: RootState) => ({
     createErrorMessage: state.create.createErrorMessage,
-    password: state.create.password || '',
+    password: state.create.password || null,
     pin: state.create.pin,
-    username: state.create.username || ''
+    username: state.create.username || null
   }),
   (dispatch: Dispatch) => ({
     agreeToConditionAndCreateUser(data: CreateUserData) {
