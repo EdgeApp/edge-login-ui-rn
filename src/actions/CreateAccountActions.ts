@@ -109,12 +109,10 @@ export function createUser(data: CreateUserData) {
     dispatch({ type: 'NEW_ACCOUNT_WAIT' })
     setTimeout(async () => {
       try {
-        const abcAccount = await context.createAccount(
-          data.username,
-          data.password,
-          data.pin,
-          imports.accountOptions
-        )
+        const abcAccount = await context.createAccount({
+          ...imports.accountOptions,
+          ...data
+        })
         abcAccount.watch('loggedIn', loggedIn => {
           if (!loggedIn) dispatch({ type: 'RESET_APP' })
         })

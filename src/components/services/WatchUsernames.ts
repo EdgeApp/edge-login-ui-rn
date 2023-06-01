@@ -82,6 +82,7 @@ function arrangeUsers(localUsers: EdgeUserInfo[]): string[] {
       return bDate.valueOf() - aDate.valueOf()
     })
     .map(info => info.username)
+    .filter((username): username is string => username != null)
 
   // Get the most recent 3 users that were logged in:
   const recentUsers = usernames.slice(0, 3)

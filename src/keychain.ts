@@ -48,7 +48,8 @@ export async function enableTouchId(account: EdgeAccount): Promise<void> {
   const supported = await supportsTouchId()
   if (!supported) throw new Error('TouchIdNotSupportedError')
 
-  const { username, loginKey } = account
+  const { username } = account
+  const loginKey = await account.getLoginKey()
   const loginKeyKey = createKeyWithUsername(username)
   await AbcCoreJsUi.setKeychainString(loginKey, loginKeyKey)
 

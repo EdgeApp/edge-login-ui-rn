@@ -16,8 +16,8 @@ export const hasReadyVoucher = (otpError: OtpError) => async (
 
   // Is that voucher pending?
   const messages = await context.fetchLoginMessages()
-  for (const username of Object.keys(messages)) {
-    const { pendingVouchers } = messages[username]
+  for (const message of messages) {
+    const { pendingVouchers } = message
     for (const voucher of pendingVouchers) {
       if (voucher.voucherId === voucherId) return false
     }

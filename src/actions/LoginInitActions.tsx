@@ -1,6 +1,6 @@
 import { asMaybe } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
-import { EdgeLoginMessages } from 'edge-core-js'
+import { EdgeLoginMessage } from 'edge-core-js'
 import * as React from 'react'
 import { NativeModules, Platform } from 'react-native'
 import {
@@ -141,21 +141,23 @@ const checkSecurityMessages = () => async (
   const { context } = imports
   const messages = await context.fetchLoginMessages()
 
-  const relevantMessages: EdgeLoginMessages = {}
-  for (const username of Object.keys(messages)) {
-    const message = messages[username]
+  const relevantMessages: EdgeLoginMessage[] = []
+  for (const message of messages) {
+    if (message.username == null) continue
 
     // Skip users who haven't fully logged in:
-    const info = context.localUsers.find(info => info.username === username)
+    const info = context.localUsers.find(
+      info => info.username === message.username
+    )
     if (info == null || !info.keyLoginEnabled) continue
 
     const { otpResetPending, pendingVouchers = [] } = message
     if (otpResetPending || pendingVouchers.length > 0) {
-      relevantMessages[username] = message
+      relevantMessages.push(message)
     }
   }
 
-  if (Object.keys(relevantMessages).length > 0) {
+  if (relevantMessages.length > 0) {
     Airship.show(bridge => (
       <SecurityAlertsModal
         bridge={bridge}
