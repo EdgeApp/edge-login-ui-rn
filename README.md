@@ -14,11 +14,11 @@ The login UI depends on some extra external native libraries, which you will hav
 
 - @react-native-community/datetimepicker v6
 - disklet v0.5
+- edge-core-js v1
 - react-native-email-link v1
 - react-native-gesture-handler v2
 - react-native-linear-gradient v2
 - react-native-localize v2
-- react-native-mail v6
 - react-native-permissions v3
   - Activate the [notification permission for iOS](https://www.npmjs.com/package/react-native-permissions#iOS).
 - react-native-reanimated v2

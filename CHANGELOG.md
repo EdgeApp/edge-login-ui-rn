@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 2.0.0 (2023-06-01)
+
+- changed: Upgrade to edge-core-js v1.0.0. Earlier versions will not work.
+
 ## 1.4.7 (2023-05-22)
 
 - added: Accessibility hints to logo and button
