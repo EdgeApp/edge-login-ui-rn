@@ -21,12 +21,12 @@ export const initializeChangeRecovery = (account: EdgeAccount) => async (
 
   // Get the user's questions:
   let userQuestions: string[] = []
-  const recoveryKey = account.recoveryKey
-  if (recoveryKey != null) {
+  const { recoveryKey, username } = account
+  if (recoveryKey != null && username != null) {
     try {
       userQuestions = await context.fetchRecovery2Questions(
         recoveryKey,
-        account.username
+        username
       )
     } catch (error) {
       showError(error)

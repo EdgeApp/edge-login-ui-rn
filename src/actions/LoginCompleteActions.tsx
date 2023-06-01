@@ -76,7 +76,7 @@ export const submitLogin = (account: EdgeAccount) => async (
     if (!loggedIn) dispatch({ type: 'RESET_APP' })
   })
 
-  const touchDisabled = await isTouchDisabled(account.username)
+  const touchDisabled = await isTouchDisabled(account)
   if (!touchDisabled) {
     await enableTouchId(account).catch(e => {
       console.log(e) // Fail quietly
@@ -84,7 +84,7 @@ export const submitLogin = (account: EdgeAccount) => async (
   }
 
   const isTouchSupported = await supportsTouchId()
-  const touchEnabled = await isTouchEnabled(account.username)
+  const touchEnabled = await isTouchEnabled(account)
   const touchIdInformation = {
     isTouchSupported,
     isTouchEnabled: touchEnabled

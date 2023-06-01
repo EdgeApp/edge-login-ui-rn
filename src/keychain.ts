@@ -20,14 +20,20 @@ const asFingerprintFile = asJSON(
 )
 type FingerprintFile = ReturnType<typeof asFingerprintFile>
 
-export async function isTouchEnabled(username: string): Promise<boolean> {
+export async function isTouchEnabled(account: EdgeAccount): Promise<boolean> {
+  const { username } = account
+  if (username == null) return false
+
   const file = await loadFingerprintFile()
   const supported = await supportsTouchId()
 
   return supported && file.enabledUsers.includes(username)
 }
 
-export async function isTouchDisabled(username: string): Promise<boolean> {
+export async function isTouchDisabled(account: EdgeAccount): Promise<boolean> {
+  const { username } = account
+  if (username == null) return true
+
   const file = await loadFingerprintFile()
   const supported = await supportsTouchId()
 
@@ -44,11 +50,14 @@ export async function supportsTouchId(): Promise<boolean> {
 }
 
 export async function enableTouchId(account: EdgeAccount): Promise<void> {
+  const { username } = account
+
   const file = await loadFingerprintFile()
   const supported = await supportsTouchId()
-  if (!supported) throw new Error('TouchIdNotSupportedError')
+  if (!supported || username == null) {
+    throw new Error('TouchIdNotSupportedError')
+  }
 
-  const { username } = account
   const loginKey = await account.getLoginKey()
   const loginKeyKey = createKeyWithUsername(username)
   await AbcCoreJsUi.setKeychainString(loginKey, loginKeyKey)
@@ -64,11 +73,12 @@ export async function enableTouchId(account: EdgeAccount): Promise<void> {
 }
 
 export async function disableTouchId(account: EdgeAccount): Promise<void> {
+  const { username } = account
+
   const file = await loadFingerprintFile()
   const supported = await supportsTouchId()
-  if (!supported) return // throw new Error('TouchIdNotSupportedError')
+  if (!supported || username == null) return // throw new Error('TouchIdNotSupportedError')
 
-  const { username } = account
   const loginKeyKey = createKeyWithUsername(username)
   await AbcCoreJsUi.clearKeychain(loginKeyKey)
 

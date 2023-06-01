@@ -116,7 +116,7 @@ export function createUser(data: CreateUserData) {
         abcAccount.watch('loggedIn', loggedIn => {
           if (!loggedIn) dispatch({ type: 'RESET_APP' })
         })
-        const touchDisabled = await isTouchDisabled(abcAccount.username)
+        const touchDisabled = await isTouchDisabled(abcAccount)
         if (!touchDisabled) {
           await enableTouchId(abcAccount).catch(e => {
             console.log(e) // Fail quietly

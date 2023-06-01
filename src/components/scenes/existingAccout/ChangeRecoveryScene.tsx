@@ -177,7 +177,7 @@ export const ChangeRecoveryScene = ({ branding }: Props) => {
   }
 
   const saveRecovery = async (emailAddress?: string) => {
-    if (account == null) return
+    if (account == null || account.username == null) return
     const { username } = account
     const okQuestions = questions.filter(stringPredicate)
     const okAnswers = answers.filter(stringPredicate)
