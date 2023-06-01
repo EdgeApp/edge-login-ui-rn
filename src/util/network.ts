@@ -32,6 +32,7 @@ async function multiFetch(
   return await fetchWaterfall(shuffleArray(servers), path, options, timeout)
 }
 
+// TODO: not used?
 export const fetchInfo = async (
   path: string,
   options?: EdgeFetchOptions,

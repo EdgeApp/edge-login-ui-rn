@@ -88,8 +88,8 @@ const TermsAndConditionsSceneComponent = ({
   const handleNextPress = () => {
     logEvent(`Signup_Terms_Agree_and_Create_User`)
     agreeToConditionAndCreateUser({
-      username,
-      password,
+      username: username || undefined,
+      password: password || undefined,
       pin
     })
   }
@@ -174,9 +174,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const NewAccountTosScene = connect<StateProps, DispatchProps, OwnProps>(
   (state: RootState) => ({
     createErrorMessage: state.create.createErrorMessage,
-    password: state.create.password || null,
+    password: state.create.password,
     pin: state.create.pin,
-    username: state.create.username || null
+    username: state.create.username
   }),
   (dispatch: Dispatch) => ({
     agreeToConditionAndCreateUser(data: CreateUserData) {

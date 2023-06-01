@@ -34,12 +34,12 @@ export const WatchUsernames: React.VoidFunctionComponent<Props> = props => {
         user => user.username === username
       ) ?? { pinLoginEnabled: false, keyLoginEnabled: false }
       return {
-        username,
+        username: username ?? 'LocalUser',
         pinEnabled: pinLoginEnabled,
         touchEnabled:
           keyLoginEnabled &&
           touch.supported &&
-          touch.enabledUsers.includes(username)
+          touch.enabledUsers.includes(username ?? 'LocalUser')
       }
     })
 
@@ -72,28 +72,32 @@ export const WatchUsernames: React.VoidFunctionComponent<Props> = props => {
  * Given a list of users from the core,
  * remove the given user, then organize the 3 most recent users,
  * followed by the rest in alphabetical order.
+ * Undefined usernames are replaced with "LocalUser".
  */
 function arrangeUsers(localUsers: EdgeUserInfo[]): string[] {
   // Sort the users according to their last login date (excluding active logged in user):
-  const usernames = localUsers
-    .sort((a, b) => {
-      const { lastLogin: aDate = new Date(0) } = a
-      const { lastLogin: bDate = new Date(0) } = b
-      return bDate.valueOf() - aDate.valueOf()
-    })
-    .map(info => info.username)
+  const sortedUsers = localUsers.sort((a, b) => {
+    const { lastLogin: aDate = new Date(0) } = a
+    const { lastLogin: bDate = new Date(0) } = b
+    return bDate.valueOf() - aDate.valueOf()
+  })
 
   // Get the most recent 3 users that were logged in:
-  const recentUsers = usernames.slice(0, 3)
+  const recentUsers = sortedUsers
+    .slice(0, 3)
+    .map(info => info.username ?? 'LocalUser')
 
   // Sort everything after the last 3 entries alphabetically:
-  const oldUsers = usernames.slice(3).sort((a: string, b: string) => {
-    const stringA = a.toUpperCase()
-    const stringB = b.toUpperCase()
-    if (stringA < stringB) return -1
-    if (stringA > stringB) return 1
-    return 0
-  })
+  const oldUsers = sortedUsers
+    .slice(3)
+    .sort((a, b) => {
+      const stringA = (a.username ?? 'LocalUser').toUpperCase()
+      const stringB = (b.username ?? 'LocalUser').toUpperCase()
+      if (stringA < stringB) return -1
+      if (stringA > stringB) return 1
+      return 0
+    })
+    .map(info => info.username ?? 'LocalUser')
 
   return [...recentUsers, ...oldUsers]
 }

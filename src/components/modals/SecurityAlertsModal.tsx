@@ -1,4 +1,4 @@
-import { EdgeLoginMessages } from 'edge-core-js'
+import { EdgeLoginMessage } from 'edge-core-js'
 import * as React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -14,7 +14,7 @@ import { TitleText } from '../themed/ThemedText'
 
 interface OwnProps {
   bridge: AirshipBridge<unknown>
-  messages: EdgeLoginMessages
+  messages: EdgeLoginMessage[]
   selectUser: (username: string) => void
 }
 type Props = OwnProps & ThemeProps
@@ -41,16 +41,16 @@ class SecurityAlertsModalComponent extends React.Component<Props> {
     const out: React.ReactNode[] = []
 
     let isFirst = true
-    for (const username of Object.keys(messages)) {
-      const { otpResetPending } = messages[username]
-      if (otpResetPending) {
+    for (const message of messages) {
+      const { otpResetPending, username } = message
+      if (username != null && otpResetPending) {
         out.push(this.renderRow(username, true, isFirst))
         isFirst = false
       }
     }
-    for (const username of Object.keys(messages)) {
-      const { pendingVouchers = [] } = messages[username]
-      if (pendingVouchers.length > 0) {
+    for (const message of messages) {
+      const { pendingVouchers = [], username } = message
+      if (username != null && pendingVouchers.length > 0) {
         out.push(this.renderRow(username, false, isFirst))
         isFirst = false
       }

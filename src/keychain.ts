@@ -3,7 +3,7 @@ import { makeReactNativeDisklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js'
 import { NativeModules, Platform } from 'react-native'
 
-const { AbcCoreJsUi } = NativeModules
+const { EdgeCoreBridge } = NativeModules
 const disklet = makeReactNativeDisklet()
 
 export type BiometryType = 'FaceID' | 'TouchID' | false
@@ -35,31 +35,34 @@ export async function isTouchDisabled(username: string): Promise<boolean> {
 }
 
 export async function supportsTouchId(): Promise<boolean> {
-  if (!AbcCoreJsUi) {
-    console.warn('AbcCoreJsUi  is unavailable')
+  if (!EdgeCoreBridge) {
+    console.warn('EdgeCoreBridge is unavailable')
     return false
   }
-  const out = await AbcCoreJsUi.supportsTouchId()
+  const out = await EdgeCoreBridge.supportsBiometricId()
   return !!out
 }
 
 export async function enableTouchId(account: EdgeAccount): Promise<void> {
-  const file = await loadFingerprintFile()
-  const supported = await supportsTouchId()
-  if (!supported) throw new Error('TouchIdNotSupportedError')
+  // const file = await loadFingerprintFile()
+  // const supported = await supportsBiometricId()
+  // if (!supported) throw new Error('BiometricIdNotSupportedError')
 
-  const { username, loginKey } = account
-  const loginKeyKey = createKeyWithUsername(username)
-  await AbcCoreJsUi.setKeychainString(loginKey, loginKeyKey)
+  // const { username, loginKey } = account
+  // const loginKeyKey = createKeyWithUsername(username)
+  // await EdgeCoreBridge.setKeychainString(loginKey, loginKeyKey)
 
-  // Update the file:
-  if (!file.enabledUsers.includes(username)) {
-    file.enabledUsers = [...file.enabledUsers, username]
-  }
-  if (file.disabledUsers.includes(username)) {
-    file.disabledUsers = file.disabledUsers.filter(item => item !== username)
-  }
-  saveFingerprintFile(file)
+  // // Update the file:
+  // if (!file.enabledUsers.includes(username)) {
+  //   file.enabledUsers = [...file.enabledUsers, username]
+  // }
+  // if (file.disabledUsers.includes(username)) {
+  //   file.disabledUsers = file.disabledUsers.filter(item => item !== username)
+  // }
+  // saveFingerprintFile(file)
+
+  // TODO:
+  throw new Error('BiometricIdNotSupportedError')
 }
 
 export async function disableTouchId(account: EdgeAccount): Promise<void> {
@@ -69,7 +72,7 @@ export async function disableTouchId(account: EdgeAccount): Promise<void> {
 
   const { username } = account
   const loginKeyKey = createKeyWithUsername(username)
-  await AbcCoreJsUi.clearKeychain(loginKeyKey)
+  await EdgeCoreBridge.clearKeychain(loginKeyKey)
 
   // Update the file:
   if (!file.disabledUsers.includes(username)) {
@@ -83,7 +86,7 @@ export async function disableTouchId(account: EdgeAccount): Promise<void> {
 
 export async function getSupportedBiometryType(): Promise<BiometryType> {
   try {
-    const biometryType = await AbcCoreJsUi.getSupportedBiometryType()
+    const biometryType = await EdgeCoreBridge.getSupportedBiometryType()
     switch (biometryType) {
       // Keep these as-is:
       case 'FaceID':
@@ -125,21 +128,21 @@ export async function getLoginKey(
 
   const loginKeyKey = createKeyWithUsername(username)
   if (Platform.OS === 'ios') {
-    const loginKey = await AbcCoreJsUi.getKeychainString(loginKeyKey)
+    const loginKey = await EdgeCoreBridge.getKeychainString(loginKeyKey)
     if (typeof loginKey !== 'string' || loginKey.length <= 10) {
       console.log('No valid loginKey for TouchID')
       return
     }
 
-    console.log('loginKey valid. Launching TouchID modal...')
-    const success = await AbcCoreJsUi.authenticateTouchID(
+    console.log('loginKey valid. Launching BiometricId modal...')
+    const success = await EdgeCoreBridge.authenticateTouchID(
       promptString,
       fallbackString
     )
     if (success) return loginKey
     console.log('Failed to authenticate TouchID')
   } else if (Platform.OS === 'android') {
-    return AbcCoreJsUi.getKeychainStringWithFingerprint(
+    return EdgeCoreBridge.getKeychainStringWithFingerprint(
       loginKeyKey,
       promptString
     ).catch((error: unknown) => console.log(error)) // showError?
