@@ -61,7 +61,10 @@ export const NewAccountTosScene = (props: Props) => {
   ]
 
   const handleBack = (): void => {
-    dispatch({ type: 'NEW_ACCOUNT_PIN' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'newAccountPin', params: {} }
+    })
   }
 
   const handleStatusChange = (index: number, value: boolean) => {

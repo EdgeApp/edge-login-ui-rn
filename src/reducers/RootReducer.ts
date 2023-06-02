@@ -40,15 +40,22 @@ export const rootReducer = combineReducers<RootState>({
     action: Action
   ): EdgeAccount | null {
     switch (action.type) {
+      case 'NAVIGATE':
+        switch (action.data.name) {
+          case 'changePassword':
+          case 'changePin':
+          case 'changeRecovery':
+          case 'otpRepair':
+          case 'resecurePassword':
+          case 'securityAlert': {
+            const { account } = action.data.params
+            return account
+          }
+        }
+        return state
+
       case 'CREATE_ACCOUNT_SUCCESS':
-      case 'START_CHANGE_PASSWORD':
-      case 'START_CHANGE_PIN':
-      case 'START_RESECURE':
-      case 'START_SECURITY_ALERT':
         return action.data
-      case 'START_CHANGE_RECOVERY':
-      case 'START_OTP_REPAIR':
-        return action.data.account
     }
     return state
   }

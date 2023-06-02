@@ -82,12 +82,11 @@ export const maybeRouteComplete = (fallbackAction: Action) => (
   const initialRouteSceneName = sceneReducer(
     sceneState,
     routeInitialization(state, imports)
-  ).currentScene
+  ).name
 
   if (
-    initialRouteSceneName === sceneState.currentScene ||
-    (imports.initialRoute === 'login' &&
-      sceneState.currentScene === 'PasswordScene')
+    initialRouteSceneName === sceneState.name ||
+    (imports.initialRoute === 'login' && sceneState.name === 'passwordLogin')
   ) {
     imports.onComplete()
     return
@@ -104,16 +103,28 @@ function routeInitialization(state: RootState, imports: Imports): Action {
   const defaultInitialRoute = (): Action => {
     const { recoveryKey } = imports
     if (recoveryKey) {
-      return { type: 'START_LANDING' }
+      return {
+        type: 'NAVIGATE',
+        data: { name: 'landing', params: {} }
+      }
     } else if (startupUser == null) {
-      return { type: 'START_LANDING' }
+      return {
+        type: 'NAVIGATE',
+        data: { name: 'landing', params: {} }
+      }
     } else if (
       startupUser.pinEnabled ||
       (startupUser.touchEnabled && biometryType !== false)
     ) {
-      return { type: 'START_PIN_LOGIN' }
+      return {
+        type: 'NAVIGATE',
+        data: { name: 'pinLogin', params: {} }
+      }
     } else {
-      return { type: 'START_PASSWORD_LOGIN' }
+      return {
+        type: 'NAVIGATE',
+        data: { name: 'passwordLogin', params: {} }
+      }
     }
   }
 
@@ -122,11 +133,13 @@ function routeInitialization(state: RootState, imports: Imports): Action {
       return defaultInitialRoute()
     case 'login-password':
       return {
-        type: 'START_PASSWORD_LOGIN'
+        type: 'NAVIGATE',
+        data: { name: 'passwordLogin', params: {} }
       }
     case 'new-account':
       return {
-        type: 'NEW_ACCOUNT_USERNAME'
+        type: 'NAVIGATE',
+        data: { name: 'newAccountUsername', params: {} }
       }
     default:
       return defaultInitialRoute()

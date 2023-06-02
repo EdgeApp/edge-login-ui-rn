@@ -235,7 +235,10 @@ export const ResecurePasswordScene = () => {
   const account = useSelector(state => state.account ?? undefined)
 
   const handleSkip = useHandler(() => {
-    dispatch({ type: 'RESECURE_PIN' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'resecurePin', params: {} }
+    })
   })
 
   const handleSubmit = useHandler(async (password: string) => {
@@ -251,7 +254,10 @@ export const ResecurePasswordScene = () => {
         buttons={{ ok: { label: s.strings.ok } }}
       />
     ))
-    dispatch({ type: 'RESECURE_PIN' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'resecurePin', params: {} }
+    })
   })
 
   return (
@@ -268,12 +274,18 @@ export const NewAccountPasswordScene = () => {
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {
-    dispatch({ type: 'NEW_ACCOUNT_USERNAME' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'newAccountUsername', params: {} }
+    })
   })
 
   const handleSubmit = useHandler(() => {
     logEvent('Signup_Password_Valid')
-    dispatch({ type: 'NEW_ACCOUNT_PIN' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'newAccountPin', params: {} }
+    })
   })
 
   return (

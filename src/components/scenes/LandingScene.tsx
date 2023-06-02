@@ -22,11 +22,17 @@ export const LandingScene = (props: Props) => {
 
   const handleCreate = useHandler(() => {
     logEvent('Signup_Create_Account')
-    dispatch({ type: 'NEW_ACCOUNT_WELCOME' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'newAccountWelcome', params: {} }
+    })
   })
   const handlePassword = useHandler(() => {
     logEvent('Signup_Signin')
-    dispatch({ type: 'START_PASSWORD_LOGIN' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'passwordLogin', params: {} }
+    })
   })
 
   return (

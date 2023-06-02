@@ -16,18 +16,18 @@ export function passwordRecovery(
   action: Action
 ): PasswordRecoveryState {
   switch (action.type) {
-    case 'START_CHANGE_RECOVERY':
-      return {
-        ...state,
-        questionsList: action.data.questionsList,
-        userQuestions: action.data.userQuestions
+    case 'NAVIGATE':
+      switch (action.data.name) {
+        case 'changeRecovery': {
+          const { questionsList, userQuestions } = action.data.params
+          return { ...state, questionsList, userQuestions }
+        }
+        case 'recoveryLogin': {
+          const { recoveryKey, userQuestions } = action.data.params
+          return { ...state, recoveryKey, userQuestions }
+        }
       }
-    case 'START_RECOVERY_LOGIN':
-      return {
-        ...state,
-        recoveryKey: action.data.recoveryKey,
-        userQuestions: action.data.userQuestions
-      }
+      return state
     default:
       return state
   }

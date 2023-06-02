@@ -32,11 +32,17 @@ export const NewAccountWelcomeScene = (props: Props) => {
 
   const handleDone = (): void => {
     logEvent(`Signup_Welcome_Next`)
-    dispatch({ type: 'NEW_ACCOUNT_USERNAME' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'newAccountUsername', params: {} }
+    })
   }
 
   const handleExit = (): void => {
-    dispatch({ type: 'START_LANDING' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'landing', params: {} }
+    })
   }
 
   return (

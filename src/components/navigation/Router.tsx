@@ -36,54 +36,54 @@ interface Props {
 }
 
 export function Router(props: Props) {
-  const scene = useSelector(state => state.scene)
+  const route = useSelector(state => state.scene)
 
   function renderContent() {
-    switch (scene.currentScene) {
-      case 'ChangePasswordScene':
+    switch (route.name) {
+      case 'changePassword':
         return <ChangePasswordScene />
-      case 'ChangePinScene':
+      case 'changePin':
         return <ChangePinScene />
-      case 'ChangeRecoveryScene':
+      case 'changeRecovery':
         return <ChangeRecoveryScene branding={props.branding} />
-      case 'NewAccountWelcomeScene':
+      case 'newAccountWelcome':
         return <NewAccountWelcomeScene branding={props.branding} />
-      case 'NewAccountUsernameScene':
+      case 'newAccountUsername':
         return <NewAccountUsernameScene branding={props.branding} />
-      case 'NewAccountPasswordScene':
+      case 'newAccountPassword':
         return <NewAccountPasswordScene />
-      case 'NewAccountPinScene':
+      case 'newAccountPin':
         return <NewAccountPinScene />
-      case 'NewAccountTosScene':
+      case 'newAccountTos':
         return <NewAccountTosScene branding={props.branding} />
-      case 'NewAccountWaitScene':
+      case 'newAccountWait':
         return (
           <WaitScene
             title={s.strings.great_job}
             message={s.strings.hang_tight + '\n' + s.strings.secure_account}
           />
         )
-      case 'NewAccountReviewScene':
+      case 'newAccountReview':
         return <NewAccountReviewScene branding={props.branding} />
-      case 'LandingScene':
+      case 'landing':
         return <LandingScene branding={props.branding} />
-      case 'LoadingScene':
+      case 'loading':
         return <LoadingScene branding={props.branding} />
-      case 'OtpScene':
+      case 'otpError':
         return <OtpErrorScene />
-      case 'OtpRepairScene':
+      case 'otpRepair':
         return <OtpRepairScene branding={props.branding} />
-      case 'PasswordScene':
+      case 'passwordLogin':
         return <PasswordLoginScene branding={props.branding} />
-      case 'PinScene':
+      case 'pinLogin':
         return <PinLoginScene branding={props.branding} />
-      case 'RecoveryLoginScene':
+      case 'recoveryLogin':
         return <RecoveryLoginScene />
-      case 'ResecurePasswordScene':
+      case 'resecurePassword':
         return <ResecurePasswordScene />
-      case 'ResecurePinScene':
+      case 'resecurePin':
         return <ResecurePinScene />
-      case 'SecurityAlertScene':
+      case 'securityAlert':
         return <SecurityAlertsScene />
     }
   }

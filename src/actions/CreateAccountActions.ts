@@ -106,7 +106,10 @@ export function validatePassword(data: string) {
 export function createUser(data: CreateUserData) {
   return (dispatch: Dispatch, getState: GetState, imports: Imports) => {
     const { context } = imports
-    dispatch({ type: 'NEW_ACCOUNT_WAIT' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'newAccountWait', params: {} }
+    })
     setTimeout(async () => {
       try {
         const abcAccount = await context.createAccount({
@@ -123,7 +126,10 @@ export function createUser(data: CreateUserData) {
           })
         }
         dispatch({ type: 'CREATE_ACCOUNT_SUCCESS', data: abcAccount })
-        dispatch({ type: 'NEW_ACCOUNT_REVIEW' })
+        dispatch({
+          type: 'NAVIGATE',
+          data: { name: 'newAccountReview', params: {} }
+        })
         logEvent('Signup_Create_User_Success')
         await abcAccount.dataStore.setItem(
           Constants.OTP_REMINDER_STORE_NAME,
@@ -134,7 +140,10 @@ export function createUser(data: CreateUserData) {
       } catch (e: any) {
         console.log(e)
         dispatch({ type: 'CREATE_ACCOUNT_FAIL', data: e.message })
-        dispatch({ type: 'NEW_ACCOUNT_USERNAME' })
+        dispatch({
+          type: 'NAVIGATE',
+          data: { name: 'newAccountUsername', params: {} }
+        })
       }
     }, 300)
   }

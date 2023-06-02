@@ -18,6 +18,12 @@ import { Theme, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
 
+export interface RecoveryLoginParams {
+  username: string
+  recoveryKey: string
+  userQuestions: string[]
+}
+
 export const RecoveryLoginScene = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -37,8 +43,11 @@ export const RecoveryLoginScene = () => {
   const attemptLogin = async (attempt: LoginAttempt) => {
     return await dispatch(login(attempt))
   }
-  const saveOtpError = (attempt: LoginAttempt, error: OtpError) => {
-    dispatch({ type: 'OTP_ERROR', data: { attempt, error } })
+  const saveOtpError = (otpAttempt: LoginAttempt, otpError: OtpError) => {
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'otpError', params: { otpAttempt, otpError } }
+    })
   }
 
   const showDatePickerModal = (index: number) => {
@@ -170,7 +179,12 @@ export const RecoveryLoginScene = () => {
   return (
     <ThemedScene
       paddingRem={0}
-      onBack={() => dispatch({ type: 'START_PASSWORD_LOGIN' })}
+      onBack={() =>
+        dispatch({
+          type: 'NAVIGATE',
+          data: { name: 'passwordLogin', params: {} }
+        })
+      }
     >
       <ScrollView contentContainerStyle={styles.content}>
         {renderForm()}

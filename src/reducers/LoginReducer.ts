@@ -60,19 +60,31 @@ export function login(
       }
     case 'AUTH_LOGGING_IN_WITH_PIN':
       return { ...state, isLoggingInWithPin: true }
-    case 'OTP_ERROR':
-      return {
-        ...state,
-        otpAttempt: action.data.attempt,
-        otpError: action.data.error,
-        otpResetDate: action.data.error.resetDate
+    case 'NAVIGATE':
+      switch (action.data.name) {
+        case 'otpError': {
+          const { otpAttempt, otpError } = action.data.params
+          return {
+            ...state,
+            otpAttempt,
+            otpError,
+            otpResetDate: otpError.resetDate
+          }
+        }
+        case 'otpRepair': {
+          const { otpError } = action.data.params
+          return {
+            ...state,
+            otpError,
+            otpResetDate: otpError.resetDate
+          }
+        }
+        case 'recoveryLogin': {
+          const { username } = action.data.params
+          return { ...state, username, errorMessage: null, wait: 0 }
+        }
       }
-    case 'START_OTP_REPAIR':
-      return {
-        ...state,
-        otpError: action.data.error,
-        otpResetDate: action.data.error.resetDate
-      }
+      return state
     case 'OTP_RESET_REQUEST':
       return {
         ...state,
@@ -82,15 +94,6 @@ export function login(
       const username = state.username
       return { ...initialState, username: username }
     }
-
-    // Actions for launching scenes:
-    case 'START_RECOVERY_LOGIN':
-      return {
-        ...state,
-        username: action.data.username,
-        errorMessage: null,
-        wait: 0
-      }
 
     default:
       return state

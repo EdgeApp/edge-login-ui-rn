@@ -1,3 +1,4 @@
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { useMemo, useState } from 'react'
 import { Keyboard, ScrollView, Text, View } from 'react-native'
@@ -28,10 +29,17 @@ import { MainButton } from '../../themed/MainButton'
 import { ModalMessage } from '../../themed/ModalParts'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-const NUM_QUESTIONS = 2
+export interface ChangeRecoveryParams {
+  questionsList: string[]
+  userQuestions: string[]
+  account: EdgeAccount
+}
+
 interface Props {
   branding: Branding
 }
+
+const NUM_QUESTIONS = 2
 
 export const ChangeRecoveryScene = ({ branding }: Props) => {
   const theme = useTheme()

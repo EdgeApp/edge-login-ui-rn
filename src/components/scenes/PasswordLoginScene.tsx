@@ -446,10 +446,16 @@ export function PasswordLoginScene(props: OwnProps) {
       return await dispatch(deleteUserFromDevice(username))
     },
     gotoCreatePage() {
-      dispatch({ type: 'NEW_ACCOUNT_WELCOME' })
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'newAccountWelcome', params: {} }
+      })
     },
     gotoPinLoginPage() {
-      dispatch({ type: 'START_PIN_LOGIN' })
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'pinLogin', params: {} }
+      })
     },
     handleQrModal() {
       Keyboard.dismiss()
@@ -459,10 +465,18 @@ export function PasswordLoginScene(props: OwnProps) {
       return await dispatch(login(attempt))
     },
     exitScene() {
-      dispatch(maybeRouteComplete({ type: 'START_LANDING' }))
+      dispatch(
+        maybeRouteComplete({
+          type: 'NAVIGATE',
+          data: { name: 'landing', params: {} }
+        })
+      )
     },
-    saveOtpError(attempt, error) {
-      dispatch({ type: 'OTP_ERROR', data: { attempt, error } })
+    saveOtpError(otpAttempt, otpError) {
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'otpError', params: { otpAttempt, otpError } }
+      })
     },
     updateUsername(data: string) {
       dispatch({ type: 'AUTH_UPDATE_USERNAME', data: data })

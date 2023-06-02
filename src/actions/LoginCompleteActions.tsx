@@ -27,7 +27,10 @@ export const completeLogin = (account: EdgeAccount) => async (
   // Problem logins:
   const { skipSecurityAlerts = false } = imports
   if (!skipSecurityAlerts && hasSecurityAlerts(account)) {
-    dispatch({ type: 'START_SECURITY_ALERT', data: account })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'securityAlert', params: { account } }
+    })
     return
   }
 
@@ -40,7 +43,10 @@ export const completeLogin = (account: EdgeAccount) => async (
         buttons={{ ok: { label: s.strings.ok } }}
       />
     ))
-    dispatch({ type: 'START_RESECURE', data: account })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'resecurePassword', params: { account } }
+    })
     return
   }
 

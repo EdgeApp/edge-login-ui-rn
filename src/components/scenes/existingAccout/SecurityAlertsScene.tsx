@@ -278,7 +278,10 @@ export function SecurityAlertsScene(props: OwnProps) {
   }
 
   const handleResecure = (): void => {
-    dispatch({ type: 'START_RESECURE', data: account })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'resecurePassword', params: { account } }
+    })
   }
 
   return (

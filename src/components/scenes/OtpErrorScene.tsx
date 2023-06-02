@@ -20,6 +20,11 @@ import { LinkRow } from '../themed/LinkRow'
 import { ThemedScene } from '../themed/ThemedScene'
 import { MessageText, Warning } from '../themed/ThemedText'
 
+export interface OtpErrorParams {
+  otpAttempt: LoginAttempt
+  otpError: OtpError
+}
+
 interface OwnProps {}
 interface StateProps {
   otpError: OtpError
@@ -188,7 +193,10 @@ export function OtpErrorScene(props: OwnProps) {
 
   const dispatchProps: DispatchProps = {
     onBack() {
-      dispatch({ type: 'START_PASSWORD_LOGIN' })
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'passwordLogin', params: {} }
+      })
     },
     handleQrModal() {
       dispatch(showQrCodeModal())
@@ -202,8 +210,11 @@ export function OtpErrorScene(props: OwnProps) {
     async requestOtpReset() {
       return await dispatch(requestOtpReset())
     },
-    saveOtpError(attempt, error) {
-      dispatch({ type: 'OTP_ERROR', data: { attempt, error } })
+    saveOtpError(otpAttempt, otpError) {
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'otpError', params: { otpAttempt, otpError } }
+      })
     }
   }
 

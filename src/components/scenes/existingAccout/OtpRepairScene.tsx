@@ -19,6 +19,11 @@ import { LinkRow } from '../../themed/LinkRow'
 import { ThemedScene } from '../../themed/ThemedScene'
 import { MessageText, Warning } from '../../themed/ThemedText'
 
+export interface OtpRepairParams {
+  account: EdgeAccount
+  otpError: OtpError
+}
+
 interface OwnProps {
   branding: Branding
 }
@@ -171,7 +176,10 @@ export function OtpRepairScene(props: OwnProps) {
       return await dispatch(requestOtpReset())
     },
     saveOtpError(account, error) {
-      dispatch({ type: 'START_OTP_REPAIR', data: { account, error } })
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'otpRepair', params: { account, otpError } }
+      })
     }
   }
 

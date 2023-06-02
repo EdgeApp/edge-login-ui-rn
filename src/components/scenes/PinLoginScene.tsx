@@ -94,7 +94,10 @@ export function PinLoginScene(props: Props) {
 
   React.useEffect(() => {
     if (!userDetails.touchEnabled && !userDetails.pinEnabled) {
-      dispatch({ type: 'START_PASSWORD_LOGIN' })
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'passwordLogin', params: {} }
+      })
     }
   }, [dispatch, userDetails])
 
@@ -103,7 +106,10 @@ export function PinLoginScene(props: Props) {
   // ---------------------------------------------------------------------
 
   const handleBack = () => {
-    dispatch({ type: 'START_PASSWORD_LOGIN' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'passwordLogin', params: {} }
+    })
   }
 
   const handleDelete = (username: string) => {
