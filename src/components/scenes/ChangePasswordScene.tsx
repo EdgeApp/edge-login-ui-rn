@@ -6,9 +6,9 @@ import {
   validateConfirmPassword,
   validatePassword
 } from '../../actions/CreateAccountActions'
-import { onComplete } from '../../actions/WorkflowActions'
 import s from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler.js'
+import { useImports } from '../../hooks/useImports'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { logEvent } from '../../util/analytics'
 import { WarningCard } from '../common/WarningCard'
@@ -202,7 +202,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 // The scene for existing users to change their password
 export const ChangePasswordScene = () => {
-  const dispatch = useDispatch()
+  const { onComplete } = useImports()
   const account = useSelector(state => state.account ?? undefined)
   const handleSubmit = useHandler(async (password: string) => {
     Keyboard.dismiss()
@@ -223,7 +223,7 @@ export const ChangePasswordScene = () => {
         />
       </ButtonsModal>
     ))
-    dispatch(onComplete())
+    onComplete()
   })
 
   return <ChangePasswordSceneComponent onSubmit={handleSubmit} />

@@ -4,8 +4,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import { requestOtpReset } from '../../../actions/LoginOtpActions'
-import { onComplete } from '../../../actions/WorkflowActions'
 import s from '../../../common/locales/strings'
+import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
 import { useDispatch, useSelector } from '../../../types/ReduxTypes'
 import { toLocalTime } from '../../../util/utils'
@@ -148,6 +148,7 @@ class OtpRepairSceneComponent extends React.Component<Props> {
 export function OtpRepairScene(props: OwnProps) {
   const { branding } = props
   const dispatch = useDispatch()
+  const { onComplete } = useImports()
   const account = useSelector(state => state.account)
   const otpError = useSelector(state => state.login.otpError)
   const otpResetDate = useSelector(state => state.login.otpResetDate)
@@ -157,7 +158,7 @@ export function OtpRepairScene(props: OwnProps) {
 
   const dispatchProps: DispatchProps = {
     onBack() {
-      dispatch(onComplete())
+      onComplete()
     },
     handleQrModal() {
       dispatch(showQrCodeModal())
