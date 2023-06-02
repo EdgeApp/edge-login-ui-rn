@@ -53,6 +53,5 @@ export type Action =
       }
     }
   | { type: 'NAVIGATE'; data: SceneState }
-  | { type: 'OTP_RESET_REQUEST'; data: Date }
   | { type: 'SET_PREVIOUS_USERS'; data: PreviousUsersState }
   | { type: 'SET_TOUCH'; data: TouchState }

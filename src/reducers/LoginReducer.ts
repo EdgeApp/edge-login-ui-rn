@@ -1,15 +1,9 @@
-import { OtpError } from 'edge-core-js'
-
 import { Action } from '../types/ReduxTypes'
-import { LoginAttempt } from '../util/loginAttempt'
 
 export interface LoginState {
   readonly errorMessage: string | null
   readonly isLoggingInWithPin: boolean
   readonly loginSuccess: boolean
-  readonly otpAttempt: LoginAttempt | null
-  readonly otpError: OtpError | null
-  readonly otpResetDate?: Date
   readonly pin: string | null
   readonly username: string
   readonly wait: number
@@ -19,8 +13,6 @@ const initialState: LoginState = {
   errorMessage: null,
   isLoggingInWithPin: false,
   loginSuccess: false,
-  otpAttempt: null,
-  otpError: null,
   pin: null,
   username: '',
   wait: 0
@@ -62,34 +54,12 @@ export function login(
       return { ...state, isLoggingInWithPin: true }
     case 'NAVIGATE':
       switch (action.data.name) {
-        case 'otpError': {
-          const { otpAttempt, otpError } = action.data.params
-          return {
-            ...state,
-            otpAttempt,
-            otpError,
-            otpResetDate: otpError.resetDate
-          }
-        }
-        case 'otpRepair': {
-          const { otpError } = action.data.params
-          return {
-            ...state,
-            otpError,
-            otpResetDate: otpError.resetDate
-          }
-        }
         case 'recoveryLogin': {
           const { username } = action.data.params
           return { ...state, username, errorMessage: null, wait: 0 }
         }
       }
       return state
-    case 'OTP_RESET_REQUEST':
-      return {
-        ...state,
-        otpResetDate: action.data
-      }
     case 'RESET_APP': {
       const username = state.username
       return { ...initialState, username: username }

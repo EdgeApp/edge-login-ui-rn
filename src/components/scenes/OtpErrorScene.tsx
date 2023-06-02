@@ -3,12 +3,12 @@ import * as React from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
-import { login } from '../../actions/LoginAction'
-import { hasReadyVoucher, requestOtpReset } from '../../actions/LoginOtpActions'
+import { completeLogin } from '../../actions/LoginCompleteActions'
 import s from '../../common/locales/strings'
-import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { useImports } from '../../hooks/useImports'
+import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
-import { LoginAttempt } from '../../util/loginAttempt'
+import { attemptLogin, LoginAttempt } from '../../util/loginAttempt'
 import { makePeriodicTask } from '../../util/periodicTask'
 import { toLocalTime } from '../../util/utils'
 import { showResetModal } from '../modals/OtpResetModal'
@@ -184,49 +184,76 @@ class OtpErrorSceneComponent extends React.Component<Props> {
 
 export function OtpErrorScene(props: OwnProps) {
   const { route } = props
+  const { otpAttempt, otpError } = route.params
+  const { accountOptions, context } = useImports()
   const dispatch = useDispatch()
 
-  const otpAttempt = useSelector(state => state.login.otpAttempt)
-  const otpError = useSelector(state => state.login.otpError)
-  const otpResetDate = useSelector(state => state.login.otpResetDate)
-  if (otpAttempt == null || otpError == null) {
-    throw new Error('Missing OtpError for OTP error scene')
+  const [otpResetDate, setOtpResetDate] = React.useState(otpError.resetDate)
+
+  const handleBack = (): void => {
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'passwordLogin', params: {} }
+    })
   }
 
-  const dispatchProps: DispatchProps = {
-    onBack() {
-      dispatch({
-        type: 'NAVIGATE',
-        data: { name: 'passwordLogin', params: {} }
-      })
-    },
-    handleQrModal() {
-      dispatch(showQrCodeModal())
-    },
-    async hasReadyVoucher(error: OtpError) {
-      return await dispatch(hasReadyVoucher(error))
-    },
-    async login(attempt: LoginAttempt, otpKey?: string): Promise<void> {
-      return await dispatch(login(attempt, otpKey))
-    },
-    async requestOtpReset() {
-      return await dispatch(requestOtpReset())
-    },
-    saveOtpError(otpAttempt, otpError) {
-      dispatch({
-        type: 'NAVIGATE',
-        data: { name: 'otpError', params: { otpAttempt, otpError } }
-      })
+  const handleQrModal = (): void => {
+    dispatch(showQrCodeModal())
+  }
+
+  async function hasReadyVoucher(): Promise<boolean> {
+    const { voucherId } = otpError
+    if (voucherId == null) return false
+
+    // Is that voucher pending?
+    const messages = await context.fetchLoginMessages()
+    for (const message of messages) {
+      const { pendingVouchers } = message
+      for (const voucher of pendingVouchers) {
+        if (voucher.voucherId === voucherId) return false
+      }
     }
+    return true
+  }
+
+  async function requestOtpReset() {
+    const { resetToken } = otpError
+    if (resetToken == null) {
+      throw new Error('No OTP reset token')
+    }
+
+    const date = await context.requestOtpReset(otpAttempt.username, resetToken)
+    setOtpResetDate(date)
+  }
+
+  function saveOtpError(otpAttempt: LoginAttempt, otpError: OtpError) {
+    setOtpResetDate(otpError.resetDate)
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'otpError', params: { otpAttempt, otpError } }
+    })
+  }
+
+  async function login(attempt: LoginAttempt, otpKey?: string): Promise<void> {
+    const account = await attemptLogin(context, attempt, {
+      ...accountOptions,
+      otpKey
+    })
+    dispatch(completeLogin(account))
   }
 
   return (
     <OtpErrorSceneComponent
-      {...dispatchProps}
+      handleQrModal={handleQrModal}
+      hasReadyVoucher={hasReadyVoucher}
+      login={login}
       otpAttempt={otpAttempt}
       otpError={otpError}
       otpResetDate={otpResetDate}
+      requestOtpReset={requestOtpReset}
       route={route}
+      saveOtpError={saveOtpError}
+      onBack={handleBack}
     />
   )
 }

@@ -3,11 +3,10 @@ import * as React from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
-import { requestOtpReset } from '../../../actions/LoginOtpActions'
 import s from '../../../common/locales/strings'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
-import { useDispatch, useSelector } from '../../../types/ReduxTypes'
+import { useDispatch } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
 import { toLocalTime } from '../../../util/utils'
 import { showResetModal } from '../../modals/OtpResetModal'
@@ -157,41 +156,48 @@ class OtpRepairSceneComponent extends React.Component<Props> {
 
 export function OtpRepairScene(props: OwnProps) {
   const { branding, route } = props
-  const { account } = route.params
+  const { account, otpError } = route.params
+  const { context, onComplete } = useImports()
   const dispatch = useDispatch()
-  const { onComplete } = useImports()
-  const otpError = useSelector(state => state.login.otpError)
-  const otpResetDate = useSelector(state => state.login.otpResetDate)
-  if (otpError == null) {
-    throw new Error('Missing OtpError for OTP repair scene')
+
+  const [otpResetDate, setOtpResetDate] = React.useState(otpError.resetDate)
+
+  function handleQrModal() {
+    dispatch(showQrCodeModal())
   }
 
-  const dispatchProps: DispatchProps = {
-    onBack() {
-      onComplete()
-    },
-    handleQrModal() {
-      dispatch(showQrCodeModal())
-    },
-    async requestOtpReset() {
-      return await dispatch(requestOtpReset())
-    },
-    saveOtpError(account, error) {
-      dispatch({
-        type: 'NAVIGATE',
-        data: { name: 'otpRepair', params: { account, otpError } }
-      })
+  async function requestOtpReset() {
+    const { resetToken } = otpError
+    if (resetToken == null) {
+      throw new Error('No OTP reset token')
     }
+    if (account.username == null) {
+      throw new Error('No username')
+    }
+
+    const date = await context.requestOtpReset(account.username, resetToken)
+    setOtpResetDate(date)
+  }
+
+  function saveOtpError(account: EdgeAccount, otpError: OtpError) {
+    setOtpResetDate(otpError.resetDate)
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'otpRepair', params: { account, otpError } }
+    })
   }
 
   return (
     <OtpRepairSceneComponent
-      {...dispatchProps}
       account={account}
       branding={branding}
+      handleQrModal={handleQrModal}
       otpError={otpError}
       otpResetDate={otpResetDate}
+      requestOtpReset={requestOtpReset}
       route={route}
+      saveOtpError={saveOtpError}
+      onBack={onComplete}
     />
   )
 }
