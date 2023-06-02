@@ -20,7 +20,7 @@ import s from '../../common/locales/strings'
 import { BiometryType } from '../../keychain'
 import { LoginUserInfo } from '../../reducers/PreviousUsersReducer'
 import { Branding } from '../../types/Branding'
-import { Dispatch, RootState } from '../../types/ReduxTypes'
+import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { logEvent } from '../../util/analytics'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
@@ -29,8 +29,7 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { showQrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { connect } from '../services/ReduxStore'
-import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { LineFormField } from '../themed/LineFormField'
 import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
@@ -429,15 +428,20 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const PasswordLoginScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state: RootState) => ({
-    loginSuccess: state.login.loginSuccess,
-    previousUsers: state.previousUsers.userList,
-    touch: state.touch.type,
-    username: state.login.username,
-    usernameOnlyList: state.previousUsers.usernameOnlyList
-  }),
-  (dispatch: Dispatch) => ({
+export function PasswordLoginScene(props: OwnProps) {
+  const { branding } = props
+  const dispatch = useDispatch()
+  const theme = useTheme()
+
+  const loginSuccess = useSelector(state => state.login.loginSuccess)
+  const previousUsers = useSelector(state => state.previousUsers.userList)
+  const touch = useSelector(state => state.touch.type)
+  const username = useSelector(state => state.login.username)
+  const usernameOnlyList = useSelector(
+    state => state.previousUsers.usernameOnlyList
+  )
+
+  const dispatchProps: DispatchProps = {
     async deleteUserFromDevice(username) {
       return await dispatch(deleteUserFromDevice(username))
     },
@@ -467,5 +471,17 @@ export const PasswordLoginScene = connect<StateProps, DispatchProps, OwnProps>(
       dispatch(launchPasswordRecovery(recoveryKey))
       return await Promise.resolve(true)
     }
-  })
-)(withTheme(PasswordLoginSceneComponent))
+  }
+  return (
+    <PasswordLoginSceneComponent
+      {...dispatchProps}
+      branding={branding}
+      loginSuccess={loginSuccess}
+      previousUsers={previousUsers}
+      theme={theme}
+      touch={touch}
+      username={username}
+      usernameOnlyList={usernameOnlyList}
+    />
+  )
+}
