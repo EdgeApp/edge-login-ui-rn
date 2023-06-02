@@ -8,37 +8,39 @@ import { LOGO_BIG } from '../../../assets'
 import s from '../../../common/locales/strings'
 import * as Constants from '../../../constants/index'
 import { Branding } from '../../../types/Branding'
-import { Dispatch, RootState } from '../../../types/ReduxTypes'
+import { useDispatch } from '../../../types/ReduxTypes'
 import { logEvent } from '../../../util/analytics'
-import { connect } from '../../services/ReduxStore'
-import { Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import { Theme, useTheme } from '../../services/ThemeContext'
 import { DividerLine } from '../../themed/DividerLine'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-interface OwnProps {
+interface Props {
   branding: Branding
 }
-interface DispatchProps {
-  onExit: () => void
-  onDone: () => void
-}
-type Props = OwnProps & DispatchProps & ThemeProps
 
-const NewAccountWelcomeSceneComponent = ({
-  theme,
-  branding,
-  onExit,
-  onDone
-}: Props) => {
+export const NewAccountWelcomeScene = (props: Props) => {
+  const { branding } = props
+  const dispatch = useDispatch()
+  const theme = useTheme()
   const styles = getStyles(theme)
+
   const appName = branding.appName || s.strings.app_name_default
   const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
   const logoSrc = branding.primaryLogo || LOGO_BIG
 
+  const handleDone = (): void => {
+    logEvent(`Signup_Welcome_Next`)
+    dispatch({ type: 'NEW_ACCOUNT_USERNAME' })
+  }
+
+  const handleExit = (): void => {
+    dispatch({ type: 'START_LANDING' })
+  }
+
   return (
-    <ThemedScene onBack={onExit} title={s.strings.get_started}>
+    <ThemedScene onBack={handleExit} title={s.strings.get_started}>
       <View style={styles.content}>
         <Image source={logoSrc} style={styles.logo} resizeMode="contain" />
         <EdgeText style={styles.welcome}>
@@ -82,7 +84,7 @@ const NewAccountWelcomeSceneComponent = ({
           <MainButton
             label={s.strings.get_started}
             type={buttonType}
-            onPress={onDone}
+            onPress={handleDone}
           />
         </View>
       </View>
@@ -134,16 +136,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(4.5)
   }
 }))
-
-export const NewAccountWelcomeScene = connect<{}, DispatchProps, OwnProps>(
-  (state: RootState) => ({}),
-  (dispatch: Dispatch) => ({
-    onExit() {
-      dispatch({ type: 'START_LANDING' })
-    },
-    onDone() {
-      logEvent(`Signup_Welcome_Next`)
-      dispatch({ type: 'NEW_ACCOUNT_USERNAME' })
-    }
-  })
-)(withTheme(NewAccountWelcomeSceneComponent))
