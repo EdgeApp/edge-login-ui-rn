@@ -3,53 +3,28 @@ import { Alert, Linking, ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
-import {
-  createUser,
-  CreateUserData
-} from '../../../actions/CreateAccountActions'
+import { createUser } from '../../../actions/CreateAccountActions'
 import s from '../../../common/locales/strings'
 import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
 import { Branding } from '../../../types/Branding'
-import { Dispatch, RootState } from '../../../types/ReduxTypes'
+import { useDispatch, useSelector } from '../../../types/ReduxTypes'
 import { logEvent } from '../../../util/analytics'
-import { connect } from '../../services/ReduxStore'
-import { Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import { Theme, useTheme } from '../../services/ThemeContext'
 import { Checkbox } from '../../themed/Checkbox'
 import { EdgeText } from '../../themed/EdgeText'
 import { Fade } from '../../themed/Fade'
 import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-interface OwnProps {
+interface Props {
   branding: Branding
 }
 
-interface StateProps {
-  createErrorMessage: string | null
-  password: string
-  pin: string
-  username: string
-}
+export const NewAccountTosScene = (props: Props) => {
+  const { branding } = props
+  const dispatch = useDispatch()
+  const theme = useTheme()
 
-interface DispatchProps {
-  agreeToConditionAndCreateUser: (data: CreateUserData) => void
-  clearCreateErrorMessagecircleFilled: () => void
-  onBack: () => void
-}
-
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
-
-const TermsAndConditionsSceneComponent = ({
-  branding,
-  agreeToConditionAndCreateUser,
-  createErrorMessage,
-  clearCreateErrorMessagecircleFilled,
-  onBack,
-  password,
-  pin,
-  username,
-  theme
-}: Props) => {
   const styles = getStyles(theme)
   const [termValues, setTermValues] = React.useState<boolean[]>([
     false,
@@ -61,13 +36,20 @@ const TermsAndConditionsSceneComponent = ({
   const scrollViewRef = useScrollToEnd(showNext)
   const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
 
+  const createErrorMessage = useSelector(
+    state => state.create.createErrorMessage
+  )
+  const password = useSelector(state => state.create.password || '')
+  const pin = useSelector(state => state.create.pin)
+  const username = useSelector(state => state.create.username || '')
+
   if (createErrorMessage) {
     Alert.alert(
       s.strings.create_account_error_title,
       s.strings.create_account_error_message + '\n' + createErrorMessage,
       [{ text: s.strings.ok }]
     )
-    clearCreateErrorMessagecircleFilled()
+    dispatch({ type: 'CLEAR_CREATE_ERROR_MESSAGE' })
   }
 
   const { appName = s.strings.app_name_default } = branding
@@ -78,6 +60,10 @@ const TermsAndConditionsSceneComponent = ({
     sprintf(s.strings.terms_four, appName)
   ]
 
+  const handleBack = (): void => {
+    dispatch({ type: 'NEW_ACCOUNT_PIN' })
+  }
+
   const handleStatusChange = (index: number, value: boolean) => {
     const newTermValues = [...termValues]
     newTermValues[index] = value
@@ -86,15 +72,17 @@ const TermsAndConditionsSceneComponent = ({
 
   const handleNextPress = () => {
     logEvent(`Signup_Terms_Agree_and_Create_User`)
-    agreeToConditionAndCreateUser({
-      username,
-      password,
-      pin
-    })
+    dispatch(
+      createUser({
+        username,
+        password,
+        pin
+      })
+    )
   }
 
   return (
-    <ThemedScene onBack={onBack} title={s.strings.account_confirmation}>
+    <ThemedScene onBack={handleBack} title={s.strings.account_confirmation}>
       <ScrollView ref={scrollViewRef} contentContainerStyle={styles.content}>
         <EdgeText
           style={styles.subtitle}
@@ -169,23 +157,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     minHeight: theme.rem(6)
   }
 }))
-
-export const NewAccountTosScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state: RootState) => ({
-    createErrorMessage: state.create.createErrorMessage,
-    password: state.create.password || '',
-    pin: state.create.pin,
-    username: state.create.username || ''
-  }),
-  (dispatch: Dispatch) => ({
-    agreeToConditionAndCreateUser(data: CreateUserData) {
-      dispatch(createUser(data))
-    },
-    clearCreateErrorMessagecircleFilled() {
-      dispatch({ type: 'CLEAR_CREATE_ERROR_MESSAGE' })
-    },
-    onBack() {
-      dispatch({ type: 'NEW_ACCOUNT_PIN' })
-    }
-  })
-)(withTheme(TermsAndConditionsSceneComponent))
