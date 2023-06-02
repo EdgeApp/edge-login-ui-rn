@@ -2,7 +2,6 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import s from '../../common/locales/strings'
-import * as Styles from '../../styles/index'
 import { Branding } from '../../types/Branding'
 import { useSelector } from '../../types/ReduxTypes'
 import { MaybeProvideLoginUi } from '../publicApi/LoginUiProvider'
@@ -38,7 +37,6 @@ interface Props {
 
 export function Router(props: Props) {
   const scene = useSelector(state => state.scene)
-  const { SceneStyle } = Styles
 
   function renderContent() {
     switch (scene.currentScene) {
@@ -92,10 +90,18 @@ export function Router(props: Props) {
 
   return (
     <MaybeProvideLoginUi>
-      <View accessible style={SceneStyle}>
+      <View accessible style={styles.container}>
         <WatchUsernames />
         {renderContent()}
       </View>
     </MaybeProvideLoginUi>
   )
+}
+
+const styles = {
+  container: {
+    flex: 1,
+    width: '100%',
+    height: '100%'
+  }
 }
