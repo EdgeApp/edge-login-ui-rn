@@ -1,6 +1,7 @@
 import { EdgeUserInfo } from 'edge-core-js'
 import React, { useEffect } from 'react'
 
+import { useImports } from '../../hooks/useImports'
 import { useWatch } from '../../hooks/useWatch'
 import { LoginUserInfo } from '../../reducers/PreviousUsersReducer'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
@@ -13,9 +14,8 @@ interface Props {
  * Subscribes to the username list on the context object.
  */
 export const WatchUsernames: React.VoidFunctionComponent<Props> = props => {
-  // Grab the weird redux imports object:
   const dispatch = useDispatch()
-  const imports = dispatch((dispatch, getState, imports) => imports)
+  const imports = useImports()
 
   // Subscribe to the core:
   const localUsers = useWatch(imports.context, 'localUsers')
