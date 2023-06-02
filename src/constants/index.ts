@@ -1,4 +1,7 @@
-export * from './Fonts'
+/** @deprecated */
+export const FONTS = {
+  fontFamilyRegular: 'System'
+}
 
 /** @deprecated */
 export const ACCENT_MINT = '#66EDA8'
