@@ -7,12 +7,11 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import { completeResecure } from '../../../actions/LoginCompleteActions'
 import s from '../../../common/locales/strings'
-import { Dispatch, RootState } from '../../../types/ReduxTypes'
+import { useDispatch, useSelector } from '../../../types/ReduxTypes'
 import { getAccount } from '../../../util/selectors'
 import { toLocalTime } from '../../../util/utils'
 import { showError } from '../../services/AirshipInstance'
-import { connect } from '../../services/ReduxStore'
-import { Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import { Theme, ThemeProps, useTheme } from '../../services/ThemeContext'
 import { IconHeaderRow } from '../../themed/IconHeaderRow'
 import { LinkRow } from '../../themed/LinkRow'
 import { MainButton } from '../../themed/MainButton'
@@ -269,16 +268,25 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SecurityAlertsScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state: RootState) => ({
-    account: getAccount(state)
-  }),
-  (dispatch: Dispatch) => ({
-    startResecure(account) {
-      dispatch({ type: 'START_RESECURE', data: account })
-    },
-    onDone() {
-      dispatch(completeResecure())
-    }
-  })
-)(withTheme(SecurityAlertsSceneComponent))
+export function SecurityAlertsScene(props: OwnProps) {
+  const dispatch = useDispatch()
+  const theme = useTheme()
+  const account = useSelector(state => getAccount(state))
+
+  const handleDone = (): void => {
+    dispatch(completeResecure())
+  }
+
+  const handleResecure = (): void => {
+    dispatch({ type: 'START_RESECURE', data: account })
+  }
+
+  return (
+    <SecurityAlertsSceneComponent
+      account={account}
+      startResecure={handleResecure}
+      theme={theme}
+      onDone={handleDone}
+    />
+  )
+}
