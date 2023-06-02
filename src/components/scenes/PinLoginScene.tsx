@@ -19,79 +19,95 @@ import { loginWithPin, loginWithTouch } from '../../actions/LoginAction'
 import { deleteUserFromDevice } from '../../actions/UserActions'
 import { FaceIdXml } from '../../assets/xml/FaceId'
 import s from '../../common/locales/strings'
-import { BiometryType } from '../../keychain'
-import { LoginUserInfo } from '../../reducers/PreviousUsersReducer'
 import { Branding } from '../../types/Branding'
-import { Dispatch, RootState } from '../../types/ReduxTypes'
+import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { FourDigit } from '../abSpecific/FourDigitComponent'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { PinKeypad } from '../abSpecific/PinKeypad'
 import { UserListItem } from '../abSpecific/UserListItem'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { connect } from '../services/ReduxStore'
-import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { Theme, useTheme } from '../services/ThemeContext'
 import { ThemedScene } from '../themed/ThemedScene'
 
-interface OwnProps {
+interface Props {
   branding: Branding
 }
-interface StateProps {
-  errorMessage: string
-  isLoggingInWithPin: boolean
-  isTouchIdDisabled: boolean
-  loginSuccess: boolean
-  pin: string
-  touch: BiometryType
-  userDetails: LoginUserInfo
-  userList: LoginUserInfo[]
-  username: string
-  wait: number
-}
-interface DispatchProps {
-  changeUser: (username: string) => void
-  deleteUserFromDevice: (username: string) => Promise<void>
-  gotoLoginPage: () => void
-  loginWithTouch: (username: string) => void
-  loginWithPin: (username: string, pin: string) => void
-  onChangeText: (pin: string) => void
-}
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-interface State {
-  focusOn: 'pin' | 'List'
-}
+export function PinLoginScene(props: Props) {
+  const { branding } = props
+  const dispatch = useDispatch()
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-class PinLoginSceneComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      focusOn: 'pin'
+  // ---------------------------------------------------------------------
+  // State
+  // ---------------------------------------------------------------------
+
+  const [focusOn, setFocusOn] = React.useState<'pin' | 'List'>('pin')
+
+  // Pin login state:
+  const errorMessage = useSelector(state => state.login.errorMessage || '')
+  const isLoggingInWithPin = useSelector(
+    state => state.login.isLoggingInWithPin
+  )
+  const loginSuccess = useSelector(state => state.login.loginSuccess)
+  const pin = useSelector(state => state.login.pin || '')
+  const touch = useSelector(state => state.touch.type)
+  const wait = useSelector(state => state.login.wait)
+  const isTouchIdDisabled =
+    loginSuccess || !!wait || isLoggingInWithPin || pin.length === 4
+
+  // User state:
+  const userList = useSelector(state => state.previousUsers.userList)
+  const username = useSelector(state => state.login.username)
+
+  const userDetails = React.useMemo(
+    () =>
+      userList.find(user => user.username === username) ?? {
+        username,
+        pinEnabled: false,
+        touchEnabled: false
+      },
+    [userList, username]
+  )
+
+  const dropdownItems = React.useMemo(
+    () =>
+      userList
+        .filter(user => user.pinEnabled || (touch && user.touchEnabled))
+        .map(user => user.username),
+    [touch, userList]
+  )
+
+  // ---------------------------------------------------------------------
+  // Effects
+  // ---------------------------------------------------------------------
+
+  // Runs once at start:
+  React.useEffect(() => {
+    if (username && touch !== 'FaceID') {
+      dispatch(loginWithTouch(username)).catch(showError)
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  componentDidMount() {
-    if (this.props.username && this.props.touch !== 'FaceID') {
-      this.props.loginWithTouch(this.props.username)
+  React.useEffect(() => {
+    if (!userDetails.touchEnabled && !userDetails.pinEnabled) {
+      dispatch({ type: 'START_PASSWORD_LOGIN' })
     }
+  }, [dispatch, userDetails])
+
+  // ---------------------------------------------------------------------
+  // Handlers
+  // ---------------------------------------------------------------------
+
+  const handleBack = () => {
+    dispatch({ type: 'START_PASSWORD_LOGIN' })
   }
 
-  componentDidUpdate() {
-    if (
-      !this.props.userDetails.touchEnabled &&
-      !this.props.userDetails.pinEnabled
-    ) {
-      this.exitPin()
-    }
-  }
-
-  handleBack = () => {
-    this.exitPin()
-  }
-
-  handleDelete = (username: string) => {
-    const { deleteUserFromDevice } = this.props
-    this.setState({ focusOn: 'pin' })
+  const handleDelete = (username: string) => {
+    setFocusOn('pin')
 
     Keyboard.dismiss()
     Airship.show(bridge => (
@@ -107,60 +123,59 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
     ))
       .then(async button => {
         if (button !== 'ok') return
-        return await deleteUserFromDevice(username)
+        return await dispatch(deleteUserFromDevice(username))
       })
       .catch(showError)
   }
 
-  handleTouchId = () => {
-    this.props.loginWithTouch(this.props.username)
+  const handleTouchId = () => {
+    dispatch(loginWithTouch(username)).catch(showError)
   }
 
-  handlePress = (value: string) => {
-    const { loginWithPin, onChangeText, pin, username } = this.props
+  const handlePress = (value: string) => {
     const newPin =
       value === 'back' ? pin.slice(0, -1) : pin.concat(value).slice(0, 4)
     if (newPin.length === 4 && pin.length === 3) {
-      loginWithPin(username, newPin)
+      dispatch(loginWithPin(username, newPin))
     }
-    onChangeText(newPin)
+    dispatch({ type: 'AUTH_UPDATE_PIN', data: newPin })
   }
 
-  render() {
-    const { theme } = this.props
-    const styles = getStyles(theme)
-    return (
-      <ThemedScene
-        backButtonText={s.strings.exit_pin}
-        onBack={this.handleBack}
-        noUnderline
-        branding={this.props.branding}
-      >
-        <View style={styles.container}>{this.renderOverImage()}</View>
-      </ThemedScene>
-    )
+  const handleSelectUser = (username: string) => {
+    dispatch(loginWithTouch(username)).catch(showError)
+    dispatch({ type: 'AUTH_UPDATE_USERNAME', data: username })
+    setFocusOn('pin')
   }
 
-  renderOverImage() {
-    const { pin, wait, theme } = this.props
-    const styles = getStyles(theme)
+  const handleShowDrop = () => {
+    setFocusOn('List')
+  }
 
-    if (this.props.loginSuccess) {
+  const handleHideDrop = () => {
+    setFocusOn('pin')
+  }
+
+  // ---------------------------------------------------------------------
+  // Rendering
+  // ---------------------------------------------------------------------
+
+  const renderOverImage = () => {
+    if (loginSuccess) {
       return null
     }
     return (
       <View style={styles.featureBoxContainer}>
-        <TouchableWithoutFeedback onPress={this.handleHideDrop}>
+        <TouchableWithoutFeedback onPress={handleHideDrop}>
           <View style={styles.featureBox}>
-            <LogoImageHeader branding={this.props.branding} />
-            <View style={styles.featureBoxBody}>{this.renderBottomHalf()}</View>
+            <LogoImageHeader branding={branding} />
+            <View style={styles.featureBoxBody}>{renderBottomHalf()}</View>
           </View>
         </TouchableWithoutFeedback>
         <View style={styles.spacer_full} />
-        {!this.props.userDetails.pinEnabled ? null : (
+        {!userDetails.pinEnabled ? null : (
           <PinKeypad
             disabled={wait > 0 || pin.length === 4}
-            onPress={this.handlePress}
+            onPress={handlePress}
           />
         )}
         <SafeAreaView edges={['bottom']} />
@@ -168,15 +183,13 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
     )
   }
 
-  renderBottomHalf() {
-    const { errorMessage, isLoggingInWithPin, pin, wait, theme } = this.props
-    const styles = getStyles(theme)
-    if (this.state.focusOn === 'pin') {
+  const renderBottomHalf = () => {
+    if (focusOn === 'pin') {
       return (
         <View style={styles.innerView}>
           <TouchableOpacity
             style={styles.usernameShadow}
-            onPress={this.handleShowDrop}
+            onPress={handleShowDrop}
           >
             <LinearGradient
               colors={theme.pinUsernameButton}
@@ -190,11 +203,11 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
                 numberOfLines={1}
                 style={styles.usernameText}
               >
-                {this.props.username}
+                {username}
               </Text>
             </LinearGradient>
           </TouchableOpacity>
-          {!this.props.userDetails.pinEnabled ? null : (
+          {!userDetails.pinEnabled ? null : (
             <FourDigit
               error={
                 wait > 0
@@ -208,13 +221,9 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
               spinner={wait > 0 || pin.length === 4 || isLoggingInWithPin}
             />
           )}
-          {this.props.userDetails.pinEnabled ? null : (
-            <View style={styles.spacer} />
-          )}
-          {this.renderTouchImage()}
-          <Text style={styles.touchImageText}>
-            {this.renderTouchImageText()}
-          </Text>
+          {userDetails.pinEnabled ? null : <View style={styles.spacer} />}
+          {renderTouchImage()}
+          <Text style={styles.touchImageText}>{renderTouchImageText()}</Text>
         </View>
       )
     }
@@ -222,64 +231,29 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
       <View style={styles.innerView}>
         <FlatList
           style={styles.listView}
-          data={this.getDropdownItems()}
-          renderItem={this.renderItems}
+          data={dropdownItems}
+          renderItem={renderItems}
           keyExtractor={(item, index) => index.toString()}
         />
       </View>
     )
   }
 
-  exitPin() {
-    this.props.gotoLoginPage()
-  }
-
-  getDropdownItems(): string[] {
-    const { userList, touch } = this.props
-    return userList
-      .filter(user => user.pinEnabled || (touch && user.touchEnabled))
-      .map(user => user.username)
-  }
-
-  renderItems = (item: { item: string }) => {
+  const renderItems = (item: { item: string }) => {
     return (
       <UserListItem
         data={item.item}
-        onClick={this.handleSelectUser}
-        onDelete={this.handleDelete}
+        onClick={handleSelectUser}
+        onDelete={handleDelete}
       />
     )
   }
 
-  handleSelectUser = (username: string) => {
-    this.props.loginWithTouch(username)
-    this.props.changeUser(username)
-    this.setState({
-      focusOn: 'pin'
-    })
-  }
-
-  handleShowDrop = () => {
-    this.setState({
-      focusOn: 'List'
-    })
-  }
-
-  handleHideDrop = () => {
-    this.setState({
-      focusOn: 'pin'
-    })
-  }
-
-  renderTouchImage = () => {
-    const { touch, userDetails, theme } = this.props
+  const renderTouchImage = () => {
     const { touchEnabled } = userDetails
     if (touchEnabled && touch === 'FaceID') {
       return (
-        <TouchableOpacity
-          onPress={this.handleTouchId}
-          disabled={this.props.isTouchIdDisabled}
-        >
+        <TouchableOpacity onPress={handleTouchId} disabled={isTouchIdDisabled}>
           <SvgXml
             xml={FaceIdXml}
             color={theme.iconTappable}
@@ -291,10 +265,7 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
     }
     if (touchEnabled && touch === 'TouchID') {
       return (
-        <TouchableOpacity
-          onPress={this.handleTouchId}
-          disabled={this.props.isTouchIdDisabled}
-        >
+        <TouchableOpacity onPress={handleTouchId} disabled={isTouchIdDisabled}>
           <MaterialCommunityIcons
             name="fingerprint"
             size={theme.rem(3)}
@@ -309,8 +280,7 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
     return null
   }
 
-  renderTouchImageText = () => {
-    const { touch, userDetails } = this.props
+  const renderTouchImageText = () => {
     const { touchEnabled } = userDetails
     if (touchEnabled && touch === 'FaceID') {
       return s.strings.use_faceId
@@ -323,6 +293,17 @@ class PinLoginSceneComponent extends React.Component<Props, State> {
     }
     return ''
   }
+
+  return (
+    <ThemedScene
+      backButtonText={s.strings.exit_pin}
+      onBack={handleBack}
+      noUnderline
+      branding={branding}
+    >
+      <View style={styles.container}>{renderOverImage()}</View>
+    </ThemedScene>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -385,48 +366,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     zIndex: -100
   }
 }))
-
-export const PinLoginScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state: RootState) => ({
-    errorMessage: state.login.errorMessage || '',
-    isLoggingInWithPin: state.login.isLoggingInWithPin,
-    isTouchIdDisabled:
-      state.login.loginSuccess ||
-      !!state.login.wait ||
-      state.login.isLoggingInWithPin ||
-      (state.login.pin ? state.login.pin.length : 0) === 4,
-    loginSuccess: state.login.loginSuccess,
-    pin: state.login.pin || '',
-    touch: state.touch.type,
-    userDetails: state.previousUsers.userList.find(
-      user => user.username === state.login.username
-    ) ?? {
-      username: state.login.username,
-      pinEnabled: false,
-      touchEnabled: false
-    },
-    userList: state.previousUsers.userList,
-    username: state.login.username,
-    wait: state.login.wait
-  }),
-  (dispatch: Dispatch) => ({
-    changeUser: (data: string) => {
-      dispatch({ type: 'AUTH_UPDATE_USERNAME', data: data })
-    },
-    async deleteUserFromDevice(username) {
-      return await dispatch(deleteUserFromDevice(username))
-    },
-    gotoLoginPage: () => {
-      dispatch({ type: 'START_PASSWORD_LOGIN' })
-    },
-    loginWithTouch(username) {
-      dispatch(loginWithTouch(username)).catch(showError)
-    },
-    loginWithPin(username, pin) {
-      dispatch(loginWithPin(username, pin))
-    },
-    onChangeText(pin: string) {
-      dispatch({ type: 'AUTH_UPDATE_PIN', data: pin })
-    }
-  })
-)(withTheme(PinLoginSceneComponent))
