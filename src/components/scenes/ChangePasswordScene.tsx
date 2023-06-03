@@ -238,9 +238,10 @@ export const ResecurePasswordScene = (
   const account = useSelector(state => state.account ?? undefined)
 
   const handleSkip = useHandler(() => {
+    if (account == null) return
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'resecurePin', params: {} }
+      data: { name: 'resecurePin', params: { account } }
     })
   })
 
@@ -259,7 +260,7 @@ export const ResecurePasswordScene = (
     ))
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'resecurePin', params: {} }
+      data: { name: 'resecurePin', params: { account } }
     })
   })
 

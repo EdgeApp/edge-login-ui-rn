@@ -23,7 +23,7 @@ export interface LoginParamList {
   newAccountPin: {}
   newAccountTos: {}
   newAccountWait: WaitParams
-  newAccountReview: {}
+  newAccountReview: AccountParams
   landing: {}
   loading: {}
   otpError: OtpErrorParams
@@ -32,7 +32,7 @@ export interface LoginParamList {
   pinLogin: {}
   recoveryLogin: RecoveryLoginParams
   resecurePassword: AccountParams
-  resecurePin: {}
+  resecurePin: AccountParams
   securityAlert: AccountParams
 }
 

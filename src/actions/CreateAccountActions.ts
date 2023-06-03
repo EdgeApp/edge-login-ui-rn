@@ -134,7 +134,7 @@ export function createUser(data: CreateUserData) {
         dispatch({ type: 'CREATE_ACCOUNT_SUCCESS', data: abcAccount })
         dispatch({
           type: 'NAVIGATE',
-          data: { name: 'newAccountReview', params: {} }
+          data: { name: 'newAccountReview', params: { account: abcAccount } }
         })
         logEvent('Signup_Create_User_Success')
         await abcAccount.dataStore.setItem(
