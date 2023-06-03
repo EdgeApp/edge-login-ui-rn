@@ -1,4 +1,4 @@
-import { OtpError } from 'edge-core-js'
+import { asMaybeOtpError, OtpError } from 'edge-core-js'
 import * as React from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
@@ -53,8 +53,9 @@ class OtpErrorSceneComponent extends React.Component<Props> {
         await login(otpAttempt)
       }
     } catch (error) {
-      if (error != null && error.name === 'OtpError') {
-        saveOtpError(otpAttempt, error)
+      const otpError = asMaybeOtpError(error)
+      if (otpError != null) {
+        saveOtpError(otpAttempt, otpError)
       } else {
         showError(error)
       }
@@ -82,11 +83,15 @@ class OtpErrorSceneComponent extends React.Component<Props> {
         this.checkVoucher.start()
 
         // Translate known errors:
-        if (error != null && error.name === 'OtpError') {
-          saveOtpError(otpAttempt, error)
+        const otpError = asMaybeOtpError(error)
+        if (otpError != null) {
+          saveOtpError(otpAttempt, otpError)
           return s.strings.backup_key_incorrect
         }
-        if (error != null && error.message === 'Unexpected end of data') {
+        if (
+          error instanceof Error &&
+          error.message === 'Unexpected end of data'
+        ) {
           return s.strings.backup_key_incorrect
         }
         showError(error)

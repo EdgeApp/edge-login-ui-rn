@@ -1,4 +1,4 @@
-import { EdgeAccount, OtpError } from 'edge-core-js'
+import { asMaybeOtpError, EdgeAccount, OtpError } from 'edge-core-js'
 import * as React from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
@@ -49,11 +49,15 @@ class OtpRepairSceneComponent extends React.Component<Props> {
         return true
       } catch (error) {
         // Translate known errors:
-        if (error != null && error.name === 'OtpError') {
-          saveOtpError(account, error)
+        const otpError = asMaybeOtpError(error)
+        if (otpError != null) {
+          saveOtpError(account, otpError)
           return s.strings.backup_key_incorrect
         }
-        if (error != null && error.message === 'Unexpected end of data') {
+        if (
+          error instanceof Error &&
+          error.message === 'Unexpected end of data'
+        ) {
           return s.strings.backup_key_incorrect
         }
         showError(error)
