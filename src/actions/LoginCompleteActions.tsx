@@ -56,19 +56,6 @@ export const completeLogin = (account: EdgeAccount) => async (
 }
 
 /**
- * The resecure workflow calls this when it is done.
- */
-export function completeResecure() {
-  return (dispatch: Dispatch, getState: GetState, imports: Imports) => {
-    const { account } = getState()
-    if (account == null) return
-
-    if (imports.onLogin != null) dispatch(submitLogin(account))
-    else imports.onComplete()
-  }
-}
-
-/**
  * Everything is done, and we can pass the account to the outside world.
  */
 export const submitLogin = (account: EdgeAccount) => async (

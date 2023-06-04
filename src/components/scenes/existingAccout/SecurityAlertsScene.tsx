@@ -5,11 +5,11 @@ import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
-import { completeResecure } from '../../../actions/LoginCompleteActions'
+import { submitLogin } from '../../../actions/LoginCompleteActions'
 import s from '../../../common/locales/strings'
-import { useDispatch, useSelector } from '../../../types/ReduxTypes'
+import { useImports } from '../../../hooks/useImports'
+import { useDispatch } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
-import { getAccount } from '../../../util/selectors'
 import { toLocalTime } from '../../../util/utils'
 import { showError } from '../../services/AirshipInstance'
 import { Theme, ThemeProps, useTheme } from '../../services/ThemeContext'
@@ -271,12 +271,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export function SecurityAlertsScene(props: OwnProps) {
   const { route } = props
+  const { account } = route.params
+  const { onComplete, onLogin } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
-  const account = useSelector(state => getAccount(state))
 
   const handleDone = (): void => {
-    dispatch(completeResecure())
+    if (onLogin != null) dispatch(submitLogin(account))
+    else onComplete()
   }
 
   const handleResecure = (): void => {

@@ -203,11 +203,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 // The scene for existing users to change their password
 export const ChangePasswordScene = (props: SceneProps<'changePassword'>) => {
+  const { route } = props
+  const { account } = route.params
   const { onComplete } = useImports()
-  const account = useSelector(state => state.account ?? undefined)
   const handleSubmit = useHandler(async (password: string) => {
     Keyboard.dismiss()
-    if (account == null) return
 
     await account.changePassword(password)
     await Airship.show(bridge => (
@@ -234,11 +234,11 @@ export const ChangePasswordScene = (props: SceneProps<'changePassword'>) => {
 export const ResecurePasswordScene = (
   props: SceneProps<'resecurePassword'>
 ) => {
+  const { route } = props
+  const { account } = route.params
   const dispatch = useDispatch()
-  const account = useSelector(state => state.account ?? undefined)
 
   const handleSkip = useHandler(() => {
-    if (account == null) return
     dispatch({
       type: 'NAVIGATE',
       data: { name: 'resecurePin', params: { account } }
@@ -247,7 +247,6 @@ export const ResecurePasswordScene = (
 
   const handleSubmit = useHandler(async (password: string) => {
     Keyboard.dismiss()
-    if (account == null) return
 
     await account.changePassword(password)
     await Airship.show(bridge => (

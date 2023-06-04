@@ -43,7 +43,8 @@ interface Props extends SceneProps<'changeRecovery'> {
 const NUM_QUESTIONS = 2
 
 export const ChangeRecoveryScene = (props: Props) => {
-  const { branding } = props
+  const { branding, route } = props
+  const { account } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
   const { onComplete } = useImports()
@@ -51,7 +52,6 @@ export const ChangeRecoveryScene = (props: Props) => {
   const questionPrompt = s.strings.choose_recovery_question
   const answerPrompt = s.strings.your_answer_label
 
-  const account = useSelector(state => state.account)
   const userQuestions = useSelector(
     state => state.passwordRecovery.userQuestions
   )
@@ -184,8 +184,8 @@ export const ChangeRecoveryScene = (props: Props) => {
   }
 
   const saveRecovery = async (emailAddress?: string) => {
-    if (account == null || account.username == null) return
     const { username } = account
+    if (username == null) return
     const okQuestions = questions.filter(stringPredicate)
     const okAnswers = answers.filter(stringPredicate)
     try {
@@ -250,7 +250,6 @@ export const ChangeRecoveryScene = (props: Props) => {
   }
 
   const changeRecovery = () => {
-    if (account == null) return
     Keyboard.dismiss()
     try {
       Airship.show(bridge => (
@@ -279,7 +278,6 @@ export const ChangeRecoveryScene = (props: Props) => {
   }
 
   const deleteRecovery = () => {
-    if (account == null) return
     Keyboard.dismiss()
     try {
       Airship.show(bridge => (

@@ -157,12 +157,12 @@ class OtpRepairSceneComponent extends React.Component<Props> {
 
 export function OtpRepairScene(props: OwnProps) {
   const { branding, route } = props
+  const { account } = route.params
   const dispatch = useDispatch()
   const { onComplete } = useImports()
-  const account = useSelector(state => state.account)
   const otpError = useSelector(state => state.login.otpError)
   const otpResetDate = useSelector(state => state.login.otpResetDate)
-  if (account == null || otpError == null) {
+  if (otpError == null) {
     throw new Error('Missing OtpError for OTP repair scene')
   }
 

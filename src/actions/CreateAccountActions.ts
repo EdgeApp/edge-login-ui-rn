@@ -2,7 +2,6 @@ import { sprintf } from 'sprintf-js'
 import passwordCheck from 'zxcvbn'
 
 import s from '../common/locales/strings'
-import { Airship } from '../components/services/AirshipInstance'
 import * as Constants from '../constants/index'
 import { enableTouchId, isTouchDisabled } from '../keychain'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
@@ -153,17 +152,4 @@ export function createUser(data: CreateUserData) {
       }
     }, 300)
   }
-}
-
-export const confirmAndFinish = () => (
-  dispatch: Dispatch,
-  getState: GetState,
-  imports: Imports
-) => {
-  const { account } = getState()
-  const { onLogin } = imports
-  if (account == null) return
-
-  Airship.clear()
-  if (onLogin != null) onLogin(account)
 }
