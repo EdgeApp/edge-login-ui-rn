@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import s from '../../common/locales/strings'
 import { Branding } from '../../types/Branding'
 import { useSelector } from '../../types/ReduxTypes'
 import { MaybeProvideLoginUi } from '../publicApi/LoginUiProvider'
@@ -61,13 +60,7 @@ export function Router(props: Props) {
       case 'newAccountTos':
         return <NewAccountTosScene branding={props.branding} route={route} />
       case 'newAccountWait':
-        return (
-          <WaitScene
-            title={s.strings.great_job}
-            message={s.strings.hang_tight + '\n' + s.strings.secure_account}
-            route={route}
-          />
-        )
+        return <WaitScene route={route} />
       case 'newAccountReview':
         return <NewAccountReviewScene branding={props.branding} route={route} />
       case 'landing':

@@ -108,7 +108,13 @@ export function createUser(data: CreateUserData) {
     const { context } = imports
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'newAccountWait', params: {} }
+      data: {
+        name: 'newAccountWait',
+        params: {
+          title: s.strings.great_job,
+          message: s.strings.hang_tight + '\n' + s.strings.secure_account
+        }
+      }
     })
     setTimeout(async () => {
       try {

@@ -4,6 +4,7 @@ import { ChangeRecoveryParams } from '../components/scenes/existingAccout/Change
 import { OtpRepairParams } from '../components/scenes/existingAccout/OtpRepairScene'
 import { OtpErrorParams } from '../components/scenes/OtpErrorScene'
 import { RecoveryLoginParams } from '../components/scenes/RecoveryLoginScene'
+import { WaitParams } from '../components/scenes/WaitScene'
 
 interface AccountParams {
   account: EdgeAccount
@@ -21,7 +22,7 @@ export interface LoginParamList {
   newAccountPassword: {}
   newAccountPin: {}
   newAccountTos: {}
-  newAccountWait: {}
+  newAccountWait: WaitParams
   newAccountReview: {}
   landing: {}
   loading: {}

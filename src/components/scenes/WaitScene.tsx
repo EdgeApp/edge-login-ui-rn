@@ -9,13 +9,14 @@ import { ThemedScene } from '../themed/ThemedScene'
 
 const loader = require('../../assets/safeLoader.gif')
 
-interface Props extends SceneProps<'newAccountWait'> {
+export interface WaitParams {
   title: string
   message: string
 }
 
-export const WaitScene = (props: Props) => {
-  const { message, title } = props
+export const WaitScene = (props: SceneProps<'newAccountWait'>) => {
+  const { route } = props
+  const { message, title } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
 
