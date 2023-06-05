@@ -15,7 +15,6 @@ import { questionsList } from '../../../constants/recoveryQuestions'
 import { useImports } from '../../../hooks/useImports'
 import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
 import { Branding } from '../../../types/Branding'
-import { useSelector } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
 import { validateEmail } from '../../../util/utils'
 import { Tile } from '../../common/Tile'
@@ -44,7 +43,7 @@ const NUM_QUESTIONS = 2
 
 export const ChangeRecoveryScene = (props: Props) => {
   const { branding, route } = props
-  const { account } = route.params
+  const { account, userQuestions } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
   const { onComplete } = useImports()
@@ -52,9 +51,6 @@ export const ChangeRecoveryScene = (props: Props) => {
   const questionPrompt = s.strings.choose_recovery_question
   const answerPrompt = s.strings.your_answer_label
 
-  const userQuestions = useSelector(
-    state => state.passwordRecovery.userQuestions
-  )
   const [recoveryLocked, setRecoveryLocked] = useState(userQuestions.length > 0)
 
   // userQuestions is an array of null's when no recovery exists

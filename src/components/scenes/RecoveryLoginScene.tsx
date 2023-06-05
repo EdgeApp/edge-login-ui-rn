@@ -26,16 +26,14 @@ export interface RecoveryLoginParams {
 }
 
 export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
+  const { route } = props
+  const { recoveryKey, userQuestions: questions } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
   const answerPrompt = s.strings.your_answer_label
   const username = useSelector(state => state.login.username)
-  const recoveryKey = useSelector(
-    state => state.passwordRecovery.recoveryKey ?? ''
-  )
-  const questions = useSelector(state => state.passwordRecovery.userQuestions)
   const showCaseSensitivityWarning = questions.some(
     q => q.startsWith('text:') || !q.includes(':')
   )
