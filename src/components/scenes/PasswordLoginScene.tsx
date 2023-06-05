@@ -21,6 +21,7 @@ import { BiometryType } from '../../keychain'
 import { LoginUserInfo } from '../../reducers/PreviousUsersReducer'
 import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { SceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/analytics'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
@@ -34,7 +35,7 @@ import { LineFormField } from '../themed/LineFormField'
 import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
 
-interface OwnProps {
+interface OwnProps extends SceneProps<'passwordLogin'> {
   branding: Branding
 }
 interface StateProps {
@@ -429,7 +430,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export function PasswordLoginScene(props: OwnProps) {
-  const { branding } = props
+  const { branding, route } = props
   const dispatch = useDispatch()
   const theme = useTheme()
 
@@ -492,6 +493,7 @@ export function PasswordLoginScene(props: OwnProps) {
       branding={branding}
       loginSuccess={loginSuccess}
       previousUsers={previousUsers}
+      route={route}
       theme={theme}
       touch={touch}
       username={username}

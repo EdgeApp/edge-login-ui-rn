@@ -7,6 +7,7 @@ import { checkAndRequestNotifications } from '../../../actions/LoginInitActions'
 import s from '../../../common/locales/strings'
 import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { AccountInfo } from '../../themed/AccountInfo'
@@ -15,7 +16,7 @@ import { FormError } from '../../themed/FormError'
 import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-interface Props {
+interface Props extends SceneProps<'newAccountReview'> {
   branding: Branding
 }
 

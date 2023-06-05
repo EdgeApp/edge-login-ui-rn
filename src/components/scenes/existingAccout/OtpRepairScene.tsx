@@ -8,6 +8,7 @@ import s from '../../../common/locales/strings'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
 import { useDispatch, useSelector } from '../../../types/ReduxTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { toLocalTime } from '../../../util/utils'
 import { showResetModal } from '../../modals/OtpResetModal'
 import { showQrCodeModal } from '../../modals/QrCodeModal'
@@ -24,7 +25,7 @@ export interface OtpRepairParams {
   otpError: OtpError
 }
 
-interface OwnProps {
+interface OwnProps extends SceneProps<'otpRepair'> {
   branding: Branding
 }
 interface StateProps {
@@ -155,7 +156,7 @@ class OtpRepairSceneComponent extends React.Component<Props> {
 }
 
 export function OtpRepairScene(props: OwnProps) {
-  const { branding } = props
+  const { branding, route } = props
   const dispatch = useDispatch()
   const { onComplete } = useImports()
   const account = useSelector(state => state.account)
@@ -190,6 +191,7 @@ export function OtpRepairScene(props: OwnProps) {
       branding={branding}
       otpError={otpError}
       otpResetDate={otpResetDate}
+      route={route}
     />
   )
 }

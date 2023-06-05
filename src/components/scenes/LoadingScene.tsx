@@ -3,8 +3,9 @@ import { ActivityIndicator, View } from 'react-native'
 
 import { ACCENT_MINT } from '../../constants/index'
 import { Branding } from '../../types/Branding'
+import { SceneProps } from '../../types/routerTypes'
 
-interface Props {
+interface Props extends SceneProps<'loading'> {
   branding: Branding
 }
 

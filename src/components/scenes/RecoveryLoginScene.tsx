@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { login } from '../../actions/LoginAction'
 import s from '../../common/locales/strings'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { SceneProps } from '../../types/routerTypes'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { Tile } from '../common/Tile'
 import { WarningCard } from '../common/WarningCard'
@@ -24,7 +25,7 @@ export interface RecoveryLoginParams {
   userQuestions: string[]
 }
 
-export const RecoveryLoginScene = () => {
+export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()

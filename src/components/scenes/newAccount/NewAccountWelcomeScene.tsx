@@ -9,6 +9,7 @@ import s from '../../../common/locales/strings'
 import * as Constants from '../../../constants/index'
 import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { DividerLine } from '../../themed/DividerLine'
@@ -16,7 +17,7 @@ import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-interface Props {
+interface Props extends SceneProps<'newAccountWelcome'> {
   branding: Branding
 }
 

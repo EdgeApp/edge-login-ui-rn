@@ -8,6 +8,7 @@ import s from '../../../common/locales/strings'
 import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
 import { Branding } from '../../../types/Branding'
 import { useDispatch, useSelector } from '../../../types/ReduxTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { Checkbox } from '../../themed/Checkbox'
@@ -16,7 +17,7 @@ import { Fade } from '../../themed/Fade'
 import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-interface Props {
+interface Props extends SceneProps<'newAccountTos'> {
   branding: Branding
 }
 

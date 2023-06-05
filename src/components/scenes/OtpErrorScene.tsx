@@ -7,6 +7,7 @@ import { login } from '../../actions/LoginAction'
 import { hasReadyVoucher, requestOtpReset } from '../../actions/LoginOtpActions'
 import s from '../../common/locales/strings'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { SceneProps } from '../../types/routerTypes'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { makePeriodicTask } from '../../util/periodicTask'
 import { toLocalTime } from '../../util/utils'
@@ -25,7 +26,7 @@ export interface OtpErrorParams {
   otpError: OtpError
 }
 
-interface OwnProps {}
+interface OwnProps extends SceneProps<'otpError'> {}
 interface StateProps {
   otpError: OtpError
   otpAttempt: LoginAttempt
@@ -182,6 +183,7 @@ class OtpErrorSceneComponent extends React.Component<Props> {
 }
 
 export function OtpErrorScene(props: OwnProps) {
+  const { route } = props
   const dispatch = useDispatch()
 
   const otpAttempt = useSelector(state => state.login.otpAttempt)
@@ -224,6 +226,7 @@ export function OtpErrorScene(props: OwnProps) {
       otpAttempt={otpAttempt}
       otpError={otpError}
       otpResetDate={otpResetDate}
+      route={route}
     />
   )
 }

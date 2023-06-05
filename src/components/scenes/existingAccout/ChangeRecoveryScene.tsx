@@ -16,6 +16,7 @@ import { useImports } from '../../../hooks/useImports'
 import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
 import { Branding } from '../../../types/Branding'
 import { useSelector } from '../../../types/ReduxTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { validateEmail } from '../../../util/utils'
 import { Tile } from '../../common/Tile'
 import { WarningCard } from '../../common/WarningCard'
@@ -35,13 +36,14 @@ export interface ChangeRecoveryParams {
   account: EdgeAccount
 }
 
-interface Props {
+interface Props extends SceneProps<'changeRecovery'> {
   branding: Branding
 }
 
 const NUM_QUESTIONS = 2
 
-export const ChangeRecoveryScene = ({ branding }: Props) => {
+export const ChangeRecoveryScene = (props: Props) => {
+  const { branding } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const { onComplete } = useImports()

@@ -9,6 +9,7 @@ import { useHandler } from '../../hooks/useHandler.js'
 import { useImports } from '../../hooks/useImports'
 import { useScrollToEnd } from '../../hooks/useScrollToEnd'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { SceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/analytics'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -87,7 +88,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 // The scene for existing users to change their PIN
-export const ChangePinScene = () => {
+export const ChangePinScene = (props: SceneProps<'changePin'>) => {
   const { onComplete } = useImports()
   const account = useSelector(state => state.account ?? undefined)
 
@@ -113,7 +114,7 @@ export const ChangePinScene = () => {
 }
 
 // The scene for new users to recover their PIN
-export const ResecurePinScene = () => {
+export const ResecurePinScene = (props: SceneProps<'resecurePin'>) => {
   const dispatch = useDispatch()
   const account = useSelector(state => state.account ?? undefined)
 
@@ -149,7 +150,7 @@ export const ResecurePinScene = () => {
 }
 
 // The scene for new users to set their PIN
-export const NewAccountPinScene = () => {
+export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {

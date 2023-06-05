@@ -6,13 +6,14 @@ import * as Constants from '../../constants/index'
 import { useHandler } from '../../hooks/useHandler'
 import { Branding } from '../../types/Branding'
 import { useDispatch } from '../../types/ReduxTypes'
+import { SceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/analytics'
 import { scale } from '../../util/scaling'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
 
-interface Props {
+interface Props extends SceneProps<'landing'> {
   branding: Branding
   landingSceneText?: string
 }

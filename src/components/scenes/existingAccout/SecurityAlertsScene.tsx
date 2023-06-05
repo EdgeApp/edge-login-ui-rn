@@ -8,6 +8,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { completeResecure } from '../../../actions/LoginCompleteActions'
 import s from '../../../common/locales/strings'
 import { useDispatch, useSelector } from '../../../types/ReduxTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { getAccount } from '../../../util/selectors'
 import { toLocalTime } from '../../../util/utils'
 import { showError } from '../../services/AirshipInstance'
@@ -18,7 +19,7 @@ import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 import { MessageText, Warning } from '../../themed/ThemedText'
 
-interface OwnProps {}
+interface OwnProps extends SceneProps<'securityAlert'> {}
 interface StateProps {
   account: EdgeAccount
 }
@@ -269,6 +270,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export function SecurityAlertsScene(props: OwnProps) {
+  const { route } = props
   const dispatch = useDispatch()
   const theme = useTheme()
   const account = useSelector(state => getAccount(state))
@@ -287,6 +289,7 @@ export function SecurityAlertsScene(props: OwnProps) {
   return (
     <SecurityAlertsSceneComponent
       account={account}
+      route={route}
       startResecure={handleResecure}
       theme={theme}
       onDone={handleDone}

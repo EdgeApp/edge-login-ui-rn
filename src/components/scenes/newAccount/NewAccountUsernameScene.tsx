@@ -10,6 +10,7 @@ import s from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { Branding } from '../../../types/Branding'
 import { Dispatch, useDispatch, useSelector } from '../../../types/ReduxTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -17,14 +18,15 @@ import { MainButton } from '../../themed/MainButton'
 import { OutlinedTextInput } from '../../themed/OutlinedTextInput'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-interface Props {
+interface Props extends SceneProps<'newAccountUsername'> {
   branding: Branding
 }
 const AVAILABILITY_CHECK_DELAY_MS = 400
 
 type Timeout = ReturnType<typeof setTimeout>
 
-export const NewAccountUsernameScene = ({ branding }: Props) => {
+export const NewAccountUsernameScene = (props: Props) => {
+  const { branding } = props
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)

@@ -10,6 +10,7 @@ import s from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useImports } from '../../hooks/useImports'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { SceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/analytics'
 import { WarningCard } from '../common/WarningCard'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -201,7 +202,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 // The scene for existing users to change their password
-export const ChangePasswordScene = () => {
+export const ChangePasswordScene = (props: SceneProps<'changePassword'>) => {
   const { onComplete } = useImports()
   const account = useSelector(state => state.account ?? undefined)
   const handleSubmit = useHandler(async (password: string) => {
@@ -230,7 +231,9 @@ export const ChangePasswordScene = () => {
 }
 
 // The scene for existing users to recover their password
-export const ResecurePasswordScene = () => {
+export const ResecurePasswordScene = (
+  props: SceneProps<'resecurePassword'>
+) => {
   const dispatch = useDispatch()
   const account = useSelector(state => state.account ?? undefined)
 
@@ -270,7 +273,9 @@ export const ResecurePasswordScene = () => {
 }
 
 // The scene for new users to create a password
-export const NewAccountPasswordScene = () => {
+export const NewAccountPasswordScene = (
+  props: SceneProps<'newAccountPassword'>
+) => {
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {

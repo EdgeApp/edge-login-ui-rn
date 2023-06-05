@@ -41,50 +41,55 @@ export function Router(props: Props) {
   function renderContent() {
     switch (route.name) {
       case 'changePassword':
-        return <ChangePasswordScene />
+        return <ChangePasswordScene route={route} />
       case 'changePin':
-        return <ChangePinScene />
+        return <ChangePinScene route={route} />
       case 'changeRecovery':
-        return <ChangeRecoveryScene branding={props.branding} />
+        return <ChangeRecoveryScene branding={props.branding} route={route} />
       case 'newAccountWelcome':
-        return <NewAccountWelcomeScene branding={props.branding} />
+        return (
+          <NewAccountWelcomeScene branding={props.branding} route={route} />
+        )
       case 'newAccountUsername':
-        return <NewAccountUsernameScene branding={props.branding} />
+        return (
+          <NewAccountUsernameScene branding={props.branding} route={route} />
+        )
       case 'newAccountPassword':
-        return <NewAccountPasswordScene />
+        return <NewAccountPasswordScene route={route} />
       case 'newAccountPin':
-        return <NewAccountPinScene />
+        return <NewAccountPinScene route={route} />
       case 'newAccountTos':
-        return <NewAccountTosScene branding={props.branding} />
+        return <NewAccountTosScene branding={props.branding} route={route} />
       case 'newAccountWait':
         return (
           <WaitScene
             title={s.strings.great_job}
             message={s.strings.hang_tight + '\n' + s.strings.secure_account}
+            route={route}
           />
         )
       case 'newAccountReview':
-        return <NewAccountReviewScene branding={props.branding} />
+        return <NewAccountReviewScene branding={props.branding} route={route} />
       case 'landing':
-        return <LandingScene branding={props.branding} />
+        return <LandingScene branding={props.branding} route={route} />
       case 'loading':
-        return <LoadingScene branding={props.branding} />
+        return <LoadingScene branding={props.branding} route={route} />
       case 'otpError':
-        return <OtpErrorScene />
+        return <OtpErrorScene route={route} />
       case 'otpRepair':
-        return <OtpRepairScene branding={props.branding} />
+        return <OtpRepairScene branding={props.branding} route={route} />
       case 'passwordLogin':
-        return <PasswordLoginScene branding={props.branding} />
+        return <PasswordLoginScene branding={props.branding} route={route} />
       case 'pinLogin':
-        return <PinLoginScene branding={props.branding} />
+        return <PinLoginScene branding={props.branding} route={route} />
       case 'recoveryLogin':
-        return <RecoveryLoginScene />
+        return <RecoveryLoginScene route={route} />
       case 'resecurePassword':
-        return <ResecurePasswordScene />
+        return <ResecurePasswordScene route={route} />
       case 'resecurePin':
-        return <ResecurePinScene />
+        return <ResecurePinScene route={route} />
       case 'securityAlert':
-        return <SecurityAlertsScene />
+        return <SecurityAlertsScene route={route} />
     }
   }
 
