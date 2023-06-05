@@ -101,4 +101,3 @@ export type Action =
     }
   | { type: 'START_RESECURE'; data: EdgeAccount }
   | { type: 'START_SECURITY_ALERT'; data: EdgeAccount }
-  | { type: 'UPDATE_WAIT_TIMER'; data: { seconds: number } } // Apparently unused

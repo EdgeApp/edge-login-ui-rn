@@ -9,12 +9,12 @@ import {
   sendRecoveryEmail,
   shareRecovery
 } from '../../../actions/PasswordRecoveryActions'
-import { onComplete } from '../../../actions/WorkflowActions'
 import s from '../../../common/locales/strings'
 import { questionsList } from '../../../constants/recoveryQuestions'
+import { useImports } from '../../../hooks/useImports'
 import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
 import { Branding } from '../../../types/Branding'
-import { useDispatch, useSelector } from '../../../types/ReduxTypes'
+import { useSelector } from '../../../types/ReduxTypes'
 import { validateEmail } from '../../../util/utils'
 import { Tile } from '../../common/Tile'
 import { WarningCard } from '../../common/WarningCard'
@@ -36,7 +36,7 @@ interface Props {
 export const ChangeRecoveryScene = ({ branding }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const dispatch = useDispatch()
+  const { onComplete } = useImports()
 
   const questionPrompt = s.strings.choose_recovery_question
   const answerPrompt = s.strings.your_answer_label
@@ -65,9 +65,6 @@ export const ChangeRecoveryScene = ({ branding }: Props) => {
     [questions]
   )
 
-  const done = () => {
-    dispatch(onComplete())
-  }
   const extractQuestion = (recoveryQuestion: string | null | undefined) => {
     return recoveryQuestion?.split(':').slice(-1)[0]
   }
@@ -197,7 +194,7 @@ export const ChangeRecoveryScene = ({ branding }: Props) => {
         />
       ))
       setAnswers([])
-      done()
+      onComplete()
     } catch (error) {
       showError(error)
     }
@@ -288,7 +285,7 @@ export const ChangeRecoveryScene = ({ branding }: Props) => {
       )).then(async button => {
         if (button !== 'confirm') return
         await account.deleteRecovery()
-        done()
+        onComplete()
       })
     } catch (error) {
       showError(error)
@@ -368,7 +365,7 @@ export const ChangeRecoveryScene = ({ branding }: Props) => {
           alignSelf="stretch"
           label={s.strings.cancel}
           paddingRem={[1, 0]}
-          onPress={done}
+          onPress={onComplete}
           type="escape"
         />
       </View>

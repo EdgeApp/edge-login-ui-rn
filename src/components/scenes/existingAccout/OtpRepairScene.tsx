@@ -4,16 +4,15 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import { requestOtpReset } from '../../../actions/LoginOtpActions'
-import { onComplete } from '../../../actions/WorkflowActions'
 import s from '../../../common/locales/strings'
+import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
-import { Dispatch, RootState } from '../../../types/ReduxTypes'
+import { useDispatch, useSelector } from '../../../types/ReduxTypes'
 import { toLocalTime } from '../../../util/utils'
 import { showResetModal } from '../../modals/OtpResetModal'
 import { showQrCodeModal } from '../../modals/QrCodeModal'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { Airship, showError } from '../../services/AirshipInstance'
-import { connect } from '../../services/ReduxStore'
 import { DividerWithText } from '../../themed/DividerWithText'
 import { IconHeaderRow } from '../../themed/IconHeaderRow'
 import { LinkRow } from '../../themed/LinkRow'
@@ -146,18 +145,20 @@ class OtpRepairSceneComponent extends React.Component<Props> {
   }
 }
 
-export const OtpRepairScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state: RootState) => {
-    const { account } = state
-    const { otpError, otpResetDate } = state.login
-    if (account == null || otpError == null) {
-      throw new Error('Missing OtpError for OTP repair scene')
-    }
-    return { account, otpError, otpResetDate }
-  },
-  (dispatch: Dispatch) => ({
+export function OtpRepairScene(props: OwnProps) {
+  const { branding } = props
+  const dispatch = useDispatch()
+  const { onComplete } = useImports()
+  const account = useSelector(state => state.account)
+  const otpError = useSelector(state => state.login.otpError)
+  const otpResetDate = useSelector(state => state.login.otpResetDate)
+  if (account == null || otpError == null) {
+    throw new Error('Missing OtpError for OTP repair scene')
+  }
+
+  const dispatchProps: DispatchProps = {
     onBack() {
-      dispatch(onComplete())
+      onComplete()
     },
     handleQrModal() {
       dispatch(showQrCodeModal())
@@ -168,5 +169,15 @@ export const OtpRepairScene = connect<StateProps, DispatchProps, OwnProps>(
     saveOtpError(account, error) {
       dispatch({ type: 'START_OTP_REPAIR', data: { account, error } })
     }
-  })
-)(OtpRepairSceneComponent)
+  }
+
+  return (
+    <OtpRepairSceneComponent
+      {...dispatchProps}
+      account={account}
+      branding={branding}
+      otpError={otpError}
+      otpResetDate={otpResetDate}
+    />
+  )
+}

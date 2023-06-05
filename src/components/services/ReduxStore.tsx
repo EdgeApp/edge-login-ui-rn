@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { connect as rawConnect, Provider } from 'react-redux'
+import { Provider } from 'react-redux'
 import { applyMiddleware, createStore, Store } from 'redux'
 import thunk from 'redux-thunk'
 
@@ -49,20 +49,4 @@ export class ReduxStore extends React.Component<Props> {
     // @ts-expect-error: mismatching redux versions.
     return <Provider store={this.store}>{children}</Provider>
   }
-}
-
-type Connector<ExtraProps, OwnProps> = (
-  component: React.ComponentType<ExtraProps & OwnProps>
-) => React.ComponentType<OwnProps>
-
-/**
- * The react-redux connect function, locked to our own Redux types
- * and fixed to take the same parameters as the TypeScript version.
- */
-export function connect<StateProps, DispatchProps, OwnProps>(
-  mapStateToProps: (state: RootState, ownProps: OwnProps) => StateProps,
-  mapDispatchToProps?: (dispatch: Dispatch, ownProps: OwnProps) => DispatchProps
-): Connector<StateProps & DispatchProps, OwnProps> {
-  // @ts-expect-error
-  return rawConnect(mapStateToProps, mapDispatchToProps)
 }

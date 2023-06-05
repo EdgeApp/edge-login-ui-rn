@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { login } from '../../actions/LoginAction'
 import { hasReadyVoucher, requestOtpReset } from '../../actions/LoginOtpActions'
 import s from '../../common/locales/strings'
-import { Dispatch, RootState } from '../../types/ReduxTypes'
+import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { makePeriodicTask } from '../../util/periodicTask'
 import { toLocalTime } from '../../util/utils'
@@ -14,7 +14,6 @@ import { showResetModal } from '../modals/OtpResetModal'
 import { showQrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
-import { connect } from '../services/ReduxStore'
 import { DividerWithText } from '../themed/DividerWithText'
 import { IconHeaderRow } from '../themed/IconHeaderRow'
 import { LinkRow } from '../themed/LinkRow'
@@ -172,15 +171,17 @@ class OtpErrorSceneComponent extends React.Component<Props> {
   }
 }
 
-export const OtpErrorScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state: RootState) => {
-    const { otpAttempt, otpError, otpResetDate } = state.login
-    if (otpAttempt == null || otpError == null) {
-      throw new Error('Missing OtpError for OTP error scene')
-    }
-    return { otpAttempt, otpError, otpResetDate }
-  },
-  (dispatch: Dispatch) => ({
+export function OtpErrorScene(props: OwnProps) {
+  const dispatch = useDispatch()
+
+  const otpAttempt = useSelector(state => state.login.otpAttempt)
+  const otpError = useSelector(state => state.login.otpError)
+  const otpResetDate = useSelector(state => state.login.otpResetDate)
+  if (otpAttempt == null || otpError == null) {
+    throw new Error('Missing OtpError for OTP error scene')
+  }
+
+  const dispatchProps: DispatchProps = {
     onBack() {
       dispatch({ type: 'START_PASSWORD_LOGIN' })
     },
@@ -199,5 +200,14 @@ export const OtpErrorScene = connect<StateProps, DispatchProps, OwnProps>(
     saveOtpError(attempt, error) {
       dispatch({ type: 'OTP_ERROR', data: { attempt, error } })
     }
-  })
-)(OtpErrorSceneComponent)
+  }
+
+  return (
+    <OtpErrorSceneComponent
+      {...dispatchProps}
+      otpAttempt={otpAttempt}
+      otpError={otpError}
+      otpResetDate={otpResetDate}
+    />
+  )
+}

@@ -4,7 +4,6 @@ import { Text, View } from 'react-native'
 import s from '../../common/locales/strings'
 import * as Constants from '../../constants/index'
 import { useHandler } from '../../hooks/useHandler'
-import * as Styles from '../../styles/index'
 import { Branding } from '../../types/Branding'
 import { useDispatch } from '../../types/ReduxTypes'
 import { logEvent } from '../../util/analytics'
@@ -67,7 +66,11 @@ export const LandingScene = (props: Props) => {
 }
 
 const styles = {
-  container: Styles.SceneStyle,
+  container: {
+    flex: 1,
+    width: '100%',
+    height: '100%'
+  },
   inner: {
     position: 'relative',
     flex: 1,
@@ -111,19 +114,5 @@ const styles = {
     textAlign: 'center',
     fontSize: scale(14),
     lineHeight: scale(18)
-  },
-  loginButton: {
-    upStyle: Styles.TextOnlyButtonUpStyle,
-    upTextStyle: {
-      ...Styles.TextOnlyButtonTextUpStyle,
-      fontSize: scale(14),
-      color: Constants.WHITE
-    },
-    downTextStyle: {
-      ...Styles.TextOnlyButtonTextDownStyle,
-      fontSize: scale(14),
-      color: Constants.WHITE
-    },
-    downStyle: Styles.TextOnlyButtonDownStyle
   }
 } as const

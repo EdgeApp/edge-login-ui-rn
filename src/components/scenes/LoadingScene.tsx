@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
-import * as Colors from '../../constants/Colors'
-import * as Styles from '../../styles/index'
+import { ACCENT_MINT } from '../../constants/index'
 import { Branding } from '../../types/Branding'
 
 interface Props {
@@ -17,14 +16,18 @@ export class LoadingScene extends React.Component<Props> {
   renderSpinner = () => {
     return (
       <View style={styles.spinner}>
-        <ActivityIndicator color={Colors.ACCENT_MINT} size="large" />
+        <ActivityIndicator color={ACCENT_MINT} size="large" />
       </View>
     )
   }
 }
 
 const styles = {
-  container: Styles.SceneStyle,
+  container: {
+    flex: 1,
+    width: '100%',
+    height: '100%'
+  },
   spinner: {
     flex: 1,
     justifyContent: 'center',

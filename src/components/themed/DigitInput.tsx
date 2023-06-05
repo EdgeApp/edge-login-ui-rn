@@ -3,48 +3,38 @@ import { TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { validatePin } from '../../actions/CreateAccountActions'
-import { Dispatch, RootState } from '../../types/ReduxTypes'
+import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { connect } from '../services/ReduxStore'
-import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { Theme, useTheme } from '../services/ThemeContext'
 import { PinDots } from './PinDots'
 
 export const MAX_PIN_LENGTH = 4
 
-interface OwnProps {
+interface Props {
   maxPinLength?: number
   marginRem?: number[] | number
 }
 
-interface StateProps {
-  pin: string
-}
+export const DigitInput = (props: Props) => {
+  const { maxPinLength = MAX_PIN_LENGTH, marginRem } = props
 
-interface DispatchProps {
-  onChangeText: (pin: string) => void
-}
-
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
-
-const DigitInputComponent = ({
-  pin = '',
-  maxPinLength = MAX_PIN_LENGTH,
-  marginRem,
-  theme,
-  onChangeText
-}: Props) => {
-  const inputRef = React.useRef<TextInput | null>(null)
-  const spacings = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
+  const theme = useTheme()
   const styles = getStyles(theme)
+  const spacings = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
+
+  const inputRef = React.useRef<TextInput | null>(null)
+
+  const dispatch = useDispatch()
+  const pin = useSelector(state => state.create.pin)
 
   const handleRefocus = () => {
-    if (inputRef.current !== null) inputRef.current.focus()
+    if (inputRef.current != null) inputRef.current.focus()
   }
 
   const handleUpdate = (pin: string) => {
     // Change pin only when input are numbers
     if (/^\d+$/.test(pin) || pin.length === 0) {
-      onChangeText(pin)
+      dispatch(validatePin(pin))
     }
   }
 
@@ -84,14 +74,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     opacity: 0
   }
 }))
-
-export const DigitInput = connect<StateProps, DispatchProps, OwnProps>(
-  (state: RootState) => ({
-    pin: state.create.pin
-  }),
-  (dispatch: Dispatch) => ({
-    onChangeText(pin: string) {
-      dispatch(validatePin(pin))
-    }
-  })
-)(withTheme(DigitInputComponent))

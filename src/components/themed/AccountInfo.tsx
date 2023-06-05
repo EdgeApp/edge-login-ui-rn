@@ -14,21 +14,14 @@ import Animated, {
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import s from '../../common/locales/strings'
-import { RootState } from '../../types/ReduxTypes'
+import { useSelector } from '../../types/ReduxTypes'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { connect } from '../services/ReduxStore'
-import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
-interface OwnProps {
+interface Props {
   marginRem?: number[] | number
   onOpen?: () => void
-}
-
-interface StateProps {
-  username: string
-  password: string
-  pin: string
 }
 
 interface InfoRow {
@@ -36,19 +29,17 @@ interface InfoRow {
   detail: string
 }
 
-type Props = OwnProps & StateProps & ThemeProps
+export const AccountInfo = (props: Props) => {
+  const { marginRem, onOpen = () => {} } = props
 
-const AccountInfoComponent = ({
-  username,
-  password,
-  pin,
-  marginRem,
-  onOpen = () => {},
-  theme
-}: Props) => {
+  const theme = useTheme()
   const styles = getStyles(theme)
   const spacings = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
   const [isExpanded, setIsExpanded] = React.useState(false)
+
+  const username = useSelector(state => state.create.username ?? '')
+  const password = useSelector(state => state.create.password ?? '')
+  const pin = useSelector(state => state.create.pin)
 
   const animatedRef = useAnimatedRef<View>()
   const expanded = useSharedValue(false)
@@ -200,11 +191,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     zIndex: -1
   }
 }))
-
-export const AccountInfo = connect<StateProps, {}, OwnProps>(
-  ({ create: { username, password, pin } }: RootState) => ({
-    username: username || '',
-    password: password || '',
-    pin
-  })
-)(withTheme(AccountInfoComponent))

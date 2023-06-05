@@ -4,9 +4,9 @@ import { cacheStyles } from 'react-native-patina'
 
 import { completeResecure } from '../../actions/LoginCompleteActions'
 import { maybeRouteComplete } from '../../actions/LoginInitActions'
-import { onComplete } from '../../actions/WorkflowActions'
 import s from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler.js'
+import { useImports } from '../../hooks/useImports'
 import { useScrollToEnd } from '../../hooks/useScrollToEnd'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { logEvent } from '../../util/analytics'
@@ -88,7 +88,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 // The scene for existing users to change their PIN
 export const ChangePinScene = () => {
-  const dispatch = useDispatch()
+  const { onComplete } = useImports()
   const account = useSelector(state => state.account ?? undefined)
 
   const handleSubmit = useHandler(async (pin: string) => {
@@ -104,7 +104,7 @@ export const ChangePinScene = () => {
           buttons={{ ok: { label: s.strings.ok } }}
         />
       ))
-      dispatch(onComplete())
+      onComplete()
     } catch (e) {
       showError(e)
     }

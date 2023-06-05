@@ -6,32 +6,31 @@ import { confirmAndFinish } from '../../../actions/CreateAccountActions'
 import { checkAndRequestNotifications } from '../../../actions/LoginInitActions'
 import s from '../../../common/locales/strings'
 import { Branding } from '../../../types/Branding'
-import { Dispatch, RootState } from '../../../types/ReduxTypes'
+import { useDispatch } from '../../../types/ReduxTypes'
 import { logEvent } from '../../../util/analytics'
-import { connect } from '../../services/ReduxStore'
-import { Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import { Theme, useTheme } from '../../services/ThemeContext'
 import { AccountInfo } from '../../themed/AccountInfo'
 import { EdgeText } from '../../themed/EdgeText'
 import { FormError } from '../../themed/FormError'
 import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-interface OwnProps {
+interface Props {
   branding: Branding
 }
 
-interface DispatchProps {
-  onDone: (branding: Branding) => void
-}
-
-type Props = OwnProps & DispatchProps & ThemeProps
-
-const NewAccountReviewSceneComponent = ({ branding, onDone, theme }: Props) => {
+export const NewAccountReviewScene = (props: Props) => {
+  const { branding } = props
+  const dispatch = useDispatch()
+  const theme = useTheme()
   const styles = getStyles(theme)
 
   const handleNext = () => {
     logEvent(`Signup_Review_Done`)
-    onDone(branding)
+    dispatch(confirmAndFinish())
+    dispatch(checkAndRequestNotifications(branding)).catch(error =>
+      console.log(error)
+    )
   }
 
   return (
@@ -78,15 +77,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     minHeight: theme.rem(3)
   }
 }))
-
-export const NewAccountReviewScene = connect<{}, DispatchProps, OwnProps>(
-  (state: RootState) => ({}),
-  (dispatch: Dispatch) => ({
-    onDone(branding: Branding) {
-      dispatch(confirmAndFinish())
-      dispatch(checkAndRequestNotifications(branding)).catch(error =>
-        console.log(error)
-      )
-    }
-  })
-)(withTheme(NewAccountReviewSceneComponent))

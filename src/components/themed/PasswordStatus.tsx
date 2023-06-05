@@ -5,28 +5,23 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import s from '../../common/locales/strings'
-import { PasswordStatusState } from '../../reducers/PasswordStatusReducer'
-import { RootState } from '../../types/ReduxTypes'
+import { useSelector } from '../../types/ReduxTypes'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { connect } from '../services/ReduxStore'
-import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { IconSignal } from './IconSignal'
 
-interface OwnProps {
+interface Props {
   marginRem?: number[] | number
 }
 
-interface StateProps {
-  status: PasswordStatusState | null
-}
-
-type Props = OwnProps & StateProps & ThemeProps
-
-const PasswordStatusComponent = ({ status, marginRem, theme }: Props) => {
+export const PasswordStatus = (props: Props) => {
+  const { marginRem } = props
+  const theme = useTheme()
   const styles = getStyles(theme)
   const spacings = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
 
+  const status = useSelector(state => state.passwordStatus)
   if (status === null) return null
 
   const { list, passed } = status
@@ -109,10 +104,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderColor: theme.positiveText
   }
 }))
-
-export const PasswordStatus = connect<StateProps, {}, OwnProps>(
-  (state: RootState) => ({
-    status: state.passwordStatus
-  }),
-  () => ({})
-)(withTheme(PasswordStatusComponent))

@@ -2,7 +2,6 @@ import { EdgeAccountOptions, EdgeContext } from 'edge-core-js'
 import * as React from 'react'
 
 import { initializeLogin } from '../../actions/LoginInitActions'
-import { updateFontStyles } from '../../constants/Fonts'
 import { Branding, ParentButton } from '../../types/Branding'
 import {
   OnComplete,
@@ -65,9 +64,6 @@ export function LoginScreen(props: Props): JSX.Element {
     headingFontFamily = regularFontFamily
   } = fontDescription
   const { onComplete = () => {} } = props
-
-  // Always update legacy fonts:
-  updateFontStyles(regularFontFamily, headingFontFamily)
 
   // Update theme fonts if they are different:
   React.useEffect(() => changeFont(regularFontFamily, headingFontFamily), [
