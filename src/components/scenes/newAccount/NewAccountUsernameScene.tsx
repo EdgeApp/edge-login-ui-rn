@@ -75,7 +75,7 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
     dispatch(maybeRouteComplete({ type: 'NEW_ACCOUNT_WELCOME' }))
   })
   const handleNext = useHandler(async () => {
-    dispatch(completeUsername(username))
+    if (!isNextDisabled) dispatch(completeUsername(username))
   })
 
   const handleChangeText = useHandler(async (text: string) => {
