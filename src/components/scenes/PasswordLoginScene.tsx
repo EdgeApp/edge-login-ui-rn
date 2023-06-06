@@ -41,11 +41,10 @@ interface OwnProps extends SceneProps<'passwordLogin'> {
 }
 interface StateProps {
   context: EdgeContext
+  localUsers: LoginUserInfo[]
   loginSuccess: boolean
-  previousUsers: LoginUserInfo[]
   touch: BiometryType
   username: string
-  usernameOnlyList: string[]
 }
 interface DispatchProps {
   gotoCreatePage: () => void
@@ -242,19 +241,23 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
   }
 
   renderDropdownList() {
-    const { theme } = this.props
+    const { localUsers, theme } = this.props
     const styles = getStyles(theme)
 
     return (
       <ScrollView style={styles.dropDownList}>
-        {this.props.usernameOnlyList.map(item => (
-          <UserListItem
-            key={item}
-            data={item}
-            onClick={this.handleSelectUser}
-            onDelete={this.handleDelete}
-          />
-        ))}
+        {localUsers.map(item => {
+          const { username } = item
+          if (username == null) return null
+          return (
+            <UserListItem
+              key={username}
+              data={username}
+              onClick={this.handleSelectUser}
+              onDelete={this.handleDelete}
+            />
+          )
+        })}
       </ScrollView>
     )
   }
@@ -332,7 +335,7 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
       usernameList: false
     })
 
-    const details: LoginUserInfo | undefined = this.props.previousUsers.find(
+    const details: LoginUserInfo | undefined = this.props.localUsers.find(
       info => info.username === username
     )
     if (
@@ -437,12 +440,9 @@ export function PasswordLoginScene(props: OwnProps) {
   const theme = useTheme()
 
   const loginSuccess = useSelector(state => state.login.loginSuccess)
-  const previousUsers = useSelector(state => state.previousUsers.userList)
+  const localUsers = useSelector(state => state.previousUsers.userList)
   const touch = useSelector(state => state.touch.type)
   const username = useSelector(state => state.login.username)
-  const usernameOnlyList = useSelector(
-    state => state.previousUsers.usernameOnlyList
-  )
 
   const dispatchProps: DispatchProps = {
     gotoCreatePage() {
@@ -495,13 +495,12 @@ export function PasswordLoginScene(props: OwnProps) {
       {...dispatchProps}
       branding={branding}
       context={context}
+      localUsers={localUsers}
       loginSuccess={loginSuccess}
-      previousUsers={previousUsers}
       route={route}
       theme={theme}
       touch={touch}
       username={username}
-      usernameOnlyList={usernameOnlyList}
     />
   )
 }

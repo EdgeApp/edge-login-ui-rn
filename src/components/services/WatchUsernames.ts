@@ -53,8 +53,7 @@ export const WatchUsernames: React.VoidFunctionComponent<Props> = props => {
       data: {
         loaded: true,
         startupUser: requestedUser != null ? requestedUser : userList[0],
-        userList,
-        usernameOnlyList: usernames
+        userList
       }
     })
   }, [
