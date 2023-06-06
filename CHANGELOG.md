@@ -1,5 +1,11 @@
 # edge-login-ui-rn
 
+## 2.1.0 (2023-06-06)
+
+- added: Validate that the recovery key is valid base58 before submitting the modal.
+- changed: Simplify internal redux and routing logic.
+- fixed: Disable keyboard "next" button if the new-account username has not yet been checked for availability.
+
 ## 2.0.0 (2023-06-01)
 
 - changed: Upgrade to edge-core-js v1.0.0. Earlier versions will not work.
