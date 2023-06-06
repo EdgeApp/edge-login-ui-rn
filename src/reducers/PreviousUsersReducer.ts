@@ -10,12 +10,10 @@ export interface PreviousUsersState {
   readonly loaded: boolean
   readonly startupUser?: LoginUserInfo
   readonly userList: LoginUserInfo[]
-  readonly usernameOnlyList: string[]
 }
 
 const initialState: PreviousUsersState = {
   userList: [],
-  usernameOnlyList: [],
   loaded: false
 }
 
