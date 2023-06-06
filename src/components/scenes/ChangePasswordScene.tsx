@@ -10,6 +10,7 @@ import s from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useImports } from '../../hooks/useImports'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { SceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/analytics'
 import { WarningCard } from '../common/WarningCard'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -201,12 +202,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 // The scene for existing users to change their password
-export const ChangePasswordScene = () => {
+export const ChangePasswordScene = (props: SceneProps<'changePassword'>) => {
+  const { route } = props
+  const { account } = route.params
   const { onComplete } = useImports()
-  const account = useSelector(state => state.account ?? undefined)
   const handleSubmit = useHandler(async (password: string) => {
     Keyboard.dismiss()
-    if (account == null) return
 
     await account.changePassword(password)
     await Airship.show(bridge => (
@@ -230,17 +231,22 @@ export const ChangePasswordScene = () => {
 }
 
 // The scene for existing users to recover their password
-export const ResecurePasswordScene = () => {
+export const ResecurePasswordScene = (
+  props: SceneProps<'resecurePassword'>
+) => {
+  const { route } = props
+  const { account } = route.params
   const dispatch = useDispatch()
-  const account = useSelector(state => state.account ?? undefined)
 
   const handleSkip = useHandler(() => {
-    dispatch({ type: 'RESECURE_PIN' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'resecurePin', params: { account } }
+    })
   })
 
   const handleSubmit = useHandler(async (password: string) => {
     Keyboard.dismiss()
-    if (account == null) return
 
     await account.changePassword(password)
     await Airship.show(bridge => (
@@ -251,7 +257,10 @@ export const ResecurePasswordScene = () => {
         buttons={{ ok: { label: s.strings.ok } }}
       />
     ))
-    dispatch({ type: 'RESECURE_PIN' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'resecurePin', params: { account } }
+    })
   })
 
   return (
@@ -264,16 +273,24 @@ export const ResecurePasswordScene = () => {
 }
 
 // The scene for new users to create a password
-export const NewAccountPasswordScene = () => {
+export const NewAccountPasswordScene = (
+  props: SceneProps<'newAccountPassword'>
+) => {
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {
-    dispatch({ type: 'NEW_ACCOUNT_USERNAME' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'newAccountUsername', params: {} }
+    })
   })
 
   const handleSubmit = useHandler(() => {
     logEvent('Signup_Password_Valid')
-    dispatch({ type: 'NEW_ACCOUNT_PIN' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'newAccountPin', params: {} }
+    })
   })
 
   return (

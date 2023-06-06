@@ -23,8 +23,8 @@ export function SecurityAlertsScreen(props: Props): JSX.Element {
         onComplete
       }}
       initialAction={{
-        type: 'START_SECURITY_ALERT',
-        data: account
+        type: 'NAVIGATE',
+        data: { name: 'securityAlert', params: { account } }
       }}
     >
       <Router branding={{}} />

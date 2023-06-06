@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import s from '../../common/locales/strings'
 import { Branding } from '../../types/Branding'
 import { useSelector } from '../../types/ReduxTypes'
 import { MaybeProvideLoginUi } from '../publicApi/LoginUiProvider'
@@ -36,55 +35,54 @@ interface Props {
 }
 
 export function Router(props: Props) {
-  const scene = useSelector(state => state.scene)
+  const route = useSelector(state => state.scene)
 
   function renderContent() {
-    switch (scene.currentScene) {
-      case 'ChangePasswordScene':
-        return <ChangePasswordScene />
-      case 'ChangePinScene':
-        return <ChangePinScene />
-      case 'ChangeRecoveryScene':
-        return <ChangeRecoveryScene branding={props.branding} />
-      case 'NewAccountWelcomeScene':
-        return <NewAccountWelcomeScene branding={props.branding} />
-      case 'NewAccountUsernameScene':
-        return <NewAccountUsernameScene branding={props.branding} />
-      case 'NewAccountPasswordScene':
-        return <NewAccountPasswordScene />
-      case 'NewAccountPinScene':
-        return <NewAccountPinScene />
-      case 'NewAccountTosScene':
-        return <NewAccountTosScene branding={props.branding} />
-      case 'NewAccountWaitScene':
+    switch (route.name) {
+      case 'changePassword':
+        return <ChangePasswordScene route={route} />
+      case 'changePin':
+        return <ChangePinScene route={route} />
+      case 'changeRecovery':
+        return <ChangeRecoveryScene branding={props.branding} route={route} />
+      case 'newAccountWelcome':
         return (
-          <WaitScene
-            title={s.strings.great_job}
-            message={s.strings.hang_tight + '\n' + s.strings.secure_account}
-          />
+          <NewAccountWelcomeScene branding={props.branding} route={route} />
         )
-      case 'NewAccountReviewScene':
-        return <NewAccountReviewScene branding={props.branding} />
-      case 'LandingScene':
-        return <LandingScene branding={props.branding} />
-      case 'LoadingScene':
-        return <LoadingScene branding={props.branding} />
-      case 'OtpScene':
-        return <OtpErrorScene />
-      case 'OtpRepairScene':
-        return <OtpRepairScene branding={props.branding} />
-      case 'PasswordScene':
-        return <PasswordLoginScene branding={props.branding} />
-      case 'PinScene':
-        return <PinLoginScene branding={props.branding} />
-      case 'RecoveryLoginScene':
-        return <RecoveryLoginScene />
-      case 'ResecurePasswordScene':
-        return <ResecurePasswordScene />
-      case 'ResecurePinScene':
-        return <ResecurePinScene />
-      case 'SecurityAlertScene':
-        return <SecurityAlertsScene />
+      case 'newAccountUsername':
+        return (
+          <NewAccountUsernameScene branding={props.branding} route={route} />
+        )
+      case 'newAccountPassword':
+        return <NewAccountPasswordScene route={route} />
+      case 'newAccountPin':
+        return <NewAccountPinScene route={route} />
+      case 'newAccountTos':
+        return <NewAccountTosScene branding={props.branding} route={route} />
+      case 'newAccountWait':
+        return <WaitScene route={route} />
+      case 'newAccountReview':
+        return <NewAccountReviewScene branding={props.branding} route={route} />
+      case 'landing':
+        return <LandingScene branding={props.branding} route={route} />
+      case 'loading':
+        return <LoadingScene branding={props.branding} route={route} />
+      case 'otpError':
+        return <OtpErrorScene route={route} />
+      case 'otpRepair':
+        return <OtpRepairScene branding={props.branding} route={route} />
+      case 'passwordLogin':
+        return <PasswordLoginScene branding={props.branding} route={route} />
+      case 'pinLogin':
+        return <PinLoginScene branding={props.branding} route={route} />
+      case 'recoveryLogin':
+        return <RecoveryLoginScene route={route} />
+      case 'resecurePassword':
+        return <ResecurePasswordScene route={route} />
+      case 'resecurePin':
+        return <ResecurePinScene route={route} />
+      case 'securityAlert':
+        return <SecurityAlertsScene route={route} />
     }
   }
 

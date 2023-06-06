@@ -2,13 +2,14 @@ import * as React from 'react'
 import { Keyboard, ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { completeResecure } from '../../actions/LoginCompleteActions'
+import { submitLogin } from '../../actions/LoginCompleteActions'
 import { maybeRouteComplete } from '../../actions/LoginInitActions'
 import s from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useImports } from '../../hooks/useImports'
 import { useScrollToEnd } from '../../hooks/useScrollToEnd'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { SceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/analytics'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -87,13 +88,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 // The scene for existing users to change their PIN
-export const ChangePinScene = () => {
+export const ChangePinScene = (props: SceneProps<'changePin'>) => {
+  const { route } = props
+  const { account } = route.params
   const { onComplete } = useImports()
-  const account = useSelector(state => state.account ?? undefined)
 
   const handleSubmit = useHandler(async (pin: string) => {
     Keyboard.dismiss()
-    if (account == null) return
     try {
       await account.changePin({ pin })
       await Airship.show(bridge => (
@@ -113,17 +114,19 @@ export const ChangePinScene = () => {
 }
 
 // The scene for new users to recover their PIN
-export const ResecurePinScene = () => {
+export const ResecurePinScene = (props: SceneProps<'resecurePin'>) => {
+  const { route } = props
+  const { account } = route.params
+  const { onComplete, onLogin } = useImports()
   const dispatch = useDispatch()
-  const account = useSelector(state => state.account ?? undefined)
 
-  const handleSkip = () => {
-    dispatch(completeResecure())
+  const handleComplete = () => {
+    if (onLogin != null) dispatch(submitLogin(account))
+    else onComplete()
   }
 
   const handleSubmit = useHandler(async (pin: string) => {
     Keyboard.dismiss()
-    if (account == null) return
     try {
       await account.changePin({ pin })
       await Airship.show(bridge => (
@@ -134,14 +137,14 @@ export const ResecurePinScene = () => {
           buttons={{ ok: { label: s.strings.ok } }}
         />
       ))
-      dispatch(completeResecure())
+      handleComplete()
     } catch (e) {
       showError(e)
     }
   })
   return (
     <ChangePinSceneComponent
-      onSkip={handleSkip}
+      onSkip={handleComplete}
       title={s.strings.change_pin}
       onSubmit={handleSubmit}
     />
@@ -149,15 +152,23 @@ export const ResecurePinScene = () => {
 }
 
 // The scene for new users to set their PIN
-export const NewAccountPinScene = () => {
+export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {
-    dispatch(maybeRouteComplete({ type: 'NEW_ACCOUNT_PASSWORD' }))
+    dispatch(
+      maybeRouteComplete({
+        type: 'NAVIGATE',
+        data: { name: 'newAccountPassword', params: {} }
+      })
+    )
   })
   const handleSubmit = useHandler(() => {
     logEvent('Signup_PIN_Valid')
-    dispatch({ type: 'NEW_ACCOUNT_TOS' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'newAccountTos', params: {} }
+    })
   })
 
   return (

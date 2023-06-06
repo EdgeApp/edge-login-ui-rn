@@ -2,12 +2,14 @@ import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { confirmAndFinish } from '../../../actions/CreateAccountActions'
 import { checkAndRequestNotifications } from '../../../actions/LoginInitActions'
 import s from '../../../common/locales/strings'
+import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { logEvent } from '../../../util/analytics'
+import { Airship } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { AccountInfo } from '../../themed/AccountInfo'
 import { EdgeText } from '../../themed/EdgeText'
@@ -15,19 +17,24 @@ import { FormError } from '../../themed/FormError'
 import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-interface Props {
+interface Props extends SceneProps<'newAccountReview'> {
   branding: Branding
 }
 
 export const NewAccountReviewScene = (props: Props) => {
-  const { branding } = props
+  const { branding, route } = props
+  const { account } = route.params
   const dispatch = useDispatch()
+  const { onLogin } = useImports()
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const handleNext = () => {
     logEvent(`Signup_Review_Done`)
-    dispatch(confirmAndFinish())
+
+    Airship.clear()
+    if (onLogin != null) onLogin(account)
+
     dispatch(checkAndRequestNotifications(branding)).catch(error =>
       console.log(error)
     )

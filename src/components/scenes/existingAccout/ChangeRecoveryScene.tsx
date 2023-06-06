@@ -1,3 +1,4 @@
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { useMemo, useState } from 'react'
 import { Keyboard, ScrollView, Text, View } from 'react-native'
@@ -14,7 +15,7 @@ import { questionsList } from '../../../constants/recoveryQuestions'
 import { useImports } from '../../../hooks/useImports'
 import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
 import { Branding } from '../../../types/Branding'
-import { useSelector } from '../../../types/ReduxTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { validateEmail } from '../../../util/utils'
 import { Tile } from '../../common/Tile'
 import { WarningCard } from '../../common/WarningCard'
@@ -28,12 +29,21 @@ import { MainButton } from '../../themed/MainButton'
 import { ModalMessage } from '../../themed/ModalParts'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-const NUM_QUESTIONS = 2
-interface Props {
+export interface ChangeRecoveryParams {
+  questionsList: string[]
+  userQuestions: string[]
+  account: EdgeAccount
+}
+
+interface Props extends SceneProps<'changeRecovery'> {
   branding: Branding
 }
 
-export const ChangeRecoveryScene = ({ branding }: Props) => {
+const NUM_QUESTIONS = 2
+
+export const ChangeRecoveryScene = (props: Props) => {
+  const { branding, route } = props
+  const { account, userQuestions } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
   const { onComplete } = useImports()
@@ -41,10 +51,6 @@ export const ChangeRecoveryScene = ({ branding }: Props) => {
   const questionPrompt = s.strings.choose_recovery_question
   const answerPrompt = s.strings.your_answer_label
 
-  const account = useSelector(state => state.account)
-  const userQuestions = useSelector(
-    state => state.passwordRecovery.userQuestions
-  )
   const [recoveryLocked, setRecoveryLocked] = useState(userQuestions.length > 0)
 
   // userQuestions is an array of null's when no recovery exists
@@ -174,8 +180,8 @@ export const ChangeRecoveryScene = ({ branding }: Props) => {
   }
 
   const saveRecovery = async (emailAddress?: string) => {
-    if (account == null || account.username == null) return
     const { username } = account
+    if (username == null) return
     const okQuestions = questions.filter(stringPredicate)
     const okAnswers = answers.filter(stringPredicate)
     try {
@@ -240,7 +246,6 @@ export const ChangeRecoveryScene = ({ branding }: Props) => {
   }
 
   const changeRecovery = () => {
-    if (account == null) return
     Keyboard.dismiss()
     try {
       Airship.show(bridge => (
@@ -269,7 +274,6 @@ export const ChangeRecoveryScene = ({ branding }: Props) => {
   }
 
   const deleteRecovery = () => {
-    if (account == null) return
     Keyboard.dismiss()
     try {
       Airship.show(bridge => (

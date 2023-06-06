@@ -26,8 +26,8 @@ export function OtpRepairScreen(props: Props): JSX.Element {
         onComplete
       }}
       initialAction={{
-        type: 'START_OTP_REPAIR',
-        data: { account, error: otpError }
+        type: 'NAVIGATE',
+        data: { name: 'otpRepair', params: { account, otpError } }
       }}
     >
       <Router branding={branding} />

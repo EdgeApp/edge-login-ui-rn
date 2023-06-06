@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { login } from '../../actions/LoginAction'
 import s from '../../common/locales/strings'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { SceneProps } from '../../types/routerTypes'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { Tile } from '../common/Tile'
 import { WarningCard } from '../common/WarningCard'
@@ -18,17 +19,21 @@ import { Theme, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
 
-export const RecoveryLoginScene = () => {
+export interface RecoveryLoginParams {
+  username: string
+  recoveryKey: string
+  userQuestions: string[]
+}
+
+export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
+  const { route } = props
+  const { recoveryKey, userQuestions: questions } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
   const answerPrompt = s.strings.your_answer_label
   const username = useSelector(state => state.login.username)
-  const recoveryKey = useSelector(
-    state => state.passwordRecovery.recoveryKey ?? ''
-  )
-  const questions = useSelector(state => state.passwordRecovery.userQuestions)
   const showCaseSensitivityWarning = questions.some(
     q => q.startsWith('text:') || !q.includes(':')
   )
@@ -37,8 +42,11 @@ export const RecoveryLoginScene = () => {
   const attemptLogin = async (attempt: LoginAttempt) => {
     return await dispatch(login(attempt))
   }
-  const saveOtpError = (attempt: LoginAttempt, error: OtpError) => {
-    dispatch({ type: 'OTP_ERROR', data: { attempt, error } })
+  const saveOtpError = (otpAttempt: LoginAttempt, otpError: OtpError) => {
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'otpError', params: { otpAttempt, otpError } }
+    })
   }
 
   const showDatePickerModal = (index: number) => {
@@ -170,7 +178,12 @@ export const RecoveryLoginScene = () => {
   return (
     <ThemedScene
       paddingRem={0}
-      onBack={() => dispatch({ type: 'START_PASSWORD_LOGIN' })}
+      onBack={() =>
+        dispatch({
+          type: 'NAVIGATE',
+          data: { name: 'passwordLogin', params: {} }
+        })
+      }
     >
       <ScrollView contentContainerStyle={styles.content}>
         {renderForm()}

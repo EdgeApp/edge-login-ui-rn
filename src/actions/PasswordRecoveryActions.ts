@@ -34,8 +34,11 @@ export const initializeChangeRecovery = (account: EdgeAccount) => async (
   }
 
   dispatch({
-    type: 'START_CHANGE_RECOVERY',
-    data: { questionsList, userQuestions, account }
+    type: 'NAVIGATE',
+    data: {
+      name: 'changeRecovery',
+      params: { account, questionsList, userQuestions }
+    }
   })
 }
 

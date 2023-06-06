@@ -23,8 +23,8 @@ export function ChangePinScreen(props: Props): JSX.Element {
         onComplete
       }}
       initialAction={{
-        type: 'START_CHANGE_PIN',
-        data: account
+        type: 'NAVIGATE',
+        data: { name: 'changePin', params: { account } }
       }}
     >
       <Router branding={{}} />

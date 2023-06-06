@@ -2,18 +2,22 @@ import * as React from 'react'
 import { Image, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { SceneProps } from '../../types/routerTypes'
+import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ThemedScene } from '../themed/ThemedScene'
 
 const loader = require('../../assets/safeLoader.gif')
 
-interface Props {
+export interface WaitParams {
   title: string
   message: string
 }
 
-const WaitSceneComponent = ({ title, message, theme }: Props & ThemeProps) => {
+export const WaitScene = (props: SceneProps<'newAccountWait'>) => {
+  const { route } = props
+  const { message, title } = route.params
+  const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
@@ -49,5 +53,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(5)
   }
 }))
-
-export const WaitScene = withTheme(WaitSceneComponent)

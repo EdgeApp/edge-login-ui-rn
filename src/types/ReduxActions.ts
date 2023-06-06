@@ -1,8 +1,8 @@
-import { EdgeAccount, EdgePasswordRules, OtpError } from 'edge-core-js'
+import { EdgeAccount, EdgePasswordRules } from 'edge-core-js'
 
 import { PreviousUsersState } from '../reducers/PreviousUsersReducer'
+import { SceneState } from '../reducers/SceneReducer'
 import { TouchState } from '../reducers/TouchReducer'
-import { LoginAttempt } from '../util/loginAttempt'
 
 // Actions with no payload:
 type NoDataActionName =
@@ -10,18 +10,6 @@ type NoDataActionName =
   | 'CLEAR_CREATE_ERROR_MESSAGE'
   | 'LOGIN_SUCCEESS'
   | 'RESET_APP'
-  | 'NEW_ACCOUNT_WELCOME'
-  | 'NEW_ACCOUNT_USERNAME'
-  | 'NEW_ACCOUNT_PASSWORD'
-  | 'NEW_ACCOUNT_PIN'
-  | 'NEW_ACCOUNT_TOS'
-  | 'NEW_ACCOUNT_WAIT'
-  | 'NEW_ACCOUNT_REVIEW'
-  | 'START_LANDING'
-  | 'START_PASSWORD_LOGIN'
-  | 'START_PIN_LOGIN'
-  | 'RESECURE_PASSWORD'
-  | 'RESECURE_PIN'
 
 export type Action =
   | { type: NoDataActionName }
@@ -64,40 +52,6 @@ export type Action =
         wait: number
       }
     }
-  | {
-      type: 'OTP_ERROR'
-      data: {
-        attempt: LoginAttempt
-        error: OtpError
-      }
-    }
-  | {
-      type: 'START_OTP_REPAIR'
-      data: {
-        account: EdgeAccount
-        error: OtpError
-      }
-    }
-  | { type: 'OTP_RESET_REQUEST'; data: Date }
+  | { type: 'NAVIGATE'; data: SceneState }
   | { type: 'SET_PREVIOUS_USERS'; data: PreviousUsersState }
   | { type: 'SET_TOUCH'; data: TouchState }
-  | { type: 'START_CHANGE_PASSWORD'; data: EdgeAccount }
-  | { type: 'START_CHANGE_PIN'; data: EdgeAccount }
-  | {
-      type: 'START_CHANGE_RECOVERY'
-      data: {
-        questionsList: string[]
-        userQuestions: string[]
-        account: EdgeAccount
-      }
-    }
-  | {
-      type: 'START_RECOVERY_LOGIN'
-      data: {
-        username: string
-        recoveryKey: string
-        userQuestions: string[]
-      }
-    }
-  | { type: 'START_RESECURE'; data: EdgeAccount }
-  | { type: 'START_SECURITY_ALERT'; data: EdgeAccount }

@@ -23,8 +23,8 @@ export function ChangePasswordScreen(props: Props): JSX.Element {
         onComplete
       }}
       initialAction={{
-        type: 'START_CHANGE_PASSWORD',
-        data: account
+        type: 'NAVIGATE',
+        data: { name: 'changePassword', params: { account } }
       }}
     >
       <Router branding={{}} />

@@ -61,10 +61,13 @@ export function loginWithPin(username: string, pin: string) {
         console.log('LOG IN WITH PIN ERROR ', e)
         if (e.name === 'OtpError') {
           dispatch({
-            type: 'OTP_ERROR',
+            type: 'NAVIGATE',
             data: {
-              attempt: { type: 'pin', username, pin },
-              error: e
+              name: 'otpError',
+              params: {
+                otpAttempt: { type: 'pin', username, pin },
+                otpError: e
+              }
             }
           })
           return
@@ -133,8 +136,11 @@ export const launchPasswordRecovery = (recoveryKey: string) => async (
         username
       )
       dispatch({
-        type: 'START_RECOVERY_LOGIN',
-        data: { recoveryKey, userQuestions: questions, username }
+        type: 'NAVIGATE',
+        data: {
+          name: 'recoveryLogin',
+          params: { recoveryKey, userQuestions: questions, username }
+        }
       })
       logEvent('Recovery_Username_Success')
       return true

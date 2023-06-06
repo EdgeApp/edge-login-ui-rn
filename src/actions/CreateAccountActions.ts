@@ -2,7 +2,6 @@ import { sprintf } from 'sprintf-js'
 import passwordCheck from 'zxcvbn'
 
 import s from '../common/locales/strings'
-import { Airship } from '../components/services/AirshipInstance'
 import * as Constants from '../constants/index'
 import { enableTouchId, isTouchDisabled } from '../keychain'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
@@ -106,7 +105,16 @@ export function validatePassword(data: string) {
 export function createUser(data: CreateUserData) {
   return (dispatch: Dispatch, getState: GetState, imports: Imports) => {
     const { context } = imports
-    dispatch({ type: 'NEW_ACCOUNT_WAIT' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: {
+        name: 'newAccountWait',
+        params: {
+          title: s.strings.great_job,
+          message: s.strings.hang_tight + '\n' + s.strings.secure_account
+        }
+      }
+    })
     setTimeout(async () => {
       try {
         const abcAccount = await context.createAccount({
@@ -123,7 +131,10 @@ export function createUser(data: CreateUserData) {
           })
         }
         dispatch({ type: 'CREATE_ACCOUNT_SUCCESS', data: abcAccount })
-        dispatch({ type: 'NEW_ACCOUNT_REVIEW' })
+        dispatch({
+          type: 'NAVIGATE',
+          data: { name: 'newAccountReview', params: { account: abcAccount } }
+        })
         logEvent('Signup_Create_User_Success')
         await abcAccount.dataStore.setItem(
           Constants.OTP_REMINDER_STORE_NAME,
@@ -134,21 +145,11 @@ export function createUser(data: CreateUserData) {
       } catch (e: any) {
         console.log(e)
         dispatch({ type: 'CREATE_ACCOUNT_FAIL', data: e.message })
-        dispatch({ type: 'NEW_ACCOUNT_USERNAME' })
+        dispatch({
+          type: 'NAVIGATE',
+          data: { name: 'newAccountUsername', params: {} }
+        })
       }
     }, 300)
   }
-}
-
-export const confirmAndFinish = () => (
-  dispatch: Dispatch,
-  getState: GetState,
-  imports: Imports
-) => {
-  const { account } = getState()
-  const { onLogin } = imports
-  if (account == null) return
-
-  Airship.clear()
-  if (onLogin != null) onLogin(account)
 }

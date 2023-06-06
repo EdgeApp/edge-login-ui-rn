@@ -10,6 +10,7 @@ import s from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { Branding } from '../../../types/Branding'
 import { Dispatch, useDispatch, useSelector } from '../../../types/ReduxTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -17,14 +18,15 @@ import { MainButton } from '../../themed/MainButton'
 import { OutlinedTextInput } from '../../themed/OutlinedTextInput'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-interface Props {
+interface Props extends SceneProps<'newAccountUsername'> {
   branding: Branding
 }
 const AVAILABILITY_CHECK_DELAY_MS = 400
 
 type Timeout = ReturnType<typeof setTimeout>
 
-export const NewAccountUsernameScene = ({ branding }: Props) => {
+export const NewAccountUsernameScene = (props: Props) => {
+  const { branding } = props
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -72,7 +74,12 @@ export const NewAccountUsernameScene = ({ branding }: Props) => {
     username.length === 0
 
   const handleBack = useHandler(() => {
-    dispatch(maybeRouteComplete({ type: 'NEW_ACCOUNT_WELCOME' }))
+    dispatch(
+      maybeRouteComplete({
+        type: 'NAVIGATE',
+        data: { name: 'newAccountWelcome', params: {} }
+      })
+    )
   })
   const handleNext = useHandler(async () => {
     if (!isNextDisabled) dispatch(completeUsername(username))
@@ -201,7 +208,10 @@ function completeUsername(username: string) {
   return (dispatch: Dispatch): void => {
     logEvent(`Signup_Username_Available`)
     dispatch({ type: 'CREATE_UPDATE_USERNAME', data: { username } })
-    dispatch({ type: 'NEW_ACCOUNT_PASSWORD' })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'newAccountPassword', params: {} }
+    })
   }
 }
 

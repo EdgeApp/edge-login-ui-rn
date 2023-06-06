@@ -1,13 +1,13 @@
-import { EdgeAccount, OtpError } from 'edge-core-js'
+import { asMaybeOtpError, EdgeAccount, OtpError } from 'edge-core-js'
 import * as React from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
-import { requestOtpReset } from '../../../actions/LoginOtpActions'
 import s from '../../../common/locales/strings'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
-import { useDispatch, useSelector } from '../../../types/ReduxTypes'
+import { useDispatch } from '../../../types/ReduxTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { toLocalTime } from '../../../util/utils'
 import { showResetModal } from '../../modals/OtpResetModal'
 import { showQrCodeModal } from '../../modals/QrCodeModal'
@@ -19,7 +19,12 @@ import { LinkRow } from '../../themed/LinkRow'
 import { ThemedScene } from '../../themed/ThemedScene'
 import { MessageText, Warning } from '../../themed/ThemedText'
 
-interface OwnProps {
+export interface OtpRepairParams {
+  account: EdgeAccount
+  otpError: OtpError
+}
+
+interface OwnProps extends SceneProps<'otpRepair'> {
   branding: Branding
 }
 interface StateProps {
@@ -49,11 +54,15 @@ class OtpRepairSceneComponent extends React.Component<Props> {
         return true
       } catch (error) {
         // Translate known errors:
-        if (error != null && error.name === 'OtpError') {
-          saveOtpError(account, error)
+        const otpError = asMaybeOtpError(error)
+        if (otpError != null) {
+          saveOtpError(account, otpError)
           return s.strings.backup_key_incorrect
         }
-        if (error != null && error.message === 'Unexpected end of data') {
+        if (
+          error instanceof Error &&
+          error.message === 'Unexpected end of data'
+        ) {
           return s.strings.backup_key_incorrect
         }
         showError(error)
@@ -146,38 +155,49 @@ class OtpRepairSceneComponent extends React.Component<Props> {
 }
 
 export function OtpRepairScene(props: OwnProps) {
-  const { branding } = props
+  const { branding, route } = props
+  const { account, otpError } = route.params
+  const { context, onComplete } = useImports()
   const dispatch = useDispatch()
-  const { onComplete } = useImports()
-  const account = useSelector(state => state.account)
-  const otpError = useSelector(state => state.login.otpError)
-  const otpResetDate = useSelector(state => state.login.otpResetDate)
-  if (account == null || otpError == null) {
-    throw new Error('Missing OtpError for OTP repair scene')
+
+  const [otpResetDate, setOtpResetDate] = React.useState(otpError.resetDate)
+
+  function handleQrModal() {
+    dispatch(showQrCodeModal())
   }
 
-  const dispatchProps: DispatchProps = {
-    onBack() {
-      onComplete()
-    },
-    handleQrModal() {
-      dispatch(showQrCodeModal())
-    },
-    async requestOtpReset() {
-      return await dispatch(requestOtpReset())
-    },
-    saveOtpError(account, error) {
-      dispatch({ type: 'START_OTP_REPAIR', data: { account, error } })
+  async function requestOtpReset() {
+    const { resetToken } = otpError
+    if (resetToken == null) {
+      throw new Error('No OTP reset token')
     }
+    if (account.username == null) {
+      throw new Error('No username')
+    }
+
+    const date = await context.requestOtpReset(account.username, resetToken)
+    setOtpResetDate(date)
+  }
+
+  function saveOtpError(account: EdgeAccount, otpError: OtpError) {
+    setOtpResetDate(otpError.resetDate)
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'otpRepair', params: { account, otpError } }
+    })
   }
 
   return (
     <OtpRepairSceneComponent
-      {...dispatchProps}
       account={account}
       branding={branding}
+      handleQrModal={handleQrModal}
       otpError={otpError}
       otpResetDate={otpResetDate}
+      requestOtpReset={requestOtpReset}
+      route={route}
+      saveOtpError={saveOtpError}
+      onBack={onComplete}
     />
   )
 }

@@ -5,10 +5,11 @@ import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
-import { completeResecure } from '../../../actions/LoginCompleteActions'
+import { submitLogin } from '../../../actions/LoginCompleteActions'
 import s from '../../../common/locales/strings'
-import { useDispatch, useSelector } from '../../../types/ReduxTypes'
-import { getAccount } from '../../../util/selectors'
+import { useImports } from '../../../hooks/useImports'
+import { useDispatch } from '../../../types/ReduxTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { toLocalTime } from '../../../util/utils'
 import { showError } from '../../services/AirshipInstance'
 import { Theme, ThemeProps, useTheme } from '../../services/ThemeContext'
@@ -18,7 +19,7 @@ import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 import { MessageText, Warning } from '../../themed/ThemedText'
 
-interface OwnProps {}
+interface OwnProps extends SceneProps<'securityAlert'> {}
 interface StateProps {
   account: EdgeAccount
 }
@@ -269,21 +270,28 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export function SecurityAlertsScene(props: OwnProps) {
+  const { route } = props
+  const { account } = route.params
+  const { onComplete, onLogin } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
-  const account = useSelector(state => getAccount(state))
 
   const handleDone = (): void => {
-    dispatch(completeResecure())
+    if (onLogin != null) dispatch(submitLogin(account))
+    else onComplete()
   }
 
   const handleResecure = (): void => {
-    dispatch({ type: 'START_RESECURE', data: account })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'resecurePassword', params: { account } }
+    })
   }
 
   return (
     <SecurityAlertsSceneComponent
       account={account}
+      route={route}
       startResecure={handleResecure}
       theme={theme}
       onDone={handleDone}

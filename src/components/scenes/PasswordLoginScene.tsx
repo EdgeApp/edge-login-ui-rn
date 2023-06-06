@@ -21,6 +21,7 @@ import { BiometryType } from '../../keychain'
 import { LoginUserInfo } from '../../reducers/PreviousUsersReducer'
 import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { SceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/analytics'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
@@ -34,7 +35,7 @@ import { LineFormField } from '../themed/LineFormField'
 import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
 
-interface OwnProps {
+interface OwnProps extends SceneProps<'passwordLogin'> {
   branding: Branding
 }
 interface StateProps {
@@ -429,7 +430,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export function PasswordLoginScene(props: OwnProps) {
-  const { branding } = props
+  const { branding, route } = props
   const dispatch = useDispatch()
   const theme = useTheme()
 
@@ -446,10 +447,16 @@ export function PasswordLoginScene(props: OwnProps) {
       return await dispatch(deleteUserFromDevice(username))
     },
     gotoCreatePage() {
-      dispatch({ type: 'NEW_ACCOUNT_WELCOME' })
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'newAccountWelcome', params: {} }
+      })
     },
     gotoPinLoginPage() {
-      dispatch({ type: 'START_PIN_LOGIN' })
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'pinLogin', params: {} }
+      })
     },
     handleQrModal() {
       Keyboard.dismiss()
@@ -459,10 +466,18 @@ export function PasswordLoginScene(props: OwnProps) {
       return await dispatch(login(attempt))
     },
     exitScene() {
-      dispatch(maybeRouteComplete({ type: 'START_LANDING' }))
+      dispatch(
+        maybeRouteComplete({
+          type: 'NAVIGATE',
+          data: { name: 'landing', params: {} }
+        })
+      )
     },
-    saveOtpError(attempt, error) {
-      dispatch({ type: 'OTP_ERROR', data: { attempt, error } })
+    saveOtpError(otpAttempt, otpError) {
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'otpError', params: { otpAttempt, otpError } }
+      })
     },
     updateUsername(data: string) {
       dispatch({ type: 'AUTH_UPDATE_USERNAME', data: data })
@@ -478,6 +493,7 @@ export function PasswordLoginScene(props: OwnProps) {
       branding={branding}
       loginSuccess={loginSuccess}
       previousUsers={previousUsers}
+      route={route}
       theme={theme}
       touch={touch}
       username={username}
