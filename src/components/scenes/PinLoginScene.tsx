@@ -19,6 +19,7 @@ import { loginWithPin, loginWithTouch } from '../../actions/LoginAction'
 import { FaceIdXml } from '../../assets/xml/FaceId'
 import s from '../../common/locales/strings'
 import { useImports } from '../../hooks/useImports'
+import { LoginUserInfo } from '../../reducers/PreviousUsersReducer'
 import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
@@ -74,9 +75,7 @@ export function PinLoginScene(props: Props) {
 
   const dropdownItems = React.useMemo(
     () =>
-      userList
-        .filter(user => user.pinEnabled || (touch && user.touchEnabled))
-        .map(user => user.username),
+      userList.filter(user => user.pinEnabled || (touch && user.touchEnabled)),
     [touch, userList]
   )
 
@@ -112,8 +111,9 @@ export function PinLoginScene(props: Props) {
     })
   }
 
-  const handleDelete = (username: string) => {
+  const handleDelete = (userInfo: LoginUserInfo) => {
     setFocusOn('pin')
+    const { username } = userInfo
 
     Keyboard.dismiss()
     Airship.show(bridge => (
@@ -147,7 +147,8 @@ export function PinLoginScene(props: Props) {
     dispatch({ type: 'AUTH_UPDATE_PIN', data: newPin })
   }
 
-  const handleSelectUser = (username: string) => {
+  const handleSelectUser = (userInfo: LoginUserInfo) => {
+    const { username } = userInfo
     dispatch(loginWithTouch(username)).catch(showError)
     dispatch({ type: 'AUTH_UPDATE_USERNAME', data: username })
     setFocusOn('pin')
@@ -215,16 +216,16 @@ export function PinLoginScene(props: Props) {
           style={styles.listView}
           data={dropdownItems}
           renderItem={renderItems}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={item => item.username}
         />
       </View>
     )
   }
 
-  const renderItems = (item: { item: string }) => {
+  const renderItems = (item: { item: LoginUserInfo }) => {
     return (
       <UserListItem
-        data={item.item}
+        userInfo={item.item}
         onClick={handleSelectUser}
         onDelete={handleDelete}
       />
