@@ -113,8 +113,9 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     })
   }
 
-  handleDelete = (username: string) => {
+  handleDelete = (userInfo: LoginUserInfo) => {
     const { context } = this.props
+    const { username } = userInfo
 
     Keyboard.dismiss()
     Airship.show(bridge => (
@@ -246,13 +247,13 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
 
     return (
       <ScrollView style={styles.dropDownList}>
-        {localUsers.map(item => {
-          const { username } = item
+        {localUsers.map(userInfo => {
+          const { username } = userInfo
           if (username == null) return null
           return (
             <UserListItem
               key={username}
-              data={username}
+              userInfo={userInfo}
               onClick={this.handleSelectUser}
               onDelete={this.handleDelete}
             />
@@ -329,7 +330,8 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     })
   }
 
-  handleSelectUser = (username: string) => {
+  handleSelectUser = (userInfo: LoginUserInfo) => {
+    const { username } = userInfo
     this.handleChangeUsername(username)
     this.setState({
       usernameList: false
