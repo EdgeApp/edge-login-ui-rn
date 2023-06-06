@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import { login } from '../../actions/LoginAction'
 import s from '../../common/locales/strings'
-import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { Tile } from '../common/Tile'
@@ -27,13 +27,12 @@ export interface RecoveryLoginParams {
 
 export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
   const { route } = props
-  const { recoveryKey, userQuestions: questions } = route.params
+  const { recoveryKey, userQuestions: questions, username } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
   const answerPrompt = s.strings.your_answer_label
-  const username = useSelector(state => state.login.username)
   const showCaseSensitivityWarning = questions.some(
     q => q.startsWith('text:') || !q.includes(':')
   )

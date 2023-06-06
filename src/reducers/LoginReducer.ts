@@ -52,14 +52,6 @@ export function login(
       }
     case 'AUTH_LOGGING_IN_WITH_PIN':
       return { ...state, isLoggingInWithPin: true }
-    case 'NAVIGATE':
-      switch (action.data.name) {
-        case 'recoveryLogin': {
-          const { username } = action.data.params
-          return { ...state, username, errorMessage: null, wait: 0 }
-        }
-      }
-      return state
     case 'RESET_APP': {
       const username = state.username
       return { ...initialState, username: username }
