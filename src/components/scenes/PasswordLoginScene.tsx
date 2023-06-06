@@ -1,4 +1,4 @@
-import { OtpError } from 'edge-core-js'
+import { EdgeContext, OtpError } from 'edge-core-js'
 import * as React from 'react'
 import {
   Keyboard,
@@ -15,8 +15,8 @@ import { sprintf } from 'sprintf-js'
 
 import { launchPasswordRecovery, login } from '../../actions/LoginAction'
 import { maybeRouteComplete } from '../../actions/LoginInitActions'
-import { deleteUserFromDevice } from '../../actions/UserActions'
 import s from '../../common/locales/strings'
+import { useImports } from '../../hooks/useImports'
 import { BiometryType } from '../../keychain'
 import { LoginUserInfo } from '../../reducers/PreviousUsersReducer'
 import { Branding } from '../../types/Branding'
@@ -40,6 +40,7 @@ interface OwnProps extends SceneProps<'passwordLogin'> {
   branding: Branding
 }
 interface StateProps {
+  context: EdgeContext
   loginSuccess: boolean
   previousUsers: LoginUserInfo[]
   touch: BiometryType
@@ -47,7 +48,6 @@ interface StateProps {
   usernameOnlyList: string[]
 }
 interface DispatchProps {
-  deleteUserFromDevice: (username: string) => Promise<void>
   gotoCreatePage: () => void
   gotoPinLoginPage: () => void
   handleQrModal: () => void
@@ -115,7 +115,7 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
   }
 
   handleDelete = (username: string) => {
-    const { deleteUserFromDevice } = this.props
+    const { context } = this.props
 
     Keyboard.dismiss()
     Airship.show(bridge => (
@@ -131,7 +131,7 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     ))
       .then(async button => {
         if (button !== 'ok') return
-        return await deleteUserFromDevice(username)
+        return await context.deleteLocalAccount(username)
       })
       .catch(showError)
   }
@@ -432,6 +432,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export function PasswordLoginScene(props: OwnProps) {
   const { branding, route } = props
+  const { context } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
 
@@ -444,9 +445,6 @@ export function PasswordLoginScene(props: OwnProps) {
   )
 
   const dispatchProps: DispatchProps = {
-    async deleteUserFromDevice(username) {
-      return await dispatch(deleteUserFromDevice(username))
-    },
     gotoCreatePage() {
       dispatch({
         type: 'NAVIGATE',
@@ -496,6 +494,7 @@ export function PasswordLoginScene(props: OwnProps) {
     <PasswordLoginSceneComponent
       {...dispatchProps}
       branding={branding}
+      context={context}
       loginSuccess={loginSuccess}
       previousUsers={previousUsers}
       route={route}
