@@ -4,7 +4,7 @@ import { cacheStyles } from 'react-native-patina'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import s from '../../common/locales/strings'
-import { LoginUserInfo } from '../../reducers/PreviousUsersReducer'
+import { LoginUserInfo } from '../../hooks/useLocalUsers'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {

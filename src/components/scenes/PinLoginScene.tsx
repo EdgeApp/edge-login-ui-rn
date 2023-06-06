@@ -19,7 +19,7 @@ import { loginWithPin, loginWithTouch } from '../../actions/LoginAction'
 import { FaceIdXml } from '../../assets/xml/FaceId'
 import s from '../../common/locales/strings'
 import { useImports } from '../../hooks/useImports'
-import { LoginUserInfo } from '../../reducers/PreviousUsersReducer'
+import { LoginUserInfo, useLocalUsers } from '../../hooks/useLocalUsers'
 import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
@@ -60,23 +60,25 @@ export function PinLoginScene(props: Props) {
   const isTouchIdDisabled = !!wait || isLoggingInWithPin || pin.length === 4
 
   // User state:
-  const userList = useSelector(state => state.previousUsers.userList)
+  const localUsers = useLocalUsers()
   const username = useSelector(state => state.login.username)
 
   const userDetails = React.useMemo(
     () =>
-      userList.find(user => user.username === username) ?? {
+      localUsers.find(user => user.username === username) ?? {
         username,
-        pinEnabled: false,
-        touchEnabled: false
+        pinLoginEnabled: false,
+        touchLoginEnabled: false
       },
-    [userList, username]
+    [localUsers, username]
   )
 
   const dropdownItems = React.useMemo(
     () =>
-      userList.filter(user => user.pinEnabled || (touch && user.touchEnabled)),
-    [touch, userList]
+      localUsers.filter(
+        user => user.pinLoginEnabled || (touch && user.touchLoginEnabled)
+      ),
+    [touch, localUsers]
   )
 
   // ---------------------------------------------------------------------
@@ -92,7 +94,7 @@ export function PinLoginScene(props: Props) {
   }, [])
 
   React.useEffect(() => {
-    if (!userDetails.touchEnabled && !userDetails.pinEnabled) {
+    if (!userDetails.touchLoginEnabled && !userDetails.pinLoginEnabled) {
       dispatch({
         type: 'NAVIGATE',
         data: { name: 'passwordLogin', params: {} }
@@ -113,14 +115,16 @@ export function PinLoginScene(props: Props) {
 
   const handleDelete = (userInfo: LoginUserInfo) => {
     setFocusOn('pin')
-    const { username } = userInfo
 
     Keyboard.dismiss()
     Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.forget_account}
-        message={sprintf(s.strings.forget_username_account, username)}
+        message={sprintf(
+          s.strings.forget_username_account,
+          userInfo.username ?? s.strings.username
+        )}
         buttons={{
           ok: { label: s.strings.forget },
           cancel: { label: s.strings.cancel, type: 'secondary' }
@@ -129,7 +133,13 @@ export function PinLoginScene(props: Props) {
     ))
       .then(async button => {
         if (button !== 'ok') return
-        return await context.deleteLocalAccount(username)
+        if (context.forgetAccount != null) {
+          await context.forgetAccount(userInfo.loginId)
+        } else {
+          const { username } = userInfo
+          if (username == null) throw new Error('No username')
+          await context.deleteLocalAccount(username)
+        }
       })
       .catch(showError)
   }
@@ -148,10 +158,11 @@ export function PinLoginScene(props: Props) {
   }
 
   const handleSelectUser = (userInfo: LoginUserInfo) => {
-    const { username } = userInfo
-    dispatch(loginWithTouch(username)).catch(showError)
-    dispatch({ type: 'AUTH_UPDATE_USERNAME', data: username })
     setFocusOn('pin')
+    if (userInfo.username != null) {
+      dispatch(loginWithTouch(userInfo.username)).catch(showError)
+      dispatch({ type: 'AUTH_UPDATE_USERNAME', data: userInfo.username })
+    }
   }
 
   const handleShowDrop = () => {
@@ -190,7 +201,7 @@ export function PinLoginScene(props: Props) {
               </Text>
             </LinearGradient>
           </TouchableOpacity>
-          {!userDetails.pinEnabled ? null : (
+          {!userDetails.pinLoginEnabled ? null : (
             <FourDigit
               error={
                 wait > 0
@@ -204,7 +215,7 @@ export function PinLoginScene(props: Props) {
               spinner={wait > 0 || pin.length === 4 || isLoggingInWithPin}
             />
           )}
-          {userDetails.pinEnabled ? null : <View style={styles.spacer} />}
+          {userDetails.pinLoginEnabled ? null : <View style={styles.spacer} />}
           {renderTouchImage()}
           <Text style={styles.touchImageText}>{renderTouchImageText()}</Text>
         </View>
@@ -216,7 +227,7 @@ export function PinLoginScene(props: Props) {
           style={styles.listView}
           data={dropdownItems}
           renderItem={renderItems}
-          keyExtractor={item => item.username}
+          keyExtractor={item => item.loginId}
         />
       </View>
     )
@@ -233,8 +244,8 @@ export function PinLoginScene(props: Props) {
   }
 
   const renderTouchImage = () => {
-    const { touchEnabled } = userDetails
-    if (touchEnabled && touch === 'FaceID') {
+    const { touchLoginEnabled } = userDetails
+    if (touchLoginEnabled && touch === 'FaceID') {
       return (
         <TouchableOpacity onPress={handleTouchId} disabled={isTouchIdDisabled}>
           <SvgXml
@@ -246,7 +257,7 @@ export function PinLoginScene(props: Props) {
         </TouchableOpacity>
       )
     }
-    if (touchEnabled && touch === 'TouchID') {
+    if (touchLoginEnabled && touch === 'TouchID') {
       return (
         <TouchableOpacity onPress={handleTouchId} disabled={isTouchIdDisabled}>
           <MaterialCommunityIcons
@@ -257,21 +268,22 @@ export function PinLoginScene(props: Props) {
         </TouchableOpacity>
       )
     }
-    if (!touchEnabled || !touch) {
+    if (!touchLoginEnabled || !touch) {
       return null
     }
     return null
   }
 
   const renderTouchImageText = () => {
-    const { touchEnabled } = userDetails
-    if (touchEnabled && touch === 'FaceID') {
+    const { touchLoginEnabled } = userDetails
+    if (!touchLoginEnabled) return ''
+    if (touch === 'FaceID') {
       return s.strings.use_faceId
     }
-    if (touchEnabled && touch === 'TouchID' && Platform.OS === 'ios') {
+    if (touch === 'TouchID' && Platform.OS === 'ios') {
       return s.strings.use_touchId
     }
-    if (touchEnabled && touch === 'TouchID' && Platform.OS !== 'ios') {
+    if (touch === 'TouchID' && Platform.OS !== 'ios') {
       return s.strings.use_fingerprint
     }
     return ''
@@ -292,7 +304,7 @@ export function PinLoginScene(props: Props) {
           </View>
         </TouchableWithoutFeedback>
         <View style={styles.spacer_full} />
-        {!userDetails.pinEnabled ? null : (
+        {!userDetails.pinLoginEnabled ? null : (
           <PinKeypad
             disabled={wait > 0 || pin.length === 4}
             onPress={handlePress}

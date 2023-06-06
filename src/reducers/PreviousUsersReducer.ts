@@ -1,10 +1,5 @@
+import { LoginUserInfo } from '../hooks/useLocalUsers'
 import { Action } from '../types/ReduxTypes'
-
-export interface LoginUserInfo {
-  username: string
-  pinEnabled: boolean
-  touchEnabled: boolean
-}
 
 export interface PreviousUsersState {
   readonly loaded: boolean

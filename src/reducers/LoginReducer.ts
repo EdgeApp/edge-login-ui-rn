@@ -24,7 +24,7 @@ export function login(
     case 'SET_PREVIOUS_USERS': {
       const { startupUser } = action.data
       if (startupUser != null) {
-        return { ...state, username: startupUser.username }
+        return { ...state, username: startupUser.username ?? '' }
       }
       return state
     }
