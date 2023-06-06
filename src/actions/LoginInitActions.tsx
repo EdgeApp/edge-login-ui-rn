@@ -113,8 +113,8 @@ function routeInitialization(state: RootState, imports: Imports): Action {
         data: { name: 'landing', params: {} }
       }
     } else if (
-      startupUser.pinEnabled ||
-      (startupUser.touchEnabled && biometryType !== false)
+      startupUser.pinLoginEnabled ||
+      (startupUser.touchLoginEnabled && biometryType !== false)
     ) {
       return {
         type: 'NAVIGATE',

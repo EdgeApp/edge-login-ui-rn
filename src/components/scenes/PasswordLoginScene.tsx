@@ -17,8 +17,8 @@ import { launchPasswordRecovery, login } from '../../actions/LoginAction'
 import { maybeRouteComplete } from '../../actions/LoginInitActions'
 import s from '../../common/locales/strings'
 import { useImports } from '../../hooks/useImports'
+import { LoginUserInfo } from '../../hooks/useLocalUsers'
 import { BiometryType } from '../../keychain'
-import { LoginUserInfo } from '../../reducers/PreviousUsersReducer'
 import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
@@ -116,6 +116,10 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
   handleDelete = (userInfo: LoginUserInfo) => {
     const { context } = this.props
     const { username } = userInfo
+    if (username == null) {
+      showError('Cannot delete local-only account')
+      return
+    }
 
     Keyboard.dismiss()
     Airship.show(bridge => (
@@ -332,6 +336,7 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
 
   handleSelectUser = (userInfo: LoginUserInfo) => {
     const { username } = userInfo
+    if (username == null) return // These don't exist in the list
     this.handleChangeUsername(username)
     this.setState({
       usernameList: false
@@ -342,7 +347,8 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     )
     if (
       details != null &&
-      (details.pinEnabled || (details.touchEnabled && this.props.touch))
+      (details.pinLoginEnabled ||
+        (details.touchLoginEnabled && this.props.touch))
     ) {
       this.props.gotoPinLoginPage()
       return
