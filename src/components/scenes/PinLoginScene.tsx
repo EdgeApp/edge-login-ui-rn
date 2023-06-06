@@ -16,9 +16,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { sprintf } from 'sprintf-js'
 
 import { loginWithPin, loginWithTouch } from '../../actions/LoginAction'
-import { deleteUserFromDevice } from '../../actions/UserActions'
 import { FaceIdXml } from '../../assets/xml/FaceId'
 import s from '../../common/locales/strings'
+import { useImports } from '../../hooks/useImports'
 import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
@@ -37,6 +37,7 @@ interface Props extends SceneProps<'pinLogin'> {
 
 export function PinLoginScene(props: Props) {
   const { branding } = props
+  const { context } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -130,7 +131,7 @@ export function PinLoginScene(props: Props) {
     ))
       .then(async button => {
         if (button !== 'ok') return
-        return await dispatch(deleteUserFromDevice(username))
+        return await context.deleteLocalAccount(username)
       })
       .catch(showError)
   }
