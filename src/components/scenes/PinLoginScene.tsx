@@ -1,3 +1,4 @@
+import { asMaybePasswordError, EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
 import {
   FlatList,
@@ -15,11 +16,12 @@ import { SvgXml } from 'react-native-svg'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { sprintf } from 'sprintf-js'
 
-import { loginWithPin, loginWithTouch } from '../../actions/LoginAction'
+import { completeLogin } from '../../actions/LoginCompleteActions'
 import { FaceIdXml } from '../../assets/xml/FaceId'
 import s from '../../common/locales/strings'
 import { useImports } from '../../hooks/useImports'
 import { LoginUserInfo, useLocalUsers } from '../../hooks/useLocalUsers'
+import { getLoginKey } from '../../keychain'
 import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
@@ -36,9 +38,14 @@ interface Props extends SceneProps<'pinLogin'> {
   branding: Branding
 }
 
+interface ErrorInfo {
+  message: string
+  wait: number
+}
+
 export function PinLoginScene(props: Props) {
   const { branding } = props
-  const { context } = useImports()
+  const { accountOptions, context } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -47,25 +54,26 @@ export function PinLoginScene(props: Props) {
   // State
   // ---------------------------------------------------------------------
 
+  const [pin, setPin] = React.useState('')
   const [showUserList, setShowUserList] = React.useState(false)
+  const [touchBusy, setTouchBusy] = React.useState(false)
+
+  // Error state:
+  const [errorInfo, setErrorInfo] = React.useState<ErrorInfo | undefined>()
+  const hasWait = errorInfo != null && errorInfo.wait > 0
 
   // Pin login state:
-  const errorMessage = useSelector(state => state.login.errorMessage || '')
-  const isLoggingInWithPin = useSelector(
-    state => state.login.isLoggingInWithPin
-  )
-  const pin = useSelector(state => state.login.pin || '')
   const touch = useSelector(state => state.touch.type)
-  const wait = useSelector(state => state.login.wait)
-  const isTouchIdDisabled = !!wait || isLoggingInWithPin || pin.length === 4
+  const isTouchIdDisabled = hasWait || pin.length === 4 || touchBusy
 
   // User state:
   const localUsers = useLocalUsers()
-  const username = useSelector(state => state.login.username)
+  const initialUsername = useSelector(state => state.login.username)
 
-  const userInfo = React.useMemo<LoginUserInfo | undefined>(
-    () => localUsers.find(user => user.username === username),
-    [localUsers, username]
+  const [userInfo, setUserInfo] = React.useState<LoginUserInfo | undefined>(
+    () =>
+      localUsers.find(user => user.username === initialUsername) ??
+      localUsers[0]
   )
 
   const dropdownItems = React.useMemo(
@@ -82,8 +90,8 @@ export function PinLoginScene(props: Props) {
 
   // Runs once at start:
   React.useEffect(() => {
-    if (username && touch !== 'FaceID') {
-      dispatch(loginWithTouch(username)).catch(showError)
+    if (userInfo != null && touch !== 'FaceID') {
+      handleTouchLogin(userInfo).catch(showError)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -99,6 +107,17 @@ export function PinLoginScene(props: Props) {
       })
     }
   }, [dispatch, userInfo])
+
+  // Countdown timer:
+  React.useEffect(() => {
+    if (errorInfo == null || errorInfo.wait <= 0) return
+
+    const id = setTimeout(() => {
+      setErrorInfo({ ...errorInfo, wait: errorInfo.wait - 1 })
+    }, 1000)
+
+    return () => clearTimeout(id)
+  }, [errorInfo])
 
   // ---------------------------------------------------------------------
   // Handlers
@@ -142,23 +161,76 @@ export function PinLoginScene(props: Props) {
       .catch(showError)
   }
 
+  const handlePinLogin = async (
+    userInfo: EdgeUserInfo,
+    pin: string
+  ): Promise<void> => {
+    try {
+      const account = await context.loginWithPIN(userInfo.loginId, pin, {
+        ...accountOptions,
+        useLoginId: true
+      })
+      await dispatch(completeLogin(account))
+    } catch (error: unknown) {
+      console.log('LOG IN WITH PIN ERROR ', error)
+
+      setErrorInfo({
+        message:
+          error instanceof Error ? translatePinError(error) : String(error),
+        wait: Math.ceil(asMaybePasswordError(error)?.wait ?? 0)
+      })
+      setPin('')
+      setTouchBusy(false)
+    }
+  }
+
+  const handleTouchLogin = async (userInfo: EdgeUserInfo): Promise<void> => {
+    const { username } = userInfo
+    if (username == null) return
+
+    try {
+      const loginKey = await getLoginKey(
+        username,
+        `Touch to login user: "${username}"`,
+        s.strings.login_with_password
+      )
+      if (loginKey == null) return
+
+      setTouchBusy(true)
+      const account = await context.loginWithKey(
+        username,
+        loginKey,
+        accountOptions
+      )
+      await dispatch(completeLogin(account))
+    } finally {
+      setTouchBusy(false)
+    }
+  }
+
   const handleTouchId = () => {
-    dispatch(loginWithTouch(username)).catch(showError)
+    if (userInfo == null) return
+    handleTouchLogin(userInfo).catch(showError)
   }
 
   const handlePress = (value: string) => {
     const newPin =
       value === 'back' ? pin.slice(0, -1) : pin.concat(value).slice(0, 4)
-    if (newPin.length === 4 && pin.length === 3) {
-      dispatch(loginWithPin(username, newPin))
+    setPin(newPin)
+    setErrorInfo(undefined)
+    if (newPin.length === 4 && pin.length === 3 && userInfo != null) {
+      handlePinLogin(userInfo, newPin).catch(showError)
     }
-    dispatch({ type: 'AUTH_UPDATE_PIN', data: newPin })
   }
 
   const handleSelectUser = (userInfo: LoginUserInfo) => {
     setShowUserList(false)
+    setUserInfo(userInfo)
+    setErrorInfo(undefined)
+    handleTouchLogin(userInfo).catch(showError)
+
+    // Also send the username to the password scene:
     if (userInfo.username != null) {
-      dispatch(loginWithTouch(userInfo.username)).catch(showError)
       dispatch({ type: 'AUTH_UPDATE_USERNAME', data: userInfo.username })
     }
   }
@@ -189,6 +261,15 @@ export function PinLoginScene(props: Props) {
       )
     }
 
+    let errorMessage = ''
+    if (errorInfo != null) {
+      errorMessage = errorInfo.message
+      if (errorInfo.wait > 0) {
+        errorMessage +=
+          ': ' + sprintf(s.strings.account_locked_for, errorInfo.wait)
+      }
+    }
+
     return (
       <View style={styles.innerView}>
         <TouchableOpacity
@@ -215,16 +296,9 @@ export function PinLoginScene(props: Props) {
           <View style={styles.spacer} />
         ) : (
           <FourDigit
-            error={
-              wait > 0
-                ? `${errorMessage}: ${sprintf(
-                    s.strings.account_locked_for,
-                    wait
-                  )}`
-                : errorMessage
-            }
+            error={errorMessage}
             pin={pin}
-            spinner={wait > 0 || pin.length === 4 || isLoggingInWithPin}
+            spinner={hasWait || pin.length === 4 || touchBusy}
           />
         )}
         {renderTouchImage()}
@@ -303,7 +377,7 @@ export function PinLoginScene(props: Props) {
         <View style={styles.spacer_full} />
         {userInfo == null || !userInfo.pinLoginEnabled ? null : (
           <PinKeypad
-            disabled={wait > 0 || pin.length === 4}
+            disabled={hasWait || pin.length === 4}
             onPress={handlePress}
           />
         )}
@@ -311,6 +385,15 @@ export function PinLoginScene(props: Props) {
       </View>
     </ThemedScene>
   )
+}
+
+function translatePinError(error: Error): string {
+  if (error.name === 'PasswordError') return s.strings.invalid_pin
+  if (error.name === 'UsernameError') return s.strings.pin_not_enabled
+  if (error.name === 'NetworkError') {
+    return `${error.message} ${s.strings.pin_network_error_full_password}`
+  }
+  return error.message
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
