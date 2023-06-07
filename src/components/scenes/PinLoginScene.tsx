@@ -65,13 +65,8 @@ export function PinLoginScene(props: Props) {
   const userList = useSelector(state => state.previousUsers.userList)
   const username = useSelector(state => state.login.username)
 
-  const userDetails = React.useMemo(
-    () =>
-      userList.find(user => user.username === username) ?? {
-        username,
-        pinLoginEnabled: false,
-        touchLoginEnabled: false
-      },
+  const userInfo = React.useMemo<LoginUserInfo | undefined>(
+    () => userList.find(user => user.username === username),
     [userList, username]
   )
 
@@ -96,13 +91,16 @@ export function PinLoginScene(props: Props) {
   }, [])
 
   React.useEffect(() => {
-    if (!userDetails.touchLoginEnabled && !userDetails.pinLoginEnabled) {
+    if (
+      userInfo == null ||
+      (!userInfo.touchLoginEnabled && !userInfo.pinLoginEnabled)
+    ) {
       dispatch({
         type: 'NAVIGATE',
         data: { name: 'passwordLogin', params: {} }
       })
     }
-  }, [dispatch, userDetails])
+  }, [dispatch, userInfo])
 
   // ---------------------------------------------------------------------
   // Handlers
@@ -188,7 +186,7 @@ export function PinLoginScene(props: Props) {
           </View>
         </TouchableWithoutFeedback>
         <View style={styles.spacer_full} />
-        {!userDetails.pinLoginEnabled ? null : (
+        {userInfo == null || !userInfo.pinLoginEnabled ? null : (
           <PinKeypad
             disabled={wait > 0 || pin.length === 4}
             onPress={handlePress}
@@ -223,7 +221,9 @@ export function PinLoginScene(props: Props) {
               </Text>
             </LinearGradient>
           </TouchableOpacity>
-          {!userDetails.pinLoginEnabled ? null : (
+          {userInfo == null || !userInfo.pinLoginEnabled ? (
+            <View style={styles.spacer} />
+          ) : (
             <FourDigit
               error={
                 wait > 0
@@ -237,7 +237,6 @@ export function PinLoginScene(props: Props) {
               spinner={wait > 0 || pin.length === 4 || isLoggingInWithPin}
             />
           )}
-          {userDetails.pinLoginEnabled ? null : <View style={styles.spacer} />}
           {renderTouchImage()}
           <Text style={styles.touchImageText}>{renderTouchImageText()}</Text>
         </View>
@@ -266,8 +265,9 @@ export function PinLoginScene(props: Props) {
   }
 
   const renderTouchImage = () => {
-    const { touchLoginEnabled } = userDetails
-    if (touchLoginEnabled && touch === 'FaceID') {
+    if (userInfo == null || !userInfo.touchLoginEnabled) return null
+
+    if (touch === 'FaceID') {
       return (
         <TouchableOpacity onPress={handleTouchId} disabled={isTouchIdDisabled}>
           <SvgXml
@@ -279,7 +279,7 @@ export function PinLoginScene(props: Props) {
         </TouchableOpacity>
       )
     }
-    if (touchLoginEnabled && touch === 'TouchID') {
+    if (touch === 'TouchID') {
       return (
         <TouchableOpacity onPress={handleTouchId} disabled={isTouchIdDisabled}>
           <MaterialCommunityIcons
@@ -290,15 +290,11 @@ export function PinLoginScene(props: Props) {
         </TouchableOpacity>
       )
     }
-    if (!touchLoginEnabled || !touch) {
-      return null
-    }
     return null
   }
 
   const renderTouchImageText = () => {
-    const { touchLoginEnabled } = userDetails
-    if (!touchLoginEnabled) return ''
+    if (userInfo == null || !userInfo.touchLoginEnabled) return ''
     if (touch === 'FaceID') {
       return s.strings.use_faceId
     }
