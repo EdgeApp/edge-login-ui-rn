@@ -59,19 +59,6 @@ export function loginWithPin(username: string, pin: string) {
         dispatch(completeLogin(abcAccount))
       } catch (e: any) {
         console.log('LOG IN WITH PIN ERROR ', e)
-        if (e.name === 'OtpError') {
-          dispatch({
-            type: 'NAVIGATE',
-            data: {
-              name: 'otpError',
-              params: {
-                otpAttempt: { type: 'pin', username, pin },
-                otpError: e
-              }
-            }
-          })
-          return
-        }
         const message =
           e.name === 'PasswordError'
             ? s.strings.invalid_pin
