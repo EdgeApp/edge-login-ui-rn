@@ -83,7 +83,6 @@ export const submitLogin = (account: EdgeAccount) => async (
     isTouchEnabled: touchEnabled
   }
 
-  dispatch({ type: 'LOGIN_SUCCEESS' })
   Airship.clear()
   if (onLogin != null) onLogin(account, touchIdInformation)
 }

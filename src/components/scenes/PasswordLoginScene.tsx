@@ -447,7 +447,7 @@ export function PasswordLoginScene(props: OwnProps) {
   const dispatch = useDispatch()
   const theme = useTheme()
 
-  const loginSuccess = useSelector(state => state.login.loginSuccess)
+  const [loginSuccess, setLoginSuccess] = React.useState(false)
   const localUsers = useSelector(state => state.previousUsers.userList)
   const touch = useSelector(state => state.touch.type)
   const username = useSelector(state => state.login.username)
@@ -470,7 +470,8 @@ export function PasswordLoginScene(props: OwnProps) {
       dispatch(showQrCodeModal())
     },
     async login(attempt) {
-      return await dispatch(login(attempt))
+      await dispatch(login(attempt))
+      setLoginSuccess(true)
     },
     exitScene() {
       dispatch(
@@ -495,7 +496,7 @@ export function PasswordLoginScene(props: OwnProps) {
       if (base58.parseUnsafe(recoveryKey)?.length !== 32)
         return s.strings.recovery_token_invalid
       dispatch(launchPasswordRecovery(recoveryKey))
-      return await Promise.resolve(true)
+      return true
     }
   }
   return (
