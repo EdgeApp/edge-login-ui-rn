@@ -70,11 +70,10 @@ export function PinLoginScene(props: Props) {
 
   // User state:
   const userList = useSelector(state => state.previousUsers.userList)
-  const username = useSelector(state => state.login.username)
-
-  const userInfo = React.useMemo<LoginUserInfo | undefined>(
-    () => userList.find(user => user.username === username),
-    [userList, username]
+  const initialUsername = useSelector(state => state.login.username)
+  const [userInfo, setUserInfo] = React.useState<LoginUserInfo | undefined>(
+    () =>
+      userList.find(user => user.username === initialUsername) ?? userList[0]
   )
 
   const dropdownItems = React.useMemo(
@@ -228,12 +227,15 @@ export function PinLoginScene(props: Props) {
   }
 
   const handleSelectUser = (userInfo: LoginUserInfo) => {
-    const { username } = userInfo
-    if (username == null) return
-    handleTouchLogin(userInfo).catch(showError)
-    dispatch({ type: 'AUTH_UPDATE_USERNAME', data: username })
-    setErrorInfo(undefined)
     setShowUserList(false)
+    setUserInfo(userInfo)
+    setErrorInfo(undefined)
+    handleTouchLogin(userInfo).catch(showError)
+
+    // Also send the username to the password scene:
+    if (userInfo.username != null) {
+      dispatch({ type: 'AUTH_UPDATE_USERNAME', data: userInfo.username })
+    }
   }
 
   const handleShowDrop = () => {
