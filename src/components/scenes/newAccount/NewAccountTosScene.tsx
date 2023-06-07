@@ -4,6 +4,7 @@ import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
 import { createUser } from '../../../actions/CreateAccountActions'
+import { getAppConfig } from '../../../common/appConfig'
 import s from '../../../common/locales/strings'
 import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
 import { Branding } from '../../../types/Branding'
@@ -106,7 +107,7 @@ export const NewAccountTosScene = (props: Props) => {
           style={styles.agreeText}
           numberOfLines={2}
           onPress={async () =>
-            await Linking.openURL('https://edge.app/terms-of-service/')
+            await Linking.openURL(getAppConfig().termsOfServiceSite)
           }
         >
           {s.strings.read_understod_1}

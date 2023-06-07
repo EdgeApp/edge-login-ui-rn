@@ -2,6 +2,7 @@ import { EdgeAccountOptions, EdgeContext } from 'edge-core-js'
 import * as React from 'react'
 
 import { initializeLogin } from '../../actions/LoginInitActions'
+import { setAppConfig } from '../../common/appConfig'
 import { Branding, ParentButton } from '../../types/Branding'
 import {
   OnComplete,
@@ -11,7 +12,7 @@ import {
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
 import { changeFont } from '../services/ThemeContext'
-import { InitialRouteName } from './types'
+import { AppConfig, InitialRouteName } from './types'
 
 interface Props {
   context: EdgeContext
@@ -32,6 +33,11 @@ interface Props {
 
   // Options passed to the core login methods:
   accountOptions: EdgeAccountOptions
+
+  /**
+   * Application config options
+   */
+  appConfig?: AppConfig
 
   /**
    * Called when the user navigates back passed the initialRoute if it was set.
@@ -58,7 +64,7 @@ interface Props {
 }
 
 export function LoginScreen(props: Props): JSX.Element {
-  const { fontDescription = { regularFontFamily: 'System' } } = props
+  const { appConfig, fontDescription = { regularFontFamily: 'System' } } = props
   const {
     regularFontFamily,
     headingFontFamily = regularFontFamily
@@ -71,6 +77,7 @@ export function LoginScreen(props: Props): JSX.Element {
     headingFontFamily
   ])
 
+  setAppConfig(appConfig)
   const branding: Branding = {
     appId: props.appId,
     appName: props.appName,
