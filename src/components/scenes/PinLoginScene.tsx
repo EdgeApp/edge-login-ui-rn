@@ -313,7 +313,7 @@ export function PinLoginScene(props: Props) {
               numberOfLines={1}
               style={styles.usernameText}
             >
-              {username}
+              {userInfo?.username ?? s.strings.missing_username}
             </Text>
           </LinearGradient>
         </TouchableOpacity>
