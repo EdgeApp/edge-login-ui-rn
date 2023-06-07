@@ -47,7 +47,7 @@ export function PinLoginScene(props: Props) {
   // State
   // ---------------------------------------------------------------------
 
-  const [focusOn, setFocusOn] = React.useState<'pin' | 'List'>('pin')
+  const [showUserList, setShowUserList] = React.useState(false)
 
   // Pin login state:
   const errorMessage = useSelector(state => state.login.errorMessage || '')
@@ -114,7 +114,7 @@ export function PinLoginScene(props: Props) {
   }
 
   const handleDelete = (userInfo: LoginUserInfo) => {
-    setFocusOn('pin')
+    setShowUserList(false)
     const { username } = userInfo
     if (username == null) {
       showError('Cannot delete local-only account')
@@ -158,15 +158,15 @@ export function PinLoginScene(props: Props) {
     if (username == null) return
     dispatch(loginWithTouch(username)).catch(showError)
     dispatch({ type: 'AUTH_UPDATE_USERNAME', data: username })
-    setFocusOn('pin')
+    setShowUserList(false)
   }
 
   const handleShowDrop = () => {
-    setFocusOn('List')
+    setShowUserList(true)
   }
 
   const handleHideDrop = () => {
-    setFocusOn('pin')
+    setShowUserList(false)
   }
 
   // ---------------------------------------------------------------------
@@ -198,58 +198,59 @@ export function PinLoginScene(props: Props) {
   }
 
   const renderBottomHalf = () => {
-    if (focusOn === 'pin') {
+    if (showUserList) {
       return (
         <View style={styles.innerView}>
-          <TouchableOpacity
-            style={styles.usernameShadow}
-            onPress={handleShowDrop}
-          >
-            <LinearGradient
-              colors={theme.pinUsernameButton}
-              start={theme.pinUsernameButtonColorStart}
-              end={theme.pinUsernameButtonColorEnd}
-              style={[styles.linearGradient, styles.usernameButton]}
-            >
-              <Text
-                adjustsFontSizeToFit
-                minimumFontScale={0.75}
-                numberOfLines={1}
-                style={styles.usernameText}
-              >
-                {username}
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-          {userInfo == null || !userInfo.pinLoginEnabled ? (
-            <View style={styles.spacer} />
-          ) : (
-            <FourDigit
-              error={
-                wait > 0
-                  ? `${errorMessage}: ${sprintf(
-                      s.strings.account_locked_for,
-                      wait
-                    )}`
-                  : errorMessage
-              }
-              pin={pin}
-              spinner={wait > 0 || pin.length === 4 || isLoggingInWithPin}
-            />
-          )}
-          {renderTouchImage()}
-          <Text style={styles.touchImageText}>{renderTouchImageText()}</Text>
+          <FlatList
+            style={styles.listView}
+            data={dropdownItems}
+            renderItem={renderItems}
+            keyExtractor={item => item.loginId}
+          />
         </View>
       )
     }
+
     return (
       <View style={styles.innerView}>
-        <FlatList
-          style={styles.listView}
-          data={dropdownItems}
-          renderItem={renderItems}
-          keyExtractor={item => item.loginId}
-        />
+        <TouchableOpacity
+          style={styles.usernameShadow}
+          onPress={handleShowDrop}
+        >
+          <LinearGradient
+            colors={theme.pinUsernameButton}
+            start={theme.pinUsernameButtonColorStart}
+            end={theme.pinUsernameButtonColorEnd}
+            style={[styles.linearGradient, styles.usernameButton]}
+          >
+            <Text
+              adjustsFontSizeToFit
+              minimumFontScale={0.75}
+              numberOfLines={1}
+              style={styles.usernameText}
+            >
+              {username}
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        {userInfo == null || !userInfo.pinLoginEnabled ? (
+          <View style={styles.spacer} />
+        ) : (
+          <FourDigit
+            error={
+              wait > 0
+                ? `${errorMessage}: ${sprintf(
+                    s.strings.account_locked_for,
+                    wait
+                  )}`
+                : errorMessage
+            }
+            pin={pin}
+            spinner={wait > 0 || pin.length === 4 || isLoggingInWithPin}
+          />
+        )}
+        {renderTouchImage()}
+        <Text style={styles.touchImageText}>{renderTouchImageText()}</Text>
       </View>
     )
   }
