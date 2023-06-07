@@ -7,11 +7,6 @@ export type LoginAttempt =
       password: string
     }
   | {
-      type: 'pin'
-      username: string
-      pin: string
-    }
-  | {
       type: 'recovery'
       recoveryKey: string
       username: string
@@ -29,9 +24,6 @@ export async function attemptLogin(
       attempt.password,
       opts
     )
-  }
-  if (attempt.type === 'pin') {
-    return await context.loginWithPIN(attempt.username, attempt.pin, opts)
   }
   return await context.loginWithRecovery2(
     attempt.recoveryKey,
