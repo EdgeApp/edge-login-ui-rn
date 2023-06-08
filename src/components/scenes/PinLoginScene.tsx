@@ -53,12 +53,10 @@ export function PinLoginScene(props: Props) {
   const isLoggingInWithPin = useSelector(
     state => state.login.isLoggingInWithPin
   )
-  const loginSuccess = useSelector(state => state.login.loginSuccess)
   const pin = useSelector(state => state.login.pin || '')
   const touch = useSelector(state => state.touch.type)
   const wait = useSelector(state => state.login.wait)
-  const isTouchIdDisabled =
-    loginSuccess || !!wait || isLoggingInWithPin || pin.length === 4
+  const isTouchIdDisabled = !!wait || isLoggingInWithPin || pin.length === 4
 
   // User state:
   const userList = useSelector(state => state.previousUsers.userList)
@@ -166,30 +164,6 @@ export function PinLoginScene(props: Props) {
   // ---------------------------------------------------------------------
   // Rendering
   // ---------------------------------------------------------------------
-
-  const renderOverImage = () => {
-    if (loginSuccess) {
-      return null
-    }
-    return (
-      <View style={styles.featureBoxContainer}>
-        <TouchableWithoutFeedback onPress={handleHideDrop}>
-          <View style={styles.featureBox}>
-            <LogoImageHeader branding={branding} />
-            <View style={styles.featureBoxBody}>{renderBottomHalf()}</View>
-          </View>
-        </TouchableWithoutFeedback>
-        <View style={styles.spacer_full} />
-        {!userDetails.pinEnabled ? null : (
-          <PinKeypad
-            disabled={wait > 0 || pin.length === 4}
-            onPress={handlePress}
-          />
-        )}
-        <SafeAreaView edges={['bottom']} />
-      </View>
-    )
-  }
 
   const renderBottomHalf = () => {
     if (focusOn === 'pin') {
@@ -309,17 +283,27 @@ export function PinLoginScene(props: Props) {
       noUnderline
       branding={branding}
     >
-      <View style={styles.container}>{renderOverImage()}</View>
+      <View style={styles.featureBoxContainer}>
+        <TouchableWithoutFeedback onPress={handleHideDrop}>
+          <View style={styles.featureBox}>
+            <LogoImageHeader branding={branding} />
+            <View style={styles.featureBoxBody}>{renderBottomHalf()}</View>
+          </View>
+        </TouchableWithoutFeedback>
+        <View style={styles.spacer_full} />
+        {!userDetails.pinEnabled ? null : (
+          <PinKeypad
+            disabled={wait > 0 || pin.length === 4}
+            onPress={handlePress}
+          />
+        )}
+        <SafeAreaView edges={['bottom']} />
+      </View>
     </ThemedScene>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flex: 1,
-    width: '100%',
-    height: '100%'
-  },
   listView: {
     height: theme.rem(16),
     width: theme.rem(10)

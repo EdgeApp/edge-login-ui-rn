@@ -3,7 +3,6 @@ import { Action } from '../types/ReduxTypes'
 export interface LoginState {
   readonly errorMessage: string | null
   readonly isLoggingInWithPin: boolean
-  readonly loginSuccess: boolean
   readonly pin: string | null
   readonly username: string
   readonly wait: number
@@ -12,7 +11,6 @@ export interface LoginState {
 const initialState: LoginState = {
   errorMessage: null,
   isLoggingInWithPin: false,
-  loginSuccess: false,
   pin: null,
   username: '',
   wait: 0
@@ -37,7 +35,6 @@ export function login(
     case 'LOGIN_SUCCEESS':
       return {
         ...state,
-        loginSuccess: true,
         isLoggingInWithPin: false,
         errorMessage: null,
         wait: 0

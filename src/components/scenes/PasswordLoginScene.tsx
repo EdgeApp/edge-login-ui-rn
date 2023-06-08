@@ -42,7 +42,6 @@ interface OwnProps extends SceneProps<'passwordLogin'> {
 interface StateProps {
   context: EdgeContext
   localUsers: LoginUserInfo[]
-  loginSuccess: boolean
   touch: BiometryType
   username: string
 }
@@ -145,55 +144,34 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
         keyboardShouldPersistTaps="always"
         contentContainerStyle={styles.mainScrollView}
       >
-        <TouchableWithoutFeedback onPress={this.handleBlur}>
-          <ThemedScene
-            onBack={this.handleBack}
-            noUnderline
-            branding={this.props.branding}
-          >
-            {this.renderOverImage()}
-          </ThemedScene>
-        </TouchableWithoutFeedback>
+        <ThemedScene
+          onBack={this.handleBack}
+          noUnderline
+          branding={this.props.branding}
+        >
+          <TouchableWithoutFeedback onPress={this.handleBlur}>
+            <View style={styles.featureBox}>
+              <LogoImageHeader branding={this.props.branding} />
+              {this.renderUsername()}
+              <View style={styles.shimTiny} />
+              <LineFormField
+                testID="passwordFormField"
+                onChangeText={this.handlePasswordChange}
+                value={this.state.password}
+                label={s.strings.password}
+                error={this.state.errorMessage}
+                autoCorrect={false}
+                secureTextEntry
+                returnKeyType="go"
+                forceFocus={this.state.focusSecond}
+                onFocus={this.handleFocus2}
+                onSubmitEditing={this.handleSubmit}
+              />
+              {this.renderButtons()}
+            </View>
+          </TouchableWithoutFeedback>
+        </ThemedScene>
       </KeyboardAwareScrollView>
-    )
-  }
-
-  renderOverImage() {
-    const { theme } = this.props
-    const styles = getStyles(theme)
-
-    if (this.props.loginSuccess) {
-      /* return (
-        <View style={style.featureBox}>
-          <Text>LOGIN SUCCESS</Text>
-        </View>
-      ) */
-      return null
-    }
-    return (
-      <View style={styles.featureBoxContainer}>
-        <TouchableWithoutFeedback onPress={this.handleBlur}>
-          <View style={styles.featureBox}>
-            <LogoImageHeader branding={this.props.branding} />
-            {this.renderUsername()}
-            <View style={styles.shimTiny} />
-            <LineFormField
-              testID="passwordFormField"
-              onChangeText={this.handlePasswordChange}
-              value={this.state.password}
-              label={s.strings.password}
-              error={this.state.errorMessage}
-              autoCorrect={false}
-              secureTextEntry
-              returnKeyType="go"
-              forceFocus={this.state.focusSecond}
-              onFocus={this.handleFocus2}
-              onSubmitEditing={this.handleSubmit}
-            />
-            {this.renderButtons()}
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
     )
   }
 
@@ -381,15 +359,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.backgroundGradientColors[0]
   },
   mainScrollView: {
-    position: 'relative',
     width: '100%',
     height: '100%'
   },
-  featureBoxContainer: {
-    width: '100%'
-  },
   featureBox: {
-    position: 'relative',
     top: theme.rem(3.5),
     width: '100%',
     alignItems: 'center'
@@ -439,7 +412,6 @@ export function PasswordLoginScene(props: OwnProps) {
   const dispatch = useDispatch()
   const theme = useTheme()
 
-  const loginSuccess = useSelector(state => state.login.loginSuccess)
   const localUsers = useSelector(state => state.previousUsers.userList)
   const touch = useSelector(state => state.touch.type)
   const username = useSelector(state => state.login.username)
@@ -462,7 +434,7 @@ export function PasswordLoginScene(props: OwnProps) {
       dispatch(showQrCodeModal())
     },
     async login(attempt) {
-      return await dispatch(login(attempt))
+      await dispatch(login(attempt))
     },
     exitScene() {
       dispatch(
@@ -487,7 +459,7 @@ export function PasswordLoginScene(props: OwnProps) {
       if (base58.parseUnsafe(recoveryKey)?.length !== 32)
         return s.strings.recovery_token_invalid
       dispatch(launchPasswordRecovery(recoveryKey))
-      return await Promise.resolve(true)
+      return true
     }
   }
   return (
@@ -496,7 +468,6 @@ export function PasswordLoginScene(props: OwnProps) {
       branding={branding}
       context={context}
       localUsers={localUsers}
-      loginSuccess={loginSuccess}
       route={route}
       theme={theme}
       touch={touch}
