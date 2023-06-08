@@ -85,9 +85,10 @@ export const maybeRouteComplete = (fallbackAction: Action) => (
   ).currentScene
 
   if (
-    initialRouteSceneName === sceneState.currentScene ||
-    (imports.initialRoute === 'login' &&
-      sceneState.currentScene === 'PasswordScene')
+    imports.onComplete != null &&
+    (initialRouteSceneName === sceneState.currentScene ||
+      (imports.initialRoute === 'login' &&
+        sceneState.currentScene === 'PasswordScene'))
   ) {
     imports.onComplete()
     return

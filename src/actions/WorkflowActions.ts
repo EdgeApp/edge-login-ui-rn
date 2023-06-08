@@ -5,5 +5,6 @@ export const onComplete = () => (
   getState: GetState,
   imports: Imports
 ) => {
+  if (imports.onComplete == null) return
   imports.onComplete()
 }

@@ -58,7 +58,7 @@ export function completeResecure() {
     if (account == null) return
 
     if (imports.onLogin != null) dispatch(submitLogin(account))
-    else imports.onComplete()
+    else if (imports.onComplete != null) imports.onComplete()
   }
 }
 

@@ -70,7 +70,7 @@ export function LoginScreen(props: Props): JSX.Element {
     regularFontFamily,
     headingFontFamily = regularFontFamily
   } = fontDescription
-  const { onComplete = () => {} } = props
+  const { onComplete } = props
 
   // Always update legacy fonts:
   updateFontStyles(regularFontFamily, headingFontFamily)
