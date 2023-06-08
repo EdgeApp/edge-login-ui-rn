@@ -7,6 +7,7 @@ import {
   createUser,
   CreateUserData
 } from '../../../actions/CreateAccountActions'
+import { getAppConfig } from '../../../common/appConfig'
 import s from '../../../common/locales/strings'
 import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
 import { Branding } from '../../../types/Branding'
@@ -114,7 +115,7 @@ const TermsAndConditionsSceneComponent = ({
           style={styles.agreeText}
           numberOfLines={2}
           onPress={async () =>
-            await Linking.openURL('https://edge.app/terms-of-service/')
+            await Linking.openURL(getAppConfig().termsOfServiceSite)
           }
         >
           {s.strings.read_understod_1}
