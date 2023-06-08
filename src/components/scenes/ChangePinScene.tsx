@@ -91,7 +91,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const ChangePinScene = (props: SceneProps<'changePin'>) => {
   const { route } = props
   const { account } = route.params
-  const { onComplete } = useImports()
+  const { onComplete = () => {} } = useImports()
 
   const handleSubmit = useHandler(async (pin: string) => {
     Keyboard.dismiss()
@@ -117,7 +117,7 @@ export const ChangePinScene = (props: SceneProps<'changePin'>) => {
 export const ResecurePinScene = (props: SceneProps<'resecurePin'>) => {
   const { route } = props
   const { account } = route.params
-  const { onComplete, onLogin } = useImports()
+  const { onComplete = () => {}, onLogin } = useImports()
   const dispatch = useDispatch()
 
   const handleComplete = () => {

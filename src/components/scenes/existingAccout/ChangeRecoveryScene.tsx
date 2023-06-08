@@ -46,7 +46,7 @@ export const ChangeRecoveryScene = (props: Props) => {
   const { account, userQuestions } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { onComplete } = useImports()
+  const { onComplete = () => {} } = useImports()
 
   const questionPrompt = s.strings.choose_recovery_question
   const answerPrompt = s.strings.your_answer_label

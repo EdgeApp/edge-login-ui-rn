@@ -157,7 +157,7 @@ class OtpRepairSceneComponent extends React.Component<Props> {
 export function OtpRepairScene(props: OwnProps) {
   const { branding, route } = props
   const { account, otpError } = route.params
-  const { context, onComplete } = useImports()
+  const { context, onComplete = () => {} } = useImports()
   const dispatch = useDispatch()
 
   const [otpResetDate, setOtpResetDate] = React.useState(otpError.resetDate)

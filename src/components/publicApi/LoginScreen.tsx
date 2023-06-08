@@ -69,7 +69,7 @@ export function LoginScreen(props: Props): JSX.Element {
     regularFontFamily,
     headingFontFamily = regularFontFamily
   } = fontDescription
-  const { onComplete = () => {} } = props
+  const { onComplete } = props
 
   // Update theme fonts if they are different:
   React.useEffect(() => changeFont(regularFontFamily, headingFontFamily), [

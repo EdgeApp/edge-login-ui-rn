@@ -41,7 +41,7 @@ export interface Imports {
   readonly accountOptions: EdgeAccountOptions
   readonly context: EdgeContext
   readonly initialRoute?: InitialRouteName
-  readonly onComplete: () => void
+  readonly onComplete?: () => void
   readonly onLogin?: OnLogin
   readonly onNotificationPermit?: OnNotificationPermit
   readonly recoveryKey?: string
