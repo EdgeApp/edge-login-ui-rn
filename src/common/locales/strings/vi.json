@@ -1,5 +1,6 @@
 {
   "app_name_default": "Edge",
+  "edge_site": "https://edge.app/",
   "login_button": "Đăng nhập",
   "username": "Tên người dùng",
   "password": "Mật khẩu",
