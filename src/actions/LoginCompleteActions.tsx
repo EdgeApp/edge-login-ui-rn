@@ -83,9 +83,11 @@ export const submitLogin = (account: EdgeAccount) => async (
     isTouchEnabled: touchEnabled
   }
 
-  dispatch({ type: 'LOGIN_SUCCEESS' })
-  Airship.clear()
   if (onLogin != null) onLogin(account, touchIdInformation)
+
+  // Hide all modals and scenes:
+  Airship.clear()
+  dispatch({ type: 'NAVIGATE', data: { name: 'loading', params: '' } })
 }
 
 async function twofaReminder(account: EdgeAccount) {

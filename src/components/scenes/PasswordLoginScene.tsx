@@ -1,4 +1,4 @@
-import { OtpError } from 'edge-core-js'
+import { EdgeContext, OtpError } from 'edge-core-js'
 import * as React from 'react'
 import {
   Keyboard,
@@ -15,10 +15,10 @@ import { sprintf } from 'sprintf-js'
 
 import { launchPasswordRecovery, login } from '../../actions/LoginAction'
 import { maybeRouteComplete } from '../../actions/LoginInitActions'
-import { deleteUserFromDevice } from '../../actions/UserActions'
 import s from '../../common/locales/strings'
+import { useImports } from '../../hooks/useImports'
+import { LoginUserInfo, useLocalUsers } from '../../hooks/useLocalUsers'
 import { BiometryType } from '../../keychain'
-import { LoginUserInfo } from '../../reducers/PreviousUsersReducer'
 import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
@@ -40,14 +40,12 @@ interface OwnProps extends SceneProps<'passwordLogin'> {
   branding: Branding
 }
 interface StateProps {
-  loginSuccess: boolean
-  previousUsers: LoginUserInfo[]
+  context: EdgeContext
+  localUsers: LoginUserInfo[]
   touch: BiometryType
   username: string
-  usernameOnlyList: string[]
 }
 interface DispatchProps {
-  deleteUserFromDevice: (username: string) => Promise<void>
   gotoCreatePage: () => void
   gotoPinLoginPage: () => void
   handleQrModal: () => void
@@ -114,15 +112,18 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     })
   }
 
-  handleDelete = (username: string) => {
-    const { deleteUserFromDevice } = this.props
+  handleDelete = (userInfo: LoginUserInfo) => {
+    const { context } = this.props
 
     Keyboard.dismiss()
     Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.forget_account}
-        message={sprintf(s.strings.forget_username_account, username)}
+        message={sprintf(
+          s.strings.forget_username_account,
+          userInfo.username ?? s.strings.username
+        )}
         buttons={{
           ok: { label: s.strings.forget },
           cancel: { label: s.strings.cancel, type: 'secondary' }
@@ -131,7 +132,13 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     ))
       .then(async button => {
         if (button !== 'ok') return
-        return await deleteUserFromDevice(username)
+        if (context.forgetAccount != null) {
+          await context.forgetAccount(userInfo.loginId)
+        } else {
+          const { username } = userInfo
+          if (username == null) throw new Error('No username')
+          await context.deleteLocalAccount(username)
+        }
       })
       .catch(showError)
   }
@@ -146,55 +153,34 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
         keyboardShouldPersistTaps="always"
         contentContainerStyle={styles.mainScrollView}
       >
-        <TouchableWithoutFeedback onPress={this.handleBlur}>
-          <ThemedScene
-            onBack={this.handleBack}
-            noUnderline
-            branding={this.props.branding}
-          >
-            {this.renderOverImage()}
-          </ThemedScene>
-        </TouchableWithoutFeedback>
+        <ThemedScene
+          onBack={this.handleBack}
+          noUnderline
+          branding={this.props.branding}
+        >
+          <TouchableWithoutFeedback onPress={this.handleBlur}>
+            <View style={styles.featureBox}>
+              <LogoImageHeader branding={this.props.branding} />
+              {this.renderUsername()}
+              <View style={styles.shimTiny} />
+              <LineFormField
+                testID="passwordFormField"
+                onChangeText={this.handlePasswordChange}
+                value={this.state.password}
+                label={s.strings.password}
+                error={this.state.errorMessage}
+                autoCorrect={false}
+                secureTextEntry
+                returnKeyType="go"
+                forceFocus={this.state.focusSecond}
+                onFocus={this.handleFocus2}
+                onSubmitEditing={this.handleSubmit}
+              />
+              {this.renderButtons()}
+            </View>
+          </TouchableWithoutFeedback>
+        </ThemedScene>
       </KeyboardAwareScrollView>
-    )
-  }
-
-  renderOverImage() {
-    const { theme } = this.props
-    const styles = getStyles(theme)
-
-    if (this.props.loginSuccess) {
-      /* return (
-        <View style={style.featureBox}>
-          <Text>LOGIN SUCCESS</Text>
-        </View>
-      ) */
-      return null
-    }
-    return (
-      <View style={styles.featureBoxContainer}>
-        <TouchableWithoutFeedback onPress={this.handleBlur}>
-          <View style={styles.featureBox}>
-            <LogoImageHeader branding={this.props.branding} />
-            {this.renderUsername()}
-            <View style={styles.shimTiny} />
-            <LineFormField
-              testID="passwordFormField"
-              onChangeText={this.handlePasswordChange}
-              value={this.state.password}
-              label={s.strings.password}
-              error={this.state.errorMessage}
-              autoCorrect={false}
-              secureTextEntry
-              returnKeyType="go"
-              forceFocus={this.state.focusSecond}
-              onFocus={this.handleFocus2}
-              onSubmitEditing={this.handleSubmit}
-            />
-            {this.renderButtons()}
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
     )
   }
 
@@ -242,19 +228,23 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
   }
 
   renderDropdownList() {
-    const { theme } = this.props
+    const { localUsers, theme } = this.props
     const styles = getStyles(theme)
 
     return (
       <ScrollView style={styles.dropDownList}>
-        {this.props.usernameOnlyList.map(item => (
-          <UserListItem
-            key={item}
-            data={item}
-            onClick={this.handleSelectUser}
-            onDelete={this.handleDelete}
-          />
-        ))}
+        {localUsers.map(userInfo => {
+          const { username } = userInfo
+          if (username == null) return null
+          return (
+            <UserListItem
+              key={username}
+              userInfo={userInfo}
+              onClick={this.handleSelectUser}
+              onDelete={this.handleDelete}
+            />
+          )
+        })}
       </ScrollView>
     )
   }
@@ -326,18 +316,21 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     })
   }
 
-  handleSelectUser = (username: string) => {
+  handleSelectUser = (userInfo: LoginUserInfo) => {
+    const { username } = userInfo
+    if (username == null) return // These don't exist in the list
     this.handleChangeUsername(username)
     this.setState({
       usernameList: false
     })
 
-    const details: LoginUserInfo | undefined = this.props.previousUsers.find(
+    const details: LoginUserInfo | undefined = this.props.localUsers.find(
       info => info.username === username
     )
     if (
       details != null &&
-      (details.pinEnabled || (details.touchEnabled && this.props.touch))
+      (details.pinLoginEnabled ||
+        (details.touchLoginEnabled && this.props.touch))
     ) {
       this.props.gotoPinLoginPage()
       return
@@ -378,15 +371,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.backgroundGradientColors[0]
   },
   mainScrollView: {
-    position: 'relative',
     width: '100%',
     height: '100%'
   },
-  featureBoxContainer: {
-    width: '100%'
-  },
   featureBox: {
-    position: 'relative',
     top: theme.rem(3.5),
     width: '100%',
     alignItems: 'center'
@@ -432,21 +420,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export function PasswordLoginScene(props: OwnProps) {
   const { branding, route } = props
+  const { context } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
 
-  const loginSuccess = useSelector(state => state.login.loginSuccess)
-  const previousUsers = useSelector(state => state.previousUsers.userList)
+  const localUsers = useLocalUsers()
   const touch = useSelector(state => state.touch.type)
   const username = useSelector(state => state.login.username)
-  const usernameOnlyList = useSelector(
-    state => state.previousUsers.usernameOnlyList
-  )
 
   const dispatchProps: DispatchProps = {
-    async deleteUserFromDevice(username) {
-      return await dispatch(deleteUserFromDevice(username))
-    },
     gotoCreatePage() {
       dispatch({
         type: 'NAVIGATE',
@@ -464,7 +446,7 @@ export function PasswordLoginScene(props: OwnProps) {
       dispatch(showQrCodeModal())
     },
     async login(attempt) {
-      return await dispatch(login(attempt))
+      await dispatch(login(attempt))
     },
     exitScene() {
       dispatch(
@@ -489,20 +471,19 @@ export function PasswordLoginScene(props: OwnProps) {
       if (base58.parseUnsafe(recoveryKey)?.length !== 32)
         return s.strings.recovery_token_invalid
       dispatch(launchPasswordRecovery(recoveryKey))
-      return await Promise.resolve(true)
+      return true
     }
   }
   return (
     <PasswordLoginSceneComponent
       {...dispatchProps}
       branding={branding}
-      loginSuccess={loginSuccess}
-      previousUsers={previousUsers}
+      context={context}
+      localUsers={localUsers}
       route={route}
       theme={theme}
       touch={touch}
       username={username}
-      usernameOnlyList={usernameOnlyList}
     />
   )
 }

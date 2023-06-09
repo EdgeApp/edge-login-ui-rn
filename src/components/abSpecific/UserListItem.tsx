@@ -3,56 +3,49 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
-import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-interface OwnProps {
-  data: string
-  onClick: (username: string) => void
-  onDelete: (username: string) => void
+import s from '../../common/locales/strings'
+import { LoginUserInfo } from '../../hooks/useLocalUsers'
+import { Theme, useTheme } from '../services/ThemeContext'
+
+interface Props {
+  userInfo: LoginUserInfo
+  onClick: (userInfo: LoginUserInfo) => void
+  onDelete: (userInfo: LoginUserInfo) => void
 }
-type Props = OwnProps & ThemeProps
 
-class UserListItemComponent extends React.Component<Props> {
-  handleDelete = () => {
-    this.props.onDelete(this.props.data)
+export function UserListItem(props: Props) {
+  const { userInfo, onClick, onDelete } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  const handleDelete = () => {
+    onDelete(userInfo)
   }
 
-  handlePress = () => {
-    this.props.onClick(this.props.data)
+  const handlePress = () => {
+    onClick(userInfo)
   }
 
-  render() {
-    return (
-      <TouchableOpacity onPress={this.handlePress}>
-        {this.renderInside()}
-      </TouchableOpacity>
-    )
-  }
-
-  renderInside() {
-    const { theme } = this.props
-    const styles = getStyles(theme)
-
-    return (
-      <View style={styles.container}>
-        <View style={styles.textComtainer}>
-          <Text style={styles.text}>{this.props.data}</Text>
-        </View>
-        <TouchableOpacity
-          style={styles.iconButtonContainer}
-          onPress={this.handleDelete}
-        >
-          <MaterialIcon
-            style={styles.iconButtonIcon}
-            name="close"
-            size={theme.rem(1)}
-          />
-        </TouchableOpacity>
+  return (
+    <TouchableOpacity style={styles.container} onPress={handlePress}>
+      <View style={styles.textComtainer}>
+        <Text style={styles.text}>
+          {userInfo.username ?? s.strings.missing_username}
+        </Text>
       </View>
-    )
-  }
+      <TouchableOpacity
+        style={styles.iconButtonContainer}
+        onPress={handleDelete}
+      >
+        <MaterialIcon
+          style={styles.iconButtonIcon}
+          name="close"
+          size={theme.rem(1)}
+        />
+      </TouchableOpacity>
+    </TouchableOpacity>
+  )
 }
-
-export const UserListItem = withTheme(UserListItemComponent)
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {

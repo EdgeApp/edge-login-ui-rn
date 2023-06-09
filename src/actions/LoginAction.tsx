@@ -3,7 +3,6 @@ import * as React from 'react'
 import s from '../common/locales/strings'
 import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { getLoginKey } from '../keychain'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
 import { logEvent } from '../util/analytics'
 import { attemptLogin, LoginAttempt } from '../util/loginAttempt'
@@ -26,96 +25,6 @@ export const login = (attempt: LoginAttempt, otpKey?: string) => async (
     otpKey
   })
   dispatch(completeLogin(account))
-}
-
-export const loginWithTouch = (username: string) => async (
-  dispatch: Dispatch,
-  getState: GetState,
-  imports: Imports
-) => {
-  const { context, accountOptions } = imports
-  const loginKey = await getLoginKey(
-    username,
-    `Touch to login user: "${username}"`,
-    s.strings.login_with_password
-  )
-  if (loginKey == null) return
-
-  dispatch({ type: 'AUTH_LOGGING_IN_WITH_PIN' })
-  const account = await context.loginWithKey(username, loginKey, accountOptions)
-  dispatch(completeLogin(account))
-}
-
-export function loginWithPin(username: string, pin: string) {
-  return (dispatch: Dispatch, getState: GetState, imports: Imports) => {
-    const { context } = imports
-    setTimeout(async () => {
-      try {
-        const abcAccount = await context.loginWithPIN(
-          username,
-          pin,
-          imports.accountOptions
-        )
-        dispatch(completeLogin(abcAccount))
-      } catch (e: any) {
-        console.log('LOG IN WITH PIN ERROR ', e)
-        if (e.name === 'OtpError') {
-          dispatch({
-            type: 'NAVIGATE',
-            data: {
-              name: 'otpError',
-              params: {
-                otpAttempt: { type: 'pin', username, pin },
-                otpError: e
-              }
-            }
-          })
-          return
-        }
-        const message =
-          e.name === 'PasswordError'
-            ? s.strings.invalid_pin
-            : e.name === 'UsernameError'
-            ? s.strings.pin_not_enabled
-            : e.name === 'NetworkError'
-            ? `${e.message} ${s.strings.pin_network_error_full_password}`
-            : e.message
-        dispatch({
-          type: 'LOGIN_PIN_FAIL',
-          data: {
-            message,
-            wait: e.wait
-          }
-        })
-        if (e.wait) {
-          setTimeout(() => {
-            dispatch(processWait(message))
-          }, 1000)
-        }
-      }
-    }, 300)
-    // the timeout is a hack until we put in interaction manager.
-  }
-}
-export function processWait(message: string) {
-  return (dispatch: Dispatch, getState: GetState, imports: Imports) => {
-    const state = getState()
-    const wait = state.login.wait
-    console.log('RL: wait ', wait)
-    if (wait > 0) {
-      // console.log('RL: got more than 1', wait)
-      dispatch({
-        type: 'LOGIN_PIN_FAIL',
-        data: {
-          message,
-          wait: wait - 1
-        }
-      })
-      setTimeout(() => {
-        dispatch(processWait(message))
-      }, 1000)
-    }
-  }
 }
 
 /**

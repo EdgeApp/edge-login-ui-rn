@@ -5,11 +5,7 @@ import { SceneState } from '../reducers/SceneReducer'
 import { TouchState } from '../reducers/TouchReducer'
 
 // Actions with no payload:
-type NoDataActionName =
-  | 'AUTH_LOGGING_IN_WITH_PIN'
-  | 'CLEAR_CREATE_ERROR_MESSAGE'
-  | 'LOGIN_SUCCEESS'
-  | 'RESET_APP'
+type NoDataActionName = 'CLEAR_CREATE_ERROR_MESSAGE' | 'RESET_APP'
 
 export type Action =
   | { type: NoDataActionName }
@@ -44,13 +40,6 @@ export type Action =
   | {
       type: 'CREATE_UPDATE_USERNAME'
       data: { username: string }
-    }
-  | {
-      type: 'LOGIN_PIN_FAIL'
-      data: {
-        message: string
-        wait: number
-      }
     }
   | { type: 'NAVIGATE'; data: SceneState }
   | { type: 'SET_PREVIOUS_USERS'; data: PreviousUsersState }
