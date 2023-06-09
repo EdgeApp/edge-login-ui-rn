@@ -90,6 +90,7 @@
   "hide_account_info": "隐藏账户信息",
   "password_desc": "Your password is used to encrypt your account and to log in.",
   "pin_desc": "Your PIN is a 4 digit code used to quickly log back into your account.",
+  "recovery_token_invalid": "Invalid recovery token",
   "recovery_successful": "成功复原！请更改您的密码和PIN.",
   "recover_by_username": "请输入账户的用户名称以进行复原.",
   "recovery_by_username_error": "Invalid recovery link or username does not exist",
@@ -179,6 +180,7 @@
   "alert_scene_date": "Requested on: ",
   "alert_scene_approve": "It was me, grant access",
   "alert_scene_deny": "Not me, deny all",
+  "missing_username": "<No Username>",
   "otp_scene_header_2fa": "Username and password are correct. This device cannot log in because it does not have the right 2-factor code.",
   "otp_scene_header_ip": "Username and password are correct. This device cannot log in due to an unrecognized IP address.",
   "otp_scene_approve": "Approve this request from another logged-in device",
@@ -211,5 +213,7 @@
   "change_recovery_question10": "What was your maternal grandmother's first and last name?",
   "change_recovery_question11": "What is the street address of the first home you remember?",
   "change_recovery_question12": "Name the make, model, and year of your dream car?",
-  "change_recovery_question13": "Who is your childhood sports hero?"
+  "change_recovery_question13": "Who is your childhood sports hero?",
+  "app_logo_hint": "App logo",
+  "spin_load_hint": "Loading... please wait."
 }
