@@ -90,6 +90,7 @@
   "hide_account_info": "Nascondi le informazioni sull'account",
   "password_desc": "La tua password viene utilizzata per crittografare il tuo account e per accedere.",
   "pin_desc": "Il PIN è un codice a 4 cifre utilizzato per eseguire l'accesso rapido al tuo account.",
+  "recovery_token_invalid": "Invalid recovery token",
   "recovery_successful": "Recupero avvenuto con successo! Ricordati di cambiare password e PIN.",
   "recover_by_username": "Inserisci il nome utente dell'account che vuoi recuperare.",
   "recovery_by_username_error": "Link di recupero non valido o nome utente non esistente",
@@ -179,6 +180,7 @@
   "alert_scene_date": "Richiesto il: ",
   "alert_scene_approve": "Sono io, concedi l'accesso",
   "alert_scene_deny": "Non sono io, nega tutto",
+  "missing_username": "<No Username>",
   "otp_scene_header_2fa": "Nome utente e password sono corretti. Questo dispositivo non può accedere perché non ha il giusto codice a 2 fattori.",
   "otp_scene_header_ip": "Nome utente e password sono corretti. Questo dispositivo non può accedere a causa di un indirizzo IP non riconosciuto.",
   "otp_scene_approve": "Approva questa richiesta da un altro dispositivo già loggato",
@@ -211,5 +213,7 @@
   "change_recovery_question10": "Qual è / qual è stato il nome e il cognome della tua nonna materna?",
   "change_recovery_question11": "Qual è l'indirizzo della prima casa in cui ricordi di aver vissuto?",
   "change_recovery_question12": "Nomina la marca, il modello e l'anno della tua auto da sogno",
-  "change_recovery_question13": "Chi è il tuo eroe sportivo d'infanzia?"
+  "change_recovery_question13": "Chi è il tuo eroe sportivo d'infanzia?",
+  "app_logo_hint": "App logo",
+  "spin_load_hint": "Loading... please wait."
 }
