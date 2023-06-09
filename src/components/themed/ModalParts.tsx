@@ -1,5 +1,11 @@
 import * as React from 'react'
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import {
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle
+} from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -15,7 +21,7 @@ interface ModalTitleProps {
 }
 interface ModalFooterProps {
   onPress: () => void
-  fadeOut?: boolean | undefined
+  fadeOut?: boolean
 }
 
 export function ModalTitle(props: ModalTitleProps) {
@@ -54,22 +60,13 @@ export function ModalMessage(props: {
     </Text>
   )
 }
-
-export function ModalCloseArrow(props: { onPress?: () => void }) {
-  const theme = useTheme()
-  const styles = getStyles(theme)
-
-  return (
-    <TouchableOpacity onPress={props.onPress} style={styles.closeIcon}>
-      <AntDesignIcon
-        name="close"
-        size={theme.rem(1.25)}
-        color={theme.iconTappable}
-      />
-    </TouchableOpacity>
-  )
-}
-
+/**
+ * Renders a close button and an optional fade-out gradient.
+ *
+ * If you use the fade-out gradient, your scroll element's
+ * `contentContainerStyle` needs `theme.rem(ModalFooter.bottomRem)`
+ * worth of bottom padding, so the close button does not cover your content.
+ */
 export function ModalFooter(props: ModalFooterProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -98,6 +95,7 @@ export function ModalFooter(props: ModalFooterProps) {
     </View>
   )
 }
+ModalFooter.bottomRem = 2.5
 
 export function ModalScrollArea(props: {
   children: React.ReactNode
@@ -106,10 +104,19 @@ export function ModalScrollArea(props: {
   const { children, onCancel } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const scrollPadding = React.useMemo<ViewStyle>(() => {
+    return {
+      paddingBottom: theme.rem(ModalFooter.bottomRem)
+    }
+  }, [theme])
 
   return (
     <View>
-      <ScrollView contentContainerStyle={styles.scrollPadding}>
+      <ScrollView
+        contentContainerStyle={scrollPadding}
+        pagingEnabled
+        style={styles.scrollViewContainer}
+      >
         {children}
       </ScrollView>
       <ModalFooter onPress={onCancel} fadeOut />
@@ -120,9 +127,10 @@ export function ModalScrollArea(props: {
 const getStyles = cacheStyles((theme: Theme) => ({
   closeIcon: {
     alignItems: 'center',
-    paddingTop: theme.rem(1)
+    paddingBottom: theme.rem(ModalFooter.bottomRem)
   },
-  scrollPadding: {
+  scrollViewContainer: {
+    margin: theme.rem(0.5),
     paddingBottom: theme.rem(2.5)
   },
   titleContainer: {

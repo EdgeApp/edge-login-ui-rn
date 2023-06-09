@@ -7,51 +7,35 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../common/locales/strings'
-import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { ModalCloseArrow } from '../themed/ModalParts'
+import { Theme, useTheme } from '../services/ThemeContext'
+import { ModalFooter, ModalScrollArea, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
-import { TitleText } from '../themed/ThemedText'
 
-interface OwnProps {
+interface Props {
   bridge: AirshipBridge<unknown>
   messages: EdgeLoginMessage[]
   selectUser: (username: string) => void
 }
-type Props = OwnProps & ThemeProps
 
-class SecurityAlertsModalComponent extends React.Component<Props> {
-  render() {
-    const { bridge } = this.props
+export const SecurityAlertsModal = (props: Props) => {
+  const { bridge, messages, selectUser } = props
+  const theme = useTheme()
 
-    return (
-      <ThemedModal
-        bridge={bridge}
-        warning
-        onCancel={() => bridge.resolve(undefined)}
-      >
-        <TitleText>{s.strings.security_is_our_priority_modal_title}</TitleText>
-        {this.renderList()}
-        <ModalCloseArrow onPress={() => bridge.resolve(undefined)} />
-      </ThemedModal>
-    )
-  }
-
-  renderList(): React.ReactNode {
-    const { messages } = this.props
+  const renderList = () => {
     const out: React.ReactNode[] = []
 
     let isFirst = true
     for (const message of messages) {
       const { otpResetPending, username } = message
       if (otpResetPending && username != null) {
-        out.push(this.renderRow(username, true, isFirst))
+        out.push(renderRow(username, true, isFirst))
         isFirst = false
       }
     }
     for (const message of messages) {
       const { pendingVouchers = [], username } = message
       if (pendingVouchers.length > 0 && username != null) {
-        out.push(this.renderRow(username, false, isFirst))
+        out.push(renderRow(username, false, isFirst))
         isFirst = false
       }
     }
@@ -59,8 +43,7 @@ class SecurityAlertsModalComponent extends React.Component<Props> {
     return out
   }
 
-  renderRow(username: string, isReset: boolean, isFirst: boolean) {
-    const { bridge, theme } = this.props
+  const renderRow = (username: string, isReset: boolean, isFirst: boolean) => {
     const styles = getStyles(theme)
 
     return (
@@ -68,7 +51,7 @@ class SecurityAlertsModalComponent extends React.Component<Props> {
         key={(isReset ? 'reset:' : 'voucher:') + username}
         style={isFirst ? styles.row : styles.rowBorder}
         onPress={() => {
-          this.props.selectUser(username)
+          selectUser(username)
           bridge.resolve(undefined)
         }}
       >
@@ -96,6 +79,19 @@ class SecurityAlertsModalComponent extends React.Component<Props> {
       </TouchableOpacity>
     )
   }
+
+  const handleCancel = () => bridge.resolve(undefined)
+  return (
+    <ThemedModal bridge={bridge} warning onCancel={handleCancel}>
+      <ModalScrollArea onCancel={handleCancel}>
+        <ModalTitle>
+          {s.strings.security_is_our_priority_modal_title}
+        </ModalTitle>
+        {renderList()}
+        <ModalFooter fadeOut onPress={() => bridge.resolve(undefined)} />
+      </ModalScrollArea>
+    </ThemedModal>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -126,5 +122,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontWeight: 'bold'
   }
 }))
-
-export const SecurityAlertsModal = withTheme(SecurityAlertsModalComponent)

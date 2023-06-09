@@ -16,9 +16,8 @@ import { Dispatch, GetState, Imports } from '../../types/ReduxTypes'
 import { QrCode } from '../common/QrCode'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { ModalCloseArrow } from '../themed/ModalParts'
+import { ModalMessage, ModalScrollArea, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
-import { MessageText, TitleText } from '../themed/ThemedText'
 
 /**
  * Dispatch this redux action to launch the QR code modal
@@ -127,30 +126,38 @@ class QrCodeModalComponent extends React.Component<Props, State> {
     this.setState({ pendingLogin: out })
   }
 
+  handleCancel = (): void => {
+    const { bridge } = this.props
+    bridge.resolve(undefined)
+  }
+
   render() {
     const { bridge, theme } = this.props
     const { pendingLogin, username } = this.state
     const styles = getStyles(theme)
-
+    const isLoadingQrCode = username != null || pendingLogin == null
+    const qrData =
+      pendingLogin == null ? null : 'edge://edge/' + pendingLogin.id
     return (
-      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve()}>
-        <TitleText>{s.strings.qr_modal_title}</TitleText>
-        <MessageText>
-          {username != null
-            ? sprintf(s.strings.qr_modal_started, username)
-            : s.strings.qr_modal_message}
-        </MessageText>
-        <View style={styles.qrContainer}>
-          {username != null || pendingLogin == null ? (
-            <ActivityIndicator color={theme.primaryText} />
-          ) : (
-            <QrCode
-              data={'edge://edge/' + pendingLogin.id}
-              size={theme.rem(14)}
-            />
-          )}
-        </View>
-        <ModalCloseArrow onPress={() => bridge.resolve()} />
+      <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
+        <ModalScrollArea onCancel={this.handleCancel}>
+          <ModalTitle>{s.strings.qr_modal_title}</ModalTitle>
+          <ModalMessage>
+            {username != null
+              ? sprintf(s.strings.qr_modal_started, username)
+              : s.strings.qr_modal_message}
+          </ModalMessage>
+          <View style={styles.qrContainer}>
+            {qrData == null ? (
+              <ActivityIndicator
+                color={theme.primaryText}
+                animating={isLoadingQrCode}
+              />
+            ) : (
+              <QrCode key="qrcode" data={qrData} size={theme.rem(14)} />
+            )}
+          </View>
+        </ModalScrollArea>
       </ThemedModal>
     )
   }
