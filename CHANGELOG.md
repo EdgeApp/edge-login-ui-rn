@@ -1,5 +1,14 @@
 # edge-login-ui-rn
 
+## 2.2.0 (2023-06-09)
+
+- added: Add an `appconfig` prop to `LoginScreen`.
+- changed: Update routing behavior when `onComplete` is not passed to `LoginScreen`.
+- changed: Give scrolling modals a bottom fade-out effect.
+- changed: Make the QR login modal and text input modals scrollable.
+- changed: Allow the PIN scene to log into username-less accounts.
+- removed: Remove OTP support for PIN logins. The login server will never return OTP errors for PIN logins, so this capability is not needed.
+
 ## 2.1.0 (2023-06-06)
 
 - added: Validate that the recovery key is valid base58 before submitting the modal.
