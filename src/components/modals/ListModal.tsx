@@ -1,8 +1,15 @@
 import * as React from 'react'
-import { FlatList, Keyboard, ListRenderItem, ViewToken } from 'react-native'
+import {
+  FlatList,
+  Keyboard,
+  ListRenderItem,
+  ViewStyle,
+  ViewToken
+} from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
-import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { useTheme } from '../services/ThemeContext'
+import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 import { GradientFadeOut } from './GradientFadeout'
@@ -62,6 +69,7 @@ export function ListModal<T>({
   onViewableItemsChanged,
   ...textProps
 }: Props<T>) {
+  const theme = useTheme()
   const [text, setText] = React.useState<string>(initialValue)
   const renderItem: ListRenderItem<T> = ({ item }) =>
     rowComponent ? rowComponent(item) : null
@@ -72,6 +80,10 @@ export function ListModal<T>({
 
   const handleSubmitEditing = () =>
     onSubmitEditing != null ? onSubmitEditing(text) : bridge.resolve(text)
+
+  const scrollPadding = React.useMemo<ViewStyle>(() => {
+    return { paddingBottom: theme.rem(ModalFooter.bottomRem) }
+  }, [theme])
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
@@ -94,7 +106,7 @@ export function ListModal<T>({
         />
       ) : null}
       <FlatList
-        style={{ flexGrow: fullScreen ? 1 : 0 }}
+        contentContainerStyle={scrollPadding}
         data={rowsData}
         initialNumToRender={12}
         onScroll={() => Keyboard.dismiss()}
@@ -104,7 +116,7 @@ export function ListModal<T>({
         onViewableItemsChanged={onViewableItemsChanged}
       />
       <GradientFadeOut />
-      {closeArrow ? <ModalCloseArrow onPress={handleCancel} /> : null}
+      {!closeArrow ? null : <ModalFooter onPress={handleCancel} fadeOut />}
     </ThemedModal>
   )
 }

@@ -3,7 +3,7 @@ import { AirshipBridge } from 'react-native-airship'
 
 import { showError } from '../services/AirshipInstance'
 import { MainButton } from '../themed/MainButton'
-import { ModalCloseArrow } from '../themed/ModalParts'
+import { ModalFooter } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 import { MessageText, TitleText } from '../themed/ThemedText'
 
@@ -85,7 +85,7 @@ export function ButtonsModal<
           />
         )
       })}
-      {!closeArrow ? null : <ModalCloseArrow onPress={handleCancel} />}
+      {!closeArrow ? null : <ModalFooter onPress={handleCancel} />}
     </ThemedModal>
   )
 }
