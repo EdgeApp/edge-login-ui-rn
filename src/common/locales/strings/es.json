@@ -90,6 +90,7 @@
   "hide_account_info": "Ocultar información de la cuenta",
   "password_desc": "Tu contraseña se utiliza para encriptar tu cuenta e iniciar sesión.",
   "pin_desc": "Tu PIN es un código de 4 dígitos utilizado para iniciar sesión rápidamente de nuevo en tu cuenta.",
+  "recovery_token_invalid": "Invalid recovery token",
   "recovery_successful": "¡Recuperación exitosa! Cambia tu NIP y contraseña por favor.",
   "recover_by_username": "Por favor introduce el nombre de usuario de la cuenta que quieres recuperar.",
   "recovery_by_username_error": "El enlace de recuperación o nombre de usuario no es válido",
@@ -179,6 +180,7 @@
   "alert_scene_date": "Solicitado el: ",
   "alert_scene_approve": "Fui yo, conceder acceso",
   "alert_scene_deny": "No fui yo, rechazar todo",
+  "missing_username": "<No Username>",
   "otp_scene_header_2fa": "Username and password are correct. This device cannot log in because it does not have the right 2-factor code.",
   "otp_scene_header_ip": "Username and password are correct. This device cannot log in due to an unrecognized IP address.",
   "otp_scene_approve": "Aprobar esta solicitud desde otro dispositivo de inicio de sesión",
@@ -211,5 +213,7 @@
   "change_recovery_question10": "¿Cómo se llama tu abuela por parte de madre?",
   "change_recovery_question11": "¿Cuál es la dirección de la primera casa que recuerdas?",
   "change_recovery_question12": "Marca, modelo y año de tu coche de ensueño?",
-  "change_recovery_question13": "¿Quién era tu héroe infantil del deporte?"
+  "change_recovery_question13": "¿Quién era tu héroe infantil del deporte?",
+  "app_logo_hint": "App logo",
+  "spin_load_hint": "Loading... please wait."
 }
