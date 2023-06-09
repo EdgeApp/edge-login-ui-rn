@@ -214,7 +214,6 @@
   "change_recovery_question11": "What is the street address of the first home you remember?",
   "change_recovery_question12": "Name the make, model, and year of your dream car?",
   "change_recovery_question13": "Who is your childhood sports hero?",
-  // Accessibility
   "app_logo_hint": "App logo",
   "spin_load_hint": "Loading... please wait."
 }
