@@ -1,5 +1,6 @@
 {
   "app_name_default": "Edge",
+  "edge_site": "https://edge.app/",
   "login_button": "Se connecter",
   "username": "Nom d'utilisateur",
   "password": "Mot de passe",
