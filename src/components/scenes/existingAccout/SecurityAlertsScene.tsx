@@ -272,7 +272,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export function SecurityAlertsScene(props: OwnProps) {
   const { route } = props
   const { account } = route.params
-  const { onComplete, onLogin } = useImports()
+  const { onComplete = () => {}, onLogin } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
 

@@ -205,7 +205,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const ChangePasswordScene = (props: SceneProps<'changePassword'>) => {
   const { route } = props
   const { account } = route.params
-  const { onComplete } = useImports()
+  const { onComplete = () => {} } = useImports()
   const handleSubmit = useHandler(async (password: string) => {
     Keyboard.dismiss()
 
