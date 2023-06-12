@@ -1,5 +1,10 @@
 # edge-login-ui-rn
 
+## 1.5.0 (2023-06-12)
+
+- added: Ability to pass AppConfig to LoginScreen with termsOfServiceSite
+- added: Allow onComplete prop to LoginScreen to be optional
+
 ## 1.4.7 (2023-05-22)
 
 - added: Accessibility hints to logo and button
