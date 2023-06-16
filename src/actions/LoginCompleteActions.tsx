@@ -91,7 +91,9 @@ export const submitLogin = (account: EdgeAccount) => async (
 }
 
 async function twofaReminder(account: EdgeAccount) {
-  const { otpKey, dataStore } = account
+  const { otpKey, dataStore, username } = account
+  if (username == null) return
+
   const pluginList = await dataStore.listStoreIds()
   const storeName = pluginList.includes(Constants.OTP_REMINDER_STORE_NAME)
     ? Constants.OTP_REMINDER_STORE_NAME
