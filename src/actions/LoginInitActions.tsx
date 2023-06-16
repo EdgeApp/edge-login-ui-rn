@@ -142,6 +142,11 @@ function routeInitialization(state: RootState, imports: Imports): Action {
         type: 'NAVIGATE',
         data: { name: 'newAccountUsername', params: {} }
       }
+    case 'new-light-account': // Set pin, modified TOS
+      return {
+        type: 'NAVIGATE',
+        data: { name: 'newAccountPin', params: {} }
+      }
     default:
       return defaultInitialRoute()
   }

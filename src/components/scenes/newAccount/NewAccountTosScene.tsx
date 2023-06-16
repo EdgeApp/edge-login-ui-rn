@@ -32,12 +32,12 @@ export const NewAccountTosScene = (props: Props) => {
   const imports = useImports()
 
   const styles = getStyles(theme)
-  const [termValues, setTermValues] = React.useState<boolean[]>([
-    false,
-    false,
-    false,
-    false
-  ])
+
+  const isLightAccount = route.params.username == null
+
+  const [termValues, setTermValues] = React.useState<boolean[]>(
+    isLightAccount ? [false, false, false] : [false, false, false, false]
+  )
   const showNext = !termValues.includes(false)
   const scrollViewRef = useScrollToEnd(showNext)
   const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
