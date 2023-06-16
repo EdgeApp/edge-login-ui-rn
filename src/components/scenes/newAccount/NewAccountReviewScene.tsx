@@ -7,7 +7,11 @@ import s from '../../../common/locales/strings'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
-import { SceneProps } from '../../../types/routerTypes'
+import {
+  AccountParams,
+  CreateFlowParams,
+  SceneProps
+} from '../../../types/routerTypes'
 import { logEvent } from '../../../util/analytics'
 import { Airship } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
@@ -20,6 +24,10 @@ import { ThemedScene } from '../../themed/ThemedScene'
 interface Props extends SceneProps<'newAccountReview'> {
   branding: Branding
 }
+
+export interface NewAcountReviewParams
+  extends AccountParams,
+    CreateFlowParams {}
 
 export const NewAccountReviewScene = (props: Props) => {
   const { branding, route } = props
@@ -54,7 +62,12 @@ export const NewAccountReviewScene = (props: Props) => {
         >
           {s.strings.warning_message}
         </FormError>
-        <AccountInfo marginRem={[0, 2.5]} />
+        <AccountInfo
+          marginRem={[0, 2.5]}
+          username={route.params.username}
+          password={route.params.password}
+          pin={route.params.pin}
+        />
         <View style={styles.actions}>
           <MainButton
             label={s.strings.create}
