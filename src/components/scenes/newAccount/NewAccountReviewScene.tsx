@@ -54,7 +54,12 @@ export const NewAccountReviewScene = (props: Props) => {
         >
           {s.strings.warning_message}
         </FormError>
-        <AccountInfo marginRem={[0, 2.5]} />
+        <AccountInfo
+          marginRem={[0, 2.5]}
+          username={route.params.username}
+          password={route.params.password}
+          pin={route.params.pin}
+        />
         <View style={styles.actions}>
           <MainButton
             label={s.strings.create}

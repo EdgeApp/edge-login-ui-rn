@@ -31,15 +31,12 @@ export type Action =
   | { type: 'CREATE_ACCOUNT_FAIL'; data: string /* error */ }
   | { type: 'CREATE_ACCOUNT_SUCCESS'; data: EdgeAccount }
   | {
+      // TODO: remove
       type: 'CREATE_UPDATE_PIN'
       data: {
         pin: string
         error: string | null
       }
-    }
-  | {
-      type: 'CREATE_UPDATE_USERNAME'
-      data: { username: string }
     }
   | { type: 'NAVIGATE'; data: SceneState }
   | { type: 'SET_PREVIOUS_USERS'; data: PreviousUsersState }

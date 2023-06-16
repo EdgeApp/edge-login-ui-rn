@@ -3,10 +3,13 @@ import { Alert, Linking, ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
-import { createUser } from '../../../actions/CreateAccountActions'
+import { loadTouchState } from '../../../actions/TouchActions'
 import { getAppConfig } from '../../../common/appConfig'
 import s from '../../../common/locales/strings'
+import * as Constants from '../../../constants/index'
+import { useImports } from '../../../hooks/useImports'
 import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
+import { enableTouchId, isTouchDisabled } from '../../../keychain'
 import { Branding } from '../../../types/Branding'
 import { useDispatch, useSelector } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
@@ -23,9 +26,10 @@ interface Props extends SceneProps<'newAccountTos'> {
 }
 
 export const NewAccountTosScene = (props: Props) => {
-  const { branding } = props
+  const { branding, route } = props
   const dispatch = useDispatch()
   const theme = useTheme()
+  const imports = useImports()
 
   const styles = getStyles(theme)
   const [termValues, setTermValues] = React.useState<boolean[]>([
@@ -41,9 +45,6 @@ export const NewAccountTosScene = (props: Props) => {
   const createErrorMessage = useSelector(
     state => state.create.createErrorMessage
   )
-  const password = useSelector(state => state.create.password || '')
-  const pin = useSelector(state => state.create.pin)
-  const username = useSelector(state => state.create.username || '')
 
   if (createErrorMessage) {
     Alert.alert(
@@ -58,7 +59,7 @@ export const NewAccountTosScene = (props: Props) => {
   const terms: string[] = [
     sprintf(s.strings.terms_one, appName),
     s.strings.terms_two,
-    sprintf(s.strings.terms_three, appName),
+    ...(isLightAccount ? [] : [sprintf(s.strings.terms_three, appName)]),
     sprintf(s.strings.terms_four, appName)
   ]
 
@@ -77,13 +78,60 @@ export const NewAccountTosScene = (props: Props) => {
 
   const handleNextPress = () => {
     logEvent(`Signup_Terms_Agree_and_Create_User`)
-    dispatch(
-      createUser({
-        username,
-        password,
-        pin
-      })
-    )
+    const { username, password, pin } = route.params
+    if (pin == null) throw new Error('No PIN set')
+    const { context } = imports
+    dispatch({
+      type: 'NAVIGATE',
+      data: {
+        name: 'newAccountWait',
+        params: {
+          title: s.strings.great_job,
+          message: s.strings.hang_tight + '\n' + s.strings.secure_account
+        }
+      }
+    })
+    setTimeout(async () => {
+      try {
+        const abcAccount = await context.createAccount({
+          ...imports.accountOptions,
+          username,
+          password,
+          pin
+        })
+        abcAccount.watch('loggedIn', loggedIn => {
+          if (!loggedIn) dispatch({ type: 'RESET_APP' })
+        })
+        const touchDisabled = await isTouchDisabled(abcAccount)
+        if (!touchDisabled) {
+          await enableTouchId(abcAccount).catch(e => {
+            console.log(e) // Fail quietly
+          })
+        }
+        dispatch({ type: 'CREATE_ACCOUNT_SUCCESS', data: abcAccount })
+        dispatch({
+          type: 'NAVIGATE',
+          data: {
+            name: 'newAccountReview',
+            params: { ...route.params, account: abcAccount }
+          }
+        })
+        logEvent('Signup_Create_User_Success')
+        await abcAccount.dataStore.setItem(
+          Constants.OTP_REMINDER_STORE_NAME,
+          Constants.OTP_REMINDER_KEY_NAME_CREATED_AT,
+          Date.now().toString()
+        )
+        dispatch(loadTouchState())
+      } catch (e: any) {
+        console.log(e)
+        dispatch({ type: 'CREATE_ACCOUNT_FAIL', data: e.message })
+        dispatch({
+          type: 'NAVIGATE',
+          data: { name: 'newAccountUsername', params: {} }
+        })
+      }
+    }, 300)
   }
 
   return (

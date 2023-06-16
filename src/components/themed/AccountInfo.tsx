@@ -14,32 +14,30 @@ import Animated, {
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import s from '../../common/locales/strings'
-import { useSelector } from '../../types/ReduxTypes'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 interface Props {
+  username?: string
+  password?: string
+  pin?: string
   marginRem?: number[] | number
   onOpen?: () => void
 }
 
 interface InfoRow {
   label: string
-  detail: string
+  value: string | undefined
 }
 
 export const AccountInfo = (props: Props) => {
-  const { marginRem, onOpen = () => {} } = props
+  const { username, password, pin, marginRem, onOpen = () => {} } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
   const spacings = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
   const [isExpanded, setIsExpanded] = React.useState(false)
-
-  const username = useSelector(state => state.create.username ?? '')
-  const password = useSelector(state => state.create.password ?? '')
-  const pin = useSelector(state => state.create.pin)
 
   const animatedRef = useAnimatedRef<View>()
   const expanded = useSharedValue(false)
@@ -66,13 +64,12 @@ export const AccountInfo = (props: Props) => {
   })
 
   const infoRows: InfoRow[] = [
-    { detail: s.strings.username, label: username },
-    { detail: s.strings.password, label: password },
-    { detail: s.strings.pin, label: pin }
+    { label: s.strings.username, value: username },
+    { label: s.strings.password, value: password },
+    { label: s.strings.pin, value: pin }
   ]
-
-  const renderInfoRow = (label: string, detail: string, isLastRow: boolean) => (
-    <View style={[styles.row, !isLastRow ? styles.rowMarginBottom : undefined]}>
+  const renderInfoRow = (label: string, value: string | undefined) => (
+    <View style={styles.row}>
       <EdgeText
         style={[styles.text, styles.label]}
         numberOfLines={1}
@@ -85,7 +82,7 @@ export const AccountInfo = (props: Props) => {
         numberOfLines={0}
         disableFontScaling
       >
-        {detail}
+        {value}
       </EdgeText>
     </View>
   )
@@ -124,13 +121,13 @@ export const AccountInfo = (props: Props) => {
         </Animated.View>
       </TouchableWithoutFeedback>
       <Animated.View style={[styles.info, infoStyle]}>
-        {infoRows.map(({ detail, label }: InfoRow, index: number) =>
-          renderInfoRow(detail, label, index + 1 === infoRows.length)
+        {infoRows.map(({ value, label }: InfoRow, index: number) =>
+          renderInfoRow(label, value)
         )}
       </Animated.View>
       <View style={[styles.info, styles.infoHiddenCopy]} ref={animatedRef}>
-        {infoRows.map(({ detail, label }: InfoRow, index: number) =>
-          renderInfoRow(detail, label, index + 1 === infoRows.length)
+        {infoRows.map(({ value, label }: InfoRow, index: number) =>
+          renderInfoRow(label, value)
         )}
       </View>
     </View>
@@ -167,13 +164,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderLeftWidth: theme.thinLineWidth,
     borderRightWidth: theme.thinLineWidth,
     paddingHorizontal: theme.rem(1),
-    paddingBottom: theme.rem(1)
+    paddingBottom: theme.rem(1),
+    marginBottom: theme.rem(0.5)
   },
   row: {
     flexDirection: 'row'
-  },
-  rowMarginBottom: {
-    marginBottom: theme.rem(0.5)
   },
   text: {
     fontSize: theme.rem(0.75)

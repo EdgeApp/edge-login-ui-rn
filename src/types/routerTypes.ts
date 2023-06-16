@@ -11,6 +11,15 @@ interface AccountParams {
 }
 
 /**
+ * Data passed between scenes for the create account flows.
+ */
+export interface CreateFlowParams {
+  username?: string
+  password?: string
+  pin?: string
+}
+
+/**
  * Defines the acceptable route parameters for each scene key.
  */
 export interface LoginParamList {
@@ -18,12 +27,12 @@ export interface LoginParamList {
   changePin: AccountParams
   changeRecovery: ChangeRecoveryParams
   newAccountWelcome: {}
-  newAccountUsername: {}
-  newAccountPassword: {}
-  newAccountPin: {}
-  newAccountTos: {}
-  newAccountWait: WaitParams
-  newAccountReview: AccountParams
+  newAccountUsername: CreateFlowParams
+  newAccountPassword: CreateFlowParams
+  newAccountPin: CreateFlowParams
+  newAccountTos: CreateFlowParams
+  newAccountWait: WaitParams & CreateFlowParams
+  newAccountReview: AccountParams & CreateFlowParams
   landing: {}
   loading: {}
   otpError: OtpErrorParams

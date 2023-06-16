@@ -8,7 +8,7 @@ import s from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useImports } from '../../hooks/useImports'
 import { useScrollToEnd } from '../../hooks/useScrollToEnd'
-import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/analytics'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -21,6 +21,7 @@ import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
 
 interface Props {
+  initPin?: string
   title?: string
   onBack?: () => void
   onSkip?: (() => void) | undefined
@@ -29,6 +30,7 @@ interface Props {
 }
 
 const ChangePinSceneComponent = ({
+  initPin,
   title,
   onBack,
   onSkip,
@@ -38,13 +40,18 @@ const ChangePinSceneComponent = ({
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const pin = useSelector(state => state.create.pin ?? '')
-  const pinErrorMessage = useSelector(
-    state => state.create.pinErrorMessage ?? ''
-  )
+  const [pin, setPin] = React.useState(initPin ?? '')
 
-  const isValidPin = pin.length === MAX_PIN_LENGTH && pinErrorMessage === ''
+  const isValidPin = pin.length === MAX_PIN_LENGTH
+
   const handlePress = useHandler(() => (isValidPin ? onSubmit(pin) : undefined))
+  const handleChangePin = useHandler((newPin: string) => {
+    // Change pin only when input are numbers
+    if ((/^\d+$/.test(newPin) || newPin.length === 0) && newPin.length <= 4) {
+      setPin(newPin)
+    }
+  })
+
   const scrollViewRef = useScrollToEnd(isValidPin)
 
   return (
@@ -53,7 +60,7 @@ const ChangePinSceneComponent = ({
         <EdgeText style={styles.description} numberOfLines={0}>
           {s.strings.pin_desc}
         </EdgeText>
-        <DigitInput />
+        <DigitInput pin={pin} onChangePin={handleChangePin} />
         <View style={styles.actions}>
           <Fade visible={isValidPin}>
             <MainButton
@@ -153,21 +160,22 @@ export const ResecurePinScene = (props: SceneProps<'resecurePin'>) => {
 
 // The scene for new users to set their PIN
 export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
+  const { route } = props
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {
     dispatch(
       maybeRouteComplete({
         type: 'NAVIGATE',
-        data: { name: 'newAccountPassword', params: {} }
+        data: { name: 'newAccountPassword', params: { ...route.params } }
       })
     )
   })
-  const handleSubmit = useHandler(() => {
+  const handleSubmit = useHandler((newPin: string) => {
     logEvent('Signup_PIN_Valid')
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'newAccountTos', params: {} }
+      data: { name: 'newAccountTos', params: { ...route.params, pin: newPin } }
     })
   })
 

@@ -1,15 +1,12 @@
+import { EdgePasswordRules } from 'edge-core-js'
 import * as React from 'react'
 import { Keyboard, KeyboardAvoidingView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import {
-  validateConfirmPassword,
-  validatePassword
-} from '../../actions/CreateAccountActions'
 import s from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useImports } from '../../hooks/useImports'
-import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/analytics'
 import { WarningCard } from '../common/WarningCard'
@@ -25,6 +22,7 @@ import { PasswordStatus } from '../themed/PasswordStatus'
 import { ThemedScene } from '../themed/ThemedScene'
 
 interface Props {
+  initPassword?: string | undefined
   title?: string | undefined
   onBack?: (() => void) | undefined
   onSkip?: (() => void) | undefined
@@ -33,6 +31,7 @@ interface Props {
 }
 
 const ChangePasswordSceneComponent = ({
+  initPassword,
   title,
   onBack,
   onSkip,
@@ -41,25 +40,24 @@ const ChangePasswordSceneComponent = ({
 }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
+  const imports = useImports()
 
-  const dispatch = useDispatch()
   const [focusFirst, setFocusFirst] = React.useState(true)
   const [focusSecond, setFocusSecond] = React.useState(false)
   const [hidePassword, setHidePassword] = React.useState(true)
   const [spinning, setSpinning] = React.useState(false)
   const [isShowError, setIsShowError] = React.useState(false)
+  const [passwordEval, setPasswordEval] = React.useState<
+    EdgePasswordRules | undefined
+  >(undefined)
+  const isRequirementsMet = passwordEval?.passed ?? false
 
-  const hasPasswordStatus = useSelector(state => state.passwordStatus != null)
-  const isRequirementsMet = useSelector(
-    state => state.passwordStatus?.passed ?? false
-  )
-  const password = useSelector(state => state.create.password ?? '')
-  const confirmPassword = useSelector(
-    state => state.create.confirmPassword ?? ''
-  )
-  const confirmPasswordErrorMessage = useSelector(
-    state => state.create.confirmPasswordErrorMessage ?? ''
-  )
+  const [password, setPassword] = React.useState(initPassword ?? '')
+  const [confirmPassword, setConfirmPassword] = React.useState('')
+  const [
+    confirmPasswordErrorMessage,
+    setConfirmPasswordErrorMessage
+  ] = React.useState('')
 
   const handleHidePassword = useHandler(() => {
     setHidePassword(!hidePassword)
@@ -87,19 +85,24 @@ const ChangePasswordSceneComponent = ({
     setFocusSecond(true)
   }
 
-  const validatePasswordDispatch = (password: string) => {
+  const handleValidatePassword = (password: string) => {
+    setPassword(password)
     setIsShowError(false)
-    dispatch(validatePassword(password))
+    setPasswordEval(imports.context.checkPasswordRules(password))
   }
-  const validateConfirmPasswordDispatch = (password: string) => {
+  const handleChangeConfirmPassword = (confirmPassword: string) => {
+    setConfirmPassword(confirmPassword)
     setIsShowError(false)
-    dispatch(validateConfirmPassword(password))
+    if (confirmPassword !== password) {
+      setConfirmPasswordErrorMessage(s.strings.password_mismatch_error)
+      setIsShowError(true)
+    }
   }
 
   const renderInterior = () => {
     return (
       <>
-        {hasPasswordStatus ? (
+        {passwordEval != null ? (
           <PasswordStatus marginRem={[0.5, 0.5, 1.25]} />
         ) : (
           <EdgeText style={styles.description} numberOfLines={4}>
@@ -113,7 +116,7 @@ const ChangePasswordSceneComponent = ({
           label={s.strings.password}
           autoFocus={focusFirst}
           hidePassword={hidePassword}
-          onChangeText={validatePasswordDispatch}
+          onChangeText={handleValidatePassword}
           onSubmitEditing={handleFocusSwitch}
           onHidePassword={handleHidePassword}
           clearIcon
@@ -128,7 +131,7 @@ const ChangePasswordSceneComponent = ({
           label={s.strings.confirm_password}
           autoFocus={focusSecond}
           hidePassword={hidePassword}
-          onChangeText={validateConfirmPasswordDispatch}
+          onChangeText={handleChangeConfirmPassword}
           onSubmitEditing={handlePress}
           onHidePassword={handleHidePassword}
           clearIcon
@@ -276,20 +279,24 @@ export const ResecurePasswordScene = (
 export const NewAccountPasswordScene = (
   props: SceneProps<'newAccountPassword'>
 ) => {
+  const { route } = props
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'newAccountUsername', params: {} }
+      data: { name: 'newAccountUsername', params: { ...route.params } }
     })
   })
 
-  const handleSubmit = useHandler(() => {
+  const handleSubmit = useHandler((newPassword: string) => {
     logEvent('Signup_Password_Valid')
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'newAccountPin', params: {} }
+      data: {
+        name: 'newAccountPin',
+        params: { ...route.params, password: newPassword }
+      }
     })
   })
 

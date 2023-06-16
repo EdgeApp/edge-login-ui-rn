@@ -2,8 +2,6 @@ import * as React from 'react'
 import { TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { validatePin } from '../../actions/CreateAccountActions'
-import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { PinDots } from './PinDots'
@@ -11,12 +9,14 @@ import { PinDots } from './PinDots'
 export const MAX_PIN_LENGTH = 4
 
 interface Props {
+  pin: string
   maxPinLength?: number
   marginRem?: number[] | number
+  onChangePin: (newPin: string) => void
 }
 
 export const DigitInput = (props: Props) => {
-  const { maxPinLength = MAX_PIN_LENGTH, marginRem } = props
+  const { pin, maxPinLength = MAX_PIN_LENGTH, marginRem, onChangePin } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -24,18 +24,8 @@ export const DigitInput = (props: Props) => {
 
   const inputRef = React.useRef<TextInput | null>(null)
 
-  const dispatch = useDispatch()
-  const pin = useSelector(state => state.create.pin)
-
   const handleRefocus = () => {
     if (inputRef.current != null) inputRef.current.focus()
-  }
-
-  const handleUpdate = (pin: string) => {
-    // Change pin only when input are numbers
-    if (/^\d+$/.test(pin) || pin.length === 0) {
-      dispatch(validatePin(pin))
-    }
   }
 
   return (
@@ -47,7 +37,7 @@ export const DigitInput = (props: Props) => {
         <TextInput
           ref={inputRef}
           style={styles.input}
-          onChangeText={handleUpdate}
+          onChangeText={onChangePin}
           maxLength={maxPinLength}
           keyboardType="number-pad"
           value={pin}
