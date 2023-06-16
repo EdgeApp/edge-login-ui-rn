@@ -64,8 +64,12 @@ export const AccountInfo = (props: Props) => {
   })
 
   const infoRows: InfoRow[] = [
-    { label: s.strings.username, value: username },
-    { label: s.strings.password, value: password },
+    ...(username != null
+      ? [{ label: s.strings.username, value: username }]
+      : []),
+    ...(password != null
+      ? [{ label: s.strings.password, value: password }]
+      : []),
     { label: s.strings.pin, value: pin }
   ]
   const renderInfoRow = (label: string, value: string | undefined) => (
