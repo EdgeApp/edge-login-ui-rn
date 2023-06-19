@@ -79,13 +79,15 @@ export async function supportsTouchId(): Promise<boolean> {
 export async function enableTouchId(account: EdgeAccount): Promise<void> {
   const supported = await supportsTouchId()
   const file = await readKeychainFile()
+  const status = getKeychainStatus(file, account)
 
   if (!supported) {
     throw new Error('TouchIdNotSupportedError')
   }
 
   const loginKey = await account.getLoginKey()
-  const location = account.rootLoginId + '_loginId'
+  const location =
+    typeof status === 'string' ? status : account.rootLoginId + '_loginId'
   await nativeMethods.setKeychainString(loginKey, location)
 
   // Update the file:

@@ -1,5 +1,5 @@
 {
   "watch": ["src"],
   "ext": "ts,tsx,json",
-  "exec": "cd ../edge-react-gui && yarn updot edge-login-ui-rn && cd ../edge-login-ui-rn"
+  "exec": "(cd ../edge-react-gui && yarn updot edge-login-ui-rn)"
 }
