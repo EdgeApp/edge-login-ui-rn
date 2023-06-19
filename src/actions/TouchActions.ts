@@ -1,10 +1,7 @@
-import {
-  getSupportedBiometryType,
-  loadFingerprintFile,
-  supportsTouchId
-} from '../keychain'
+import { getSupportedBiometryType, supportsTouchId } from '../keychain'
 import { TouchState } from '../reducers/TouchReducer'
 import { Dispatch } from '../types/ReduxTypes'
+import { readKeychainFile } from '../util/keychainFile'
 
 /**
  * Figures out whether or not biometric logins are available,
@@ -13,13 +10,13 @@ import { Dispatch } from '../types/ReduxTypes'
 export const loadTouchState = () => async (
   dispatch: Dispatch
 ): Promise<TouchState> => {
-  const [{ disabledUsers, enabledUsers }, supported, type] = await Promise.all([
-    loadFingerprintFile(),
+  const [file, supported, type] = await Promise.all([
+    readKeychainFile(),
     supportsTouchId().catch(() => false),
     getSupportedBiometryType()
   ])
 
-  const touchState = { disabledUsers, enabledUsers, supported, type }
+  const touchState = { file, supported, type }
   dispatch({ type: 'SET_TOUCH', data: touchState })
   return touchState
 }

@@ -1,16 +1,15 @@
 import { BiometryType } from '../keychain'
 import { Action } from '../types/ReduxActions'
+import { KeychainInfo } from '../util/keychainFile'
 
 export interface TouchState {
-  readonly disabledUsers: string[]
-  readonly enabledUsers: string[]
+  readonly file: KeychainInfo[]
   readonly supported: boolean
   readonly type: BiometryType
 }
 
 const initialState: TouchState = {
-  disabledUsers: [],
-  enabledUsers: [],
+  file: [],
   supported: false,
   type: false
 }

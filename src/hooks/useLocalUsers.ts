@@ -3,6 +3,7 @@ import * as React from 'react'
 
 import { TouchState } from '../reducers/TouchReducer'
 import { useSelector } from '../types/ReduxTypes'
+import { getKeychainStatus } from '../util/keychainFile'
 import { useImports } from './useImports'
 import { useWatch } from './useWatch'
 
@@ -61,7 +62,7 @@ export function upgradeUsers(
         username != null &&
         keyLoginEnabled &&
         touch.supported &&
-        touch.enabledUsers.includes(username)
+        typeof getKeychainStatus(touch.file, userInfo) === 'string'
     }
   })
 }
