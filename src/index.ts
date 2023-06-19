@@ -10,9 +10,9 @@ export * from './components/publicApi/SecurityAlertsScreen'
 export * from './components/publicApi/types'
 
 export {
-  isTouchEnabled,
-  enableTouchId,
   disableTouchId,
+  enableTouchId,
+  isTouchEnabled,
   getSupportedBiometryType
 } from './keychain'
 

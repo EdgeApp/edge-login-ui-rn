@@ -18,6 +18,7 @@
 ## 2.0.0 (2023-06-01)
 
 - changed: Upgrade to edge-core-js v1.0.0. Earlier versions will not work.
+- changed: Adjust `isTouchEnabled` to take an `EdgeAccount` instead of a username.
 
 ## 1.5.0 (2023-06-12)
 

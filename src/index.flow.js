@@ -116,7 +116,7 @@ declare export class SecurityAlertsScreen
       onComplete: () => void
     }> {}
 
-declare export function isTouchEnabled(username: string): Promise<boolean>
+declare export function isTouchEnabled(account: EdgeAccount): Promise<boolean>
 declare export function enableTouchId(account: EdgeAccount): Promise<void>
 declare export function disableTouchId(account: EdgeAccount): Promise<void>
 declare export function getSupportedBiometryType(): Promise<BiometryType | null>
