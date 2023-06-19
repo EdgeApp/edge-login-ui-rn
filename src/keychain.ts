@@ -3,10 +3,51 @@ import { makeReactNativeDisklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js'
 import { NativeModules, Platform } from 'react-native'
 
-const { AbcCoreJsUi } = NativeModules
 const disklet = makeReactNativeDisklet()
 
 export type BiometryType = 'FaceID' | 'TouchID' | false
+
+interface NativeMethods {
+  supportsTouchId: () => Promise<boolean>
+  getSupportedBiometryType: () => Promise<
+    'FaceID' | 'TouchID' | 'Fingerprint' | null
+  >
+
+  /**
+   * Stores a secret on either iOS and Android.
+   */
+  setKeychainString: (secret: string, name: string) => Promise<void>
+
+  /**
+   * Forgets a secret on either iOS or Android.
+   */
+  clearKeychain: (name: string) => Promise<void>
+
+  /**
+   * Retrieves a stored secret on iOS.
+   * Call `authenticateTouchID` to show a fingerprint prompt separately,
+   * since this requires no authentication.
+   */
+  getKeychainString: (name: string) => Promise<string>
+
+  /**
+   * Performs a biometric authentication on iOS.
+   */
+  authenticateTouchID: (
+    promptString: string,
+    fallbackString: string
+  ) => Promise<boolean>
+
+  /**
+   * Retrieves a stored secret on Android, with authentication.
+   */
+  getKeychainStringWithFingerprint: (
+    name: string,
+    promptString: string
+  ) => Promise<string | undefined>
+}
+
+const nativeMethods: NativeMethods = NativeModules.AbcCoreJsUi
 
 function createKeyWithUsername(username: string) {
   return username + '___key_loginkey'
@@ -41,11 +82,11 @@ export async function isTouchDisabled(account: EdgeAccount): Promise<boolean> {
 }
 
 export async function supportsTouchId(): Promise<boolean> {
-  if (!AbcCoreJsUi) {
-    console.warn('AbcCoreJsUi  is unavailable')
+  if (nativeMethods == null) {
+    console.warn('Native edge-login-ui-rn methods are missing')
     return false
   }
-  const out = await AbcCoreJsUi.supportsTouchId()
+  const out = await nativeMethods.supportsTouchId()
   return !!out
 }
 
@@ -60,7 +101,7 @@ export async function enableTouchId(account: EdgeAccount): Promise<void> {
 
   const loginKey = await account.getLoginKey()
   const loginKeyKey = createKeyWithUsername(username)
-  await AbcCoreJsUi.setKeychainString(loginKey, loginKeyKey)
+  await nativeMethods.setKeychainString(loginKey, loginKeyKey)
 
   // Update the file:
   if (!file.enabledUsers.includes(username)) {
@@ -80,7 +121,7 @@ export async function disableTouchId(account: EdgeAccount): Promise<void> {
   if (!supported || username == null) return // throw new Error('TouchIdNotSupportedError')
 
   const loginKeyKey = createKeyWithUsername(username)
-  await AbcCoreJsUi.clearKeychain(loginKeyKey)
+  await nativeMethods.clearKeychain(loginKeyKey)
 
   // Update the file:
   if (!file.disabledUsers.includes(username)) {
@@ -94,7 +135,7 @@ export async function disableTouchId(account: EdgeAccount): Promise<void> {
 
 export async function getSupportedBiometryType(): Promise<BiometryType> {
   try {
-    const biometryType = await AbcCoreJsUi.getSupportedBiometryType()
+    const biometryType = await nativeMethods.getSupportedBiometryType()
     switch (biometryType) {
       // Keep these as-is:
       case 'FaceID':
@@ -136,24 +177,28 @@ export async function getLoginKey(
 
   const loginKeyKey = createKeyWithUsername(username)
   if (Platform.OS === 'ios') {
-    const loginKey = await AbcCoreJsUi.getKeychainString(loginKeyKey)
+    const loginKey = await nativeMethods.getKeychainString(loginKeyKey)
     if (typeof loginKey !== 'string' || loginKey.length <= 10) {
       console.log('No valid loginKey for TouchID')
       return
     }
 
     console.log('loginKey valid. Launching TouchID modal...')
-    const success = await AbcCoreJsUi.authenticateTouchID(
+    const success = await nativeMethods.authenticateTouchID(
       promptString,
       fallbackString
     )
     if (success) return loginKey
     console.log('Failed to authenticate TouchID')
   } else if (Platform.OS === 'android') {
-    return AbcCoreJsUi.getKeychainStringWithFingerprint(
-      loginKeyKey,
-      promptString
-    ).catch((error: unknown) => console.log(error)) // showError?
+    try {
+      return await nativeMethods.getKeychainStringWithFingerprint(
+        loginKeyKey,
+        promptString
+      )
+    } catch (error) {
+      console.log(error) // showError?
+    }
   }
 }
 
