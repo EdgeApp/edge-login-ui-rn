@@ -8,4 +8,4 @@ if [ ! -e "./$tool" ]; then
   curl -L -o "./$tool" "$url"
 fi
 
-java -jar "./$tool" --replace ./android/src/main/java/co/airbitz/AbcCoreJsUi/*.java
+java -jar "./$tool" --replace ./src/main/java/co/airbitz/AbcCoreJsUi/*.java

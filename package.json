@@ -26,7 +26,7 @@
     "/README.md"
   ],
   "scripts": {
-    "dev": "nodemon",
+    "fix-android": "(cd android; ./format-java.sh)",
     "fix": "npm run lint -- --fix && yarn-deduplicate",
     "flow": "flow",
     "lint": "eslint .",
@@ -83,7 +83,6 @@
     "flow-bin": "^0.84.0",
     "husky": "^7.0.0",
     "lint-staged": "^10.5.3",
-    "nodemon": "^2.0.20",
     "prettier": "^2.2.0",
     "react-native-email-link": "^1.14.5",
     "react-native-gesture-handler": "^2.5.0",

@@ -1,10 +1,8 @@
 # Build output:
-*.jar
-/assets
-/lib
+/android/*.jar
+/lib/
 
 # Package managers:
-lerna-debug.log
 node_modules/
 npm-debug.log
 package-lock.json
