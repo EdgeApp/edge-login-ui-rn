@@ -10,7 +10,11 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
-import { SceneProps } from '../../../types/routerTypes'
+import {
+  AccountParams,
+  CreateFlowParams,
+  SceneProps
+} from '../../../types/routerTypes'
 import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -21,6 +25,10 @@ import { ThemedScene } from '../../themed/ThemedScene'
 const AVAILABILITY_CHECK_DELAY_MS = 400
 
 type Timeout = ReturnType<typeof setTimeout>
+
+export interface AccountUsernameParams
+  extends AccountParams,
+    CreateFlowParams {}
 
 interface Props {
   branding: Branding
@@ -247,6 +255,51 @@ export const NewAccountUsernameScene = (props: NewAccountUsernameProps) => {
   return (
     <ChangeUsernameComponent
       initUsername={route.params.username}
+      branding={branding}
+      onBack={handleBack}
+      onNext={handleNext}
+    />
+  )
+}
+
+/**
+ * The change username scene for (light) accounts.
+ */
+interface UpgradeUsernameProps extends SceneProps<'upgradeUsername'> {
+  branding: Branding
+}
+export const UpgradeUsernameScene = (props: UpgradeUsernameProps) => {
+  const { branding, route } = props
+  const dispatch = useDispatch()
+
+  const handleBack = useHandler(() => {
+    dispatch(
+      maybeRouteComplete({
+        type: 'NAVIGATE',
+        data: { name: 'newAccountWelcome', params: {} }
+      })
+    )
+  })
+
+  const handleNext = useHandler(async (newUsername: string) => {
+    const currentPin = await route.params.account.getPin()
+    logEvent(`Signup_Username_Available`)
+    dispatch({
+      type: 'NAVIGATE',
+      data: {
+        name: 'upgradePassword',
+        params: {
+          ...route.params,
+          username: newUsername,
+          pin: currentPin
+        }
+      }
+    })
+  })
+
+  return (
+    <ChangeUsernameComponent
+      initUsername=""
       branding={branding}
       onBack={handleBack}
       onNext={handleNext}

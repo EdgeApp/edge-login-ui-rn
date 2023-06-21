@@ -1,3 +1,4 @@
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, Linking, ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -7,12 +8,17 @@ import { loadTouchState } from '../../../actions/TouchActions'
 import { getAppConfig } from '../../../common/appConfig'
 import s from '../../../common/locales/strings'
 import * as Constants from '../../../constants/index'
+import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
 import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
-import { enableTouchId, isTouchDisabled } from '../../../keychain'
+import { enableTouchId } from '../../../keychain'
 import { Branding } from '../../../types/Branding'
-import { useDispatch } from '../../../types/ReduxTypes'
-import { SceneProps } from '../../../types/routerTypes'
+import { Dispatch, useDispatch } from '../../../types/ReduxTypes'
+import {
+  AccountParams,
+  CreateFlowParams,
+  SceneProps
+} from '../../../types/routerTypes'
 import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { Checkbox } from '../../themed/Checkbox'
@@ -21,22 +27,24 @@ import { Fade } from '../../themed/Fade'
 import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-interface Props extends SceneProps<'newAccountTos'> {
+export interface AccountTosParams extends AccountParams, CreateFlowParams {}
+
+interface Props {
   branding: Branding
+  hidePasswordTerms: boolean
+  onBack: () => void
+  onNext: () => Promise<void>
 }
 
-export const NewAccountTosScene = (props: Props) => {
-  const { branding, route } = props
+const TosComponent = (props: Props) => {
+  const { branding, hidePasswordTerms, onBack, onNext } = props
   const dispatch = useDispatch()
   const theme = useTheme()
-  const imports = useImports()
 
   const styles = getStyles(theme)
 
-  const isLightAccount = route.params.username == null
-
   const [termValues, setTermValues] = React.useState<boolean[]>(
-    isLightAccount ? [false, false, false] : [false, false, false, false]
+    hidePasswordTerms ? [false, false, false] : [false, false, false, false]
   )
   const showNext = !termValues.includes(false)
   const scrollViewRef = useScrollToEnd(showNext)
@@ -46,61 +54,17 @@ export const NewAccountTosScene = (props: Props) => {
   const terms: string[] = [
     sprintf(s.strings.terms_one, appName),
     s.strings.terms_two,
-    sprintf(s.strings.terms_three, appName),
+    ...(hidePasswordTerms ? [] : [sprintf(s.strings.terms_three, appName)]),
     sprintf(s.strings.terms_four, appName)
   ]
 
-  const handleBack = (): void => {
-    dispatch({
-      type: 'NAVIGATE',
-      data: { name: 'newAccountPin', params: {} }
-    })
-  }
-
-  const handleStatusChange = (index: number, value: boolean) => {
+  const handleStatusChange = useHandler((index: number, value: boolean) => {
     const newTermValues = [...termValues]
     newTermValues[index] = value
     setTermValues(newTermValues)
-  }
+  })
 
-  const handleCreateAccount = async () => {
-    const { username, password, pin } = route.params
-    const { context } = imports
-    const account = await context.createAccount({
-      ...imports.accountOptions,
-      username,
-      password,
-      pin
-    })
-    account.watch('loggedIn', loggedIn => {
-      if (!loggedIn) dispatch({ type: 'RESET_APP' })
-    })
-    const touchDisabled = await isTouchDisabled(account)
-    if (!touchDisabled) {
-      await enableTouchId(account).catch(e => {
-        console.log(e) // Fail quietly
-      })
-    }
-    dispatch({ type: 'CREATE_ACCOUNT_SUCCESS', data: account })
-    dispatch({
-      type: 'NAVIGATE',
-      data: {
-        name: 'newAccountReview',
-        params: { ...route.params, account: account }
-      }
-    })
-    logEvent('Signup_Create_User_Success')
-    await account.dataStore.setItem(
-      Constants.OTP_REMINDER_STORE_NAME,
-      Constants.OTP_REMINDER_KEY_NAME_CREATED_AT,
-      Date.now().toString()
-    )
-    dispatch(loadTouchState())
-  }
-
-  const handleNextPress = () => {
-    logEvent(`Signup_Terms_Agree_and_Create_User`)
-    if (route.params.pin == null) throw new Error('No PIN set')
+  const handleNextPress = useHandler(() => {
     dispatch({
       type: 'NAVIGATE',
       data: {
@@ -112,7 +76,7 @@ export const NewAccountTosScene = (props: Props) => {
       }
     })
     setTimeout(() => {
-      handleCreateAccount().catch((e: any) => {
+      onNext().catch((e: any) => {
         console.error(e)
         Alert.alert(
           s.strings.create_account_error_title,
@@ -125,10 +89,10 @@ export const NewAccountTosScene = (props: Props) => {
         })
       })
     }, 300)
-  }
+  })
 
   return (
-    <ThemedScene onBack={handleBack} title={s.strings.account_confirmation}>
+    <ThemedScene onBack={onBack} title={s.strings.account_confirmation}>
       <ScrollView ref={scrollViewRef} contentContainerStyle={styles.content}>
         <EdgeText
           style={styles.subtitle}
@@ -203,3 +167,123 @@ const getStyles = cacheStyles((theme: Theme) => ({
     minHeight: theme.rem(6)
   }
 }))
+
+const setTouchOtp = async (account: EdgeAccount, dispatch: Dispatch) => {
+  await enableTouchId(account).catch(e => {
+    console.log(e) // Fail quietly
+  })
+  await account.dataStore.setItem(
+    Constants.OTP_REMINDER_STORE_NAME,
+    Constants.OTP_REMINDER_KEY_NAME_CREATED_AT,
+    Date.now().toString()
+  )
+  dispatch(loadTouchState())
+}
+
+/**
+ * Terms of Service scene for new regular or light accounts
+ */
+interface NewAccountTosProps extends SceneProps<'newAccountTos'> {
+  branding: Branding
+}
+export const NewAccountTosScene = (props: NewAccountTosProps) => {
+  const { route, branding } = props
+  const imports = useImports()
+  const { context, accountOptions } = imports
+  const dispatch = useDispatch()
+
+  const handleBack = useHandler((): void => {
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'newAccountPin', params: { ...route.params } }
+    })
+  })
+
+  const handleNext = useHandler(async () => {
+    logEvent(`Signup_Terms_Agree_and_Create_User`)
+    const { username, password, pin } = route.params
+
+    const account = await context.createAccount({
+      ...accountOptions,
+      username,
+      password,
+      pin
+    })
+    account.watch('loggedIn', loggedIn => {
+      if (!loggedIn) dispatch({ type: 'RESET_APP' })
+    })
+    await setTouchOtp(account, dispatch)
+
+    dispatch({
+      type: 'NAVIGATE',
+      data: {
+        name: 'newAccountReview',
+        params: {
+          ...route.params,
+          account
+        }
+      }
+    })
+
+    logEvent('Signup_Create_User_Success')
+  })
+
+  return (
+    <TosComponent
+      hidePasswordTerms={route.params.username == null}
+      branding={branding}
+      onBack={handleBack}
+      onNext={handleNext}
+    />
+  )
+}
+
+/**
+ * Terms of Service scene for upgrading existing (light) accounts
+ */
+interface UpgradeTosProps extends SceneProps<'upgradeTos'> {
+  branding: Branding
+}
+export const UpgradeTosScene = (props: UpgradeTosProps) => {
+  const { route, branding } = props
+  const dispatch = useDispatch()
+
+  const handleBack = useHandler((): void => {
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'upgradeUsername', params: { ...route.params } }
+    })
+  })
+
+  const handleNext = useHandler(async () => {
+    logEvent(`Signup_Terms_Agree_and_Back_Up_User`)
+    const { account, username, password } = route.params
+
+    if (username == null || password == null)
+      throw new Error('Failed to update account, missing username or password')
+    await account.changeUsername({
+      username,
+      password
+    })
+
+    dispatch({
+      type: 'NAVIGATE',
+      data: {
+        name: 'upgradeAccountReview',
+        params: {
+          ...route.params
+        }
+      }
+    })
+    logEvent(`Signup_Back_Up_User_Success`)
+  })
+
+  return (
+    <TosComponent
+      branding={branding}
+      hidePasswordTerms={false}
+      onBack={handleBack}
+      onNext={handleNext}
+    />
+  )
+}
