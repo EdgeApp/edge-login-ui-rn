@@ -35,10 +35,7 @@ function mergeStrings(
 // Locale formats can be in the form 'en', 'en-US', 'en_US', or 'enUS'
 export function selectLocale(locale: string = 'en'): boolean {
   // Break up local into language and region
-  const normalizedLocale = locale
-    .replace('-', '')
-    .replace('-', '')
-    .replace('_', '')
+  const normalizedLocale = locale.replace('-', '').replace('_', '')
 
   let found = false
   const lang = normalizedLocale.slice(0, 2)
