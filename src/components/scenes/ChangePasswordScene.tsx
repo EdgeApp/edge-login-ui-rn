@@ -7,7 +7,11 @@ import s from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useImports } from '../../hooks/useImports'
 import { useDispatch } from '../../types/ReduxTypes'
-import { SceneProps } from '../../types/routerTypes'
+import {
+  AccountParams,
+  CreateFlowParams,
+  SceneProps
+} from '../../types/routerTypes'
 import { logEvent } from '../../util/analytics'
 import { WarningCard } from '../common/WarningCard'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -20,6 +24,10 @@ import { MainButton } from '../themed/MainButton'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { PasswordStatus } from '../themed/PasswordStatus'
 import { ThemedScene } from '../themed/ThemedScene'
+
+export interface AccountPasswordParams
+  extends AccountParams,
+    CreateFlowParams {}
 
 interface Props {
   initPassword?: string | undefined
@@ -290,6 +298,39 @@ export const NewAccountPasswordScene = (
       type: 'NAVIGATE',
       data: {
         name: 'newAccountPin',
+        params: { ...route.params, password: newPassword }
+      }
+    })
+  })
+
+  return (
+    <ChangePasswordSceneComponent
+      onBack={handleBack}
+      onSubmit={handleSubmit}
+      title={s.strings.choose_title_password}
+      mainButtonLabel={s.strings.next_label}
+    />
+  )
+}
+
+// The scene for light account users to create a password for the upgrade/backup
+export const UpgradePasswordScene = (props: SceneProps<'upgradePassword'>) => {
+  const { route } = props
+  const dispatch = useDispatch()
+
+  const handleBack = useHandler(() => {
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'upgradeUsername', params: { ...route.params } }
+    })
+  })
+
+  const handleSubmit = useHandler(async (newPassword: string) => {
+    logEvent('Signup_Back_Up_Password_Valid')
+    dispatch({
+      type: 'NAVIGATE',
+      data: {
+        name: 'upgradeTos',
         params: { ...route.params, password: newPassword }
       }
     })

@@ -1,8 +1,11 @@
 import { EdgeAccount } from 'edge-core-js'
 
+import { AccountPasswordParams } from '../components/scenes/ChangePasswordScene'
 import { ChangeRecoveryParams } from '../components/scenes/existingAccout/ChangeRecoveryScene'
 import { OtpRepairParams } from '../components/scenes/existingAccout/OtpRepairScene'
-import { NewAcountReviewParams } from '../components/scenes/newAccount/NewAccountReviewScene'
+import { AccountReviewParams } from '../components/scenes/newAccount/NewAccountReviewScene'
+import { AccountTosParams } from '../components/scenes/newAccount/NewAccountTosScene'
+import { AccountUsernameParams } from '../components/scenes/newAccount/NewAccountUsernameScene'
 import { OtpErrorParams } from '../components/scenes/OtpErrorScene'
 import { PasswordLoginParams } from '../components/scenes/PasswordLoginScene'
 import { PinLoginParams } from '../components/scenes/PinLoginScene'
@@ -35,7 +38,11 @@ export interface LoginParamList {
   newAccountPin: CreateFlowParams
   newAccountTos: CreateFlowParams
   newAccountWait: WaitParams
-  newAccountReview: NewAcountReviewParams
+  newAccountReview: AccountReviewParams
+  upgradeUsername: AccountUsernameParams
+  upgradePassword: AccountPasswordParams
+  upgradeTos: AccountTosParams
+  upgradeAccountReview: AccountReviewParams
   landing: {}
   loading: {}
   otpError: OtpErrorParams
