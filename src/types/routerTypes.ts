@@ -33,6 +33,10 @@ export interface LoginParamList {
   newAccountTos: CreateFlowParams
   newAccountWait: WaitParams & CreateFlowParams
   newAccountReview: AccountParams & CreateFlowParams
+  upgradeUsername: AccountParams & CreateFlowParams
+  upgradePassword: AccountParams & CreateFlowParams
+  upgradeTos: AccountParams & CreateFlowParams
+  upgradeAccountReview: AccountParams & CreateFlowParams
   landing: {}
   loading: {}
   otpError: OtpErrorParams

@@ -7,7 +7,8 @@ import { MaybeProvideLoginUi } from '../publicApi/LoginUiProvider'
 import {
   ChangePasswordScene,
   NewAccountPasswordScene,
-  ResecurePasswordScene
+  ResecurePasswordScene,
+  UpgradePasswordScene
 } from '../scenes/ChangePasswordScene'
 import {
   ChangePinScene,
@@ -19,9 +20,18 @@ import { OtpRepairScene } from '../scenes/existingAccout/OtpRepairScene'
 import { SecurityAlertsScene } from '../scenes/existingAccout/SecurityAlertsScene'
 import { LandingScene } from '../scenes/LandingScene'
 import { LoadingScene } from '../scenes/LoadingScene'
-import { NewAccountReviewScene } from '../scenes/newAccount/NewAccountReviewScene'
-import { NewAccountTosScene } from '../scenes/newAccount/NewAccountTosScene'
-import { NewAccountUsernameScene } from '../scenes/newAccount/NewAccountUsernameScene'
+import {
+  NewAccountReviewScene,
+  UpgradeReviewScene
+} from '../scenes/newAccount/NewAccountReviewScene'
+import {
+  NewAccountTosScene,
+  UpgradeTosScene
+} from '../scenes/newAccount/NewAccountTosScene'
+import {
+  NewAccountUsernameScene,
+  UpgradeUsernameScene
+} from '../scenes/newAccount/NewAccountUsernameScene'
 import { NewAccountWelcomeScene } from '../scenes/newAccount/NewAccountWelcomeScene'
 import { OtpErrorScene } from '../scenes/OtpErrorScene'
 import { PasswordLoginScene } from '../scenes/PasswordLoginScene'
@@ -83,6 +93,14 @@ export function Router(props: Props) {
         return <ResecurePinScene route={route} />
       case 'securityAlert':
         return <SecurityAlertsScene route={route} />
+      case 'upgradeUsername':
+        return <UpgradeUsernameScene branding={props.branding} route={route} />
+      case 'upgradePassword':
+        return <UpgradePasswordScene route={route} />
+      case 'upgradeTos':
+        return <UpgradeTosScene branding={props.branding} route={route} />
+      case 'upgradeAccountReview':
+        return <UpgradeReviewScene branding={props.branding} route={route} />
     }
   }
 

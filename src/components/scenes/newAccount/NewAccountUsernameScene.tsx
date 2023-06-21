@@ -251,3 +251,48 @@ export const NewAccountUsernameScene = (props: NewAccountUsernameProps) => {
     />
   )
 }
+
+/**
+ * The change username scene for (light) accounts.
+ */
+interface UpgradeUsernameProps extends SceneProps<'upgradeUsername'> {
+  branding: Branding
+}
+export const UpgradeUsernameScene = (props: UpgradeUsernameProps) => {
+  const { branding, route } = props
+  const dispatch = useDispatch()
+
+  const handleBack = useHandler(() => {
+    dispatch(
+      maybeRouteComplete({
+        type: 'NAVIGATE',
+        data: { name: 'newAccountWelcome', params: {} }
+      })
+    )
+  })
+
+  const handleNext = useHandler(async (newUsername: string) => {
+    const currentPin = await route.params.account.getPin()
+    logEvent(`Signup_Username_Available`)
+    dispatch({
+      type: 'NAVIGATE',
+      data: {
+        name: 'upgradePassword',
+        params: {
+          ...route.params,
+          username: newUsername,
+          pin: currentPin
+        }
+      }
+    })
+  })
+
+  return (
+    <ChangeUsernameComponent
+      initUsername=""
+      branding={branding}
+      onBack={handleBack}
+      onNext={handleNext}
+    />
+  )
+}

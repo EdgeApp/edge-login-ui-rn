@@ -3,6 +3,7 @@ export type InitialRouteName =
   | 'login-password'
   | 'new-account'
   | 'new-light-account'
+  | 'upgrade-light-account'
 
 /**
  * Subset of AppConfig from https://github.com/EdgeApp/edge-react-gui/blob/develop/src/types/types.ts

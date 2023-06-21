@@ -309,3 +309,36 @@ export const NewAccountPasswordScene = (
     />
   )
 }
+
+// The scene for light account users to create a password for the upgrade/backup
+export const UpgradePasswordScene = (props: SceneProps<'upgradePassword'>) => {
+  const { route } = props
+  const dispatch = useDispatch()
+
+  const handleBack = useHandler(() => {
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'upgradeUsername', params: { ...route.params } }
+    })
+  })
+
+  const handleSubmit = useHandler(async (newPassword: string) => {
+    logEvent('Signup_Password_Valid')
+    dispatch({
+      type: 'NAVIGATE',
+      data: {
+        name: 'upgradeTos',
+        params: { ...route.params, password: newPassword }
+      }
+    })
+  })
+
+  return (
+    <ChangePasswordSceneComponent
+      onBack={handleBack}
+      onSubmit={handleSubmit}
+      title={s.strings.choose_title_password}
+      mainButtonLabel={s.strings.next_label}
+    />
+  )
+}

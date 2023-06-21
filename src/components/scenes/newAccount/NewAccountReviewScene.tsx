@@ -4,12 +4,12 @@ import { cacheStyles } from 'react-native-patina'
 
 import { checkAndRequestNotifications } from '../../../actions/LoginInitActions'
 import s from '../../../common/locales/strings'
+import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
-import { SceneProps } from '../../../types/routerTypes'
+import { CreateFlowParams, SceneProps } from '../../../types/routerTypes'
 import { logEvent } from '../../../util/analytics'
-import { Airship } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { AccountInfo } from '../../themed/AccountInfo'
 import { EdgeText } from '../../themed/EdgeText'
@@ -17,28 +17,14 @@ import { FormError } from '../../themed/FormError'
 import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-interface Props extends SceneProps<'newAccountReview'> {
-  branding: Branding
+interface Props extends CreateFlowParams {
+  onNext: () => void
 }
 
-export const NewAccountReviewScene = (props: Props) => {
-  const { branding, route } = props
-  const { account } = route.params
-  const dispatch = useDispatch()
-  const { onLogin } = useImports()
+const AccountReviewComponent = (props: Props) => {
+  const { username, password, pin, onNext } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-
-  const handleNext = () => {
-    logEvent(`Signup_Review_Done`)
-
-    Airship.clear()
-    if (onLogin != null) onLogin(account)
-
-    dispatch(checkAndRequestNotifications(branding)).catch(error =>
-      console.log(error)
-    )
-  }
 
   return (
     <ThemedScene title={s.strings.review}>
@@ -56,15 +42,15 @@ export const NewAccountReviewScene = (props: Props) => {
         </FormError>
         <AccountInfo
           marginRem={[0, 2.5]}
-          username={route.params.username}
-          password={route.params.password}
-          pin={route.params.pin}
+          username={username}
+          password={password}
+          pin={pin}
         />
         <View style={styles.actions}>
           <MainButton
             label={s.strings.create}
             type="secondary"
-            onPress={handleNext}
+            onPress={onNext}
           />
         </View>
       </ScrollView>
@@ -89,3 +75,53 @@ const getStyles = cacheStyles((theme: Theme) => ({
     minHeight: theme.rem(3)
   }
 }))
+
+/**
+ * The review scene for new accounts.
+ */
+interface NewAccountReviewProps extends SceneProps<'newAccountReview'> {
+  branding: Branding
+}
+
+export const NewAccountReviewScene = (props: NewAccountReviewProps) => {
+  const { branding, route } = props
+  const dispatch = useDispatch()
+  const { onLogin } = useImports()
+
+  const handleNext = useHandler(() => {
+    logEvent(`Signup_Review_Done`)
+
+    if (onLogin != null) onLogin(route.params.account)
+
+    dispatch(checkAndRequestNotifications(branding)).catch(error =>
+      console.log(error)
+    )
+  })
+
+  return <AccountReviewComponent {...route.params} onNext={handleNext} />
+}
+
+/**
+ * The review scene for upgrading (light) accounts.
+ */
+interface UpgradeReviewProps extends SceneProps<'upgradeAccountReview'> {
+  branding: Branding
+}
+
+export const UpgradeReviewScene = (props: UpgradeReviewProps) => {
+  const { branding, route } = props
+  const dispatch = useDispatch()
+  const { onComplete } = useImports()
+
+  const handleNext = useHandler(() => {
+    logEvent(`Signup_Review_Done`)
+
+    if (onComplete != null) onComplete()
+
+    dispatch(checkAndRequestNotifications(branding)).catch(error =>
+      console.log(error)
+    )
+  })
+
+  return <AccountReviewComponent {...route.params} onNext={handleNext} />
+}
