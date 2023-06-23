@@ -119,14 +119,14 @@ export const NewAccountUsernameScene = (props: Props) => {
 
           // Tag this fetch with a "counter ID" and sync with the outer context
           fetchCounter.current++
-          const localCounter = fetchCounter
+          const localCounter = fetchCounter.current
 
           const isAvailable = await fetchIsAvailable(text)
           if (!mounted.current) return
 
           // This fetch is stale. Another fetch began before this one had a
           // chance to finish. Discard this result.
-          if (localCounter !== fetchCounter) return
+          if (localCounter !== fetchCounter.current) return
 
           // If the counter from the outer context matches this local counter,
           // it means no new fetches began during the execution of
