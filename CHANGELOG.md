@@ -1,5 +1,11 @@
 # edge-login-ui-rn
 
+## 2.3.0 (2023-06-26)
+
+- changed: Android gradle build file updated
+- changed: Upgrade to edge-core-js v1.3.0.
+- fixed: Sometimes the username availability check mis-reports availability status
+
 ## 2.2.0 (2023-06-09)
 
 - added: Add an `appconfig` prop to `LoginScreen`.
