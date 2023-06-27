@@ -1,6 +1,6 @@
-import basex, { BaseConverter } from 'base-x'
+import basex from 'base-x'
 
-const base58Codec: BaseConverter = basex(
+const base58Codec = basex(
   '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 )
 

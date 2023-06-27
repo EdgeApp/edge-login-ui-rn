@@ -40,6 +40,7 @@
     "sha3": "2.1.4"
   },
   "dependencies": {
+    "base-x": "^4.0.0",
     "cleaners": "^0.3.12",
     "date-fns": "^2.23.0",
     "qrcode-generator": "^1.4.4",
