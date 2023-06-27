@@ -5,6 +5,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { sprintf } from 'sprintf-js'
 
 import s from '../../common/locales/strings'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -64,9 +65,8 @@ export const SecurityAlertsModal = (props: Props) => {
         <Text style={styles.rowText}>
           <Text style={styles.bold}>
             {isReset
-              ? s.strings.alert_modal_reset
-              : s.strings.alert_modal_voucher}
-            {username}
+              ? sprintf(s.strings.alert_modal_reset_s, username)
+              : sprintf(s.strings.alert_modal_voucher_s, username)}
           </Text>
           {s.strings.alert_modal_action}
         </Text>
