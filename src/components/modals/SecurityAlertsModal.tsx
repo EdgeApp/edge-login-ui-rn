@@ -5,10 +5,12 @@ import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { sprintf } from 'sprintf-js'
 
 import s from '../../common/locales/strings'
+import { useHandler } from '../../hooks/useHandler'
 import { Theme, useTheme } from '../services/ThemeContext'
-import { ModalFooter, ModalScrollArea, ModalTitle } from '../themed/ModalParts'
+import { ModalScrollArea, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
@@ -20,6 +22,8 @@ interface Props {
 export const SecurityAlertsModal = (props: Props) => {
   const { bridge, messages, selectUser } = props
   const theme = useTheme()
+
+  const handleCancel = useHandler(() => bridge.resolve(undefined))
 
   const renderList = () => {
     const out: React.ReactNode[] = []
@@ -64,9 +68,8 @@ export const SecurityAlertsModal = (props: Props) => {
         <Text style={styles.rowText}>
           <Text style={styles.bold}>
             {isReset
-              ? s.strings.alert_modal_reset
-              : s.strings.alert_modal_voucher}
-            {username}
+              ? sprintf(s.strings.alert_modal_reset_s, username)
+              : sprintf(s.strings.alert_modal_voucher_s, username)}
           </Text>
           {s.strings.alert_modal_action}
         </Text>
@@ -80,16 +83,10 @@ export const SecurityAlertsModal = (props: Props) => {
     )
   }
 
-  const handleCancel = () => bridge.resolve(undefined)
   return (
     <ThemedModal bridge={bridge} warning onCancel={handleCancel}>
-      <ModalScrollArea onCancel={handleCancel}>
-        <ModalTitle>
-          {s.strings.security_is_our_priority_modal_title}
-        </ModalTitle>
-        {renderList()}
-        <ModalFooter fadeOut onPress={() => bridge.resolve(undefined)} />
-      </ModalScrollArea>
+      <ModalTitle>{s.strings.security_is_our_priority_modal_title}</ModalTitle>
+      <ModalScrollArea onCancel={handleCancel}>{renderList()}</ModalScrollArea>
     </ThemedModal>
   )
 }
