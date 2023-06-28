@@ -129,8 +129,10 @@ export const ChangeUsernameComponent = (props: Props) => {
           // Update UI elements
           setIsFetchingAvailability(false)
           setTimerId(undefined)
-          if (isAvailable) setAvailableText(s.strings.username_available)
-          else setErrorText(s.strings.username_exists_error)
+          if (isAvailable) {
+            setErrorText(undefined)
+            setAvailableText(s.strings.username_available)
+          } else setErrorText(s.strings.username_exists_error)
         }, AVAILABILITY_CHECK_DELAY_MS)
         setTimerId(newTimerId)
       }
