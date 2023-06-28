@@ -116,6 +116,7 @@ export function ModalScrollArea(props: {
         contentContainerStyle={scrollPadding}
         pagingEnabled
         style={styles.scrollViewContainer}
+        keyboardShouldPersistTaps="handled"
       >
         {children}
       </ScrollView>

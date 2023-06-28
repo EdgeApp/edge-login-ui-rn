@@ -98,8 +98,8 @@ export function TextInputModal(props: Props) {
   const handleCancel = () => bridge.resolve(undefined)
   return (
     <ThemedModal warning={warning} bridge={bridge} onCancel={handleCancel}>
+      {title == null ? null : <ModalTitle>{title}</ModalTitle>}
       <ModalScrollArea onCancel={handleCancel}>
-        {title == null ? null : <ModalTitle>{title}</ModalTitle>}
         {message == null ? null : <ModalMessage>{message}</ModalMessage>}
         {warningMessage == null ? null : (
           <Alert
