@@ -4,6 +4,7 @@ import { AirshipBridge, AirshipModal } from 'react-native-airship'
 
 import { fixSides } from '../../util/sides'
 import { useTheme } from '../services/ThemeContext'
+import { ModalFooter } from './ModalParts'
 
 interface Props<T> {
   bridge: AirshipBridge<T>
@@ -58,6 +59,7 @@ export function ThemedModal<T>(props: Props<T>) {
       underlay={underlay}
     >
       {children}
+      <ModalFooter onPress={onCancel} />
     </AirshipModal>
   )
 }

@@ -1,17 +1,13 @@
 import * as React from 'react'
-import {
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle
-} from 'react-native'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
-import { GradientFadeOut } from '../modals/GradientFadeout'
 import { Theme, useTheme } from '../services/ThemeContext'
+
+const SCROLL_BOTTOM_GRADIENT_REM = 2.5
 
 interface ModalTitleProps {
   children: React.ReactNode
@@ -21,7 +17,9 @@ interface ModalTitleProps {
 }
 interface ModalFooterProps {
   onPress: () => void
-  fadeOut?: boolean
+}
+interface ModalScrollAreaProps {
+  children: React.ReactNode
 }
 
 export function ModalTitle(props: ModalTitleProps) {
@@ -60,79 +58,95 @@ export function ModalMessage(props: {
     </Text>
   )
 }
+
 /**
- * Renders a close button and an optional fade-out gradient.
- *
- * If you use the fade-out gradient, your scroll element's
- * `contentContainerStyle` needs `theme.rem(ModalFooter.bottomRem)`
- * worth of bottom padding, so the close button does not cover your content.
+ * Renders a close button.
  */
 export function ModalFooter(props: ModalFooterProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { fadeOut } = props
-
-  const footerFadeContainer =
-    fadeOut === true ? styles.footerFadeContainer : undefined
-  const footerFade = fadeOut === true ? styles.footerFade : undefined
-
   return (
-    <View style={footerFadeContainer}>
-      <View style={footerFade}>
-        <TouchableOpacity
-          onPress={props.onPress}
-          style={styles.closeIcon}
-          accessibilityHint="Close Modal"
-        >
-          <AntDesignIcon
-            name="close"
-            size={theme.rem(1.25)}
-            color={theme.iconTappable}
-          />
-        </TouchableOpacity>
-      </View>
-      {fadeOut !== true ? null : <GradientFadeOut />}
-    </View>
+    <TouchableOpacity
+      onPress={props.onPress}
+      style={styles.closeIcon}
+      accessibilityHint="Close Modal"
+    >
+      <AntDesignIcon
+        name="close"
+        size={theme.rem(1.25)}
+        color={theme.iconTappable}
+      />
+    </TouchableOpacity>
   )
 }
-ModalFooter.bottomRem = 2.5
 
-export function ModalScrollArea(props: {
-  children: React.ReactNode
-  onCancel: () => void
-}) {
-  const { children, onCancel } = props
+/**
+ * Renders a scrollable area, with a bottom gradient.
+ */
+export function ModalScrollArea(props: ModalScrollAreaProps) {
+  const { children } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const scrollPadding = React.useMemo<ViewStyle>(() => {
-    return {
-      paddingBottom: theme.rem(ModalFooter.bottomRem)
-    }
-  }, [theme])
 
   return (
     <View>
       <ScrollView
-        contentContainerStyle={scrollPadding}
+        contentContainerStyle={styles.scrollPadding}
         pagingEnabled
         style={styles.scrollViewContainer}
         keyboardShouldPersistTaps="handled"
       >
         {children}
       </ScrollView>
-      <ModalFooter onPress={onCancel} fadeOut />
+      <GradientFadeOut />
     </View>
   )
 }
 
+const MARKS: number[] = [0, 0.2, 0.75, 1]
+const START = { x: 0, y: 0 }
+const END = { x: 0, y: 1 }
+
+/*
+ * Used for adding a gradient fadeout to the bottom of a list modal
+ */
+export const GradientFadeOut = () => {
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const color = theme.modal
+  const colors: string[] = React.useMemo(() => {
+    return MARKS.map(
+      mark => color + `0${Math.floor(255 * mark).toString(16)}`.slice(-2)
+    )
+  }, [color])
+  return (
+    <LinearGradient
+      style={styles.gradientContainer}
+      start={START}
+      end={END}
+      colors={colors}
+      locations={MARKS}
+      pointerEvents="none"
+    />
+  )
+}
+
 const getStyles = cacheStyles((theme: Theme) => ({
+  gradientContainer: {
+    zIndex: 1,
+    position: 'absolute',
+    height: theme.rem(3),
+    width: '100%',
+    bottom: theme.rem(SCROLL_BOTTOM_GRADIENT_REM),
+    borderColor: 'white',
+    borderWidth: 0.5
+  },
   closeIcon: {
     alignItems: 'center',
-    paddingBottom: theme.rem(ModalFooter.bottomRem)
+    paddingBottom: theme.rem(0.5)
   },
   scrollViewContainer: {
-    margin: theme.rem(0.5),
-    paddingBottom: theme.rem(2.5)
+    margin: theme.rem(0.5)
   },
   titleContainer: {
     alignItems: 'center',
@@ -165,10 +179,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginBottom: theme.rem(-1)
   },
   footerFade: {
+    width: '100%',
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     zIndex: 1
+  },
+  scrollPadding: {
+    paddingBottom: theme.rem(SCROLL_BOTTOM_GRADIENT_REM)
   }
 }))

@@ -307,7 +307,7 @@ export const ChangeRecoveryScene = (props: Props) => {
           body={question ?? questionPrompt}
           onPress={handleQuestion(index)}
           contentPadding={false}
-          disabled={recoveryLocked}
+          // disabled={recoveryLocked}
         />
         <Tile
           type={questions[index] == null ? 'static' : 'touchable'}
@@ -315,7 +315,7 @@ export const ChangeRecoveryScene = (props: Props) => {
           body={answer}
           onPress={handleAnswer(index)}
           contentPadding={false}
-          disabled={recoveryLocked || questions[index] == null}
+          // disabled={recoveryLocked || questions[index] == null}
         />
       </View>
     )
@@ -354,7 +354,7 @@ export const ChangeRecoveryScene = (props: Props) => {
           label={s.strings.confirm_email}
           marginRem={[1, 0, 0.5, 0]}
           onPress={saveRecoveryViaEmail}
-          disabled={!confirmButtonsEnabled}
+          // disabled={!confirmButtonsEnabled}
           type="primary"
         />
         <MainButton
@@ -362,7 +362,7 @@ export const ChangeRecoveryScene = (props: Props) => {
           label={s.strings.confirm_share}
           marginRem={[0.5, 0]}
           onPress={saveRecoveryViaShare}
-          disabled={!confirmButtonsEnabled}
+          // disabled={!confirmButtonsEnabled}
           type="secondary"
         />
         <MainButton
@@ -377,7 +377,7 @@ export const ChangeRecoveryScene = (props: Props) => {
   }
 
   const renderButtons = () => {
-    return recoveryLocked ? renderModifyButtons() : renderConfirmButtons()
+    return renderConfirmButtons()
   }
   const renderQuestionAnswers = () => {
     return (

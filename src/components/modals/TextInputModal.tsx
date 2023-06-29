@@ -99,7 +99,7 @@ export function TextInputModal(props: Props) {
   return (
     <ThemedModal warning={warning} bridge={bridge} onCancel={handleCancel}>
       {title == null ? null : <ModalTitle>{title}</ModalTitle>}
-      <ModalScrollArea onCancel={handleCancel}>
+      <ModalScrollArea>
         {message == null ? null : <ModalMessage>{message}</ModalMessage>}
         {warningMessage == null ? null : (
           <Alert

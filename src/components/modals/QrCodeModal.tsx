@@ -140,7 +140,7 @@ class QrCodeModalComponent extends React.Component<Props, State> {
       pendingLogin == null ? null : 'edge://edge/' + pendingLogin.id
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
-        <ModalScrollArea onCancel={this.handleCancel}>
+        <ModalScrollArea>
           <ModalTitle>{s.strings.qr_modal_title}</ModalTitle>
           <ModalMessage>
             {username != null
