@@ -1,4 +1,3 @@
-import { EdgeContext, OtpError } from 'edge-core-js'
 import * as React from 'react'
 import {
   Keyboard,
@@ -16,9 +15,9 @@ import { sprintf } from 'sprintf-js'
 import { launchPasswordRecovery, login } from '../../actions/LoginAction'
 import { maybeRouteComplete } from '../../actions/LoginInitActions'
 import s from '../../common/locales/strings'
+import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
 import { LoginUserInfo, useLocalUsers } from '../../hooks/useLocalUsers'
-import { BiometryType } from '../../keychain'
 import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
@@ -31,90 +30,71 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { showQrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { Theme, ThemeProps, useTheme } from '../services/ThemeContext'
+import { Theme, useTheme } from '../services/ThemeContext'
 import { LineFormField } from '../themed/LineFormField'
 import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
 
-interface OwnProps extends SceneProps<'passwordLogin'> {
+interface Props extends SceneProps<'passwordLogin'> {
   branding: Branding
 }
-interface StateProps {
-  context: EdgeContext
-  localUsers: LoginUserInfo[]
-  touch: BiometryType
-  username: string
-}
-interface DispatchProps {
-  gotoCreatePage: () => void
-  gotoPinLoginPage: () => void
-  handleQrModal: () => void
-  login: (attempt: LoginAttempt) => Promise<void>
-  exitScene: () => void
-  saveOtpError: (otpAttempt: LoginAttempt, otpError: OtpError) => void
-  updateUsername: (username: string) => void
-  handleSubmitRecoveryKey: (recoveryKey: string) => Promise<boolean | string>
-}
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-interface State {
-  errorMessage: string
-  focusFirst: boolean
-  focusSecond: boolean
-  password: string
-  usernameList: boolean
-}
+export const PasswordLoginScene = (props: Props) => {
+  const { branding } = props
+  const { context } = useImports()
+  const dispatch = useDispatch()
+  const theme = useTheme()
 
-class PasswordLoginSceneComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      errorMessage: '',
-      focusFirst: true,
-      focusSecond: false,
-      password: '',
-      usernameList: false
-    }
-  }
+  const localUsers = useLocalUsers()
+  const touch = useSelector(state => state.touch.type)
+  const username = useSelector(state => state.login.username)
+  const styles = getStyles(theme)
 
-  handlePasswordChange = (password: string) => {
-    this.setState({ errorMessage: '', password })
-  }
+  const [errorMessage, setErrorMessage] = React.useState('')
+  const [focusFirst, setFocusFirst] = React.useState(true)
+  const [focusSecond, setFocusSecond] = React.useState(false)
+  const [password, setPassword] = React.useState('')
+  const [usernameList, setUsernameList] = React.useState(false)
 
-  handleSubmit = async () => {
-    const { login, saveOtpError, username } = this.props
-    const { password } = this.state
+  const handlePasswordChange = useHandler((password: string) => {
+    setErrorMessage('')
+    setPassword(password)
+  })
 
-    this.handleBlur()
+  const handleSubmit = useHandler(async () => {
     Keyboard.dismiss()
 
-    const attempt: LoginAttempt = { type: 'password', username, password }
-    await login(attempt).catch(error => {
+    const otpAttempt: LoginAttempt = { type: 'password', username, password }
+    await dispatch(login(otpAttempt)).catch(error => {
       if (error != null && error.name === 'OtpError') {
-        saveOtpError(attempt, error)
+        dispatch({
+          type: 'NAVIGATE',
+          data: { name: 'otpError', params: { otpAttempt, otpError: error } }
+        })
       } else {
         console.log(error)
         const errorMessage = error != null ? error.message : ''
-        this.setState({ errorMessage })
+        setErrorMessage(errorMessage)
       }
     })
-  }
+  })
 
-  handleBack = () => {
-    this.props.exitScene()
-  }
+  const handleBack = useHandler(() => {
+    dispatch(
+      maybeRouteComplete({
+        type: 'NAVIGATE',
+        data: { name: 'landing', params: {} }
+      })
+    )
+  })
 
-  handleBlur = () => {
+  const handleBlur = useHandler(() => {
     Keyboard.dismiss()
-    this.setState({
-      focusFirst: false,
-      focusSecond: false
-    })
-  }
+    setFocusFirst(false)
+    setFocusSecond(false)
+  })
 
-  handleDelete = (userInfo: LoginUserInfo) => {
-    const { context } = this.props
-
+  const handleDelete = useHandler((userInfo: LoginUserInfo) => {
     Keyboard.dismiss()
     Airship.show(bridge => (
       <ButtonsModal
@@ -141,96 +121,132 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
         }
       })
       .catch(showError)
-  }
+  })
 
-  render() {
-    const { theme } = this.props
-    const styles = getStyles(theme)
+  const handleToggleUsernameList = useHandler(() => {
+    Keyboard.dismiss()
+    setFocusFirst(false)
+    setFocusSecond(false)
+    setUsernameList(!usernameList)
+  })
 
-    return (
-      <KeyboardAwareScrollView
-        style={styles.container}
-        keyboardShouldPersistTaps="always"
-        contentContainerStyle={styles.mainScrollView}
-      >
-        <ThemedScene
-          onBack={this.handleBack}
-          noUnderline
-          branding={this.props.branding}
+  const handleFocus1 = useHandler(() => {
+    setFocusFirst(true)
+    setFocusSecond(false)
+  })
+
+  const handleFocus2 = useHandler(() => {
+    setFocusFirst(false)
+    setFocusSecond(true)
+  })
+
+  const handleSetNextFocus = useHandler(() => {
+    setFocusFirst(false)
+    setFocusSecond(true)
+  })
+
+  const handleSelectUser = useHandler((userInfo: LoginUserInfo) => {
+    const { username } = userInfo
+    if (username == null) return // These don't exist in the list
+    handleChangeUsername(username)
+    setUsernameList(false)
+
+    const details: LoginUserInfo | undefined = localUsers.find(
+      info => info.username === username
+    )
+    if (
+      details != null &&
+      (details.pinLoginEnabled || (details.touchLoginEnabled && touch))
+    ) {
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'pinLogin', params: {} }
+      })
+      return
+    }
+    handleSetNextFocus()
+  })
+
+  const handleChangeUsername = useHandler((data: string) => {
+    setErrorMessage('')
+    dispatch({ type: 'AUTH_UPDATE_USERNAME', data: data })
+  })
+
+  const handleSubmitRecoveryKey = useHandler(
+    async (recoveryKey: string): Promise<boolean | string> => {
+      if (base58.parseUnsafe(recoveryKey)?.length !== 32)
+        return s.strings.recovery_token_invalid
+      dispatch(launchPasswordRecovery(recoveryKey))
+      return true
+    }
+  )
+
+  const handleForgotPassword = useHandler(() => {
+    Keyboard.dismiss()
+    logEvent('Login_Password_Forgot_Password')
+    Airship.show(bridge => (
+      <TextInputModal
+        bridge={bridge}
+        onSubmit={handleSubmitRecoveryKey}
+        title={s.strings.password_recovery}
+        message={s.strings.initiate_password_recovery}
+        inputLabel={s.strings.recovery_token}
+      />
+    ))
+  })
+
+  const handleCreateAccount = useHandler(() => {
+    logEvent('Login_Password_Create_Account')
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'newAccountWelcome', params: {} }
+    })
+  })
+
+  const handleQrModal = useHandler(() => {
+    Keyboard.dismiss()
+    dispatch(showQrCodeModal())
+  })
+
+  const renderUsername = () => (
+    <View>
+      <View style={styles.usernameWrapper}>
+        <LineFormField
+          testID="usernameFormField"
+          onChangeText={handleChangeUsername}
+          value={username}
+          label={s.strings.username}
+          returnKeyType="next"
+          autoCorrect={false}
+          autoFocus={focusFirst}
+          forceFocus={focusFirst}
+          onFocus={handleFocus1}
+          onSubmitEditing={handleSetNextFocus}
+        />
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={handleToggleUsernameList}
         >
-          <TouchableWithoutFeedback onPress={this.handleBlur}>
-            <View style={styles.featureBox}>
-              <LogoImageHeader branding={this.props.branding} />
-              {this.renderUsername()}
-              <View style={styles.shimTiny} />
-              <LineFormField
-                testID="passwordFormField"
-                onChangeText={this.handlePasswordChange}
-                value={this.state.password}
-                label={s.strings.password}
-                error={this.state.errorMessage}
-                autoCorrect={false}
-                secureTextEntry
-                returnKeyType="go"
-                forceFocus={this.state.focusSecond}
-                onFocus={this.handleFocus2}
-                onSubmitEditing={this.handleSubmit}
-              />
-              {this.renderButtons()}
-            </View>
-          </TouchableWithoutFeedback>
-        </ThemedScene>
-      </KeyboardAwareScrollView>
-    )
-  }
-
-  renderUsername() {
-    const { theme } = this.props
-    const styles = getStyles(theme)
-
-    return (
-      <View>
-        <View style={styles.usernameWrapper}>
-          <LineFormField
-            testID="usernameFormField"
-            onChangeText={this.handleChangeUsername}
-            value={this.props.username}
-            label={s.strings.username}
-            returnKeyType="next"
-            autoCorrect={false}
-            autoFocus={this.state.focusFirst}
-            forceFocus={this.state.focusFirst}
-            onFocus={this.handleFocus1}
-            onSubmitEditing={this.handleSetNextFocus}
-          />
-          <TouchableOpacity
-            style={styles.iconContainer}
-            onPress={this.handleToggleUsernameList}
-          >
-            {this.state.usernameList ? (
-              <MaterialIcon
-                name="expand-less"
-                size={theme.rem(1.5)}
-                style={styles.iconColor}
-              />
-            ) : (
-              <MaterialIcon
-                name="expand-more"
-                size={theme.rem(1.5)}
-                style={styles.iconColor}
-              />
-            )}
-          </TouchableOpacity>
-        </View>
-        {!this.state.usernameList ? null : this.renderDropdownList()}
+          {usernameList ? (
+            <MaterialIcon
+              name="expand-less"
+              size={theme.rem(1.5)}
+              style={styles.iconColor}
+            />
+          ) : (
+            <MaterialIcon
+              name="expand-more"
+              size={theme.rem(1.5)}
+              style={styles.iconColor}
+            />
+          )}
+        </TouchableOpacity>
       </View>
-    )
-  }
+      {!usernameList ? null : renderDropdownList()}
+    </View>
+  )
 
-  renderDropdownList() {
-    const { localUsers, theme } = this.props
-    const styles = getStyles(theme)
-
+  const renderDropdownList = () => {
     return (
       <ScrollView style={styles.dropDownList}>
         {localUsers.map(userInfo => {
@@ -240,8 +256,8 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
             <UserListItem
               key={username}
               userInfo={userInfo}
-              onClick={this.handleSelectUser}
-              onDelete={this.handleDelete}
+              onClick={handleSelectUser}
+              onDelete={handleDelete}
             />
           )
         })}
@@ -249,16 +265,13 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     )
   }
 
-  renderButtons() {
-    const { handleQrModal, theme } = this.props
-    const styles = getStyles(theme)
+  const renderButtons = () => {
     const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
-
     return (
       <View style={styles.buttonsBox}>
         <MainButton
           type="textOnly"
-          onPress={this.handleForgotPassword}
+          onPress={handleForgotPassword}
           label={s.strings.forgot_password}
         />
         <View style={styles.loginButtonBox}>
@@ -266,13 +279,13 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
             label={s.strings.login_button}
             testID="loginButton"
             type={buttonType}
-            onPress={this.handleSubmit}
+            onPress={handleSubmit}
           />
         </View>
         <MainButton
           type="textOnly"
           testID="createAccountButton"
-          onPress={this.handleCreateAccount}
+          onPress={handleCreateAccount}
           label={s.strings.create_an_account}
         />
         <TouchableOpacity onPress={handleQrModal}>
@@ -286,81 +299,37 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     )
   }
 
-  handleToggleUsernameList = () => {
-    Keyboard.dismiss()
-    this.setState({
-      focusFirst: false,
-      focusSecond: false,
-      usernameList: !this.state.usernameList
-    })
-  }
-
-  handleFocus1 = () => {
-    this.setState({
-      focusFirst: true,
-      focusSecond: false
-    })
-  }
-
-  handleFocus2 = () => {
-    this.setState({
-      focusFirst: false,
-      focusSecond: true
-    })
-  }
-
-  handleSetNextFocus = () => {
-    this.setState({
-      focusFirst: false,
-      focusSecond: true
-    })
-  }
-
-  handleSelectUser = (userInfo: LoginUserInfo) => {
-    const { username } = userInfo
-    if (username == null) return // These don't exist in the list
-    this.handleChangeUsername(username)
-    this.setState({
-      usernameList: false
-    })
-
-    const details: LoginUserInfo | undefined = this.props.localUsers.find(
-      info => info.username === username
-    )
-    if (
-      details != null &&
-      (details.pinLoginEnabled ||
-        (details.touchLoginEnabled && this.props.touch))
-    ) {
-      this.props.gotoPinLoginPage()
-      return
-    }
-    this.handleSetNextFocus()
-  }
-
-  handleChangeUsername = (data: string) => {
-    this.setState({ errorMessage: '' })
-    this.props.updateUsername(data)
-  }
-
-  handleForgotPassword = () => {
-    Keyboard.dismiss()
-    logEvent('Login_Password_Forgot_Password')
-    Airship.show(bridge => (
-      <TextInputModal
-        bridge={bridge}
-        onSubmit={this.props.handleSubmitRecoveryKey}
-        title={s.strings.password_recovery}
-        message={s.strings.initiate_password_recovery}
-        inputLabel={s.strings.recovery_token}
-      />
-    ))
-  }
-
-  handleCreateAccount = () => {
-    logEvent('Login_Password_Create_Account')
-    this.props.gotoCreatePage()
-  }
+  return (
+    <KeyboardAwareScrollView
+      style={styles.container}
+      keyboardShouldPersistTaps="always"
+      contentContainerStyle={styles.mainScrollView}
+    >
+      <ThemedScene onBack={handleBack} noUnderline branding={branding}>
+        <TouchableWithoutFeedback onPress={handleBlur}>
+          <View style={styles.featureBox}>
+            <LogoImageHeader branding={branding} />
+            {renderUsername()}
+            <View style={styles.shimTiny} />
+            <LineFormField
+              testID="passwordFormField"
+              onChangeText={handlePasswordChange}
+              value={password}
+              label={s.strings.password}
+              error={errorMessage}
+              autoCorrect={false}
+              secureTextEntry
+              returnKeyType="go"
+              forceFocus={focusSecond}
+              onFocus={handleFocus2}
+              onSubmitEditing={handleSubmit}
+            />
+            {renderButtons()}
+          </View>
+        </TouchableWithoutFeedback>
+      </ThemedScene>
+    </KeyboardAwareScrollView>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -417,73 +386,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.iconDeactivated
   }
 }))
-
-export function PasswordLoginScene(props: OwnProps) {
-  const { branding, route } = props
-  const { context } = useImports()
-  const dispatch = useDispatch()
-  const theme = useTheme()
-
-  const localUsers = useLocalUsers()
-  const touch = useSelector(state => state.touch.type)
-  const username = useSelector(state => state.login.username)
-
-  const dispatchProps: DispatchProps = {
-    gotoCreatePage() {
-      dispatch({
-        type: 'NAVIGATE',
-        data: { name: 'newAccountWelcome', params: {} }
-      })
-    },
-    gotoPinLoginPage() {
-      dispatch({
-        type: 'NAVIGATE',
-        data: { name: 'pinLogin', params: {} }
-      })
-    },
-    handleQrModal() {
-      Keyboard.dismiss()
-      dispatch(showQrCodeModal())
-    },
-    async login(attempt) {
-      await dispatch(login(attempt))
-    },
-    exitScene() {
-      dispatch(
-        maybeRouteComplete({
-          type: 'NAVIGATE',
-          data: { name: 'landing', params: {} }
-        })
-      )
-    },
-    saveOtpError(otpAttempt, otpError) {
-      dispatch({
-        type: 'NAVIGATE',
-        data: { name: 'otpError', params: { otpAttempt, otpError } }
-      })
-    },
-    updateUsername(data: string) {
-      dispatch({ type: 'AUTH_UPDATE_USERNAME', data: data })
-    },
-    async handleSubmitRecoveryKey(
-      recoveryKey: string
-    ): Promise<boolean | string> {
-      if (base58.parseUnsafe(recoveryKey)?.length !== 32)
-        return s.strings.recovery_token_invalid
-      dispatch(launchPasswordRecovery(recoveryKey))
-      return true
-    }
-  }
-  return (
-    <PasswordLoginSceneComponent
-      {...dispatchProps}
-      branding={branding}
-      context={context}
-      localUsers={localUsers}
-      route={route}
-      theme={theme}
-      touch={touch}
-      username={username}
-    />
-  )
-}
