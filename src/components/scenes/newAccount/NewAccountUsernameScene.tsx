@@ -4,12 +4,12 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
-import { fetchIsUsernameAvailable } from '../../../actions/CreateAccountActions'
 import { maybeRouteComplete } from '../../../actions/LoginInitActions'
 import s from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
+import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
-import { Dispatch, useDispatch, useSelector } from '../../../types/ReduxTypes'
+import { useDispatch } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
 import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
@@ -18,20 +18,23 @@ import { MainButton } from '../../themed/MainButton'
 import { OutlinedTextInput } from '../../themed/OutlinedTextInput'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-interface Props extends SceneProps<'newAccountUsername'> {
-  branding: Branding
-}
 const AVAILABILITY_CHECK_DELAY_MS = 400
 
 type Timeout = ReturnType<typeof setTimeout>
 
-export const NewAccountUsernameScene = (props: Props) => {
-  const { branding } = props
-  const dispatch = useDispatch()
+interface Props {
+  branding: Branding
+  initUsername?: string
+  onBack: () => void
+  onNext: (username: string) => void | Promise<void>
+}
+
+export const ChangeUsernameComponent = (props: Props) => {
+  const { branding, initUsername, onBack, onNext } = props
+
+  const imports = useImports()
   const theme = useTheme()
   const styles = getStyles(theme)
-
-  const initUsername = useSelector(state => state.create.username)
 
   const [username, setUsername] = React.useState(initUsername ?? '')
   const [timerId, setTimerId] = React.useState<Timeout | undefined>(undefined)
@@ -55,10 +58,6 @@ export const NewAccountUsernameScene = (props: Props) => {
     []
   )
 
-  const fetchIsAvailable = async (username: string): Promise<boolean> => {
-    return await dispatch(fetchIsUsernameAvailable(username))
-  }
-
   // TODO:
   // Special considerations for the call to action (next) button:
   // 1. We want to avoid making the user wait for a fetch to check username
@@ -74,15 +73,10 @@ export const NewAccountUsernameScene = (props: Props) => {
     username.length === 0
 
   const handleBack = useHandler(() => {
-    dispatch(
-      maybeRouteComplete({
-        type: 'NAVIGATE',
-        data: { name: 'newAccountWelcome', params: {} }
-      })
-    )
+    onBack()
   })
   const handleNext = useHandler(async () => {
-    if (!isNextDisabled) dispatch(completeUsername(username))
+    if (!isNextDisabled) onNext(username)
   })
 
   const handleChangeText = useHandler(async (text: string) => {
@@ -121,7 +115,7 @@ export const NewAccountUsernameScene = (props: Props) => {
           fetchCounter.current++
           const localCounter = fetchCounter.current
 
-          const isAvailable = await fetchIsAvailable(text)
+          const isAvailable = await imports.context.usernameAvailable(text)
           if (!mounted.current) return
 
           // This fetch is stale. Another fetch began before this one had a
@@ -201,20 +195,6 @@ const getUsernameFormatError = (text: string): null | string => {
   }
 }
 
-/**
- * Sets the username if available and proceeds to password creation.
- */
-function completeUsername(username: string) {
-  return (dispatch: Dispatch): void => {
-    logEvent(`Signup_Username_Available`)
-    dispatch({ type: 'CREATE_UPDATE_USERNAME', data: { username } })
-    dispatch({
-      type: 'NAVIGATE',
-      data: { name: 'newAccountPassword', params: {} }
-    })
-  }
-}
-
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flex: 1,
@@ -231,3 +211,43 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginBottom: theme.rem(1)
   }
 }))
+
+/**
+ * The username creation scene for new accounts.
+ */
+interface NewAccountUsernameProps extends SceneProps<'newAccountUsername'> {
+  branding: Branding
+}
+export const NewAccountUsernameScene = (props: NewAccountUsernameProps) => {
+  const { branding, route } = props
+  const dispatch = useDispatch()
+
+  const handleBack = useHandler(() => {
+    dispatch(
+      maybeRouteComplete({
+        type: 'NAVIGATE',
+        data: { name: 'newAccountWelcome', params: {} }
+      })
+    )
+  })
+
+  const handleNext = useHandler((newUsername: string) => {
+    logEvent(`Signup_Username_Available`)
+    dispatch({
+      type: 'NAVIGATE',
+      data: {
+        name: 'newAccountPassword',
+        params: { ...route.params, username: newUsername }
+      }
+    })
+  })
+
+  return (
+    <ChangeUsernameComponent
+      initUsername={route.params.username}
+      branding={branding}
+      onBack={handleBack}
+      onNext={handleNext}
+    />
+  )
+}

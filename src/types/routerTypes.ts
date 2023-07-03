@@ -2,12 +2,22 @@ import { EdgeAccount } from 'edge-core-js'
 
 import { ChangeRecoveryParams } from '../components/scenes/existingAccout/ChangeRecoveryScene'
 import { OtpRepairParams } from '../components/scenes/existingAccout/OtpRepairScene'
+import { NewAcountReviewParams } from '../components/scenes/newAccount/NewAccountReviewScene'
 import { OtpErrorParams } from '../components/scenes/OtpErrorScene'
 import { RecoveryLoginParams } from '../components/scenes/RecoveryLoginScene'
 import { WaitParams } from '../components/scenes/WaitScene'
 
-interface AccountParams {
+export interface AccountParams {
   account: EdgeAccount
+}
+
+/**
+ * Data passed between scenes for the create account flows.
+ */
+export interface CreateFlowParams {
+  username?: string
+  password?: string
+  pin?: string
 }
 
 /**
@@ -18,12 +28,12 @@ export interface LoginParamList {
   changePin: AccountParams
   changeRecovery: ChangeRecoveryParams
   newAccountWelcome: {}
-  newAccountUsername: {}
-  newAccountPassword: {}
-  newAccountPin: {}
-  newAccountTos: {}
+  newAccountUsername: CreateFlowParams
+  newAccountPassword: CreateFlowParams
+  newAccountPin: CreateFlowParams
+  newAccountTos: CreateFlowParams
   newAccountWait: WaitParams
-  newAccountReview: AccountParams
+  newAccountReview: NewAcountReviewParams
   landing: {}
   loading: {}
   otpError: OtpErrorParams

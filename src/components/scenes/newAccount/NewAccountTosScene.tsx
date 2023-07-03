@@ -3,12 +3,15 @@ import { Alert, Linking, ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
-import { createUser } from '../../../actions/CreateAccountActions'
+import { loadTouchState } from '../../../actions/TouchActions'
 import { getAppConfig } from '../../../common/appConfig'
 import s from '../../../common/locales/strings'
+import * as Constants from '../../../constants/index'
+import { useImports } from '../../../hooks/useImports'
 import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
+import { enableTouchId, isTouchDisabled } from '../../../keychain'
 import { Branding } from '../../../types/Branding'
-import { useDispatch, useSelector } from '../../../types/ReduxTypes'
+import { useDispatch } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
 import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
@@ -23,9 +26,10 @@ interface Props extends SceneProps<'newAccountTos'> {
 }
 
 export const NewAccountTosScene = (props: Props) => {
-  const { branding } = props
+  const { branding, route } = props
   const dispatch = useDispatch()
   const theme = useTheme()
+  const imports = useImports()
 
   const styles = getStyles(theme)
   const [termValues, setTermValues] = React.useState<boolean[]>([
@@ -37,22 +41,6 @@ export const NewAccountTosScene = (props: Props) => {
   const showNext = !termValues.includes(false)
   const scrollViewRef = useScrollToEnd(showNext)
   const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
-
-  const createErrorMessage = useSelector(
-    state => state.create.createErrorMessage
-  )
-  const password = useSelector(state => state.create.password || '')
-  const pin = useSelector(state => state.create.pin)
-  const username = useSelector(state => state.create.username || '')
-
-  if (createErrorMessage) {
-    Alert.alert(
-      s.strings.create_account_error_title,
-      s.strings.create_account_error_message + '\n' + createErrorMessage,
-      [{ text: s.strings.ok }]
-    )
-    dispatch({ type: 'CLEAR_CREATE_ERROR_MESSAGE' })
-  }
 
   const { appName = s.strings.app_name_default } = branding
   const terms: string[] = [
@@ -75,15 +63,68 @@ export const NewAccountTosScene = (props: Props) => {
     setTermValues(newTermValues)
   }
 
+  const handleCreateAccount = async () => {
+    const { username, password, pin } = route.params
+    const { context } = imports
+    const account = await context.createAccount({
+      ...imports.accountOptions,
+      username,
+      password,
+      pin
+    })
+    account.watch('loggedIn', loggedIn => {
+      if (!loggedIn) dispatch({ type: 'RESET_APP' })
+    })
+    const touchDisabled = await isTouchDisabled(account)
+    if (!touchDisabled) {
+      await enableTouchId(account).catch(e => {
+        console.log(e) // Fail quietly
+      })
+    }
+    dispatch({ type: 'CREATE_ACCOUNT_SUCCESS', data: account })
+    dispatch({
+      type: 'NAVIGATE',
+      data: {
+        name: 'newAccountReview',
+        params: { ...route.params, account: account }
+      }
+    })
+    logEvent('Signup_Create_User_Success')
+    await account.dataStore.setItem(
+      Constants.OTP_REMINDER_STORE_NAME,
+      Constants.OTP_REMINDER_KEY_NAME_CREATED_AT,
+      Date.now().toString()
+    )
+    dispatch(loadTouchState())
+  }
+
   const handleNextPress = () => {
     logEvent(`Signup_Terms_Agree_and_Create_User`)
-    dispatch(
-      createUser({
-        username,
-        password,
-        pin
+    if (route.params.pin == null) throw new Error('No PIN set')
+    dispatch({
+      type: 'NAVIGATE',
+      data: {
+        name: 'newAccountWait',
+        params: {
+          title: s.strings.great_job,
+          message: s.strings.hang_tight + '\n' + s.strings.secure_account
+        }
+      }
+    })
+    setTimeout(() => {
+      handleCreateAccount().catch((e: any) => {
+        console.error(e)
+        Alert.alert(
+          s.strings.create_account_error_title,
+          s.strings.create_account_error_message + '\n' + e.message,
+          [{ text: s.strings.ok }]
+        )
+        dispatch({
+          type: 'NAVIGATE',
+          data: { name: 'newAccountUsername', params: {} }
+        })
       })
-    )
+    }, 300)
   }
 
   return (
