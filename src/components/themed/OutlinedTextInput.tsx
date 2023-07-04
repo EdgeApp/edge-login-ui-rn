@@ -89,7 +89,7 @@ interface Props {
  * Create a ref object using `useRef<OutlinedTextInputRef>(null)` or
  * `const ref: { current: OutlinedTextInputRef | null } = createRef()`
  */
-declare class OutlinedTextInputRef {
+export declare class OutlinedTextInputRef {
   focus: () => void
   blur: () => void
   isFocused: () => boolean

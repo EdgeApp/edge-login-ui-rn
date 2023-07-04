@@ -1,11 +1,6 @@
+import { asMaybePasswordError, asMaybeUsernameError } from 'edge-core-js'
 import * as React from 'react'
-import {
-  Keyboard,
-  ScrollView,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View
-} from 'react-native'
+import { Keyboard, ScrollView, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -31,8 +26,11 @@ import { showQrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
-import { LineFormField } from '../themed/LineFormField'
 import { MainButton } from '../themed/MainButton'
+import {
+  OutlinedTextInput,
+  OutlinedTextInputRef
+} from '../themed/OutlinedTextInput'
 import { ThemedScene } from '../themed/ThemedScene'
 
 interface Props extends SceneProps<'passwordLogin'> {
@@ -50,14 +48,21 @@ export const PasswordLoginScene = (props: Props) => {
   const username = useSelector(state => state.login.username)
   const styles = getStyles(theme)
 
-  const [errorMessage, setErrorMessage] = React.useState('')
-  const [focusFirst, setFocusFirst] = React.useState(true)
-  const [focusSecond, setFocusSecond] = React.useState(false)
+  const isMultiLocalUsers = localUsers.length > 1
+
+  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState<
+    string | undefined
+  >(undefined)
+  const [usernameErrorMessage, setUsernameErrorMessage] = React.useState<
+    string | undefined
+  >(undefined)
   const [password, setPassword] = React.useState('')
-  const [usernameList, setUsernameList] = React.useState(false)
+  const [showUsernameList, setShowUsernameList] = React.useState(false)
+
+  const passwordInputRef = React.useRef<OutlinedTextInputRef>(null)
 
   const handlePasswordChange = useHandler((password: string) => {
-    setErrorMessage('')
+    setPasswordErrorMessage(undefined)
     setPassword(password)
   })
 
@@ -73,8 +78,21 @@ export const PasswordLoginScene = (props: Props) => {
         })
       } else {
         console.log(error)
-        const errorMessage = error != null ? error.message : ''
-        setErrorMessage(errorMessage)
+        const usernameError = asMaybeUsernameError(error)
+        if (usernameError != null) {
+          setUsernameErrorMessage(s.strings.invalid_account)
+          return
+        }
+
+        const passwordError = asMaybePasswordError(error)
+        if (passwordError != null) {
+          setPasswordErrorMessage(s.strings.invalid_password)
+          return
+        }
+
+        console.warn('Unknown login error: ', error)
+        const unknownErrorMessage = error != null ? error.message : undefined
+        setPasswordErrorMessage(unknownErrorMessage)
       }
     })
   })
@@ -86,12 +104,6 @@ export const PasswordLoginScene = (props: Props) => {
         data: { name: 'landing', params: {} }
       })
     )
-  })
-
-  const handleBlur = useHandler(() => {
-    Keyboard.dismiss()
-    setFocusFirst(false)
-    setFocusSecond(false)
   })
 
   const handleDelete = useHandler((userInfo: LoginUserInfo) => {
@@ -125,31 +137,14 @@ export const PasswordLoginScene = (props: Props) => {
 
   const handleToggleUsernameList = useHandler(() => {
     Keyboard.dismiss()
-    setFocusFirst(false)
-    setFocusSecond(false)
-    setUsernameList(!usernameList)
-  })
-
-  const handleFocus1 = useHandler(() => {
-    setFocusFirst(true)
-    setFocusSecond(false)
-  })
-
-  const handleFocus2 = useHandler(() => {
-    setFocusFirst(false)
-    setFocusSecond(true)
-  })
-
-  const handleSetNextFocus = useHandler(() => {
-    setFocusFirst(false)
-    setFocusSecond(true)
+    setShowUsernameList(!showUsernameList)
   })
 
   const handleSelectUser = useHandler((userInfo: LoginUserInfo) => {
     const { username } = userInfo
     if (username == null) return // These don't exist in the list
     handleChangeUsername(username)
-    setUsernameList(false)
+    setShowUsernameList(false)
 
     const details: LoginUserInfo | undefined = localUsers.find(
       info => info.username === username
@@ -162,13 +157,14 @@ export const PasswordLoginScene = (props: Props) => {
         type: 'NAVIGATE',
         data: { name: 'pinLogin', params: {} }
       })
-      return
+    } else {
+      if (passwordInputRef.current != null) passwordInputRef.current.focus()
     }
-    handleSetNextFocus()
   })
 
   const handleChangeUsername = useHandler((data: string) => {
-    setErrorMessage('')
+    setPasswordErrorMessage(undefined)
+    setUsernameErrorMessage(undefined)
     dispatch({ type: 'AUTH_UPDATE_USERNAME', data: data })
   })
 
@@ -209,25 +205,27 @@ export const PasswordLoginScene = (props: Props) => {
   })
 
   const renderUsername = () => (
-    <View>
-      <View style={styles.usernameWrapper}>
-        <LineFormField
-          testID="usernameFormField"
-          onChangeText={handleChangeUsername}
-          value={username}
-          label={s.strings.username}
-          returnKeyType="next"
+    <View style={styles.usernameWrapper}>
+      <View style={styles.usernameField}>
+        <OutlinedTextInput
           autoCorrect={false}
-          autoFocus={focusFirst}
-          forceFocus={focusFirst}
-          onFocus={handleFocus1}
-          onSubmitEditing={handleSetNextFocus}
+          autoFocus
+          clearIcon={!isMultiLocalUsers}
+          error={usernameErrorMessage}
+          label={s.strings.username}
+          marginRem={[0.5, 1, 0.5, 1]}
+          returnKeyType="next"
+          testID="usernameFormField"
+          value={username}
+          onChangeText={handleChangeUsername}
         />
+      </View>
+      {isMultiLocalUsers ? (
         <TouchableOpacity
-          style={styles.iconContainer}
+          style={styles.dropdownButton}
           onPress={handleToggleUsernameList}
         >
-          {usernameList ? (
+          {showUsernameList ? (
             <MaterialIcon
               name="expand-less"
               size={theme.rem(1.5)}
@@ -241,14 +239,16 @@ export const PasswordLoginScene = (props: Props) => {
             />
           )}
         </TouchableOpacity>
-      </View>
-      {!usernameList ? null : renderDropdownList()}
+      ) : null}
     </View>
   )
 
   const renderDropdownList = () => {
     return (
-      <ScrollView style={styles.dropDownList}>
+      <ScrollView
+        style={styles.dropdownList}
+        keyboardShouldPersistTaps="handled"
+      >
         {localUsers.map(userInfo => {
           const { username } = userInfo
           if (username == null) return null
@@ -300,89 +300,73 @@ export const PasswordLoginScene = (props: Props) => {
   }
 
   return (
-    <KeyboardAwareScrollView
-      style={styles.container}
-      keyboardShouldPersistTaps="always"
-      contentContainerStyle={styles.mainScrollView}
-    >
-      <ThemedScene onBack={handleBack} noUnderline branding={branding}>
-        <TouchableWithoutFeedback onPress={handleBlur}>
-          <View style={styles.featureBox}>
-            <LogoImageHeader branding={branding} />
-            {renderUsername()}
-            <View style={styles.shimTiny} />
-            <LineFormField
-              testID="passwordFormField"
-              onChangeText={handlePasswordChange}
-              value={password}
-              label={s.strings.password}
-              error={errorMessage}
-              autoCorrect={false}
-              secureTextEntry
-              returnKeyType="go"
-              forceFocus={focusSecond}
-              onFocus={handleFocus2}
-              onSubmitEditing={handleSubmit}
-            />
-            {renderButtons()}
-          </View>
-        </TouchableWithoutFeedback>
-      </ThemedScene>
-    </KeyboardAwareScrollView>
+    <ThemedScene onBack={handleBack} noUnderline branding={branding}>
+      <KeyboardAwareScrollView
+        style={styles.container}
+        keyboardShouldPersistTaps="always"
+      >
+        <LogoImageHeader branding={branding} />
+
+        <View style={styles.inputFieldContainer}>
+          {renderUsername()}
+          {showUsernameList ? renderDropdownList() : null}
+          <OutlinedTextInput
+            ref={passwordInputRef}
+            autoCorrect={false}
+            autoFocus={false}
+            error={passwordErrorMessage}
+            label={s.strings.password}
+            marginRem={[0.5, 1, 0.5, 1]}
+            returnKeyType="done"
+            secureTextEntry
+            testID="passwordFormField"
+            value={password}
+            onChangeText={handlePasswordChange}
+            onSubmitEditing={handleSubmit}
+          />
+        </View>
+        {renderButtons()}
+      </KeyboardAwareScrollView>
+    </ThemedScene>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    backgroundColor: theme.backgroundGradientColors[0]
+    flex: 1
   },
-  mainScrollView: {
-    width: '100%',
-    height: '100%'
-  },
-  featureBox: {
-    top: theme.rem(3.5),
-    width: '100%',
-    alignItems: 'center'
-  },
-  shimTiny: {
-    width: '100%',
-    height: theme.rem(0.75)
+  inputFieldContainer: {
+    marginHorizontal: theme.rem(1)
   },
   loginButtonBox: {
     marginVertical: theme.rem(0.25),
     width: '70%'
   },
   buttonsBox: {
-    width: '100%',
     alignItems: 'center'
   },
   usernameWrapper: {
-    width: '100%',
     flexDirection: 'row'
   },
-  dropDownList: {
+  usernameField: {
+    flex: 1,
+    flexGrow: 1
+  },
+  dropdownList: {
     flexGrow: 0,
     maxHeight: theme.rem(12.5),
     backgroundColor: theme.backgroundGradientColors[0]
   },
-  iconContainer: {
-    flexDirection: 'row',
+  dropdownButton: {
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    right: theme.rem(-0.5),
+    right: theme.rem(1.5),
     width: theme.rem(2),
     height: theme.rem(2),
-    bottom: theme.rem(0.5)
+    bottom: theme.rem(0.75)
   },
   iconColor: {
-    color: theme.icon
-  },
-  iconColorPressed: {
-    color: theme.iconDeactivated
+    color: theme.iconTappable
   }
 }))
