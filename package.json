@@ -1,6 +1,6 @@
 {
   "name": "edge-login-ui-rn",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Edge login UI components, as a React Native library",
   "keywords": [
     "Airbitz",
@@ -16,7 +16,9 @@
   "author": "Airbitz, Inc.",
   "main": "lib/index.js",
   "files": [
-    "/android/",
+    "/android/build.gradle",
+    "/android/src/",
+    "/CHANGELOG.md",
     "/edge-login-ui-rn.podspec",
     "/ios/",
     "/lib/",

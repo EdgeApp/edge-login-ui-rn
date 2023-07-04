@@ -1,5 +1,11 @@
 # edge-login-ui-rn
 
+## 2.3.1 (2023-07-03)
+
+- fixed: Allow pressing modal buttons without dismissing the keyboard.
+- fixed: Remove an extra close button from the security alerts modal.
+- changed: Simplify the create-account flow internals.
+
 ## 2.3.0 (2023-06-26)
 
 - changed: Update the Android gradle build file.
