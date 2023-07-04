@@ -1,8 +1,21 @@
 import { asMaybePasswordError, asMaybeUsernameError } from 'edge-core-js'
 import * as React from 'react'
-import { Keyboard, ScrollView, TouchableOpacity, View } from 'react-native'
+import {
+  Keyboard,
+  LayoutChangeEvent,
+  ScrollView,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { cacheStyles } from 'react-native-patina'
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
@@ -33,6 +46,10 @@ import {
 } from '../themed/OutlinedTextInput'
 import { ThemedScene } from '../themed/ThemedScene'
 
+// Non-round number so that the scroll is apparent with more than max displayed
+// localUsers
+const MAX_DISPLAYED_LOCAL_USERS = 4.75
+
 interface Props extends SceneProps<'passwordLogin'> {
   branding: Branding
 }
@@ -58,8 +75,43 @@ export const PasswordLoginScene = (props: Props) => {
   >(undefined)
   const [password, setPassword] = React.useState('')
   const [showUsernameList, setShowUsernameList] = React.useState(false)
+  const [dropdownY, setDropdownY] = React.useState(0)
 
   const passwordInputRef = React.useRef<OutlinedTextInputRef>(null)
+  const [usernameItemHeight, setUsernameItemHeight] = React.useState(0)
+  const mDropContainerStyle = React.useMemo(() => {
+    return { top: dropdownY, ...styles.dropContainer }
+  }, [styles, dropdownY])
+
+  const sAnimationMult = useSharedValue(0)
+
+  const dFinalHeight = useDerivedValue(() => {
+    return (
+      usernameItemHeight *
+      Math.min(localUsers.length, MAX_DISPLAYED_LOCAL_USERS)
+    )
+  }, [usernameItemHeight, localUsers])
+
+  const aDropContainerStyle = useAnimatedStyle(
+    () => ({
+      height: dFinalHeight.value * sAnimationMult.value,
+      opacity: showUsernameList
+        ? withTiming(1, { duration: 50, easing: Easing.exp })
+        : withTiming(0, { duration: 200, easing: Easing.exp })
+    }),
+    [showUsernameList]
+  )
+
+  const handleUsernameLayout = useHandler((event: LayoutChangeEvent) => {
+    setDropdownY(event.nativeEvent.layout.y + theme.rem(3.5))
+  })
+
+  const handleDropdownItemLayout = useHandler((event: LayoutChangeEvent) => {
+    if (event != null && usernameItemHeight === 0) {
+      const { height } = event.nativeEvent.layout
+      setUsernameItemHeight(height)
+    }
+  })
 
   const handlePasswordChange = useHandler((password: string) => {
     setPasswordErrorMessage(undefined)
@@ -136,7 +188,6 @@ export const PasswordLoginScene = (props: Props) => {
   })
 
   const handleToggleUsernameList = useHandler(() => {
-    Keyboard.dismiss()
     setShowUsernameList(!showUsernameList)
   })
 
@@ -204,9 +255,18 @@ export const PasswordLoginScene = (props: Props) => {
     dispatch(showQrCodeModal())
   })
 
+  // The main hints dropdown animation depending on focus state of the
+  // username dropdown
+  React.useEffect(() => {
+    sAnimationMult.value = withTiming(showUsernameList ? 1 : 0, {
+      duration: 250,
+      easing: Easing.inOut(Easing.circle)
+    })
+  }, [sAnimationMult, showUsernameList])
+
   const renderUsername = () => (
     <View style={styles.usernameWrapper}>
-      <View style={styles.usernameField}>
+      <View style={styles.inputField} onLayout={handleUsernameLayout}>
         <OutlinedTextInput
           autoCorrect={false}
           autoFocus
@@ -245,23 +305,44 @@ export const PasswordLoginScene = (props: Props) => {
 
   const renderDropdownList = () => {
     return (
-      <ScrollView
-        style={styles.dropdownList}
-        keyboardShouldPersistTaps="handled"
-      >
-        {localUsers.map(userInfo => {
-          const { username } = userInfo
-          if (username == null) return null
-          return (
-            <UserListItem
-              key={username}
-              userInfo={userInfo}
-              onClick={handleSelectUser}
-              onDelete={handleDelete}
-            />
-          )
-        })}
-      </ScrollView>
+      <Animated.View style={[mDropContainerStyle, aDropContainerStyle]}>
+        <ScrollView keyboardShouldPersistTaps="handled">
+          {localUsers.map(userInfo => {
+            const { username } = userInfo
+            if (username == null) return null
+            return (
+              <UserListItem
+                key={username}
+                userInfo={userInfo}
+                onClick={handleSelectUser}
+                onDelete={handleDelete}
+                onLayout={handleDropdownItemLayout}
+              />
+            )
+          })}
+        </ScrollView>
+      </Animated.View>
+    )
+  }
+
+  const renderPassword = () => {
+    return (
+      <View style={styles.inputField}>
+        <OutlinedTextInput
+          ref={passwordInputRef}
+          autoCorrect={false}
+          autoFocus={false}
+          error={passwordErrorMessage}
+          label={s.strings.password}
+          marginRem={[0.5, 1, 0.5, 1]}
+          returnKeyType="done"
+          secureTextEntry
+          testID="passwordFormField"
+          value={password}
+          onChangeText={handlePasswordChange}
+          onSubmitEditing={handleSubmit}
+        />
+      </View>
     )
   }
 
@@ -279,6 +360,12 @@ export const PasswordLoginScene = (props: Props) => {
             label={s.strings.login_button}
             testID="loginButton"
             type={buttonType}
+            disabled={
+              username.length === 0 ||
+              password.length === 0 ||
+              usernameErrorMessage != null ||
+              passwordErrorMessage != null
+            }
             onPress={handleSubmit}
           />
         </View>
@@ -307,36 +394,37 @@ export const PasswordLoginScene = (props: Props) => {
       >
         <LogoImageHeader branding={branding} />
 
-        <View style={styles.inputFieldContainer}>
+        <View style={styles.inputContainer}>
           {renderUsername()}
-          {showUsernameList ? renderDropdownList() : null}
-          <OutlinedTextInput
-            ref={passwordInputRef}
-            autoCorrect={false}
-            autoFocus={false}
-            error={passwordErrorMessage}
-            label={s.strings.password}
-            marginRem={[0.5, 1, 0.5, 1]}
-            returnKeyType="done"
-            secureTextEntry
-            testID="passwordFormField"
-            value={password}
-            onChangeText={handlePasswordChange}
-            onSubmitEditing={handleSubmit}
-          />
+          {renderDropdownList()}
+          {renderPassword()}
+          {renderButtons()}
         </View>
-        {renderButtons()}
       </KeyboardAwareScrollView>
     </ThemedScene>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
+  dropContainer: {
+    backgroundColor: theme.modal,
+    borderRadius: theme.rem(0.5),
+    zIndex: 1,
+    borderColor: theme.iconTappable,
+    borderWidth: theme.thinLineWidth,
+    overflow: 'hidden',
+    position: 'absolute',
+    marginHorizontal: theme.rem(1),
     flex: 1
   },
-  inputFieldContainer: {
-    marginHorizontal: theme.rem(1)
+  container: {
+    flex: 1,
+    paddingTop: theme.rem(2),
+    paddingHorizontal: theme.rem(0.5)
+  },
+  inputContainer: {
+    marginHorizontal: theme.rem(0.5),
+    marginTop: theme.rem(2)
   },
   loginButtonBox: {
     marginVertical: theme.rem(0.25),
@@ -348,23 +436,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
   usernameWrapper: {
     flexDirection: 'row'
   },
-  usernameField: {
+  inputField: {
     flex: 1,
-    flexGrow: 1
+    marginBottom: theme.rem(1)
   },
-  dropdownList: {
-    flexGrow: 0,
-    maxHeight: theme.rem(12.5),
-    backgroundColor: theme.backgroundGradientColors[0]
-  },
+  // TODO: Integrate dropdown into OutlinedTextInput
   dropdownButton: {
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    right: theme.rem(1.5),
-    width: theme.rem(2),
+    right: theme.rem(1.25),
+    width: theme.rem(2.5),
     height: theme.rem(2),
-    bottom: theme.rem(0.75)
+    bottom: theme.rem(1.85)
   },
   iconColor: {
     color: theme.iconTappable
