@@ -1,5 +1,8 @@
 # edge-login-ui-rn
 
+## 2.3.2 (2023-07-05)
+- fixed: Modal close button overlapping submit button in PW Recovery modal
+
 ## 2.3.1 (2023-07-03)
 
 - fixed: Allow pressing modal buttons without dismissing the keyboard.
