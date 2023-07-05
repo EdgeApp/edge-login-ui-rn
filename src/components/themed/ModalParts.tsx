@@ -1,11 +1,6 @@
 import * as React from 'react'
-import {
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle
-} from 'react-native'
+import { Text, TouchableOpacity, View, ViewStyle } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -112,14 +107,13 @@ export function ModalScrollArea(props: {
 
   return (
     <View>
-      <ScrollView
+      <KeyboardAwareScrollView
         contentContainerStyle={scrollPadding}
-        pagingEnabled
         style={styles.scrollViewContainer}
         keyboardShouldPersistTaps="handled"
       >
         {children}
-      </ScrollView>
+      </KeyboardAwareScrollView>
       <ModalFooter onPress={onCancel} fadeOut />
     </View>
   )
