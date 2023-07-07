@@ -1,100 +1,113 @@
-import { asArray, asJSON, asObject, asOptional, asString } from 'cleaners'
-import { makeReactNativeDisklet } from 'disklet'
-import { EdgeAccount } from 'edge-core-js'
+import { EdgeAccount, EdgeUserInfo } from 'edge-core-js'
 import { NativeModules, Platform } from 'react-native'
 
-const { AbcCoreJsUi } = NativeModules
-const disklet = makeReactNativeDisklet()
+import {
+  getKeychainStatus,
+  readKeychainFile,
+  saveKeychainStatus
+} from './util/keychainFile'
 
 export type BiometryType = 'FaceID' | 'TouchID' | false
 
-function createKeyWithUsername(username: string) {
-  return username + '___key_loginkey'
+interface NativeMethods {
+  supportsTouchId: () => Promise<boolean>
+  getSupportedBiometryType: () => Promise<
+    'FaceID' | 'TouchID' | 'Fingerprint' | null
+  >
+
+  /**
+   * Stores a secret on either iOS and Android.
+   */
+  setKeychainString: (secret: string, name: string) => Promise<void>
+
+  /**
+   * Forgets a secret on either iOS or Android.
+   */
+  clearKeychain: (name: string) => Promise<void>
+
+  /**
+   * Retrieves a stored secret on iOS.
+   * Call `authenticateTouchID` to show a fingerprint prompt separately,
+   * since this requires no authentication.
+   */
+  getKeychainString: (name: string) => Promise<string>
+
+  /**
+   * Performs a biometric authentication on iOS.
+   */
+  authenticateTouchID: (
+    promptString: string,
+    fallbackString: string
+  ) => Promise<boolean>
+
+  /**
+   * Retrieves a stored secret on Android, with authentication.
+   */
+  getKeychainStringWithFingerprint: (
+    name: string,
+    promptString: string
+  ) => Promise<string | undefined>
 }
 
-const asFingerprintFile = asJSON(
-  asObject({
-    enabledUsers: asOptional(asArray(asString), []),
-    disabledUsers: asOptional(asArray(asString), [])
-  })
-)
-type FingerprintFile = ReturnType<typeof asFingerprintFile>
+const nativeMethods: NativeMethods = NativeModules.AbcCoreJsUi
 
 export async function isTouchEnabled(account: EdgeAccount): Promise<boolean> {
-  const { username } = account
-  if (username == null) return false
-
-  const file = await loadFingerprintFile()
   const supported = await supportsTouchId()
+  const file = await readKeychainFile()
+  const status = getKeychainStatus(file, account)
 
-  return supported && file.enabledUsers.includes(username)
+  return supported && typeof status === 'string'
 }
 
 export async function isTouchDisabled(account: EdgeAccount): Promise<boolean> {
-  const { username } = account
-  if (username == null) return true
-
-  const file = await loadFingerprintFile()
   const supported = await supportsTouchId()
+  const file = await readKeychainFile()
+  const status = getKeychainStatus(file, account)
 
-  return !supported || file.disabledUsers.includes(username)
+  return !supported || status === false
 }
 
 export async function supportsTouchId(): Promise<boolean> {
-  if (!AbcCoreJsUi) {
-    console.warn('AbcCoreJsUi  is unavailable')
+  if (nativeMethods == null) {
+    console.warn('Native edge-login-ui-rn methods are missing')
     return false
   }
-  const out = await AbcCoreJsUi.supportsTouchId()
+  const out = await nativeMethods.supportsTouchId()
   return !!out
 }
 
 export async function enableTouchId(account: EdgeAccount): Promise<void> {
-  const { username } = account
-
-  const file = await loadFingerprintFile()
   const supported = await supportsTouchId()
-  if (!supported || username == null) {
+  const file = await readKeychainFile()
+
+  if (!supported) {
     throw new Error('TouchIdNotSupportedError')
   }
 
   const loginKey = await account.getLoginKey()
-  const loginKeyKey = createKeyWithUsername(username)
-  await AbcCoreJsUi.setKeychainString(loginKey, loginKeyKey)
+  const location = account.rootLoginId + '_loginId'
+  await nativeMethods.setKeychainString(loginKey, location)
 
   // Update the file:
-  if (!file.enabledUsers.includes(username)) {
-    file.enabledUsers = [...file.enabledUsers, username]
-  }
-  if (file.disabledUsers.includes(username)) {
-    file.disabledUsers = file.disabledUsers.filter(item => item !== username)
-  }
-  saveFingerprintFile(file)
+  await saveKeychainStatus(file, account, location)
 }
 
 export async function disableTouchId(account: EdgeAccount): Promise<void> {
-  const { username } = account
-
-  const file = await loadFingerprintFile()
   const supported = await supportsTouchId()
-  if (!supported || username == null) return // throw new Error('TouchIdNotSupportedError')
+  const file = await readKeychainFile()
+  const status = getKeychainStatus(file, account)
 
-  const loginKeyKey = createKeyWithUsername(username)
-  await AbcCoreJsUi.clearKeychain(loginKeyKey)
+  if (supported && typeof status === 'string') {
+    await nativeMethods.clearKeychain(status)
+  }
 
   // Update the file:
-  if (!file.disabledUsers.includes(username)) {
-    file.disabledUsers = [...file.disabledUsers, username]
-  }
-  if (file.enabledUsers.includes(username)) {
-    file.enabledUsers = file.enabledUsers.filter(item => item !== username)
-  }
-  await saveFingerprintFile(file)
+  await saveKeychainStatus(file, account, false)
 }
 
 export async function getSupportedBiometryType(): Promise<BiometryType> {
   try {
-    const biometryType = await AbcCoreJsUi.getSupportedBiometryType()
+    const biometryType = await nativeMethods.getSupportedBiometryType()
     switch (biometryType) {
       // Keep these as-is:
       case 'FaceID':
@@ -120,53 +133,40 @@ export async function getSupportedBiometryType(): Promise<BiometryType> {
  * Returns undefined if there is no secret, or if the user denies the request.
  */
 export async function getLoginKey(
-  username: string,
+  userInfo: EdgeUserInfo,
   promptString: string,
   fallbackString: string
 ): Promise<string | undefined> {
-  const file = await loadFingerprintFile()
   const supported = await supportsTouchId()
-  if (
-    !supported ||
-    !file.enabledUsers.includes(username) ||
-    file.disabledUsers.includes(username)
-  ) {
+  const file = await readKeychainFile()
+  const status = getKeychainStatus(file, userInfo)
+
+  if (!supported || typeof status !== 'string') {
     return
   }
 
-  const loginKeyKey = createKeyWithUsername(username)
   if (Platform.OS === 'ios') {
-    const loginKey = await AbcCoreJsUi.getKeychainString(loginKeyKey)
+    const loginKey = await nativeMethods.getKeychainString(status)
     if (typeof loginKey !== 'string' || loginKey.length <= 10) {
       console.log('No valid loginKey for TouchID')
       return
     }
 
     console.log('loginKey valid. Launching TouchID modal...')
-    const success = await AbcCoreJsUi.authenticateTouchID(
+    const success = await nativeMethods.authenticateTouchID(
       promptString,
       fallbackString
     )
     if (success) return loginKey
     console.log('Failed to authenticate TouchID')
   } else if (Platform.OS === 'android') {
-    return AbcCoreJsUi.getKeychainStringWithFingerprint(
-      loginKeyKey,
-      promptString
-    ).catch((error: unknown) => console.log(error)) // showError?
+    try {
+      return await nativeMethods.getKeychainStringWithFingerprint(
+        status,
+        promptString
+      )
+    } catch (error) {
+      console.log(error) // showError?
+    }
   }
-}
-
-export async function loadFingerprintFile(): Promise<FingerprintFile> {
-  try {
-    const json = await disklet.getText('fingerprint.json')
-    return asFingerprintFile(json)
-  } catch (error) {
-    return { enabledUsers: [], disabledUsers: [] }
-  }
-}
-
-async function saveFingerprintFile(file: FingerprintFile): Promise<void> {
-  const text = JSON.stringify(file)
-  await disklet.setText('fingerprint.json', text)
 }

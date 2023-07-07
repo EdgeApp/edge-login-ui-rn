@@ -166,7 +166,8 @@ export function PinLoginScene(props: Props) {
     pin: string
   ): Promise<void> => {
     try {
-      const account = await context.loginWithPIN(userInfo.loginId, pin, {
+      const { loginId } = userInfo
+      const account = await context.loginWithPIN(loginId, pin, {
         ...accountOptions,
         useLoginId: true
       })
@@ -185,23 +186,20 @@ export function PinLoginScene(props: Props) {
   }
 
   const handleTouchLogin = async (userInfo: EdgeUserInfo): Promise<void> => {
-    const { username } = userInfo
-    if (username == null) return
-
     try {
+      const { loginId, username = s.strings.missing_username } = userInfo
       const loginKey = await getLoginKey(
-        username,
+        userInfo,
         `Touch to login user: "${username}"`,
         s.strings.login_with_password
       )
       if (loginKey == null) return
 
       setTouchBusy(true)
-      const account = await context.loginWithKey(
-        username,
-        loginKey,
-        accountOptions
-      )
+      const account = await context.loginWithKey(loginId, loginKey, {
+        ...accountOptions,
+        useLoginId: true
+      })
       await dispatch(completeLogin(account))
     } finally {
       setTouchBusy(false)
