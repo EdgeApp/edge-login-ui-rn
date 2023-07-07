@@ -1,6 +1,12 @@
 # edge-login-ui-rn
 
+## 2.3.3 (2023-07-07)
+
+- fixed: Modal close button covering modal submit buttons while Android keyboard is open
+- fixed: Username availability check error would incorrectly show in some cases
+
 ## 2.3.2 (2023-07-05)
+
 - fixed: Modal close button overlapping submit button in PW Recovery modal
 
 ## 2.3.1 (2023-07-03)
