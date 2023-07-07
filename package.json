@@ -48,7 +48,6 @@
     "qrcode-generator": "^1.4.4",
     "react-native-airship": "^0.2.9",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
-    "react-native-material-textfield": "https://github.com/EdgeApp/react-native-material-textfield.git",
     "react-native-patina": "^0.1.6",
     "react-redux": "^7.2.4",
     "redux": "~3.5.2",

@@ -1,14 +1,21 @@
-import { EdgeContext, OtpError } from 'edge-core-js'
+import { asMaybePasswordError, asMaybeUsernameError } from 'edge-core-js'
 import * as React from 'react'
 import {
   Keyboard,
+  LayoutChangeEvent,
   ScrollView,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View
 } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { cacheStyles } from 'react-native-patina'
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
@@ -16,9 +23,9 @@ import { sprintf } from 'sprintf-js'
 import { launchPasswordRecovery, login } from '../../actions/LoginAction'
 import { maybeRouteComplete } from '../../actions/LoginInitActions'
 import s from '../../common/locales/strings'
+import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
 import { LoginUserInfo, useLocalUsers } from '../../hooks/useLocalUsers'
-import { BiometryType } from '../../keychain'
 import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
@@ -31,90 +38,127 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { showQrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { Theme, ThemeProps, useTheme } from '../services/ThemeContext'
-import { LineFormField } from '../themed/LineFormField'
+import { Theme, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
+import {
+  OutlinedTextInput,
+  OutlinedTextInputRef
+} from '../themed/OutlinedTextInput'
 import { ThemedScene } from '../themed/ThemedScene'
 
-interface OwnProps extends SceneProps<'passwordLogin'> {
+// Non-round number so that the scroll is apparent with more than max displayed
+// localUsers
+const MAX_DISPLAYED_LOCAL_USERS = 4.75
+
+interface Props extends SceneProps<'passwordLogin'> {
   branding: Branding
 }
-interface StateProps {
-  context: EdgeContext
-  localUsers: LoginUserInfo[]
-  touch: BiometryType
-  username: string
-}
-interface DispatchProps {
-  gotoCreatePage: () => void
-  gotoPinLoginPage: () => void
-  handleQrModal: () => void
-  login: (attempt: LoginAttempt) => Promise<void>
-  exitScene: () => void
-  saveOtpError: (otpAttempt: LoginAttempt, otpError: OtpError) => void
-  updateUsername: (username: string) => void
-  handleSubmitRecoveryKey: (recoveryKey: string) => Promise<boolean | string>
-}
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-interface State {
-  errorMessage: string
-  focusFirst: boolean
-  focusSecond: boolean
-  password: string
-  usernameList: boolean
-}
+export const PasswordLoginScene = (props: Props) => {
+  const { branding } = props
+  const { context } = useImports()
+  const dispatch = useDispatch()
+  const theme = useTheme()
 
-class PasswordLoginSceneComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      errorMessage: '',
-      focusFirst: true,
-      focusSecond: false,
-      password: '',
-      usernameList: false
+  const localUsers = useLocalUsers()
+  const touch = useSelector(state => state.touch.type)
+  const username = useSelector(state => state.login.username)
+  const styles = getStyles(theme)
+
+  const isMultiLocalUsers = localUsers.length > 1
+
+  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState<
+    string | undefined
+  >(undefined)
+  const [usernameErrorMessage, setUsernameErrorMessage] = React.useState<
+    string | undefined
+  >(undefined)
+  const [password, setPassword] = React.useState('')
+  const [showUsernameList, setShowUsernameList] = React.useState(false)
+  const [dropdownY, setDropdownY] = React.useState(0)
+
+  const passwordInputRef = React.useRef<OutlinedTextInputRef>(null)
+  const [usernameItemHeight, setUsernameItemHeight] = React.useState(0)
+  const mDropContainerStyle = React.useMemo(() => {
+    return { top: dropdownY, ...styles.dropContainer }
+  }, [styles, dropdownY])
+
+  const sAnimationMult = useSharedValue(0)
+
+  const dFinalHeight = useDerivedValue(() => {
+    return (
+      usernameItemHeight *
+      Math.min(localUsers.length, MAX_DISPLAYED_LOCAL_USERS)
+    )
+  }, [usernameItemHeight, localUsers])
+
+  const aDropContainerStyle = useAnimatedStyle(
+    () => ({
+      height: dFinalHeight.value * sAnimationMult.value,
+      opacity: showUsernameList
+        ? withTiming(1, { duration: 50, easing: Easing.exp })
+        : withTiming(0, { duration: 200, easing: Easing.exp })
+    }),
+    [showUsernameList]
+  )
+
+  const handleUsernameLayout = useHandler((event: LayoutChangeEvent) => {
+    setDropdownY(event.nativeEvent.layout.y + theme.rem(3.5))
+  })
+
+  const handleDropdownItemLayout = useHandler((event: LayoutChangeEvent) => {
+    if (event != null && usernameItemHeight === 0) {
+      const { height } = event.nativeEvent.layout
+      setUsernameItemHeight(height)
     }
-  }
+  })
 
-  handlePasswordChange = (password: string) => {
-    this.setState({ errorMessage: '', password })
-  }
+  const handlePasswordChange = useHandler((password: string) => {
+    setPasswordErrorMessage(undefined)
+    setPassword(password)
+  })
 
-  handleSubmit = async () => {
-    const { login, saveOtpError, username } = this.props
-    const { password } = this.state
-
-    this.handleBlur()
+  const handleSubmit = useHandler(async () => {
     Keyboard.dismiss()
 
-    const attempt: LoginAttempt = { type: 'password', username, password }
-    await login(attempt).catch(error => {
+    const otpAttempt: LoginAttempt = { type: 'password', username, password }
+    await dispatch(login(otpAttempt)).catch(error => {
       if (error != null && error.name === 'OtpError') {
-        saveOtpError(attempt, error)
+        dispatch({
+          type: 'NAVIGATE',
+          data: { name: 'otpError', params: { otpAttempt, otpError: error } }
+        })
       } else {
         console.log(error)
-        const errorMessage = error != null ? error.message : ''
-        this.setState({ errorMessage })
+        const usernameError = asMaybeUsernameError(error)
+        if (usernameError != null) {
+          setUsernameErrorMessage(s.strings.invalid_account)
+          return
+        }
+
+        const passwordError = asMaybePasswordError(error)
+        if (passwordError != null) {
+          setPasswordErrorMessage(s.strings.invalid_password)
+          return
+        }
+
+        console.warn('Unknown login error: ', error)
+        const unknownErrorMessage = error != null ? error.message : undefined
+        setPasswordErrorMessage(unknownErrorMessage)
       }
     })
-  }
+  })
 
-  handleBack = () => {
-    this.props.exitScene()
-  }
+  const handleBack = useHandler(() => {
+    dispatch(
+      maybeRouteComplete({
+        type: 'NAVIGATE',
+        data: { name: 'landing', params: {} }
+      })
+    )
+  })
 
-  handleBlur = () => {
-    Keyboard.dismiss()
-    this.setState({
-      focusFirst: false,
-      focusSecond: false
-    })
-  }
-
-  handleDelete = (userInfo: LoginUserInfo) => {
-    const { context } = this.props
-
+  const handleDelete = useHandler((userInfo: LoginUserInfo) => {
     Keyboard.dismiss()
     Airship.show(bridge => (
       <ButtonsModal
@@ -141,124 +185,174 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
         }
       })
       .catch(showError)
-  }
+  })
 
-  render() {
-    const { theme } = this.props
-    const styles = getStyles(theme)
+  const handleToggleUsernameList = useHandler(() => {
+    setShowUsernameList(!showUsernameList)
+  })
 
-    return (
-      <KeyboardAwareScrollView
-        style={styles.container}
-        keyboardShouldPersistTaps="always"
-        contentContainerStyle={styles.mainScrollView}
-      >
-        <ThemedScene
-          onBack={this.handleBack}
-          noUnderline
-          branding={this.props.branding}
+  const handleSelectUser = useHandler((userInfo: LoginUserInfo) => {
+    const { username } = userInfo
+    if (username == null) return // These don't exist in the list
+    handleChangeUsername(username)
+    setShowUsernameList(false)
+
+    const details: LoginUserInfo | undefined = localUsers.find(
+      info => info.username === username
+    )
+    if (
+      details != null &&
+      (details.pinLoginEnabled || (details.touchLoginEnabled && touch))
+    ) {
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'pinLogin', params: {} }
+      })
+    } else {
+      if (passwordInputRef.current != null) passwordInputRef.current.focus()
+    }
+  })
+
+  const handleChangeUsername = useHandler((data: string) => {
+    setPasswordErrorMessage(undefined)
+    setUsernameErrorMessage(undefined)
+    dispatch({ type: 'AUTH_UPDATE_USERNAME', data: data })
+  })
+
+  const handleSubmitRecoveryKey = useHandler(
+    async (recoveryKey: string): Promise<boolean | string> => {
+      if (base58.parseUnsafe(recoveryKey)?.length !== 32)
+        return s.strings.recovery_token_invalid
+      dispatch(launchPasswordRecovery(recoveryKey))
+      return true
+    }
+  )
+
+  const handleForgotPassword = useHandler(() => {
+    Keyboard.dismiss()
+    logEvent('Login_Password_Forgot_Password')
+    Airship.show(bridge => (
+      <TextInputModal
+        bridge={bridge}
+        onSubmit={handleSubmitRecoveryKey}
+        title={s.strings.password_recovery}
+        message={s.strings.initiate_password_recovery}
+        inputLabel={s.strings.recovery_token}
+      />
+    ))
+  })
+
+  const handleCreateAccount = useHandler(() => {
+    logEvent('Login_Password_Create_Account')
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'newAccountWelcome', params: {} }
+    })
+  })
+
+  const handleQrModal = useHandler(() => {
+    Keyboard.dismiss()
+    dispatch(showQrCodeModal())
+  })
+
+  // The main hints dropdown animation depending on focus state of the
+  // username dropdown
+  React.useEffect(() => {
+    sAnimationMult.value = withTiming(showUsernameList ? 1 : 0, {
+      duration: 250,
+      easing: Easing.inOut(Easing.circle)
+    })
+  }, [sAnimationMult, showUsernameList])
+
+  const renderUsername = () => (
+    <View style={styles.usernameWrapper}>
+      <View style={styles.inputField} onLayout={handleUsernameLayout}>
+        <OutlinedTextInput
+          autoCorrect={false}
+          autoFocus
+          clearIcon={!isMultiLocalUsers}
+          error={usernameErrorMessage}
+          label={s.strings.username}
+          marginRem={[0.5, 1, 0.5, 1]}
+          returnKeyType="next"
+          testID="usernameFormField"
+          value={username}
+          onChangeText={handleChangeUsername}
+        />
+      </View>
+      {isMultiLocalUsers ? (
+        <TouchableOpacity
+          style={styles.dropdownButton}
+          onPress={handleToggleUsernameList}
         >
-          <TouchableWithoutFeedback onPress={this.handleBlur}>
-            <View style={styles.featureBox}>
-              <LogoImageHeader branding={this.props.branding} />
-              {this.renderUsername()}
-              <View style={styles.shimTiny} />
-              <LineFormField
-                testID="passwordFormField"
-                onChangeText={this.handlePasswordChange}
-                value={this.state.password}
-                label={s.strings.password}
-                error={this.state.errorMessage}
-                autoCorrect={false}
-                secureTextEntry
-                returnKeyType="go"
-                forceFocus={this.state.focusSecond}
-                onFocus={this.handleFocus2}
-                onSubmitEditing={this.handleSubmit}
+          {showUsernameList ? (
+            <MaterialIcon
+              name="expand-less"
+              size={theme.rem(1.5)}
+              style={styles.iconColor}
+            />
+          ) : (
+            <MaterialIcon
+              name="expand-more"
+              size={theme.rem(1.5)}
+              style={styles.iconColor}
+            />
+          )}
+        </TouchableOpacity>
+      ) : null}
+    </View>
+  )
+
+  const renderDropdownList = () => {
+    return (
+      <Animated.View style={[mDropContainerStyle, aDropContainerStyle]}>
+        <ScrollView keyboardShouldPersistTaps="handled">
+          {localUsers.map(userInfo => {
+            const { username } = userInfo
+            if (username == null) return null
+            return (
+              <UserListItem
+                key={username}
+                userInfo={userInfo}
+                onClick={handleSelectUser}
+                onDelete={handleDelete}
+                onLayout={handleDropdownItemLayout}
               />
-              {this.renderButtons()}
-            </View>
-          </TouchableWithoutFeedback>
-        </ThemedScene>
-      </KeyboardAwareScrollView>
+            )
+          })}
+        </ScrollView>
+      </Animated.View>
     )
   }
 
-  renderUsername() {
-    const { theme } = this.props
-    const styles = getStyles(theme)
-
+  const renderPassword = () => {
     return (
-      <View>
-        <View style={styles.usernameWrapper}>
-          <LineFormField
-            testID="usernameFormField"
-            onChangeText={this.handleChangeUsername}
-            value={this.props.username}
-            label={s.strings.username}
-            returnKeyType="next"
-            autoCorrect={false}
-            autoFocus={this.state.focusFirst}
-            forceFocus={this.state.focusFirst}
-            onFocus={this.handleFocus1}
-            onSubmitEditing={this.handleSetNextFocus}
-          />
-          <TouchableOpacity
-            style={styles.iconContainer}
-            onPress={this.handleToggleUsernameList}
-          >
-            {this.state.usernameList ? (
-              <MaterialIcon
-                name="expand-less"
-                size={theme.rem(1.5)}
-                style={styles.iconColor}
-              />
-            ) : (
-              <MaterialIcon
-                name="expand-more"
-                size={theme.rem(1.5)}
-                style={styles.iconColor}
-              />
-            )}
-          </TouchableOpacity>
-        </View>
-        {!this.state.usernameList ? null : this.renderDropdownList()}
+      <View style={styles.inputField}>
+        <OutlinedTextInput
+          ref={passwordInputRef}
+          autoCorrect={false}
+          autoFocus={false}
+          error={passwordErrorMessage}
+          label={s.strings.password}
+          marginRem={[0.5, 1, 0.5, 1]}
+          returnKeyType="done"
+          secureTextEntry
+          testID="passwordFormField"
+          value={password}
+          onChangeText={handlePasswordChange}
+          onSubmitEditing={handleSubmit}
+        />
       </View>
     )
   }
 
-  renderDropdownList() {
-    const { localUsers, theme } = this.props
-    const styles = getStyles(theme)
-
-    return (
-      <ScrollView style={styles.dropDownList}>
-        {localUsers.map(userInfo => {
-          const { username } = userInfo
-          if (username == null) return null
-          return (
-            <UserListItem
-              key={username}
-              userInfo={userInfo}
-              onClick={this.handleSelectUser}
-              onDelete={this.handleDelete}
-            />
-          )
-        })}
-      </ScrollView>
-    )
-  }
-
-  renderButtons() {
-    const { handleQrModal, theme } = this.props
-    const styles = getStyles(theme)
+  const renderButtons = () => {
     const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
-
     return (
       <View style={styles.buttonsBox}>
         <MainButton
           type="textOnly"
-          onPress={this.handleForgotPassword}
+          onPress={handleForgotPassword}
           label={s.strings.forgot_password}
         />
         <View style={styles.loginButtonBox}>
@@ -266,13 +360,19 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
             label={s.strings.login_button}
             testID="loginButton"
             type={buttonType}
-            onPress={this.handleSubmit}
+            disabled={
+              username.length === 0 ||
+              password.length === 0 ||
+              usernameErrorMessage != null ||
+              passwordErrorMessage != null
+            }
+            onPress={handleSubmit}
           />
         </View>
         <MainButton
           type="textOnly"
           testID="createAccountButton"
-          onPress={this.handleCreateAccount}
+          onPress={handleCreateAccount}
           label={s.strings.create_an_account}
         />
         <TouchableOpacity onPress={handleQrModal}>
@@ -286,204 +386,71 @@ class PasswordLoginSceneComponent extends React.Component<Props, State> {
     )
   }
 
-  handleToggleUsernameList = () => {
-    Keyboard.dismiss()
-    this.setState({
-      focusFirst: false,
-      focusSecond: false,
-      usernameList: !this.state.usernameList
-    })
-  }
+  return (
+    <ThemedScene onBack={handleBack} noUnderline branding={branding}>
+      <KeyboardAwareScrollView
+        style={styles.container}
+        keyboardShouldPersistTaps="always"
+      >
+        <LogoImageHeader branding={branding} />
 
-  handleFocus1 = () => {
-    this.setState({
-      focusFirst: true,
-      focusSecond: false
-    })
-  }
-
-  handleFocus2 = () => {
-    this.setState({
-      focusFirst: false,
-      focusSecond: true
-    })
-  }
-
-  handleSetNextFocus = () => {
-    this.setState({
-      focusFirst: false,
-      focusSecond: true
-    })
-  }
-
-  handleSelectUser = (userInfo: LoginUserInfo) => {
-    const { username } = userInfo
-    if (username == null) return // These don't exist in the list
-    this.handleChangeUsername(username)
-    this.setState({
-      usernameList: false
-    })
-
-    const details: LoginUserInfo | undefined = this.props.localUsers.find(
-      info => info.username === username
-    )
-    if (
-      details != null &&
-      (details.pinLoginEnabled ||
-        (details.touchLoginEnabled && this.props.touch))
-    ) {
-      this.props.gotoPinLoginPage()
-      return
-    }
-    this.handleSetNextFocus()
-  }
-
-  handleChangeUsername = (data: string) => {
-    this.setState({ errorMessage: '' })
-    this.props.updateUsername(data)
-  }
-
-  handleForgotPassword = () => {
-    Keyboard.dismiss()
-    logEvent('Login_Password_Forgot_Password')
-    Airship.show(bridge => (
-      <TextInputModal
-        bridge={bridge}
-        onSubmit={this.props.handleSubmitRecoveryKey}
-        title={s.strings.password_recovery}
-        message={s.strings.initiate_password_recovery}
-        inputLabel={s.strings.recovery_token}
-      />
-    ))
-  }
-
-  handleCreateAccount = () => {
-    logEvent('Login_Password_Create_Account')
-    this.props.gotoCreatePage()
-  }
+        <View style={styles.inputContainer}>
+          {renderUsername()}
+          {renderDropdownList()}
+          {renderPassword()}
+          {renderButtons()}
+        </View>
+      </KeyboardAwareScrollView>
+    </ThemedScene>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  dropContainer: {
+    backgroundColor: theme.modal,
+    borderRadius: theme.rem(0.5),
+    zIndex: 1,
+    borderColor: theme.iconTappable,
+    borderWidth: theme.thinLineWidth,
+    overflow: 'hidden',
+    position: 'absolute',
+    marginHorizontal: theme.rem(1),
+    flex: 1
+  },
   container: {
     flex: 1,
-    width: '100%',
-    height: '100%',
-    backgroundColor: theme.backgroundGradientColors[0]
+    paddingTop: theme.rem(2),
+    paddingHorizontal: theme.rem(0.5)
   },
-  mainScrollView: {
-    width: '100%',
-    height: '100%'
-  },
-  featureBox: {
-    top: theme.rem(3.5),
-    width: '100%',
-    alignItems: 'center'
-  },
-  shimTiny: {
-    width: '100%',
-    height: theme.rem(0.75)
+  inputContainer: {
+    marginHorizontal: theme.rem(0.5),
+    marginTop: theme.rem(2)
   },
   loginButtonBox: {
     marginVertical: theme.rem(0.25),
     width: '70%'
   },
   buttonsBox: {
-    width: '100%',
     alignItems: 'center'
   },
   usernameWrapper: {
-    width: '100%',
     flexDirection: 'row'
   },
-  dropDownList: {
-    flexGrow: 0,
-    maxHeight: theme.rem(12.5),
-    backgroundColor: theme.backgroundGradientColors[0]
+  inputField: {
+    flex: 1,
+    marginBottom: theme.rem(1)
   },
-  iconContainer: {
-    flexDirection: 'row',
+  // TODO: Integrate dropdown into OutlinedTextInput
+  dropdownButton: {
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    right: theme.rem(-0.5),
-    width: theme.rem(2),
+    right: theme.rem(1.25),
+    width: theme.rem(2.5),
     height: theme.rem(2),
-    bottom: theme.rem(0.5)
+    bottom: theme.rem(1.85)
   },
   iconColor: {
-    color: theme.icon
-  },
-  iconColorPressed: {
-    color: theme.iconDeactivated
+    color: theme.iconTappable
   }
 }))
-
-export function PasswordLoginScene(props: OwnProps) {
-  const { branding, route } = props
-  const { context } = useImports()
-  const dispatch = useDispatch()
-  const theme = useTheme()
-
-  const localUsers = useLocalUsers()
-  const touch = useSelector(state => state.touch.type)
-  const username = useSelector(state => state.login.username)
-
-  const dispatchProps: DispatchProps = {
-    gotoCreatePage() {
-      dispatch({
-        type: 'NAVIGATE',
-        data: { name: 'newAccountWelcome', params: {} }
-      })
-    },
-    gotoPinLoginPage() {
-      dispatch({
-        type: 'NAVIGATE',
-        data: { name: 'pinLogin', params: {} }
-      })
-    },
-    handleQrModal() {
-      Keyboard.dismiss()
-      dispatch(showQrCodeModal())
-    },
-    async login(attempt) {
-      await dispatch(login(attempt))
-    },
-    exitScene() {
-      dispatch(
-        maybeRouteComplete({
-          type: 'NAVIGATE',
-          data: { name: 'landing', params: {} }
-        })
-      )
-    },
-    saveOtpError(otpAttempt, otpError) {
-      dispatch({
-        type: 'NAVIGATE',
-        data: { name: 'otpError', params: { otpAttempt, otpError } }
-      })
-    },
-    updateUsername(data: string) {
-      dispatch({ type: 'AUTH_UPDATE_USERNAME', data: data })
-    },
-    async handleSubmitRecoveryKey(
-      recoveryKey: string
-    ): Promise<boolean | string> {
-      if (base58.parseUnsafe(recoveryKey)?.length !== 32)
-        return s.strings.recovery_token_invalid
-      dispatch(launchPasswordRecovery(recoveryKey))
-      return true
-    }
-  }
-  return (
-    <PasswordLoginSceneComponent
-      {...dispatchProps}
-      branding={branding}
-      context={context}
-      localUsers={localUsers}
-      route={route}
-      theme={theme}
-      touch={touch}
-      username={username}
-    />
-  )
-}

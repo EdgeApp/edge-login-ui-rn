@@ -1,44 +1,46 @@
 import * as React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { LayoutChangeEvent, TouchableOpacity } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import s from '../../common/locales/strings'
+import { useHandler } from '../../hooks/useHandler'
 import { LoginUserInfo } from '../../hooks/useLocalUsers'
 import { Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   userInfo: LoginUserInfo
   onClick: (userInfo: LoginUserInfo) => void
   onDelete: (userInfo: LoginUserInfo) => void
+  onLayout: (event: LayoutChangeEvent) => void
 }
 
 export function UserListItem(props: Props) {
-  const { userInfo, onClick, onDelete } = props
+  const { userInfo, onClick, onDelete, onLayout } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handleDelete = () => {
+  const handleDelete = useHandler(() => {
     onDelete(userInfo)
-  }
+  })
 
-  const handlePress = () => {
+  const handlePress = useHandler(() => {
     onClick(userInfo)
-  }
+  })
 
   return (
-    <TouchableOpacity style={styles.container} onPress={handlePress}>
-      <View style={styles.textComtainer}>
-        <Text style={styles.text}>
-          {userInfo.username ?? s.strings.missing_username}
-        </Text>
-      </View>
-      <TouchableOpacity
-        style={styles.iconButtonContainer}
-        onPress={handleDelete}
-      >
+    <TouchableOpacity
+      style={styles.container}
+      onPress={handlePress}
+      onLayout={onLayout}
+    >
+      <EdgeText style={styles.text}>
+        {userInfo.username ?? s.strings.missing_username}
+      </EdgeText>
+      <TouchableOpacity onPress={handleDelete}>
         <MaterialIcon
-          style={styles.iconButtonIcon}
+          style={styles.deleteButton}
           name="close"
           size={theme.rem(1)}
         />
@@ -49,33 +51,19 @@ export function UserListItem(props: Props) {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    height: theme.rem(2.5),
-    width: '100%',
     backgroundColor: theme.modal,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  textComtainer: {
-    flex: 25,
-    height: '100%',
-    flexDirection: 'column',
-    justifyContent: 'space-around'
-  },
-  iconButtonContainer: {
-    flex: 5,
+    flex: 1,
+    height: theme.rem(2.5),
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
-    height: '100%'
-  },
-  iconButtonIcon: {
-    color: theme.icon
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: theme.rem(1)
   },
   text: {
-    paddingLeft: theme.rem(1.25),
-    color: theme.primaryText,
-    backgroundColor: '#fff0',
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1)
+    marginVertical: theme.rem(0.25)
+  },
+  deleteButton: {
+    color: theme.iconTappable
   }
 }))

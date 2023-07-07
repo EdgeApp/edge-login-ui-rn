@@ -313,6 +313,9 @@ export function PinLoginScene(props: Props) {
         userInfo={item.item}
         onClick={handleSelectUser}
         onDelete={handleDelete}
+        // TODO: New dropdown visual design for this scene OR
+        // New design for combined password/pin scene
+        onLayout={() => {}}
       />
     )
   }

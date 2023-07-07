@@ -44,7 +44,6 @@ const ChangePasswordSceneComponent = ({
 
   const [focusFirst, setFocusFirst] = React.useState(true)
   const [focusSecond, setFocusSecond] = React.useState(false)
-  const [hidePassword, setHidePassword] = React.useState(true)
   const [spinning, setSpinning] = React.useState(false)
   const [isShowError, setIsShowError] = React.useState(false)
   const [passwordEval, setPasswordEval] = React.useState<
@@ -58,10 +57,6 @@ const ChangePasswordSceneComponent = ({
     confirmPasswordErrorMessage,
     setConfirmPasswordErrorMessage
   ] = React.useState('')
-
-  const handleHidePassword = useHandler(() => {
-    setHidePassword(!hidePassword)
-  })
 
   const handlePress = useHandler(async () => {
     if (!isRequirementsMet) return
@@ -119,10 +114,8 @@ const ChangePasswordSceneComponent = ({
           returnKeyType="next"
           label={s.strings.password}
           autoFocus={focusFirst}
-          hidePassword={hidePassword}
           onChangeText={handleValidatePassword}
           onSubmitEditing={handleFocusSwitch}
-          onHidePassword={handleHidePassword}
           clearIcon
           searchIcon={false}
           marginRem={[0, 0.75, 1.25]}
@@ -134,10 +127,8 @@ const ChangePasswordSceneComponent = ({
           returnKeyType="go"
           label={s.strings.confirm_password}
           autoFocus={focusSecond}
-          hidePassword={hidePassword}
           onChangeText={handleChangeConfirmPassword}
           onSubmitEditing={handlePress}
-          onHidePassword={handleHidePassword}
           clearIcon
           searchIcon={false}
           marginRem={[0, 0.75, 1.25]}

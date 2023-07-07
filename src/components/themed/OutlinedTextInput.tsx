@@ -89,7 +89,7 @@ interface Props {
  * Create a ref object using `useRef<OutlinedTextInputRef>(null)` or
  * `const ref: { current: OutlinedTextInputRef | null } = createRef()`
  */
-declare class OutlinedTextInputRef {
+export declare class OutlinedTextInputRef {
   focus: () => void
   blur: () => void
   isFocused: () => boolean
@@ -113,7 +113,6 @@ export const OutlinedTextInput = forwardRef(
       marginRem,
       multiline = false,
       searchIcon = false,
-      hidePassword,
       showSpinner = false,
 
       // Callbacks:
@@ -140,13 +139,10 @@ export const OutlinedTextInput = forwardRef(
     const hasValue = value !== ''
 
     // Show/Hide password input:
-    const [internalHidePassword, setInternalHidePassword] = useState(
+    const [hidePassword, setHidePassword] = React.useState(
       secureTextEntry ?? false
     )
-    const handleHidePassword = () => {
-      setInternalHidePassword(!internalHidePassword)
-      if (onHidePassword != null) onHidePassword()
-    }
+    const handleHidePassword = () => setHidePassword(!hidePassword)
 
     // Imperative methods:
     const inputRef = useRef<TextInput>(null)
@@ -376,6 +372,14 @@ export const OutlinedTextInput = forwardRef(
         }
       ]
     }))
+
+    const AnimatedIonIcon = Animated.createAnimatedComponent(IonIcon)
+    const eyeIconStyle = useAnimatedStyle(() => {
+      return {
+        color: getBorderColor(subtextAnimation.value, focusAnimation.value)
+      }
+    })
+
     // Character limit
     const charLimitLabel =
       maxLength === undefined ||
@@ -438,7 +442,10 @@ export const OutlinedTextInput = forwardRef(
                 <Animated.View
                   style={[styles.eyeIconHideLine, showPasswordLineStyle]}
                 />
-                <IonIcon name="eye-outline" style={styles.eyeIcon} />
+                <AnimatedIonIcon
+                  name="eye-outline"
+                  style={[styles.eyeIcon, eyeIconStyle]}
+                />
               </View>
             </TouchableWithoutFeedback>
           ) : null}
@@ -454,7 +461,7 @@ export const OutlinedTextInput = forwardRef(
             style={[styles.textInput, textInputStyle]}
             textAlignVertical="top"
             value={value}
-            secureTextEntry={hidePassword ?? internalHidePassword}
+            secureTextEntry={hidePassword}
             // Callbacks:
             onBlur={handleBlur}
             onChangeText={onChangeText}
@@ -586,7 +593,6 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     eyeIcon: {
       zIndex: 0,
-      color: theme.iconTappable,
       fontSize: theme.rem(1),
       padding: theme.rem(1)
     },
