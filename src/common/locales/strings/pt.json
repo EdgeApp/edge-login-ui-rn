@@ -134,6 +134,8 @@
   "landing_create_account_button": "Criar conta",
   "landing_already_have_account": "Já tem uma conta? Inicie sessão",
   "pin_not_enabled": "Não há PIN habilitado para esta conta",
+  "invalid_account": "Account does not exist",
+  "invalid_password": "Invalid password",
   "invalid_pin": "PIN inválido",
   "pin_network_error_full_password": "You may still log into your account with username and password.",
   "account_locked_for": "Conta bloqueada por \nmais %1$s segundos",
