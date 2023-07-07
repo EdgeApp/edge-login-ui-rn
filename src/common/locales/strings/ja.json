@@ -134,6 +134,8 @@
   "landing_create_account_button": "アカウントを作成",
   "landing_already_have_account": "アカウントをお持ちですか？サインイン",
   "pin_not_enabled": "このアカウントでPINは無効化されています",
+  "invalid_account": "Account does not exist",
+  "invalid_password": "Invalid password",
   "invalid_pin": "PINが正しくありません",
   "pin_network_error_full_password": "You may still log into your account with username and password.",
   "account_locked_for": "アカウントはあと%1$s秒間ロックされます。",
