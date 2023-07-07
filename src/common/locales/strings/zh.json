@@ -134,6 +134,8 @@
   "landing_create_account_button": "创建账户",
   "landing_already_have_account": "已经有帐户？请登录",
   "pin_not_enabled": "此帐户未启用PIN码",
+  "invalid_account": "Account does not exist",
+  "invalid_password": "Invalid password",
   "invalid_pin": "无效的PIN码",
   "pin_network_error_full_password": "You may still log into your account with username and password.",
   "account_locked_for": "帐户被锁定 \n%1$s 秒",
