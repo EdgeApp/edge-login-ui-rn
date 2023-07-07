@@ -6,7 +6,7 @@ import s from '../../common/locales/strings'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage, ModalScrollArea, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -99,57 +99,56 @@ export function TextInputModal(props: Props) {
   return (
     <ThemedModal warning={warning} bridge={bridge} onCancel={handleCancel}>
       {title == null ? null : <ModalTitle>{title}</ModalTitle>}
-      <ModalScrollArea onCancel={handleCancel}>
-        {message == null ? null : <ModalMessage>{message}</ModalMessage>}
-        {warningMessage == null ? null : (
-          <Alert
-            type="warning"
-            title={s.strings.warning}
-            marginRem={0.5}
-            message={warningMessage}
-            numberOfLines={0}
-          />
-        )}
-        <OutlinedTextInput
-          // Text input props:
-          autoCapitalize={autoCapitalize}
-          autoFocus={autoFocus}
-          autoCorrect={autoCorrect}
-          keyboardType={keyboardType}
-          label={inputLabel}
-          returnKeyType={returnKeyType}
-          secureTextEntry={secureTextEntry}
-          multiline={multiline}
-          // Our props:
-          error={errorMessage}
-          marginRem={[1, 0.5, 1.5, 0.5]}
-          onChangeText={handleChangeText}
-          onSubmitEditing={handleSubmit}
-          value={text}
-          maxLength={maxLength}
+      {message == null ? null : <ModalMessage>{message}</ModalMessage>}
+      {warningMessage == null ? null : (
+        <Alert
+          type="warning"
+          title={s.strings.warning}
+          marginRem={0.5}
+          message={warningMessage}
+          numberOfLines={0}
         />
-        {
-          // Hack around the android:windowSoftInputMode="adjustPan" glitch:
-          Platform.OS === 'android' ? <View style={{ flex: 2 }} /> : null
-        }
-        {spinning ? (
-          <MainButton
-            alignSelf="center"
-            disabled
-            marginRem={0.5}
-            type="secondary"
-            spinner
-          />
-        ) : (
-          <MainButton
-            alignSelf="center"
-            label={submitLabel}
-            marginRem={0.5}
-            onPress={handleSubmit}
-            type="secondary"
-          />
-        )}
-      </ModalScrollArea>
+      )}
+      <OutlinedTextInput
+        // Text input props:
+        autoCapitalize={autoCapitalize}
+        autoFocus={autoFocus}
+        autoCorrect={autoCorrect}
+        keyboardType={keyboardType}
+        label={inputLabel}
+        returnKeyType={returnKeyType}
+        secureTextEntry={secureTextEntry}
+        multiline={multiline}
+        // Our props:
+        error={errorMessage}
+        marginRem={[1, 0.5, 1.5, 0.5]}
+        onChangeText={handleChangeText}
+        onSubmitEditing={handleSubmit}
+        value={text}
+        maxLength={maxLength}
+      />
+      {
+        // Hack around the android:windowSoftInputMode="adjustPan" glitch:
+        Platform.OS === 'android' ? <View style={{ flex: 2 }} /> : null
+      }
+      {spinning ? (
+        <MainButton
+          alignSelf="center"
+          disabled
+          marginRem={[0.5, 0.5, 5, 0.5]}
+          type="secondary"
+          spinner
+        />
+      ) : (
+        <MainButton
+          alignSelf="center"
+          label={submitLabel}
+          marginRem={[0.5, 0.5, 5, 0.5]}
+          onPress={handleSubmit}
+          type="secondary"
+        />
+      )}
+      <ModalFooter onPress={handleCancel} fadeOut />
     </ThemedModal>
   )
 }
