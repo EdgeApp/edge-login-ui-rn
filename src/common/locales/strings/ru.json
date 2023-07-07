@@ -134,6 +134,8 @@
   "landing_create_account_button": "Создать учетную запись",
   "landing_already_have_account": "Уже имеете учетную запись? Войти",
   "pin_not_enabled": "PIN-код не включен для этой учетной записи",
+  "invalid_account": "Account does not exist",
+  "invalid_password": "Invalid password",
   "invalid_pin": "Неверный PIN",
   "pin_network_error_full_password": "You may still log into your account with username and password.",
   "account_locked_for": "Учетная запись заблокирована \n%1$s секунд",
