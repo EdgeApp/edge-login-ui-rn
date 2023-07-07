@@ -134,6 +134,8 @@
   "landing_create_account_button": "계정 만들기",
   "landing_already_have_account": "이미 계정을 가지고 있으십니까? 로그인하세요.",
   "pin_not_enabled": "이 계정에서 PIN은 무효화되어 있습니다.",
+  "invalid_account": "Account does not exist",
+  "invalid_password": "Invalid password",
   "invalid_pin": "잘못된 PIN",
   "pin_network_error_full_password": "You may still log into your account with username and password.",
   "account_locked_for": "계정이 %1$s초간 잠겨져 있습니다.",
