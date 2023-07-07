@@ -134,6 +134,8 @@
   "landing_create_account_button": "Benutzerkonto erstellen",
   "landing_already_have_account": "Hast du bereits ein Benutzerkonto? Einloggen",
   "pin_not_enabled": "PIN ist für dieses Benutzerkonto nicht aktiviert",
+  "invalid_account": "Account does not exist",
+  "invalid_password": "Invalid password",
   "invalid_pin": "Ungültiger PIN",
   "pin_network_error_full_password": "Sie können sich noch mit Benutzername und Passwort in Ihr Konto einloggen.",
   "account_locked_for": "Benutzerkonto gesperrt für\n%1$s weitere Sekunden",
