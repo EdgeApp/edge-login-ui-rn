@@ -1,5 +1,11 @@
 # edge-login-ui-rn
 
+## 2.4.0 (2023-07-10)
+
+- changed: Update password login scene to use themed text input
+- fixed: Password login scene errors were not localized
+- changed: Allow biometric logins for accounts without usernames.
+
 ## 2.3.3 (2023-07-07)
 
 - fixed: Modal close button covering modal submit buttons while Android keyboard is open
