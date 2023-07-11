@@ -79,24 +79,38 @@ export function ThemedScene(props: Props) {
         {!hasHeader ? null : (
           <View style={styles.headerButtons}>
             {onBack == null ? null : (
-              <TouchableOpacity style={styles.leftButton} onPress={onBack}>
+              <TouchableOpacity
+                accessible={false}
+                style={styles.leftButton}
+                onPress={onBack}
+              >
                 <FontAwesome5
+                  accessible
+                  testID="headerLeftButton"
                   name="chevron-left"
                   size={theme.rem(1)}
                   style={styles.buttonIcon}
                 />
                 {backButtonText == null ? null : (
-                  <Text style={styles.buttonText}>{backButtonText}</Text>
+                  <Text accessible style={styles.buttonText}>
+                    {backButtonText}
+                  </Text>
                 )}
               </TouchableOpacity>
             )}
             {onSkip == null ? null : (
-              <TouchableOpacity style={styles.rightButton} onPress={onSkip}>
+              <TouchableOpacity
+                accessible
+                testID="headerRightButton"
+                style={styles.rightButton}
+                onPress={onSkip}
+              >
                 <Text style={styles.buttonText}>{s.strings.skip}</Text>
               </TouchableOpacity>
             )}
             {parentButton == null || parentButton.text == null ? null : (
               <TouchableOpacity
+                accessible
                 style={styles.rightButton}
                 onPress={handleParentButtonPress}
               >
