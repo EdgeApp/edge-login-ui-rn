@@ -127,6 +127,7 @@ export const OutlinedTextInput = forwardRef(
       blurOnClear = searchIcon,
       maxLength,
       secureTextEntry,
+      testID,
       editableOnSpinner = false,
       ...inputProps
     } = props
@@ -388,7 +389,11 @@ export const OutlinedTextInput = forwardRef(
         : `${maxLength - value.length}`
 
     return (
-      <TouchableWithoutFeedback onPress={() => focus()}>
+      <TouchableWithoutFeedback
+        accessible={false}
+        testID={testID}
+        onPress={() => focus()}
+      >
         <View style={[styles.container, containerStyle]}>
           <Animated.View style={[styles.bottomLine, bottomStyle]} />
           <Animated.View style={[styles.leftCap, leftStyle]} />
@@ -396,26 +401,32 @@ export const OutlinedTextInput = forwardRef(
           <Animated.View style={[styles.topLine, topStyle]} />
           <View style={[styles.labelContainer, containerPadding]}>
             <Animated.Text
+              accessible
               numberOfLines={1}
               style={[styles.labelText, labelStyle]}
               onLayout={handleLabelLayout}
+              testID={`${testID}.labelText`}
             >
               {label}
             </Animated.Text>
           </View>
           <Animated.Text
+            accessible
             numberOfLines={1}
             style={[
               hasError ? styles.errorText : styles.validText,
               subtextStyle
             ]}
+            testID={`${testID}.subText`}
           >
             {error ?? valid}
           </Animated.Text>
           <Animated.Text
+            accessible
             numberOfLines={1}
             style={[styles.counterText, counterStyle]}
             onLayout={handleCounterLayout}
+            testID={`${testID}.charLimit`}
           >
             {charLimitLabel}
           </Animated.Text>
@@ -424,8 +435,10 @@ export const OutlinedTextInput = forwardRef(
           ) : null}
           {clearIcon && hasValue && !showSpinner && !secureTextEntry ? (
             <TouchableOpacity
+              accessible
               style={styles.clearTapArea}
               onPress={() => clear()}
+              testID={`${testID}.clearIcon`}
             >
               <AntDesignIcon name="close" style={styles.clearIcon} />
             </TouchableOpacity>
@@ -437,12 +450,16 @@ export const OutlinedTextInput = forwardRef(
           ) : null}
 
           {secureTextEntry ? (
-            <TouchableWithoutFeedback onPress={handleHidePassword}>
+            <TouchableWithoutFeedback
+              testID={`${testID}.eyeIcon`}
+              onPress={handleHidePassword}
+            >
               <View style={styles.clearTapArea}>
                 <Animated.View
                   style={[styles.eyeIconHideLine, showPasswordLineStyle]}
                 />
                 <AnimatedIonIcon
+                  accessible
                   name="eye-outline"
                   style={[styles.eyeIcon, eyeIconStyle]}
                 />
@@ -450,6 +467,7 @@ export const OutlinedTextInput = forwardRef(
             </TouchableWithoutFeedback>
           ) : null}
           <TextInput
+            accessible
             ref={inputRef}
             {...inputProps}
             autoFocus={autoFocus}
@@ -459,6 +477,7 @@ export const OutlinedTextInput = forwardRef(
               hasError ? theme.dangerText : theme.outlineTextInputTextColor
             }
             style={[styles.textInput, textInputStyle]}
+            testID={`${testID}.textInput`}
             textAlignVertical="top"
             value={value}
             secureTextEntry={hidePassword}
