@@ -271,6 +271,7 @@ export function PinLoginScene(props: Props) {
     return (
       <View style={styles.innerView}>
         <TouchableOpacity
+          testID="usernameDropdownButton"
           style={styles.usernameShadow}
           onPress={handleShowDrop}
         >
@@ -369,7 +370,7 @@ export function PinLoginScene(props: Props) {
       branding={branding}
     >
       <View style={styles.featureBoxContainer}>
-        <TouchableWithoutFeedback onPress={handleHideDrop}>
+        <TouchableWithoutFeedback accessible={false} onPress={handleHideDrop}>
           <View style={styles.featureBox}>
             <LogoImageHeader branding={branding} />
             <View style={styles.featureBoxBody}>{renderBottomHalf()}</View>
