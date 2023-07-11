@@ -41,6 +41,7 @@ export function UserListItem(props: Props) {
         {username}
       </EdgeText>
       <TouchableOpacity
+        style={styles.deleteButtonContainer}
         testID={`${username}.deleteIcon`}
         onPress={handleDelete}
       >
@@ -63,10 +64,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    paddingHorizontal: theme.rem(1)
+    paddingLeft: theme.rem(1)
   },
   text: {
     marginVertical: theme.rem(0.25)
+  },
+  deleteButtonContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    minHeight: theme.rem(2),
+    minWidth: theme.rem(2)
   },
   deleteButton: {
     color: theme.iconTappable
