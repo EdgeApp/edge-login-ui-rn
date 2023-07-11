@@ -88,7 +88,7 @@ export function Router(props: Props) {
 
   return (
     <MaybeProvideLoginUi>
-      <View accessible style={styles.container}>
+      <View style={styles.container}>
         <WatchUsernames />
         {renderContent()}
       </View>
