@@ -128,18 +128,22 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     paddingHorizontal: theme.rem(1),
+    minWidth: theme.rem(3),
+    minHeight: theme.rem(3),
     position: 'absolute',
     left: 0,
-    top: 0
+    top: theme.rem(-1)
   },
   rightButton: {
-    alignContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
     paddingHorizontal: theme.rem(1),
+    minWidth: theme.rem(3),
+    minHeight: theme.rem(3),
     position: 'absolute',
     right: 0,
-    top: 0
+    top: theme.rem(-1)
   },
   buttonIcon: {
     color: theme.primaryText,
