@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 2.4.1 (2023-07-11)
+
+- fixed: Maestro testing targetability of components
+
 ## 2.4.0 (2023-07-10)
 
 - changed: Update password login scene to use themed text input
