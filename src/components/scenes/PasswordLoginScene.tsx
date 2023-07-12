@@ -282,6 +282,7 @@ export const PasswordLoginScene = (props: Props) => {
       </View>
       {isMultiLocalUsers ? (
         <TouchableOpacity
+          testID="userDropdownIcon"
           style={styles.dropdownButton}
           onPress={handleToggleUsernameList}
         >

@@ -29,16 +29,22 @@ export function UserListItem(props: Props) {
     onClick(userInfo)
   })
 
+  const username = userInfo.username ?? s.strings.missing_username
   return (
     <TouchableOpacity
+      accessible={false}
       style={styles.container}
       onPress={handlePress}
       onLayout={onLayout}
     >
-      <EdgeText style={styles.text}>
-        {userInfo.username ?? s.strings.missing_username}
+      <EdgeText accessible style={styles.text}>
+        {username}
       </EdgeText>
-      <TouchableOpacity onPress={handleDelete}>
+      <TouchableOpacity
+        style={styles.deleteButtonContainer}
+        testID={`${username}.deleteIcon`}
+        onPress={handleDelete}
+      >
         <MaterialIcon
           style={styles.deleteButton}
           name="close"
@@ -58,10 +64,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    paddingHorizontal: theme.rem(1)
+    paddingLeft: theme.rem(1)
   },
   text: {
     marginVertical: theme.rem(0.25)
+  },
+  deleteButtonContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    minHeight: theme.rem(2),
+    minWidth: theme.rem(2)
   },
   deleteButton: {
     color: theme.iconTappable
