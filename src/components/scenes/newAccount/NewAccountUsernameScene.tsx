@@ -33,7 +33,7 @@ export interface AccountUsernameParams
 interface Props {
   branding: Branding
   initUsername?: string
-  onBack: () => void
+  onBack?: () => void
   onNext: (username: string) => void | Promise<void>
 }
 
@@ -81,7 +81,7 @@ export const ChangeUsernameComponent = (props: Props) => {
     username.length === 0
 
   const handleBack = useHandler(() => {
-    onBack()
+    if (onBack != null) onBack()
   })
   const handleNext = useHandler(async () => {
     if (!isNextDisabled) onNext(username)
@@ -236,7 +236,7 @@ export const NewAccountUsernameScene = (props: NewAccountUsernameProps) => {
     dispatch(
       maybeRouteComplete({
         type: 'NAVIGATE',
-        data: { name: 'newAccountWelcome', params: {} }
+        data: { name: 'passwordLogin', params: { username: '' } }
       })
     )
   })
@@ -271,15 +271,7 @@ interface UpgradeUsernameProps extends SceneProps<'upgradeUsername'> {
 export const UpgradeUsernameScene = (props: UpgradeUsernameProps) => {
   const { branding, route } = props
   const dispatch = useDispatch()
-
-  const handleBack = useHandler(() => {
-    dispatch(
-      maybeRouteComplete({
-        type: 'NAVIGATE',
-        data: { name: 'newAccountWelcome', params: {} }
-      })
-    )
-  })
+  const { onComplete = () => {} } = useImports()
 
   const handleNext = useHandler(async (newUsername: string) => {
     const currentPin = await route.params.account.getPin()
@@ -301,8 +293,8 @@ export const UpgradeUsernameScene = (props: UpgradeUsernameProps) => {
     <ChangeUsernameComponent
       initUsername=""
       branding={branding}
-      onBack={handleBack}
       onNext={handleNext}
+      onBack={onComplete}
     />
   )
 }

@@ -21,7 +21,6 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import { launchPasswordRecovery, login } from '../../actions/LoginAction'
-import { maybeRouteComplete } from '../../actions/LoginInitActions'
 import s from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
@@ -153,15 +152,6 @@ export const PasswordLoginScene = (props: Props) => {
     })
   })
 
-  const handleBack = useHandler(() => {
-    dispatch(
-      maybeRouteComplete({
-        type: 'NAVIGATE',
-        data: { name: 'landing', params: {} }
-      })
-    )
-  })
-
   const handleDelete = useHandler((userInfo: LoginUserInfo) => {
     Keyboard.dismiss()
     Airship.show(bridge => (
@@ -253,7 +243,7 @@ export const PasswordLoginScene = (props: Props) => {
     logEvent('Login_Password_Create_Account')
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'newAccountWelcome', params: {} }
+      data: { name: 'newAccountUsername', params: {} }
     })
   })
 
@@ -395,7 +385,7 @@ export const PasswordLoginScene = (props: Props) => {
   }
 
   return (
-    <ThemedScene onBack={handleBack} noUnderline branding={branding}>
+    <ThemedScene noUnderline branding={branding}>
       <KeyboardAwareScrollView
         style={styles.container}
         keyboardShouldPersistTaps="always"

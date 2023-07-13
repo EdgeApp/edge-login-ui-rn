@@ -162,18 +162,30 @@ export const ResecurePinScene = (props: SceneProps<'resecurePin'>) => {
 export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
   const { route } = props
   const dispatch = useDispatch()
+  const lightAccount = route.params.username == null
 
   const handleBack = useHandler(() => {
     dispatch(
-      maybeRouteComplete({
-        type: 'NAVIGATE',
-        data: { name: 'newAccountPassword', params: route.params }
-      })
+      lightAccount
+        ? maybeRouteComplete({
+            type: 'NAVIGATE',
+            data: {
+              name: 'passwordLogin',
+              params: { username: '' }
+            }
+          })
+        : maybeRouteComplete({
+            type: 'NAVIGATE',
+            data: {
+              name: 'newAccountPassword',
+              params: route.params
+            }
+          })
     )
   })
   const handleSubmit = useHandler((newPin: string) => {
     logEvent('Signup_PIN_Valid', {
-      lightAccount: route.params.username == null
+      lightAccount
     })
     dispatch({
       type: 'NAVIGATE',
