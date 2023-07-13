@@ -200,32 +200,38 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
   })
 
   const handleNext = useHandler(async () => {
-    logEvent(`Signup_Terms_Agree_and_Create_User`)
     const { username, password, pin } = route.params
+    let error
+    try {
+      const account = await context.createAccount({
+        ...accountOptions,
+        username,
+        password,
+        pin
+      })
+      account.watch('loggedIn', loggedIn => {
+        if (!loggedIn) dispatch({ type: 'RESET_APP' })
+      })
+      await setTouchOtp(account, dispatch)
 
-    const account = await context.createAccount({
-      ...accountOptions,
-      username,
-      password,
-      pin
-    })
-    account.watch('loggedIn', loggedIn => {
-      if (!loggedIn) dispatch({ type: 'RESET_APP' })
-    })
-    await setTouchOtp(account, dispatch)
-
-    dispatch({
-      type: 'NAVIGATE',
-      data: {
-        name: 'newAccountReview',
-        params: {
-          ...route.params,
-          account
+      dispatch({
+        type: 'NAVIGATE',
+        data: {
+          name: 'newAccountReview',
+          params: {
+            ...route.params,
+            account
+          }
         }
-      }
-    })
+      })
+    } catch (e: any) {
+      error = String(e)
+    }
 
-    logEvent('Signup_Create_User_Success')
+    logEvent('Signup_Terms_Agree_and_Create_User', {
+      lightAccount: username == null,
+      error
+    })
   })
 
   return (
@@ -256,26 +262,33 @@ export const UpgradeTosScene = (props: UpgradeTosProps) => {
   })
 
   const handleNext = useHandler(async () => {
-    logEvent(`Signup_Terms_Agree_and_Back_Up_User`)
     const { account, username, password } = route.params
 
-    if (username == null || password == null)
-      throw new Error('Failed to update account, missing username or password')
-    await account.changeUsername({
-      username,
-      password
-    })
+    let error
+    try {
+      if (username == null || password == null)
+        throw new Error(
+          'Failed to update account, missing username or password'
+        )
+      await account.changeUsername({
+        username,
+        password
+      })
 
-    dispatch({
-      type: 'NAVIGATE',
-      data: {
-        name: 'upgradeAccountReview',
-        params: {
-          ...route.params
+      dispatch({
+        type: 'NAVIGATE',
+        data: {
+          name: 'upgradeAccountReview',
+          params: {
+            ...route.params
+          }
         }
-      }
-    })
-    logEvent(`Signup_Back_Up_User_Success`)
+      })
+    } catch (e: any) {
+      error = String(e)
+    }
+
+    logEvent('Backup_Terms_Agree_and_Create_User', { error })
   })
 
   return (
