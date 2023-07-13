@@ -172,15 +172,12 @@ const checkSecurityMessages = () => async (
   }
 
   if (relevantMessages.length > 0) {
-    Airship.show(bridge => (
-      <SecurityAlertsModal
-        bridge={bridge}
-        messages={relevantMessages}
-        selectUser={username =>
-          dispatch({ type: 'AUTH_UPDATE_USERNAME', data: username })
-        }
-      />
+    const username = await Airship.show<string | undefined>(bridge => (
+      <SecurityAlertsModal bridge={bridge} messages={relevantMessages} />
     ))
+    if (username != null) {
+      dispatch({ type: 'AUTH_UPDATE_USERNAME', data: username })
+    }
   }
 }
 
