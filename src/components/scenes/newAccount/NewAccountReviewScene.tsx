@@ -94,13 +94,16 @@ export const NewAccountReviewScene = (props: NewAccountReviewProps) => {
   const { onLogin } = useImports()
 
   const handleNext = useHandler(() => {
-    logEvent(`Signup_Review_Done`)
+    const lightAccount = route.params.username == null
+    logEvent(`Signup_Review_Done`, { lightAccount })
 
     if (onLogin != null) onLogin(route.params.account)
 
-    dispatch(checkAndRequestNotifications(branding)).catch(error =>
-      console.log(error)
-    )
+    // Only request notification permissions for full account creation
+    if (!lightAccount)
+      dispatch(checkAndRequestNotifications(branding)).catch(error =>
+        console.log(error)
+      )
   })
 
   return <AccountReviewComponent {...route.params} onNext={handleNext} />
@@ -119,7 +122,7 @@ export const UpgradeReviewScene = (props: UpgradeReviewProps) => {
   const { onComplete } = useImports()
 
   const handleNext = useHandler(() => {
-    logEvent(`Signup_Back_Up_Review_Done`)
+    logEvent(`Backup_Review_Done`)
 
     if (onComplete != null) onComplete()
 

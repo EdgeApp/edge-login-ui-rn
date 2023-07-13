@@ -283,7 +283,7 @@ export const UpgradeUsernameScene = (props: UpgradeUsernameProps) => {
 
   const handleNext = useHandler(async (newUsername: string) => {
     const currentPin = await route.params.account.getPin()
-    logEvent(`Signup_Username_Available`)
+    logEvent(`Backup_Username_Available`)
     dispatch({
       type: 'NAVIGATE',
       data: {

@@ -293,7 +293,7 @@ export const NewAccountPasswordScene = (
   })
 
   const handleSubmit = useHandler((newPassword: string) => {
-    logEvent('Signup_Password_Valid')
+    logEvent('Signup_Password_Valid', { lightAccount: false })
     dispatch({
       type: 'NAVIGATE',
       data: {
@@ -326,7 +326,7 @@ export const UpgradePasswordScene = (props: SceneProps<'upgradePassword'>) => {
   })
 
   const handleSubmit = useHandler(async (newPassword: string) => {
-    logEvent('Signup_Back_Up_Password_Valid')
+    logEvent('Backup_Password_Valid')
     dispatch({
       type: 'NAVIGATE',
       data: {
