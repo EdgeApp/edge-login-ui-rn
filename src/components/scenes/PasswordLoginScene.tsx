@@ -50,20 +50,24 @@ import { ThemedScene } from '../themed/ThemedScene'
 // localUsers
 const MAX_DISPLAYED_LOCAL_USERS = 4.75
 
+export interface PasswordLoginParams {
+  username: string
+}
+
 interface Props extends SceneProps<'passwordLogin'> {
   branding: Branding
 }
 
 export const PasswordLoginScene = (props: Props) => {
-  const { branding } = props
+  const { branding, route } = props
+  const { username } = route.params
   const { context } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
+  const styles = getStyles(theme)
 
   const localUsers = useLocalUsers()
   const touch = useSelector(state => state.touch.type)
-  const username = useSelector(state => state.login.username)
-  const styles = getStyles(theme)
 
   const isMultiLocalUsers = localUsers.length > 1
 
@@ -192,7 +196,7 @@ export const PasswordLoginScene = (props: Props) => {
   })
 
   const handleSelectUser = useHandler((userInfo: LoginUserInfo) => {
-    const { username } = userInfo
+    const { loginId, username } = userInfo
     if (username == null) return // These don't exist in the list
     handleChangeUsername(username)
     setShowUsernameList(false)
@@ -206,17 +210,20 @@ export const PasswordLoginScene = (props: Props) => {
     ) {
       dispatch({
         type: 'NAVIGATE',
-        data: { name: 'pinLogin', params: {} }
+        data: { name: 'pinLogin', params: { loginId } }
       })
     } else {
       if (passwordInputRef.current != null) passwordInputRef.current.focus()
     }
   })
 
-  const handleChangeUsername = useHandler((data: string) => {
+  const handleChangeUsername = useHandler((username: string) => {
     setPasswordErrorMessage(undefined)
     setUsernameErrorMessage(undefined)
-    dispatch({ type: 'AUTH_UPDATE_USERNAME', data: data })
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'passwordLogin', params: { username } }
+    })
   })
 
   const handleSubmitRecoveryKey = useHandler(

@@ -180,7 +180,7 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
       onBack={() =>
         dispatch({
           type: 'NAVIGATE',
-          data: { name: 'passwordLogin', params: {} }
+          data: { name: 'passwordLogin', params: { username } }
         })
       }
     >

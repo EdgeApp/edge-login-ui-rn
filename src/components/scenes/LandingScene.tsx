@@ -4,6 +4,7 @@ import { Text, View } from 'react-native'
 import s from '../../common/locales/strings'
 import * as Constants from '../../constants/index'
 import { useHandler } from '../../hooks/useHandler'
+import { useImports } from '../../hooks/useImports'
 import { Branding } from '../../types/Branding'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
@@ -20,6 +21,7 @@ interface Props extends SceneProps<'landing'> {
 
 export const LandingScene = (props: Props) => {
   const dispatch = useDispatch()
+  const { username } = useImports()
 
   const handleCreate = useHandler(() => {
     logEvent('Signup_Create_Account')
@@ -32,7 +34,10 @@ export const LandingScene = (props: Props) => {
     logEvent('Signup_Signin')
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'passwordLogin', params: {} }
+      data: {
+        name: 'passwordLogin',
+        params: { username: username ?? '' }
+      }
     })
   })
 

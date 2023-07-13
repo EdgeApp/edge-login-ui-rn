@@ -18,6 +18,7 @@ import {
 } from '../components/modals/RequestPermissionsModal'
 import { SecurityAlertsModal } from '../components/modals/SecurityAlertsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
+import { arrangeUsers, upgradeUsers } from '../hooks/useLocalUsers'
 import { scene as sceneReducer } from '../reducers/SceneReducer'
 import { Branding } from '../types/Branding'
 import {
@@ -96,10 +97,17 @@ export const maybeRouteComplete = (fallbackAction: Action) => (
   dispatch(fallbackAction)
 }
 
+/**
+ * Loading is done, so send the user to the initial route.
+ */
 function routeInitialization(state: RootState, imports: Imports): Action {
-  // Loading is done, so send the user to the initial route:
-  const biometryType = state.touch.type
-  const { startupUser } = state.previousUsers
+  const { context, username } = imports
+  const { touch } = state
+
+  // Try to find the user requested by the LoginScene props:
+  const localUsers = upgradeUsers(arrangeUsers(context.localUsers), touch)
+  const startupUser =
+    localUsers.find(user => user.username === username) ?? localUsers[0]
 
   const defaultInitialRoute = (): Action => {
     const { recoveryKey } = imports
@@ -115,16 +123,22 @@ function routeInitialization(state: RootState, imports: Imports): Action {
       }
     } else if (
       startupUser.pinLoginEnabled ||
-      (startupUser.touchLoginEnabled && biometryType !== false)
+      (startupUser.touchLoginEnabled && touch.type !== false)
     ) {
       return {
         type: 'NAVIGATE',
-        data: { name: 'pinLogin', params: {} }
+        data: {
+          name: 'pinLogin',
+          params: { loginId: startupUser.loginId }
+        }
       }
     } else {
       return {
         type: 'NAVIGATE',
-        data: { name: 'passwordLogin', params: {} }
+        data: {
+          name: 'passwordLogin',
+          params: { username: startupUser.username ?? '' }
+        }
       }
     }
   }
@@ -135,7 +149,10 @@ function routeInitialization(state: RootState, imports: Imports): Action {
     case 'login-password':
       return {
         type: 'NAVIGATE',
-        data: { name: 'passwordLogin', params: {} }
+        data: {
+          name: 'passwordLogin',
+          params: { username: imports.username ?? '' }
+        }
       }
     case 'new-account':
       return {
@@ -176,7 +193,10 @@ const checkSecurityMessages = () => async (
       <SecurityAlertsModal bridge={bridge} messages={relevantMessages} />
     ))
     if (username != null) {
-      dispatch({ type: 'AUTH_UPDATE_USERNAME', data: username })
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'passwordLogin', params: { username } }
+      })
     }
   }
 }
