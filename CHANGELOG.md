@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 2.4.2 (2023-07-14)
+
+- fixed: Correctly handle username deletion on the PIN scene.
+
 ## 2.4.1 (2023-07-11)
 
 - fixed: Maestro testing targetability of components
