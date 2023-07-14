@@ -34,6 +34,10 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ThemedScene } from '../themed/ThemedScene'
 
+export interface PinLoginParams {
+  loginId: string
+}
+
 interface Props extends SceneProps<'pinLogin'> {
   branding: Branding
 }
@@ -44,7 +48,8 @@ interface ErrorInfo {
 }
 
 export function PinLoginScene(props: Props) {
-  const { branding } = props
+  const { branding, route } = props
+  const { loginId } = route.params
   const { accountOptions, context } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -66,22 +71,21 @@ export function PinLoginScene(props: Props) {
   const touch = useSelector(state => state.touch.type)
   const isTouchIdDisabled = hasWait || pin.length === 4 || touchBusy
 
-  // User state:
+  // User list:
   const localUsers = useLocalUsers()
-  const initialUsername = useSelector(state => state.login.username)
-
-  const [userInfo, setUserInfo] = React.useState<LoginUserInfo | undefined>(
-    () =>
-      localUsers.find(user => user.username === initialUsername) ??
-      localUsers[0]
-  )
-
   const dropdownItems = React.useMemo(
     () =>
       localUsers.filter(
         user => user.pinLoginEnabled || (touch && user.touchLoginEnabled)
       ),
     [touch, localUsers]
+  )
+
+  // Active user:
+  const userInfo = React.useMemo<LoginUserInfo | undefined>(
+    () =>
+      dropdownItems.find(user => user.loginId === loginId) ?? dropdownItems[0],
+    [dropdownItems, loginId]
   )
 
   // ---------------------------------------------------------------------
@@ -103,7 +107,10 @@ export function PinLoginScene(props: Props) {
     ) {
       dispatch({
         type: 'NAVIGATE',
-        data: { name: 'passwordLogin', params: {} }
+        data: {
+          name: 'passwordLogin',
+          params: { username: userInfo?.username ?? '' }
+        }
       })
     }
   }, [dispatch, userInfo])
@@ -126,7 +133,10 @@ export function PinLoginScene(props: Props) {
   const handleBack = () => {
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'passwordLogin', params: {} }
+      data: {
+        name: 'passwordLogin',
+        params: { username: userInfo?.username ?? '' }
+      }
     })
   }
 
@@ -223,14 +233,12 @@ export function PinLoginScene(props: Props) {
 
   const handleSelectUser = (userInfo: LoginUserInfo) => {
     setShowUserList(false)
-    setUserInfo(userInfo)
+    dispatch({
+      type: 'NAVIGATE',
+      data: { name: 'pinLogin', params: { loginId: userInfo.loginId } }
+    })
     setErrorInfo(undefined)
     handleTouchLogin(userInfo).catch(showError)
-
-    // Also send the username to the password scene:
-    if (userInfo.username != null) {
-      dispatch({ type: 'AUTH_UPDATE_USERNAME', data: userInfo.username })
-    }
   }
 
   const handleShowDrop = () => {

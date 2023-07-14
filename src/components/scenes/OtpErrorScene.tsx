@@ -193,7 +193,10 @@ export function OtpErrorScene(props: OwnProps) {
   const handleBack = (): void => {
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'passwordLogin', params: {} }
+      data: {
+        name: 'passwordLogin',
+        params: { username: otpAttempt.username }
+      }
     })
   }
 

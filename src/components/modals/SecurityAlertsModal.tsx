@@ -14,13 +14,12 @@ import { ModalScrollArea, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
-  bridge: AirshipBridge<unknown>
+  bridge: AirshipBridge<string | undefined>
   messages: EdgeLoginMessage[]
-  selectUser: (username: string) => void
 }
 
 export const SecurityAlertsModal = (props: Props) => {
-  const { bridge, messages, selectUser } = props
+  const { bridge, messages } = props
   const theme = useTheme()
 
   const handleCancel = useHandler(() => bridge.resolve(undefined))
@@ -54,10 +53,7 @@ export const SecurityAlertsModal = (props: Props) => {
       <TouchableOpacity
         key={(isReset ? 'reset:' : 'voucher:') + username}
         style={isFirst ? styles.row : styles.rowBorder}
-        onPress={() => {
-          selectUser(username)
-          bridge.resolve(undefined)
-        }}
+        onPress={() => bridge.resolve(username)}
       >
         <FontAwesome
           color={isReset ? theme.dangerText : theme.warningText}
