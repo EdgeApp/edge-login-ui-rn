@@ -6,8 +6,10 @@ type Unsubscribe = () => void
  * Returns true if the application should show the SecurityAlertsScene.
  */
 export function hasSecurityAlerts(account: EdgeAccount): boolean {
-  const { otpResetDate, pendingVouchers = [] } = account
-  return otpResetDate != null || pendingVouchers.length > 0
+  const { otpResetDate, pendingVouchers = [], username } = account
+  return (
+    username != null && (otpResetDate != null || pendingVouchers.length > 0)
+  )
 }
 
 /**

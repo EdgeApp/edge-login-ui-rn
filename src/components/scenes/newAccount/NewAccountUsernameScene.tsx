@@ -10,7 +10,11 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
-import { SceneProps } from '../../../types/routerTypes'
+import {
+  AccountParams,
+  CreateFlowParams,
+  SceneProps
+} from '../../../types/routerTypes'
 import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -22,10 +26,14 @@ const AVAILABILITY_CHECK_DELAY_MS = 400
 
 type Timeout = ReturnType<typeof setTimeout>
 
+export interface AccountUsernameParams
+  extends AccountParams,
+    CreateFlowParams {}
+
 interface Props {
   branding: Branding
   initUsername?: string
-  onBack: () => void
+  onBack?: () => void
   onNext: (username: string) => void | Promise<void>
 }
 
@@ -73,7 +81,7 @@ export const ChangeUsernameComponent = (props: Props) => {
     username.length === 0
 
   const handleBack = useHandler(() => {
-    onBack()
+    if (onBack != null) onBack()
   })
   const handleNext = useHandler(async () => {
     if (!isNextDisabled) onNext(username)
@@ -228,7 +236,7 @@ export const NewAccountUsernameScene = (props: NewAccountUsernameProps) => {
     dispatch(
       maybeRouteComplete({
         type: 'NAVIGATE',
-        data: { name: 'newAccountWelcome', params: {} }
+        data: { name: 'passwordLogin', params: { username: '' } }
       })
     )
   })
@@ -250,6 +258,43 @@ export const NewAccountUsernameScene = (props: NewAccountUsernameProps) => {
       branding={branding}
       onBack={handleBack}
       onNext={handleNext}
+    />
+  )
+}
+
+/**
+ * The change username scene for (light) accounts.
+ */
+interface UpgradeUsernameProps extends SceneProps<'upgradeUsername'> {
+  branding: Branding
+}
+export const UpgradeUsernameScene = (props: UpgradeUsernameProps) => {
+  const { branding, route } = props
+  const dispatch = useDispatch()
+  const { onComplete = () => {} } = useImports()
+
+  const handleNext = useHandler(async (newUsername: string) => {
+    const currentPin = await route.params.account.getPin()
+    logEvent(`Backup_Username_Available`)
+    dispatch({
+      type: 'NAVIGATE',
+      data: {
+        name: 'upgradePassword',
+        params: {
+          ...route.params,
+          username: newUsername,
+          pin: currentPin
+        }
+      }
+    })
+  })
+
+  return (
+    <ChangeUsernameComponent
+      initUsername=""
+      branding={branding}
+      onNext={handleNext}
+      onBack={onComplete}
     />
   )
 }
