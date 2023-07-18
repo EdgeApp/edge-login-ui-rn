@@ -1,5 +1,10 @@
 # edge-login-ui-rn
 
+## 2.5.0 (2023-07-17)
+
+- changed: Upgrade to edge-core-js v1.3.2.
+- changed: Support for username-less (light) account.
+
 ## 2.4.2 (2023-07-14)
 
 - fixed: Correctly handle username deletion on the PIN scene.
