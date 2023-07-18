@@ -1,5 +1,11 @@
 # edge-login-ui-rn
 
+## 2.5.1 (2023-07-18)
+
+- fixed: Add missing gradient in Password Login Scene scrollable list
+- fixed: Allow text wrapping in PIN Login Scene account dropdown list
+- changed: Update translations
+
 ## 2.5.0 (2023-07-17)
 
 - changed: Upgrade to edge-core-js v1.3.2.
