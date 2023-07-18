@@ -34,6 +34,7 @@ import { LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
 import { ButtonsModal } from '../modals/ButtonsModal'
+import { GradientFadeOut } from '../modals/GradientFadeout'
 import { showQrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -187,23 +188,29 @@ export const PasswordLoginScene = (props: Props) => {
 
   const handleSelectUser = useHandler((userInfo: LoginUserInfo) => {
     const { loginId, username } = userInfo
-    if (username == null) return // These don't exist in the list
-    handleChangeUsername(username)
-    setShowUsernameList(false)
-
-    const details: LoginUserInfo | undefined = localUsers.find(
-      info => info.username === username
-    )
-    if (
-      details != null &&
-      (details.pinLoginEnabled || (details.touchLoginEnabled && touch))
-    ) {
+    if (username == null) {
       dispatch({
         type: 'NAVIGATE',
         data: { name: 'pinLogin', params: { loginId } }
       })
     } else {
-      if (passwordInputRef.current != null) passwordInputRef.current.focus()
+      handleChangeUsername(username)
+      setShowUsernameList(false)
+
+      const details: LoginUserInfo | undefined = localUsers.find(
+        info => info.username === username
+      )
+      if (
+        details != null &&
+        (details.pinLoginEnabled || (details.touchLoginEnabled && touch))
+      ) {
+        dispatch({
+          type: 'NAVIGATE',
+          data: { name: 'pinLogin', params: { loginId } }
+        })
+      } else {
+        if (passwordInputRef.current != null) passwordInputRef.current.focus()
+      }
     }
   })
 
@@ -307,7 +314,6 @@ export const PasswordLoginScene = (props: Props) => {
         <ScrollView keyboardShouldPersistTaps="handled">
           {localUsers.map(userInfo => {
             const { username } = userInfo
-            if (username == null) return null
             return (
               <UserListItem
                 key={username}
@@ -319,6 +325,7 @@ export const PasswordLoginScene = (props: Props) => {
             )
           })}
         </ScrollView>
+        <GradientFadeOut />
       </Animated.View>
     )
   }

@@ -37,7 +37,7 @@ export function UserListItem(props: Props) {
       onPress={handlePress}
       onLayout={onLayout}
     >
-      <EdgeText accessible style={styles.text}>
+      <EdgeText accessible style={styles.text} numberOfLines={2}>
         {username}
       </EdgeText>
       <TouchableOpacity
@@ -64,9 +64,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    paddingLeft: theme.rem(1)
+    paddingLeft: theme.rem(0.75)
   },
   text: {
+    flex: 1,
+    flexWrap: 'wrap',
     marginVertical: theme.rem(0.25)
   },
   deleteButtonContainer: {

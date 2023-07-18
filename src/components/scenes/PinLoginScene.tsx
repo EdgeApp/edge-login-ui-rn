@@ -409,7 +409,8 @@ function translatePinError(error: Error): string {
 const getStyles = cacheStyles((theme: Theme) => ({
   listView: {
     height: theme.rem(16),
-    width: theme.rem(10)
+    width: theme.rem(10),
+    backgroundColor: theme.modal
   },
   featureBoxContainer: {
     width: '100%',
