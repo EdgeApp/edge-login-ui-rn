@@ -3,7 +3,6 @@ import * as React from 'react'
 import {
   Keyboard,
   LayoutChangeEvent,
-  ScrollView,
   TouchableOpacity,
   View
 } from 'react-native'
@@ -11,6 +10,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { cacheStyles } from 'react-native-patina'
 import Animated, {
   Easing,
+  Extrapolate,
+  interpolate,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -46,9 +48,7 @@ import {
 } from '../themed/OutlinedTextInput'
 import { ThemedScene } from '../themed/ThemedScene'
 
-// Non-round number so that the scroll is apparent with more than max displayed
-// localUsers
-const MAX_DISPLAYED_LOCAL_USERS = 4.75
+const MAX_DISPLAYED_LOCAL_USERS = 5
 
 export interface PasswordLoginParams {
   username: string
@@ -67,9 +67,9 @@ export const PasswordLoginScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const localUsers = useLocalUsers()
-  const touch = useSelector(state => state.touch.type)
+  const numUsers = localUsers.length
 
-  const isMultiLocalUsers = localUsers.length > 1
+  const touch = useSelector(state => state.touch.type)
 
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState<
     string | undefined
@@ -80,14 +80,16 @@ export const PasswordLoginScene = (props: Props) => {
   const [password, setPassword] = React.useState('')
   const [showUsernameList, setShowUsernameList] = React.useState(false)
   const [dropdownY, setDropdownY] = React.useState(0)
+  const [usernameItemHeight, setUsernameItemHeight] = React.useState(0)
 
   const passwordInputRef = React.useRef<OutlinedTextInputRef>(null)
-  const [usernameItemHeight, setUsernameItemHeight] = React.useState(0)
+
   const mDropContainerStyle = React.useMemo(() => {
     return { top: dropdownY, ...styles.dropContainer }
   }, [styles, dropdownY])
 
   const sAnimationMult = useSharedValue(0)
+  const sScrollY = useSharedValue(0)
 
   const dFinalHeight = useDerivedValue(() => {
     return (
@@ -95,6 +97,35 @@ export const PasswordLoginScene = (props: Props) => {
       Math.min(localUsers.length, MAX_DISPLAYED_LOCAL_USERS)
     )
   }, [usernameItemHeight, localUsers])
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (e: { contentOffset: { y: number } }) => {
+      sScrollY.value = e.contentOffset.y
+    }
+  })
+
+  // Gradually hide the bottom ScrollView gradient as the last item scrolls into
+  // view
+  const aGradientOpacity = useAnimatedStyle(() => {
+    // Always hide the bottom ScrollView gradient if there's no entries below
+    // the lower bound of the ScrollView
+    if (MAX_DISPLAYED_LOCAL_USERS > localUsers.length) return { opacity: 0 }
+
+    // Define the bounds at which the opacity should begin to change
+    const minScroll =
+      usernameItemHeight * (localUsers.length - MAX_DISPLAYED_LOCAL_USERS - 1)
+    const maxScroll =
+      usernameItemHeight * (localUsers.length - MAX_DISPLAYED_LOCAL_USERS)
+
+    return {
+      opacity: interpolate(
+        sScrollY.value,
+        [minScroll, maxScroll],
+        [1, 0],
+        Extrapolate.CLAMP
+      )
+    }
+  })
 
   const aDropContainerStyle = useAnimatedStyle(
     () => ({
@@ -268,50 +299,58 @@ export const PasswordLoginScene = (props: Props) => {
     })
   }, [sAnimationMult, showUsernameList])
 
-  const renderUsername = () => (
-    <View style={styles.usernameWrapper}>
-      <View style={styles.inputField} onLayout={handleUsernameLayout}>
-        <OutlinedTextInput
-          autoCorrect={false}
-          autoFocus
-          clearIcon={!isMultiLocalUsers}
-          error={usernameErrorMessage}
-          label={s.strings.username}
-          marginRem={[0.5, 1, 0.5, 1]}
-          returnKeyType="next"
-          testID="usernameFormField"
-          value={username}
-          onChangeText={handleChangeUsername}
-        />
+  const renderUsername = () => {
+    const isMultiLocalUsers = numUsers > 1
+
+    return (
+      <View style={styles.usernameWrapper}>
+        <View style={styles.inputField} onLayout={handleUsernameLayout}>
+          <OutlinedTextInput
+            autoCorrect={false}
+            autoFocus
+            clearIcon={!isMultiLocalUsers}
+            error={usernameErrorMessage}
+            label={s.strings.username}
+            marginRem={[0.5, 1, 0.5, 1]}
+            returnKeyType="next"
+            testID="usernameFormField"
+            value={username}
+            onChangeText={handleChangeUsername}
+          />
+        </View>
+        {isMultiLocalUsers ? (
+          <TouchableOpacity
+            testID="userDropdownIcon"
+            style={styles.dropdownButton}
+            onPress={handleToggleUsernameList}
+          >
+            {showUsernameList ? (
+              <MaterialIcon
+                name="expand-less"
+                size={theme.rem(1.5)}
+                style={styles.iconColor}
+              />
+            ) : (
+              <MaterialIcon
+                name="expand-more"
+                size={theme.rem(1.5)}
+                style={styles.iconColor}
+              />
+            )}
+          </TouchableOpacity>
+        ) : null}
       </View>
-      {isMultiLocalUsers ? (
-        <TouchableOpacity
-          testID="userDropdownIcon"
-          style={styles.dropdownButton}
-          onPress={handleToggleUsernameList}
-        >
-          {showUsernameList ? (
-            <MaterialIcon
-              name="expand-less"
-              size={theme.rem(1.5)}
-              style={styles.iconColor}
-            />
-          ) : (
-            <MaterialIcon
-              name="expand-more"
-              size={theme.rem(1.5)}
-              style={styles.iconColor}
-            />
-          )}
-        </TouchableOpacity>
-      ) : null}
-    </View>
-  )
+    )
+  }
 
   const renderDropdownList = () => {
     return (
       <Animated.View style={[mDropContainerStyle, aDropContainerStyle]}>
-        <ScrollView keyboardShouldPersistTaps="handled">
+        <Animated.ScrollView
+          keyboardShouldPersistTaps="always"
+          scrollEventThrottle={1}
+          onScroll={scrollHandler}
+        >
           {localUsers.map(userInfo => {
             const { username } = userInfo
             return (
@@ -324,8 +363,11 @@ export const PasswordLoginScene = (props: Props) => {
               />
             )
           })}
-        </ScrollView>
-        <GradientFadeOut />
+        </Animated.ScrollView>
+
+        <Animated.View style={aGradientOpacity}>
+          <GradientFadeOut />
+        </Animated.View>
       </Animated.View>
     )
   }
