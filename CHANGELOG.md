@@ -1,5 +1,11 @@
 # edge-login-ui-rn
 
+## 2.5.2 (2023-07-20)
+
+- fixed: Enable the username dropdown for > 0 saved users on the password login scene
+- fixed: Password login scene user list dropdown fade covering last entry
+- fixed: Unnecessary scene scrolling in password login scene
+
 ## 2.5.1 (2023-07-18)
 
 - fixed: Add missing gradient in Password Login Scene scrollable list
