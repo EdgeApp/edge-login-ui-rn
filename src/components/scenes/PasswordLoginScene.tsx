@@ -233,6 +233,8 @@ export const PasswordLoginScene = (props: Props) => {
   })
 
   const handleToggleUsernameList = useHandler(() => {
+    // Dismiss the keyboard when opening the username list
+    if (!showUsernameList) Keyboard.dismiss()
     setShowUsernameList(!showUsernameList)
   })
 
@@ -265,6 +267,7 @@ export const PasswordLoginScene = (props: Props) => {
   })
 
   const handleChangeUsername = useHandler((username: string) => {
+    setShowUsernameList(false)
     setPasswordErrorMessage(undefined)
     setUsernameErrorMessage(undefined)
     dispatch({
