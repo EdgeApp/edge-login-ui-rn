@@ -67,7 +67,6 @@ export const PasswordLoginScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const localUsers = useLocalUsers()
-  const numUsers = localUsers.length
 
   const touch = useSelector(state => state.touch.type)
 
@@ -346,7 +345,7 @@ export const PasswordLoginScene = (props: Props) => {
   }, [contentHeight, scrollViewHeight])
 
   const renderUsername = () => {
-    const isMultiLocalUsers = numUsers > 1
+    const hasSavedUsers = localUsers.length > 0
 
     return (
       <View style={styles.usernameWrapper}>
@@ -354,7 +353,7 @@ export const PasswordLoginScene = (props: Props) => {
           <OutlinedTextInput
             autoCorrect={false}
             autoFocus
-            clearIcon={!isMultiLocalUsers}
+            clearIcon={!hasSavedUsers}
             error={usernameErrorMessage}
             label={s.strings.username}
             marginRem={[0.5, 1, 0.5, 1]}
@@ -364,7 +363,7 @@ export const PasswordLoginScene = (props: Props) => {
             onChangeText={handleChangeUsername}
           />
         </View>
-        {isMultiLocalUsers ? (
+        {hasSavedUsers ? (
           <TouchableOpacity
             testID="userDropdownIcon"
             style={styles.dropdownButton}
