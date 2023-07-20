@@ -18,7 +18,7 @@ import {
 } from '../components/modals/RequestPermissionsModal'
 import { SecurityAlertsModal } from '../components/modals/SecurityAlertsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { arrangeUsers, upgradeUsers } from '../hooks/useLocalUsers'
+import { arrangeUsers, upgradeUser } from '../hooks/useLocalUsers'
 import { scene as sceneReducer } from '../reducers/SceneReducer'
 import { Branding } from '../types/Branding'
 import {
@@ -101,13 +101,15 @@ export const maybeRouteComplete = (fallbackAction: Action) => (
  * Loading is done, so send the user to the initial route.
  */
 function routeInitialization(state: RootState, imports: Imports): Action {
-  const { context, username } = imports
+  const {
+    context,
+    initialUserInfo = arrangeUsers(context.localUsers)[0]
+  } = imports
   const { touch } = state
 
   // Try to find the user requested by the LoginScene props:
-  const localUsers = upgradeUsers(arrangeUsers(context.localUsers), touch)
   const startupUser =
-    localUsers.find(user => user.username === username) ?? localUsers[0]
+    initialUserInfo != null ? upgradeUser(initialUserInfo, touch) : undefined
 
   const defaultInitialRoute = (): Action => {
     const { recoveryKey } = imports
@@ -151,7 +153,7 @@ function routeInitialization(state: RootState, imports: Imports): Action {
         type: 'NAVIGATE',
         data: {
           name: 'passwordLogin',
-          params: { username: imports.username ?? '' }
+          params: { username: startupUser?.username ?? '' }
         }
       }
     case 'new-account':
