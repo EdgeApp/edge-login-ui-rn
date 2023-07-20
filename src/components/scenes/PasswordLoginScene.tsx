@@ -81,6 +81,9 @@ export const PasswordLoginScene = (props: Props) => {
   const [showUsernameList, setShowUsernameList] = React.useState(false)
   const [dropdownY, setDropdownY] = React.useState(0)
   const [usernameItemHeight, setUsernameItemHeight] = React.useState(0)
+  const [isScrollEnabled, setIsScrollEnabled] = React.useState(true)
+  const [scrollViewHeight, setScrollViewHeight] = React.useState(0)
+  const [contentHeight, setContentHeight] = React.useState(0)
 
   const passwordInputRef = React.useRef<OutlinedTextInputRef>(null)
 
@@ -136,6 +139,22 @@ export const PasswordLoginScene = (props: Props) => {
     }),
     [showUsernameList]
   )
+
+  const handleScrollViewLayout = (event: {
+    nativeEvent: { layout: { height: any } }
+  }) => {
+    const { height: scrollViewHeight } = event.nativeEvent.layout
+    setScrollViewHeight(scrollViewHeight)
+    setIsScrollEnabled(contentHeight > scrollViewHeight)
+  }
+
+  const handleContentLayout = (event: {
+    nativeEvent: { layout: { height: any } }
+  }) => {
+    const { height: contentHeight } = event.nativeEvent.layout
+    setContentHeight(contentHeight)
+    setIsScrollEnabled(contentHeight > scrollViewHeight)
+  }
 
   const handleUsernameLayout = useHandler((event: LayoutChangeEvent) => {
     setDropdownY(event.nativeEvent.layout.y + theme.rem(3.5))
@@ -299,6 +318,30 @@ export const PasswordLoginScene = (props: Props) => {
     })
   }, [sAnimationMult, showUsernameList])
 
+  // Make scene scrollability react to keyboard visibility
+  React.useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      (e: { endCoordinates: { height: any } }) => {
+        setIsScrollEnabled(
+          contentHeight > scrollViewHeight - e.endCoordinates.height
+        )
+      }
+    )
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsScrollEnabled(contentHeight > scrollViewHeight)
+      }
+    )
+
+    return () => {
+      // Cleanup the event listeners on unmount
+      keyboardDidShowListener.remove()
+      keyboardDidHideListener.remove()
+    }
+  }, [contentHeight, scrollViewHeight])
+
   const renderUsername = () => {
     const isMultiLocalUsers = numUsers > 1
 
@@ -437,15 +480,19 @@ export const PasswordLoginScene = (props: Props) => {
     <ThemedScene noUnderline branding={branding}>
       <KeyboardAwareScrollView
         style={styles.container}
-        keyboardShouldPersistTaps="always"
+        keyboardShouldPersistTaps="handled"
+        scrollEnabled={isScrollEnabled}
+        onLayout={handleScrollViewLayout}
       >
-        <LogoImageHeader branding={branding} />
+        <View onLayout={handleContentLayout}>
+          <LogoImageHeader branding={branding} />
 
-        <View style={styles.inputContainer}>
-          {renderUsername()}
-          {renderDropdownList()}
-          {renderPassword()}
-          {renderButtons()}
+          <View style={styles.inputContainer}>
+            {renderUsername()}
+            {renderDropdownList()}
+            {renderPassword()}
+            {renderButtons()}
+          </View>
         </View>
       </KeyboardAwareScrollView>
     </ThemedScene>
