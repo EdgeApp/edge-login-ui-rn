@@ -21,7 +21,7 @@ interface Props extends SceneProps<'landing'> {
 
 export const LandingScene = (props: Props) => {
   const dispatch = useDispatch()
-  const { username } = useImports()
+  const { initialUserInfo } = useImports()
 
   const handleCreate = useHandler(() => {
     logEvent('Signup_Create_Account')
@@ -36,7 +36,7 @@ export const LandingScene = (props: Props) => {
       type: 'NAVIGATE',
       data: {
         name: 'passwordLogin',
-        params: { username: username ?? '' }
+        params: { username: initialUserInfo?.username ?? '' }
       }
     })
   })

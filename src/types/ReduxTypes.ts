@@ -1,5 +1,10 @@
 import { asBoolean, asJSON, asObject } from 'cleaners'
-import { EdgeAccount, EdgeAccountOptions, EdgeContext } from 'edge-core-js'
+import {
+  EdgeAccount,
+  EdgeAccountOptions,
+  EdgeContext,
+  EdgeUserInfo
+} from 'edge-core-js'
 import * as ReactRedux from 'react-redux'
 
 import { InitialRouteName } from '../components/publicApi/types'
@@ -40,13 +45,13 @@ export type OnNotificationPermit = (
 export interface Imports {
   readonly accountOptions: EdgeAccountOptions
   readonly context: EdgeContext
+  readonly initialUserInfo?: EdgeUserInfo
   readonly initialRoute?: InitialRouteName
   readonly onComplete?: () => void
   readonly onLogin?: OnLogin
   readonly onNotificationPermit?: OnNotificationPermit
   readonly recoveryKey?: string
   readonly skipSecurityAlerts?: boolean
-  readonly username?: string | null
   readonly customPermissionsFunction?: () => void
 }
 

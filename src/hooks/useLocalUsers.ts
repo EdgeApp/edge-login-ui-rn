@@ -16,10 +16,10 @@ export function useLocalUsers(): LoginUserInfo[] {
   const localUsers = useWatch(context, 'localUsers')
   const touch = useSelector(state => state.touch)
 
-  return React.useMemo(() => upgradeUsers(arrangeUsers(localUsers), touch), [
-    localUsers,
-    touch
-  ])
+  return React.useMemo(
+    () => arrangeUsers(localUsers).map(info => upgradeUser(info, touch)),
+    [localUsers, touch]
+  )
 }
 
 /**
@@ -50,19 +50,17 @@ export function arrangeUsers(localUsers: EdgeUserInfo[]): EdgeUserInfo[] {
   return [...recentUsers, ...oldUsers]
 }
 
-export function upgradeUsers(
-  localUsers: EdgeUserInfo[],
+export function upgradeUser(
+  userInfo: EdgeUserInfo,
   touch: TouchState
-): LoginUserInfo[] {
-  return localUsers.map(userInfo => {
-    const { username, keyLoginEnabled } = userInfo
-    return {
-      ...userInfo,
-      touchLoginEnabled:
-        username != null &&
-        keyLoginEnabled &&
-        touch.supported &&
-        typeof getKeychainStatus(touch.file, userInfo) === 'string'
-    }
-  })
+): LoginUserInfo {
+  const { username, keyLoginEnabled } = userInfo
+  return {
+    ...userInfo,
+    touchLoginEnabled:
+      username != null &&
+      keyLoginEnabled &&
+      touch.supported &&
+      typeof getKeychainStatus(touch.file, userInfo) === 'string'
+  }
 }

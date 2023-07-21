@@ -16,6 +16,12 @@ import { AppConfig, InitialRouteName } from './types'
 
 interface Props {
   context: EdgeContext
+
+  /**
+   * The user to select, if present on the device.
+   * Get this from `EdgeContext.localUsers`
+   */
+  initialLoginId?: string
   initialRoute?: InitialRouteName
 
   // Branding stuff:
@@ -56,20 +62,37 @@ interface Props {
   // based on `hasSecurityAlerts` and `watchSecurityAlerts`:
   skipSecurityAlerts?: boolean
 
-  // The username to select, if present on the device:
-  username?: string
-
   // Call that overwrites the internal checkAndRequestNotifications function. Executed on Login initialization:
   customPermissionsFunction?: () => void
+
+  /**
+   * The username to select, if present on the device.
+   * @deprecated Use initialLoginId instead.
+   */
+  username?: string
 }
 
 export function LoginScreen(props: Props): JSX.Element {
-  const { appConfig, fontDescription = { regularFontFamily: 'System' } } = props
+  const {
+    appConfig,
+    context,
+    fontDescription = { regularFontFamily: 'System' },
+    initialLoginId,
+    username
+  } = props
   const {
     regularFontFamily,
     headingFontFamily = regularFontFamily
   } = fontDescription
   const { onComplete } = props
+
+  // Look up the requested user:
+  const initialUserInfo =
+    initialLoginId != null
+      ? context.localUsers.find(info => info.loginId === initialLoginId)
+      : username != null
+      ? context.localUsers.find(info => info.username === username)
+      : undefined
 
   // Update theme fonts if they are different:
   React.useEffect(() => changeFont(regularFontFamily, headingFontFamily), [
@@ -92,14 +115,14 @@ export function LoginScreen(props: Props): JSX.Element {
     <ReduxStore
       imports={{
         accountOptions: props.accountOptions,
-        context: props.context,
+        context,
+        initialUserInfo,
         initialRoute: props.initialRoute,
         onComplete,
         onLogin: props.onLogin,
         onNotificationPermit: props.onNotificationPermit,
         recoveryKey: props.recoveryLogin,
         skipSecurityAlerts: props.skipSecurityAlerts,
-        username: props.username,
         customPermissionsFunction: props.customPermissionsFunction
       }}
       initialAction={initializeLogin()}
