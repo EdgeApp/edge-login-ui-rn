@@ -1,5 +1,10 @@
 # edge-login-ui-rn
 
+## 2.6.0 (2023-07-21)
+
+- added: Accept an `initialLoginId` prop for the `LoginScreen`. Use this to select the initial user.
+- deprecated: The `username` prop for the `LoginScreen`. Use `initialLoginId` instead.
+
 ## 2.5.2 (2023-07-20)
 
 - fixed: Enable the username dropdown for > 0 saved users on the password login scene
