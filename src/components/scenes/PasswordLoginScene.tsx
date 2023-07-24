@@ -61,12 +61,13 @@ interface Props extends SceneProps<'passwordLogin'> {
 export const PasswordLoginScene = (props: Props) => {
   const { branding, route } = props
   const { username } = route.params
-  const { context } = useImports()
+  const { context, onComplete } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const localUsers = useLocalUsers()
+  const hasSavedUsers = localUsers.length > 0
 
   const touch = useSelector(state => state.touch.type)
 
@@ -302,13 +303,20 @@ export const PasswordLoginScene = (props: Props) => {
     logEvent('Login_Password_Create_Account')
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'newAccountUsername', params: {} }
+      data: {
+        name: hasSavedUsers ? 'newAccountUsername' : 'newAccountPin',
+        params: {}
+      }
     })
   })
 
   const handleQrModal = useHandler(() => {
     Keyboard.dismiss()
     dispatch(showQrCodeModal())
+  })
+
+  const handleBack = useHandler(() => {
+    if (onComplete != null) onComplete()
   })
 
   // The main hints dropdown animation depending on focus state of the
@@ -345,8 +353,6 @@ export const PasswordLoginScene = (props: Props) => {
   }, [contentHeight, scrollViewHeight])
 
   const renderUsername = () => {
-    const hasSavedUsers = localUsers.length > 0
-
     return (
       <View style={styles.usernameWrapper}>
         <View style={styles.inputField} onLayout={handleUsernameLayout}>
@@ -479,7 +485,7 @@ export const PasswordLoginScene = (props: Props) => {
   }
 
   return (
-    <ThemedScene noUnderline branding={branding}>
+    <ThemedScene noUnderline branding={branding} onBack={handleBack}>
       <KeyboardAwareScrollView
         style={styles.container}
         keyboardShouldPersistTaps="handled"
