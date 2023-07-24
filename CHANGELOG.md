@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 2.6.1 (2023-07-24)
+
+- fixed: Reinstate login screen back button, conditionalize light username-less vs full account creation
+
 ## 2.6.0 (2023-07-21)
 
 - added: Accept an `initialLoginId` prop for the `LoginScreen`. Use this to select the initial user.
