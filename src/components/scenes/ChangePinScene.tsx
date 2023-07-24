@@ -21,6 +21,7 @@ import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
 
 interface Props {
+  body?: string
   initPin?: string
   title?: string
   onBack?: () => void
@@ -30,6 +31,7 @@ interface Props {
 }
 
 const ChangePinSceneComponent = ({
+  body = s.strings.pin_desc,
   initPin,
   title,
   onBack,
@@ -58,7 +60,7 @@ const ChangePinSceneComponent = ({
     <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
       <ScrollView ref={scrollViewRef} style={styles.content}>
         <EdgeText style={styles.description} numberOfLines={0}>
-          {s.strings.pin_desc}
+          {body}
         </EdgeText>
         <DigitInput pin={pin} onChangePin={handleChangePin} />
         <View style={styles.actions}>
@@ -195,6 +197,7 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
 
   return (
     <ChangePinSceneComponent
+      body={lightAccount ? s.strings.pin_desc_alt : undefined}
       title={s.strings.choose_title_pin}
       onBack={handleBack}
       onSubmit={handleSubmit}
