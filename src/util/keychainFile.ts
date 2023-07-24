@@ -39,11 +39,11 @@ export function getKeychainStatus(
   file: KeychainInfo[],
   account: EdgeAccount | EdgeUserInfo
 ): string | false | undefined {
+  const accountLoginId =
+    'rootLoginId' in account ? account.rootLoginId : account.loginId
   const row = file.find(row => {
-    const accountLoginId =
-      'rootLoginId' in account ? account.rootLoginId : account.loginId
-    if (row.loginId === accountLoginId) return true
-    if (row.username === account.username) return true
+    if (row.loginId != null && row.loginId === accountLoginId) return true
+    if (row.username != null && row.username === account.username) return true
     return false
   })
   return row?.key
@@ -61,8 +61,8 @@ export async function saveKeychainStatus(
   status: string | false | undefined
 ): Promise<void> {
   const newRows = file.filter(row => {
-    if (row.loginId === account.rootLoginId) return false
-    if (row.username === account.username) return false
+    if (row.loginId != null && row.loginId === account.rootLoginId) return false
+    if (row.username != null && row.username === account.username) return false
     return true
   })
 
