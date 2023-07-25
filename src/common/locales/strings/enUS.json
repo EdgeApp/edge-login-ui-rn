@@ -75,6 +75,7 @@
   "must_one_number": "Must have at least 1 number",
   "terms_one": "I understand that my funds are held securely on this device, not by %s",
   "terms_two": "I understand that if I lose this device or uninstall the app, my digital assets can only be recovered with my username and password",
+  "terms_two_alt": " I understand that if I lose my device or uninstall the app without first backing up my account with a username and password, my digital assets cannot be retrieved.",
   "terms_three": "I understand that if I lose my username and password, %s will not be able to recover my account, unless I set up password recovery",
   "terms_four": "I understand that I am responsible for safekeeping of my passwords, private key pairs, PIN, and any other codes to access the software. %s is not responsible if my information is compromised or accessed by a 3rd party where funds are lost",
   "choose_title_username": "Choose Username",

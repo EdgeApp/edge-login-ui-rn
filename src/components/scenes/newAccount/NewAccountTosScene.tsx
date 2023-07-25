@@ -53,7 +53,7 @@ const TosComponent = (props: Props) => {
   const { appName = s.strings.app_name_default } = branding
   const terms: string[] = [
     sprintf(s.strings.terms_one, appName),
-    s.strings.terms_two,
+    hidePasswordTerms ? s.strings.terms_two_alt : s.strings.terms_two,
     ...(hidePasswordTerms ? [] : [sprintf(s.strings.terms_three, appName)]),
     sprintf(s.strings.terms_four, appName)
   ]
