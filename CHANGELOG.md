@@ -1,5 +1,11 @@
 # edge-login-ui-rn
 
+## 2.6.2 (2023-07-25)
+
+- fixed: Stop returning the incorrect keychain data for light accounts.
+- fixed: Update the wording on the new light account PIN scene, since there is no password.
+- fixed: Update the terms & conditions wording for light accounts, which have no password.
+
 ## 2.6.1 (2023-07-24)
 
 - fixed: Reinstate login screen back button, conditionalize light username-less vs full account creation
