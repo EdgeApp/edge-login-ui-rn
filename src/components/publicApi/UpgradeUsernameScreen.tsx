@@ -1,7 +1,6 @@
 import { EdgeAccount, EdgeContext } from 'edge-core-js'
 import * as React from 'react'
 
-import { useClearOnUnmount } from '../../hooks/useClearOnUnmount'
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
 
@@ -13,8 +12,6 @@ interface Props {
 
 export function UpgradeUsernameScreen(props: Props): JSX.Element {
   const { account, context, onComplete } = props
-
-  useClearOnUnmount()
 
   return (
     <ReduxStore
