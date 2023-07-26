@@ -1,8 +1,11 @@
 export type InitialRouteName =
   | 'login'
   | 'login-password'
+  | 'login-password-light'
   | 'new-account'
   | 'new-light-account'
+
+export type CreateAccountType = 'full' | 'light'
 
 /**
  * Subset of AppConfig from https://github.com/EdgeApp/edge-react-gui/blob/develop/src/types/types.ts

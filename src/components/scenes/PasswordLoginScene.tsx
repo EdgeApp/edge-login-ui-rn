@@ -39,6 +39,7 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { GradientFadeOut } from '../modals/GradientFadeout'
 import { showQrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
+import { CreateAccountType } from '../publicApi/types'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
@@ -52,6 +53,7 @@ const MAX_DISPLAYED_LOCAL_USERS = 5
 
 export interface PasswordLoginParams {
   username: string
+  createAccountType?: CreateAccountType
 }
 
 interface Props extends SceneProps<'passwordLogin'> {
@@ -60,7 +62,7 @@ interface Props extends SceneProps<'passwordLogin'> {
 
 export const PasswordLoginScene = (props: Props) => {
   const { branding, route } = props
-  const { username } = route.params
+  const { username, createAccountType = 'full' } = route.params
   const { context, onComplete } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -272,7 +274,7 @@ export const PasswordLoginScene = (props: Props) => {
     setUsernameErrorMessage(undefined)
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'passwordLogin', params: { username } }
+      data: { name: 'passwordLogin', params: { username, createAccountType } }
     })
   })
 
@@ -304,7 +306,10 @@ export const PasswordLoginScene = (props: Props) => {
     dispatch({
       type: 'NAVIGATE',
       data: {
-        name: hasSavedUsers ? 'newAccountUsername' : 'newAccountPin',
+        name:
+          hasSavedUsers || createAccountType === 'full'
+            ? 'newAccountUsername'
+            : 'newAccountPin',
         params: {}
       }
     })
