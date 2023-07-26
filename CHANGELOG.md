@@ -1,5 +1,10 @@
 # edge-login-ui-rn
 
+## 2.6.3 (2023-07-26)
+
+- fixed: Don't clear modals upon unmounting UpgradeUsernameScreen
+- Update translations
+
 ## 2.6.2 (2023-07-25)
 
 - fixed: Stop returning the incorrect keychain data for light accounts.
