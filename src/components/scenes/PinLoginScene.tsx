@@ -1,4 +1,10 @@
-import { asMaybePasswordError, EdgeUserInfo } from 'edge-core-js'
+import {
+  asMaybeNetworkError,
+  asMaybePasswordError,
+  asMaybeUsernameError,
+  EdgeUserInfo,
+  NetworkError
+} from 'edge-core-js'
 import * as React from 'react'
 import {
   FlatList,
@@ -172,7 +178,7 @@ export function PinLoginScene(props: Props) {
   }
 
   const handlePinLogin = async (
-    userInfo: EdgeUserInfo,
+    userInfo: LoginUserInfo,
     pin: string
   ): Promise<void> => {
     try {
@@ -185,10 +191,21 @@ export function PinLoginScene(props: Props) {
     } catch (error: unknown) {
       console.log('LOG IN WITH PIN ERROR ', error)
 
+      const passwordError = asMaybePasswordError(error)
+      const usernameError = asMaybeUsernameError(error)
+      const networkError = asMaybeNetworkError(error)
       setErrorInfo({
         message:
-          error instanceof Error ? translatePinError(error) : String(error),
-        wait: Math.ceil(asMaybePasswordError(error)?.wait ?? 0)
+          passwordError != null
+            ? s.strings.invalid_pin
+            : usernameError != null
+            ? s.strings.pin_not_enabled
+            : networkError != null
+            ? translateNetworkError(networkError, userInfo)
+            : error instanceof Error
+            ? error.message
+            : String(error),
+        wait: Math.ceil(passwordError?.wait ?? 0)
       })
       setPin('')
       setTouchBusy(false)
@@ -397,11 +414,15 @@ export function PinLoginScene(props: Props) {
   )
 }
 
-function translatePinError(error: Error): string {
-  if (error.name === 'PasswordError') return s.strings.invalid_pin
-  if (error.name === 'UsernameError') return s.strings.pin_not_enabled
-  if (error.name === 'NetworkError') {
+function translateNetworkError(
+  error: NetworkError,
+  userInfo: LoginUserInfo
+): string {
+  if (userInfo.username != null) {
     return `${error.message} ${s.strings.pin_network_error_full_password}`
+  }
+  if (userInfo.keyLoginEnabled) {
+    return `${error.message} ${s.strings.pin_network_error_biometric}`
   }
   return error.message
 }
