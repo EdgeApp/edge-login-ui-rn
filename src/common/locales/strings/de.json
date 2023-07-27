@@ -140,6 +140,7 @@
   "invalid_password": "Invalid password",
   "invalid_pin": "Ungültiger PIN",
   "pin_network_error_full_password": "Sie können sich noch mit Benutzername und Passwort in Ihr Konto einloggen.",
+  "pin_network_error_biometric": "You may still log into your account with biometrics.",
   "account_locked_for": "Benutzerkonto gesperrt für\n%1$s weitere Sekunden",
   "password_mismatch_error": "Passwords don't match",
   "username_3_characters_error": "Mindestens 3 Zeichen",
