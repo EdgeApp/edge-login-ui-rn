@@ -140,6 +140,7 @@
   "invalid_password": "Invalid password",
   "invalid_pin": "잘못된 PIN",
   "pin_network_error_full_password": "You may still log into your account with username and password.",
+  "pin_network_error_biometric": "You may still log into your account with biometrics.",
   "account_locked_for": "계정이 %1$s초간 잠겨져 있습니다.",
   "password_mismatch_error": "Passwords don't match",
   "username_3_characters_error": "최소 3자가 필요합니다.",
