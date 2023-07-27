@@ -140,6 +140,7 @@
   "invalid_password": "Invalid password",
   "invalid_pin": "无效的PIN码",
   "pin_network_error_full_password": "You may still log into your account with username and password.",
+  "pin_network_error_biometric": "You may still log into your account with biometrics.",
   "account_locked_for": "帐户被锁定 \n%1$s 秒",
   "password_mismatch_error": "Passwords don't match",
   "username_3_characters_error": "最少 3个字符",
