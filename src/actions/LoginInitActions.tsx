@@ -156,6 +156,17 @@ function routeInitialization(state: RootState, imports: Imports): Action {
           params: { username: startupUser?.username ?? '' }
         }
       }
+    case 'login-password-light':
+      return {
+        type: 'NAVIGATE',
+        data: {
+          name: 'passwordLogin',
+          params: {
+            username: startupUser?.username ?? '',
+            createAccountType: 'light'
+          }
+        }
+      }
     case 'new-account':
       return {
         type: 'NAVIGATE',
