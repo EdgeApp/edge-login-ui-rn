@@ -20,6 +20,7 @@ import {
   SceneProps
 } from '../../../types/routerTypes'
 import { logEvent } from '../../../util/analytics'
+import { showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { Checkbox } from '../../themed/Checkbox'
 import { EdgeText } from '../../themed/EdgeText'
@@ -225,6 +226,11 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
         }
       })
     } catch (e: any) {
+      showError(e)
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'newAccountTos', params: route.params }
+      })
       error = String(e)
     }
 
