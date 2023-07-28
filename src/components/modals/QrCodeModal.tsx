@@ -73,7 +73,7 @@ class QrCodeModalComponent extends React.Component<Props, State> {
     }
   }
 
-  handleStart = (username: string): void => {
+  handleStart = (username: string = s.strings.missing_username): void => {
     this.setState({ username })
   }
 
@@ -103,7 +103,7 @@ class QrCodeModalComponent extends React.Component<Props, State> {
     if (out.state != null) {
       // New core versions have the callbacks on the request:
       out.watch('state', state => {
-        if (state === 'started' && out.username != null) {
+        if (state === 'started') {
           this.handleStart(out.username)
         }
         if (state === 'done' && out.account != null) {
