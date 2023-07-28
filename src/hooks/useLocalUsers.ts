@@ -54,11 +54,10 @@ export function upgradeUser(
   userInfo: EdgeUserInfo,
   touch: TouchState
 ): LoginUserInfo {
-  const { username, keyLoginEnabled } = userInfo
+  const { keyLoginEnabled } = userInfo
   return {
     ...userInfo,
     touchLoginEnabled:
-      username != null &&
       keyLoginEnabled &&
       touch.supported &&
       typeof getKeychainStatus(touch.file, userInfo) === 'string'
