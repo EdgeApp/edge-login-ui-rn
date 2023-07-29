@@ -4,7 +4,7 @@
   "username": "ユーザー名",
   "password": "パスワード",
   "confirm_password": "パスワード確認",
-  "confirm_username": "Confirm Username",
+  "confirm_username": "ユーザー名を確認",
   "confirm": "Confirm",
   "create": "Create",
   "pin": "PIN",
