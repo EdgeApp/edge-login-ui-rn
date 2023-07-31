@@ -1,5 +1,10 @@
 # edge-login-ui-rn
 
+## 2.6.5 (2023-07-30)
+
+- fixed: Correctly handle errors during account creation.
+- fixed: Allow biometric logins for light accounts.
+
 ## 2.6.4 (2023-07-28)
 
 - changed: Update password login to allow configurable account creation options
@@ -7,7 +12,7 @@
 ## 2.6.3 (2023-07-26)
 
 - fixed: Don't clear modals upon unmounting UpgradeUsernameScreen
-- Update translations
+- changed: Update translations
 
 ## 2.6.2 (2023-07-25)
 
