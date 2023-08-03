@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 2.6.6 (2023-08-03)
+
+- changed: Update translations
+
 ## 2.6.5 (2023-07-30)
 
 - fixed: Correctly handle errors during account creation.
