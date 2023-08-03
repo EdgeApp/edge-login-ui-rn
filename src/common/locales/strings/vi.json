@@ -140,6 +140,7 @@
   "invalid_password": "Invalid password",
   "invalid_pin": "PIN không hợp lệ ",
   "pin_network_error_full_password": "You may still log into your account with username and password.",
+  "pin_network_error_biometric": "You may still log into your account with biometrics.",
   "account_locked_for": "Tài khoản bị khóa trong \n1 vài giây nữa",
   "password_mismatch_error": "Passwords don't match",
   "username_3_characters_error": "Tối Thiểu 3 Ký Tự",
