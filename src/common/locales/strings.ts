@@ -3,6 +3,7 @@ import { getLocales } from 'react-native-localize'
 import de from './strings/de.json'
 import en from './strings/enUS.json'
 import es from './strings/es.json'
+import esMX from './strings/esMX.json' // Requires Crowdin %two_letters_code% override
 import fr from './strings/fr.json'
 import it from './strings/it.json'
 import ja from './strings/ja.json'
@@ -12,7 +13,7 @@ import ru from './strings/ru.json'
 import vi from './strings/vi.json'
 import zh from './strings/zh.json'
 
-const allLocales = { en, de, ru, es, it, pt, ja, fr, ko, vi, zh }
+const allLocales = { en, de, ru, es, esMX, it, pt, ja, fr, ko, vi, zh }
 
 const strings: typeof en = { ...en }
 const out = { strings }
@@ -35,33 +36,28 @@ function mergeStrings(
 // Locale formats can be in the form 'en', 'en-US', 'en_US', or 'enUS'
 export function selectLocale(locale: string = 'en'): boolean {
   // Break up local into language and region
-  const normalizedLocale = locale
-    .replace('-', '')
-    .replace('-', '')
-    .replace('_', '')
-
-  let found = false
-  const lang = normalizedLocale.slice(0, 2)
+  const normalizedLocale = locale.replace('-', '').replace('_', '')
 
   if (locale === 'en') return true
-
-  // Find pure language match first (ie. find 'es' when 'esMX' is chosen)
-  // @ts-expect-error
-  if (allLocales[lang] !== undefined) {
-    found = true
-    // @ts-expect-error
-    mergeStrings(out.strings, allLocales[lang])
-  }
 
   // Find an exact match
   // @ts-expect-error
   if (allLocales[normalizedLocale] !== undefined) {
-    found = true
     // @ts-expect-error
     mergeStrings(out.strings, allLocales[normalizedLocale])
+    return true
   }
 
-  return found
+  const lang = normalizedLocale.slice(0, 2)
+  // Find pure language match first (ie. find 'es' when 'esMX' is chosen)
+  // @ts-expect-error
+  if (allLocales[lang] !== undefined) {
+    // @ts-expect-error
+    mergeStrings(out.strings, allLocales[lang])
+    return true
+  }
+
+  return false
 }
 
 export default out
