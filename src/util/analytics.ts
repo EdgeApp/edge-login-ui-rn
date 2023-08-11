@@ -1,7 +1,11 @@
 export type TrackingEventName =
   // Password Login Scene Events
-  | 'Login_Password_Create_Account'
-  | 'Login_Password_Forgot_Password'
+  | 'Password_Login_Create_Account'
+  | 'Password_Login_Forgot_Password'
+  | 'Pasword_Login'
+
+  // Pin Login Scene Events
+  | 'Pin_Login'
 
   // Recovery Events
   | 'Recovery_Token_Submit'
