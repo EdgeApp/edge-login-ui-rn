@@ -178,31 +178,35 @@ export const PasswordLoginScene = (props: Props) => {
     Keyboard.dismiss()
 
     const otpAttempt: LoginAttempt = { type: 'password', username, password }
-    await dispatch(login(otpAttempt)).catch(error => {
-      if (error != null && error.name === 'OtpError') {
-        dispatch({
-          type: 'NAVIGATE',
-          data: { name: 'otpError', params: { otpAttempt, otpError: error } }
-        })
-      } else {
-        console.log(error)
-        const usernameError = asMaybeUsernameError(error)
-        if (usernameError != null) {
-          setUsernameErrorMessage(s.strings.invalid_account)
-          return
-        }
+    await dispatch(login(otpAttempt))
+      .then(() => {
+        logEvent('Pasword_Login')
+      })
+      .catch(error => {
+        if (error != null && error.name === 'OtpError') {
+          dispatch({
+            type: 'NAVIGATE',
+            data: { name: 'otpError', params: { otpAttempt, otpError: error } }
+          })
+        } else {
+          console.log(error)
+          const usernameError = asMaybeUsernameError(error)
+          if (usernameError != null) {
+            setUsernameErrorMessage(s.strings.invalid_account)
+            return
+          }
 
-        const passwordError = asMaybePasswordError(error)
-        if (passwordError != null) {
-          setPasswordErrorMessage(s.strings.invalid_password)
-          return
-        }
+          const passwordError = asMaybePasswordError(error)
+          if (passwordError != null) {
+            setPasswordErrorMessage(s.strings.invalid_password)
+            return
+          }
 
-        console.warn('Unknown login error: ', error)
-        const unknownErrorMessage = error != null ? error.message : undefined
-        setPasswordErrorMessage(unknownErrorMessage)
-      }
-    })
+          console.warn('Unknown login error: ', error)
+          const unknownErrorMessage = error != null ? error.message : undefined
+          setPasswordErrorMessage(unknownErrorMessage)
+        }
+      })
   })
 
   const handleDelete = useHandler((userInfo: LoginUserInfo) => {
@@ -289,7 +293,7 @@ export const PasswordLoginScene = (props: Props) => {
 
   const handleForgotPassword = useHandler(() => {
     Keyboard.dismiss()
-    logEvent('Login_Password_Forgot_Password')
+    logEvent('Password_Login_Forgot_Password')
     Airship.show(bridge => (
       <TextInputModal
         bridge={bridge}
@@ -302,7 +306,7 @@ export const PasswordLoginScene = (props: Props) => {
   })
 
   const handleCreateAccount = useHandler(() => {
-    logEvent('Login_Password_Create_Account')
+    logEvent('Password_Login_Create_Account')
     dispatch({
       type: 'NAVIGATE',
       data: {
