@@ -303,7 +303,7 @@ export function PinLoginScene(props: Props) {
         <TouchableOpacity
           testID="usernameDropdownButton"
           style={styles.usernameShadow}
-          onPress={handleShowDrop}
+          onPress={dropdownItems.length <= 1 ? undefined : handleShowDrop}
         >
           <LinearGradient
             colors={theme.pinUsernameButton}
@@ -317,7 +317,9 @@ export function PinLoginScene(props: Props) {
               numberOfLines={1}
               style={styles.usernameText}
             >
-              {userInfo?.username ?? s.strings.missing_username}
+              {dropdownItems.length <= 1
+                ? ''
+                : userInfo?.username ?? s.strings.tap_to_switch_user}
             </Text>
           </LinearGradient>
         </TouchableOpacity>

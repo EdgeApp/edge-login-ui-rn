@@ -197,6 +197,7 @@
   "spin_load_hint": "Loading... please wait.",
   "submit": "Submit",
   "tap_to_review_button": "Tap the dropdown below to review your account information",
+  "tap_to_switch_user": "Tap to Switch User",
   "terms_four": "I understand that I am responsible for safekeeping of my passwords, private key pairs, PIN, and any other codes to access the software. %s is not responsible if my information is compromised or accessed by a 3rd party where funds are lost",
   "terms_one": "I understand that my funds are held securely on this device, not by %s",
   "terms_three": "I understand that if I lose my username and password, %s will not be able to recover my account, unless I set up password recovery",
