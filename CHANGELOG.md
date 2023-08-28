@@ -1,5 +1,10 @@
 # edge-login-ui-rn
 
+## 2.8.0 (2023-08-28)
+
+- changed: Hide "No Username" in the PIN login scene
+- changed: Update translations
+
 ## 2.7.0 (2023-08-11)
 
 - added: Tracking event for logins
