@@ -315,6 +315,7 @@ export function PinLoginScene(props: Props) {
           testID="usernameDropdownButton"
           style={styles.usernameShadow}
           onPress={isSingleSavedUser ? undefined : handleShowDrop}
+          activeOpacity={isSingleSavedUser ? 1 : undefined}
         >
           <LinearGradient
             colors={theme.pinUsernameButton}
