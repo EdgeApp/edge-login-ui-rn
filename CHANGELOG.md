@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 2.9.0 (2023-08-30)
+
+- changed: Remove the Account Review Scene from Light Account creation flow
+
 ## 2.8.1 (2023-08-30)
 
 - fixed: Always show the username in PIN login scene
