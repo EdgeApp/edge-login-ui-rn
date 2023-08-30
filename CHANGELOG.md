@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 2.8.1 (2023-08-30)
+
+- fixed: Always show the username in PIN login scene
+
 ## 2.8.0 (2023-08-28)
 
 - changed: Hide "No Username" in the PIN login scene
