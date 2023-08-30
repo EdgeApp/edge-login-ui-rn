@@ -298,12 +298,24 @@ export function PinLoginScene(props: Props) {
       }
     }
 
+    const isSingleSavedUser = dropdownItems.length === 1
+    let usernameLabel = ''
+    if (userInfo?.username != null) {
+      // Normal account: show username
+      usernameLabel = userInfo.username
+    } else if (!isSingleSavedUser) {
+      // Light account + other saved users: "Tap to Switch..."
+      usernameLabel = s.strings.tap_to_switch_user
+    }
+    // Light account + no other saved users: hide username label
+
     return (
       <View style={styles.innerView}>
         <TouchableOpacity
           testID="usernameDropdownButton"
           style={styles.usernameShadow}
-          onPress={dropdownItems.length <= 1 ? undefined : handleShowDrop}
+          onPress={isSingleSavedUser ? undefined : handleShowDrop}
+          activeOpacity={isSingleSavedUser ? 1 : undefined}
         >
           <LinearGradient
             colors={theme.pinUsernameButton}
@@ -317,9 +329,7 @@ export function PinLoginScene(props: Props) {
               numberOfLines={1}
               style={styles.usernameText}
             >
-              {dropdownItems.length <= 1
-                ? ''
-                : userInfo?.username ?? s.strings.tap_to_switch_user}
+              {usernameLabel}
             </Text>
           </LinearGradient>
         </TouchableOpacity>
