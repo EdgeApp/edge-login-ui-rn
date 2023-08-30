@@ -190,7 +190,7 @@ interface NewAccountTosProps extends SceneProps<'newAccountTos'> {
 export const NewAccountTosScene = (props: NewAccountTosProps) => {
   const { route, branding } = props
   const imports = useImports()
-  const { context, accountOptions } = imports
+  const { context, accountOptions, onLogin } = imports
   const dispatch = useDispatch()
 
   const handleBack = useHandler((): void => {
@@ -202,6 +202,8 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
 
   const handleNext = useHandler(async () => {
     const { username, password, pin } = route.params
+    const lightAccount = username == null
+
     let error
     try {
       const account = await context.createAccount({
@@ -215,16 +217,26 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
       })
       await setTouchOtp(account, dispatch)
 
-      dispatch({
-        type: 'NAVIGATE',
-        data: {
-          name: 'newAccountReview',
-          params: {
-            ...route.params,
-            account
-          }
+      if (lightAccount) {
+        if (onLogin == null) {
+          console.error(
+            'NewAccountTosScene: onLogin required for light accounts'
+          )
+          return
         }
-      })
+        onLogin(account)
+      } else {
+        dispatch({
+          type: 'NAVIGATE',
+          data: {
+            name: 'newAccountReview',
+            params: {
+              ...route.params,
+              account
+            }
+          }
+        })
+      }
     } catch (e: any) {
       showError(e)
       dispatch({
@@ -235,7 +247,7 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
     }
 
     logEvent('Signup_Terms_Agree_and_Create_User', {
-      lightAccount: username == null,
+      lightAccount,
       error
     })
   })
