@@ -94,16 +94,16 @@ export const NewAccountReviewScene = (props: NewAccountReviewProps) => {
   const { onLogin } = useImports()
 
   const handleNext = useHandler(() => {
-    const lightAccount = route.params.username == null
-    logEvent(`Signup_Review_Done`, { lightAccount })
+    if (onLogin == null) {
+      console.error('NewAccountReviewScene: onLogin not found')
+      return
+    }
+    logEvent(`Signup_Review_Done`, { lightAccount: false })
+    onLogin(route.params.account)
 
-    if (onLogin != null) onLogin(route.params.account)
-
-    // Only request notification permissions for full account creation
-    if (!lightAccount)
-      dispatch(checkAndRequestNotifications(branding)).catch(error =>
-        console.log(error)
-      )
+    dispatch(checkAndRequestNotifications(branding)).catch(error =>
+      console.log(error)
+    )
   })
 
   return <AccountReviewComponent {...route.params} onNext={handleNext} />
