@@ -197,7 +197,7 @@
   "spin_load_hint": "Caricamento in corso... si prega di attendere.",
   "submit": "Invia",
   "tap_to_review_button": "Tocca il menu a tendina qui sotto per rivedere le informazioni del tuo account",
-  "tap_to_switch_user": "Tap to Switch User",
+  "tap_to_switch_user": "Clicca per cambiare utente",
   "terms_four": "Sono al corrente di essere responsabile della custodia delle mie password, delle mie chiavi private e seed, del PIN e di qualsiasi altro codice per accedere al software. %s non è responsabile se le mie informazioni vengono compromesse o rese accessibili a una terza parte e se questa spende i miei fondi",
   "terms_one": "Sono al corrente che i miei fondi sono tenuti al sicuro su questo dispositivo, non da %s",
   "terms_three": "Sono al corrente che se perdo il mio nome utente e la mia password, %s non sarà in grado di ripristinare il mio account, a meno che non abbia configurato il Recupero Password",
