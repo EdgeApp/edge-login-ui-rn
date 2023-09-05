@@ -38,10 +38,15 @@ export function LinkRow(props: Props) {
   }
   return (
     <TouchableOpacity
+      accessible={false}
       style={[styles.container, spacingStyles]}
       onPress={onPress}
     >
-      {label == null ? null : <Text style={styles.text}>{label}</Text>}
+      {label == null ? null : (
+        <Text accessible style={styles.text}>
+          {label}
+        </Text>
+      )}
       <Text style={styles.icon}>{renderIcon(theme)}</Text>
     </TouchableOpacity>
   )
