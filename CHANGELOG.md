@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 2.9.1 (2023-09-05)
+
+- fixed: Testability of "Enter Backup Code" modal tile
+
 ## 2.9.0 (2023-08-30)
 
 - changed: Remove the Account Review Scene from Light Account creation flow
