@@ -129,6 +129,7 @@ export const OutlinedTextInput = forwardRef(
       secureTextEntry,
       testID,
       editableOnSpinner = false,
+      onSubmitEditing,
       ...inputProps
     } = props
     const theme = useTheme()
@@ -206,6 +207,9 @@ export const OutlinedTextInput = forwardRef(
         withTiming(1, { duration: baseDuration })
       )
       if (onFocus != null) onFocus()
+    }
+    const handleSubmitEditing = () => {
+      if (onSubmitEditing != null) onSubmitEditing()
     }
 
     // Label dimensions:
@@ -485,6 +489,7 @@ export const OutlinedTextInput = forwardRef(
             onBlur={handleBlur}
             onChangeText={onChangeText}
             onFocus={handleFocus}
+            onSubmitEditing={handleSubmitEditing}
             maxLength={maxLength}
           />
         </View>
