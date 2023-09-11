@@ -1,3 +1,4 @@
+import { EdgeAccountOptions } from 'edge-core-js'
 import * as React from 'react'
 
 import s from '../common/locales/strings'
@@ -12,7 +13,10 @@ import { completeLogin } from './LoginCompleteActions'
  * Logs the user in, using password, PIN, or recovery.
  * There is no error handling in here, since components do that best.
  */
-export const login = (attempt: LoginAttempt, otpKey?: string) => async (
+export const login = (
+  attempt: LoginAttempt,
+  opts?: EdgeAccountOptions
+) => async (
   dispatch: Dispatch,
   getState: GetState,
   imports: Imports
@@ -21,8 +25,7 @@ export const login = (attempt: LoginAttempt, otpKey?: string) => async (
 
   const account = await attemptLogin(context, attempt, {
     ...accountOptions,
-    otp: otpKey, // Legacy property name
-    otpKey
+    ...opts
   })
   dispatch(completeLogin(account))
 }

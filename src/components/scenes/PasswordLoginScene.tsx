@@ -1,4 +1,8 @@
-import { asMaybePasswordError, asMaybeUsernameError } from 'edge-core-js'
+import {
+  asMaybeChallengeError,
+  asMaybePasswordError,
+  asMaybeUsernameError
+} from 'edge-core-js'
 import * as React from 'react'
 import {
   Keyboard,
@@ -36,6 +40,7 @@ import { LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
 import { ButtonsModal } from '../modals/ButtonsModal'
+import { ChallengeModal } from '../modals/ChallengeModal'
 import { GradientFadeOut } from '../modals/GradientFadeout'
 import { showQrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -174,15 +179,15 @@ export const PasswordLoginScene = (props: Props) => {
     setPassword(password)
   })
 
-  const handleSubmit = useHandler(async () => {
+  const handleSubmit = useHandler(async (challengeId?: string) => {
     Keyboard.dismiss()
 
     const otpAttempt: LoginAttempt = { type: 'password', username, password }
-    await dispatch(login(otpAttempt))
+    await dispatch(login(otpAttempt, { challengeId }))
       .then(() => {
         logEvent('Pasword_Login')
       })
-      .catch(error => {
+      .catch(async error => {
         if (error != null && error.name === 'OtpError') {
           dispatch({
             type: 'NAVIGATE',
@@ -190,6 +195,23 @@ export const PasswordLoginScene = (props: Props) => {
           })
         } else {
           console.log(error)
+
+          const challengeError = asMaybeChallengeError?.(error)
+          if (challengeError != null) {
+            const result = await Airship.show<'pass' | 'fail' | undefined>(
+              bridge => (
+                <ChallengeModal
+                  bridge={bridge}
+                  challengeError={challengeError}
+                />
+              )
+            )
+            if (result === 'pass') {
+              // Try again with the passed challenge ID included
+              await handleSubmit(challengeError.challengeId)
+            }
+          }
+
           const usernameError = asMaybeUsernameError(error)
           if (usernameError != null) {
             setUsernameErrorMessage(s.strings.invalid_account)
