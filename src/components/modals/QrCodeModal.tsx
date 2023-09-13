@@ -16,7 +16,7 @@ import { Dispatch, GetState, Imports } from '../../types/ReduxTypes'
 import { QrCode } from '../common/QrCode'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { ModalMessage, ModalScrollArea, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 /**
@@ -139,25 +139,23 @@ class QrCodeModalComponent extends React.Component<Props, State> {
     const qrData =
       pendingLogin == null ? null : 'edge://edge/' + pendingLogin.id
     return (
-      <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
-        <ModalScrollArea onCancel={this.handleCancel}>
-          <ModalTitle>{s.strings.qr_modal_title}</ModalTitle>
-          <ModalMessage>
-            {username != null
-              ? sprintf(s.strings.qr_modal_started, username)
-              : s.strings.qr_modal_message}
-          </ModalMessage>
-          <View style={styles.qrContainer}>
-            {qrData == null ? (
-              <ActivityIndicator
-                color={theme.primaryText}
-                animating={isLoadingQrCode}
-              />
-            ) : (
-              <QrCode key="qrcode" data={qrData} size={theme.rem(14)} />
-            )}
-          </View>
-        </ModalScrollArea>
+      <ThemedModal bridge={bridge} onCancel={this.handleCancel} scroll>
+        <ModalTitle>{s.strings.qr_modal_title}</ModalTitle>
+        <ModalMessage>
+          {username != null
+            ? sprintf(s.strings.qr_modal_started, username)
+            : s.strings.qr_modal_message}
+        </ModalMessage>
+        <View style={styles.qrContainer}>
+          {qrData == null ? (
+            <ActivityIndicator
+              color={theme.primaryText}
+              animating={isLoadingQrCode}
+            />
+          ) : (
+            <QrCode key="qrcode" data={qrData} size={theme.rem(14)} />
+          )}
+        </View>
       </ThemedModal>
     )
   }

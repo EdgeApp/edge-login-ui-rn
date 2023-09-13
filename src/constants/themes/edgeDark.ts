@@ -42,6 +42,10 @@ export const edgeDark: Theme = {
   fontFamily: 'System',
   fontWeightBold: 'bold',
 
+  // Used to control the OS status bar, modal blur,
+  // and other binary light / dark choices:
+  isDark: true,
+
   // Icons
   icon: palette.white,
   iconDeactivated: palette.whiteOp75,

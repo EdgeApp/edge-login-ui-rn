@@ -6,7 +6,7 @@ import s from '../../common/locales/strings'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { MainButton } from '../themed/MainButton'
-import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -148,7 +148,6 @@ export function TextInputModal(props: Props) {
           type="secondary"
         />
       )}
-      <ModalFooter onPress={handleCancel} fadeOut />
     </ThemedModal>
   )
 }

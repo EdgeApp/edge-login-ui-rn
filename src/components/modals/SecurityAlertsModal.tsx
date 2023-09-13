@@ -82,7 +82,7 @@ export const SecurityAlertsModal = (props: Props) => {
   return (
     <ThemedModal bridge={bridge} warning onCancel={handleCancel}>
       <ModalTitle>{s.strings.security_is_our_priority_modal_title}</ModalTitle>
-      <ModalScrollArea onCancel={handleCancel}>{renderList()}</ModalScrollArea>
+      <ModalScrollArea>{renderList()}</ModalScrollArea>
     </ThemedModal>
   )
 }

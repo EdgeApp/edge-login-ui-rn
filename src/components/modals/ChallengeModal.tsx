@@ -5,7 +5,7 @@ import { WebView, WebViewNavigation } from 'react-native-webview'
 
 import s from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
-import { ModalFooter, ModalTitle } from '../themed/ModalParts'
+import { ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
@@ -41,7 +41,6 @@ export const ChallengeModal = (props: Props) => {
         style={{ backgroundColor: '#00000000' }}
         onShouldStartLoadWithRequest={handleLoading}
       />
-      <ModalFooter onPress={handleCancel} />
     </ThemedModal>
   )
 }

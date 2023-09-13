@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { Text, TouchableOpacity, View, ViewStyle } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
+import s from '../../common/locales/strings'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { GradientFadeOut } from '../modals/GradientFadeout'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -14,9 +14,9 @@ interface ModalTitleProps {
   paddingRem?: number[] | number
   icon?: React.ReactNode
 }
+
 interface ModalFooterProps {
   onPress: () => void
-  fadeOut?: boolean
 }
 
 export function ModalTitle(props: ModalTitleProps) {
@@ -55,78 +55,73 @@ export function ModalMessage(props: {
     </Text>
   )
 }
+
 /**
- * Renders a close button and an optional fade-out gradient.
- *
- * If you use the fade-out gradient, your scroll element's
- * `contentContainerStyle` needs `theme.rem(ModalFooter.bottomRem)`
- * worth of bottom padding, so the close button does not cover your content.
+ * Renders a close button
  */
 export function ModalFooter(props: ModalFooterProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { fadeOut } = props
-
-  const footerFadeContainer =
-    fadeOut === true ? styles.footerFadeContainer : undefined
-  const footerFade = fadeOut === true ? styles.footerFade : undefined
 
   return (
-    <View style={footerFadeContainer}>
-      <View style={footerFade}>
-        <TouchableOpacity
-          onPress={props.onPress}
-          style={styles.closeIcon}
-          accessibilityHint="Close Modal"
-        >
-          <AntDesignIcon
-            name="close"
-            size={theme.rem(1.25)}
-            color={theme.iconTappable}
-          />
-        </TouchableOpacity>
-      </View>
-      {fadeOut !== true ? null : <GradientFadeOut />}
+    <TouchableOpacity onPress={props.onPress} style={styles.closeContainer}>
+      <AntDesignIcon
+        accessibilityHint={s.strings.modal_close_hint}
+        color={theme.iconTappable}
+        name="close"
+        size={theme.rem(1.25)}
+      />
+    </TouchableOpacity>
+  )
+}
+
+ModalFooter.bottomRem = 3
+
+/**
+ * A consistently styled scroll area for use in modals. Should only be used
+ * within ThemedModal.
+ */
+export function ModalScrollArea(props: { children: React.ReactNode }) {
+  const { children } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  return (
+    <View style={styles.scrollContainer}>
+      <ScrollView contentContainerStyle={styles.scrollPadding}>
+        {children}
+      </ScrollView>
+      <ModalFooterFade />
     </View>
   )
 }
-ModalFooter.bottomRem = 2.5
 
-export function ModalScrollArea(props: {
-  children: React.ReactNode
-  onCancel: () => void
-}) {
-  const { children, onCancel } = props
+/**
+ * For fading the bottom of the modal if the modal caller has its own special
+ * scroll implementation and does not use the ThemedModal's built-in 'scroll'
+ * prop
+ */
+export const ModalFooterFade = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const scrollPadding = React.useMemo<ViewStyle>(() => {
-    return {
-      paddingBottom: theme.rem(ModalFooter.bottomRem)
-    }
-  }, [theme])
-
   return (
-    <View>
-      <KeyboardAwareScrollView
-        contentContainerStyle={scrollPadding}
-        style={styles.scrollViewContainer}
-        keyboardShouldPersistTaps="handled"
-      >
-        {children}
-      </KeyboardAwareScrollView>
-      <ModalFooter onPress={onCancel} fadeOut />
+    <View style={styles.footerFadeContainer}>
+      <GradientFadeOut />
     </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  closeIcon: {
+  closeContainer: {
     alignItems: 'center',
-    paddingBottom: theme.rem(ModalFooter.bottomRem)
+    padding: theme.rem(1),
+    marginBottom: theme.rem(-1)
   },
-  scrollViewContainer: {
-    margin: theme.rem(0.5),
-    paddingBottom: theme.rem(2.5)
+  scrollContainer: {
+    marginBottom: theme.rem(-ModalFooter.bottomRem + 0.5)
+  },
+  scrollPadding: {
+    paddingBottom: theme.rem(ModalFooter.bottomRem)
   },
   titleContainer: {
     alignItems: 'center',
@@ -138,7 +133,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   titleText: {
     color: theme.primaryText,
-    fontFamily: theme.fontFaceDefault,
+    fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1.2),
     marginVertical: theme.rem(0.5)
   },
@@ -152,13 +147,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
-    marginVertical: theme.rem(0.5),
+    margin: theme.rem(0.5),
     textAlign: 'left'
   },
   footerFadeContainer: {
-    marginBottom: theme.rem(-1)
-  },
-  footerFade: {
     position: 'absolute',
     bottom: 0,
     left: 0,

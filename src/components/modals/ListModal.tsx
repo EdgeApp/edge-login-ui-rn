@@ -116,7 +116,7 @@ export function ListModal<T>({
         onViewableItemsChanged={onViewableItemsChanged}
       />
       <GradientFadeOut />
-      {!closeArrow ? null : <ModalFooter onPress={handleCancel} fadeOut />}
+      {!closeArrow ? null : <ModalFooter onPress={handleCancel} />}
     </ThemedModal>
   )
 }
