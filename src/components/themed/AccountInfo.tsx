@@ -100,7 +100,7 @@ export const AccountInfo = (props: Props) => {
 
             runOnUI(() => {
               'worklet'
-              height.value = measure(animatedRef).height
+              height.value = measure(animatedRef)?.height ?? 0
             })()
           }
 
