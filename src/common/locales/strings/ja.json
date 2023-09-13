@@ -221,5 +221,6 @@
   "welcome_advantage_two_description": "あなたはデジタル資産を完全に管理しています。%sでさえあなたの情報にアクセスすることはできません。",
   "welcome_advantage_two_title": "あなたのセキュリティが鍵となります",
   "welcome": "%sへようこそ",
-  "your_answer_label": "あなたの回答"
+  "your_answer_label": "あなたの回答",
+  "complete_captcha_title": "Are you a human?"
 }
