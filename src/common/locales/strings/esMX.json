@@ -221,5 +221,6 @@
   "welcome_advantage_two_description": "Tienes control completo sobre sus activos digitales. Ni siquiera %s tiene acceso a tu información.",
   "welcome_advantage_two_title": "Tu seguridad es clave",
   "welcome": "Bienvenido(a) a %s!",
-  "your_answer_label": "Tu respuesta"
+  "your_answer_label": "Tu respuesta",
+  "complete_captcha_title": "Are you a human?"
 }
