@@ -221,5 +221,6 @@
   "welcome_advantage_two_description": "You have complete control over your digital assets. Not even %s has access to your information.",
   "welcome_advantage_two_title": "Your security is key",
   "welcome": "Welcome to %s!",
-  "your_answer_label": "고객님의 답변"
+  "your_answer_label": "고객님의 답변",
+  "complete_captcha_title": "Are you a human?"
 }
