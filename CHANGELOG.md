@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 2.10.0 (2023-09-13)
+
+- added: Show a CAPTCHA modal when the core returns a `ChallengeError` for password login.
+
 ## 2.9.1 (2023-09-05)
 
 - fixed: Testability of "Enter Backup Code" modal tile
