@@ -1,11 +1,12 @@
 import * as React from 'react'
+import { View, ViewStyle } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { showError } from '../services/AirshipInstance'
+import { useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
-import { ModalFooter } from '../themed/ModalParts'
+import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
-import { MessageText, TitleText } from '../themed/ThemedText'
 
 export interface ButtonInfo {
   label: string
@@ -19,6 +20,20 @@ export interface ButtonInfo {
   onPress?: () => Promise<boolean>
 }
 
+export interface ButtonModalProps<Buttons> {
+  bridge: AirshipBridge<keyof Buttons | undefined>
+  title?: string
+  message?: string
+  children?: React.ReactNode
+  buttons: Buttons
+  closeArrow?: boolean
+  disableCancel?: boolean
+  fullScreen?: boolean
+
+  // Adds a border:
+  warning?: boolean
+}
+
 /**
  * A modal with a title, message, and buttons.
  * This is an alternative to the native `Alert` component.
@@ -30,62 +45,85 @@ export interface ButtonInfo {
  * Build a custom modal component if you need form fields, check boxes,
  * or other interactive elements.
  */
-export function ButtonsModal<
-  Buttons extends { [key: string]: ButtonInfo }
->(props: {
-  bridge: AirshipBridge<keyof Buttons | undefined>
-  buttons: Buttons
-  children?: React.ReactNode
-  closeArrow?: boolean
-  message?: string
-  title?: string
-  warning?: boolean
-}) {
+export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(
+  props: ButtonModalProps<Buttons>
+) {
   const {
     bridge,
-    buttons,
-    children,
-    closeArrow = false,
-    message,
     title,
-    warning = false
+    message,
+    children,
+    buttons,
+    closeArrow = false,
+    disableCancel = false,
+    fullScreen = false,
+    warning
   } = props
-  const handleCancel = () => bridge.resolve(undefined)
+  const theme = useTheme()
+
+  const handleCancel = disableCancel
+    ? () => {}
+    : () => bridge.resolve(undefined)
+
+  const containerStyle: ViewStyle = {
+    flex: fullScreen ? 1 : 0
+  }
+  const textStyle: ViewStyle = {
+    justifyContent: 'flex-start'
+  }
+  const buttonsStyle: ViewStyle = {
+    justifyContent: 'flex-end'
+  }
 
   return (
     <ThemedModal
+      closeButton={closeArrow}
+      warning={warning}
       bridge={bridge}
       paddingRem={1}
-      warning={warning}
       onCancel={handleCancel}
     >
-      {title == null ? null : <TitleText>{title}</TitleText>}
-      {message == null ? null : <MessageText>{message}</MessageText>}
-      {children}
-      {Object.keys(buttons).map(key => {
-        const { type = 'primary', label, onPress } = buttons[key]
+      <View style={containerStyle}>
+        <View style={textStyle}>
+          {title != null ? <ModalTitle>{title}</ModalTitle> : null}
+          {message != null ? <ModalMessage>{message}</ModalMessage> : null}
+          {children}
+        </View>
+      </View>
+      <View style={buttonsStyle}>
+        {Object.keys(buttons).map((key, i, arr) => {
+          let defaultType: 'primary' | 'secondary'
+          if (theme.preferPrimaryButton) {
+            defaultType = i === 0 ? 'primary' : 'secondary'
+          } else {
+            defaultType = i === 0 && arr.length > 1 ? 'primary' : 'secondary'
+          }
+          const { type = defaultType, label, onPress } = buttons[key]
 
-        const handlePress = (): void | Promise<void> => {
-          if (onPress == null) return bridge.resolve(key)
-          return onPress().then(
-            result => {
-              if (result) bridge.resolve(key)
-            },
-            error => showError(error)
+          const handlePress = (): Promise<void> | undefined => {
+            if (onPress == null) {
+              bridge.resolve(key)
+              return
+            }
+            return onPress().then(
+              result => {
+                if (result) bridge.resolve(key)
+              },
+              error => showError(error)
+            )
+          }
+
+          return (
+            <MainButton
+              key={key}
+              label={label}
+              marginRem={0.5}
+              type={type}
+              onPress={handlePress}
+            />
           )
-        }
-
-        return (
-          <MainButton
-            key={key}
-            label={label}
-            marginRem={0.5}
-            type={type}
-            onPress={handlePress}
-          />
-        )
-      })}
-      {!closeArrow ? null : <ModalFooter onPress={handleCancel} />}
+        })}
+      </View>
     </ThemedModal>
   )
 }
