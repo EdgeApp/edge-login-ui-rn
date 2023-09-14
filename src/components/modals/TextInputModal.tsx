@@ -41,10 +41,10 @@ interface Props {
     | 'numeric'
     | 'email-address'
     | 'phone-pad'
-  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
-  secureTextEntry?: boolean
   multiline?: boolean
   maxLength?: number
+  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
+  secureTextEntry?: boolean
 }
 
 export function TextInputModal(props: Props) {
@@ -95,12 +95,20 @@ export function TextInputModal(props: Props) {
       }
     )
   }
-  const handleCancel = () => bridge.resolve(undefined)
+
   return (
-    <ThemedModal warning={warning} bridge={bridge} onCancel={handleCancel}>
-      {title == null ? null : <ModalTitle>{title}</ModalTitle>}
-      {message == null ? null : <ModalMessage>{message}</ModalMessage>}
-      {warningMessage == null ? null : (
+    <ThemedModal
+      warning={warning}
+      bridge={bridge}
+      onCancel={() => bridge.resolve(undefined)}
+    >
+      {title != null ? <ModalTitle>{title}</ModalTitle> : null}
+      {typeof message === 'string' ? (
+        <ModalMessage>{message}</ModalMessage>
+      ) : (
+        <>{message}</>
+      )}
+      {warningMessage != null ? (
         <Alert
           type="warning"
           title={s.strings.warning}
@@ -108,7 +116,7 @@ export function TextInputModal(props: Props) {
           message={warningMessage}
           numberOfLines={0}
         />
-      )}
+      ) : null}
       <OutlinedTextInput
         // Text input props:
         autoCapitalize={autoCapitalize}
@@ -135,7 +143,7 @@ export function TextInputModal(props: Props) {
         <MainButton
           alignSelf="center"
           disabled
-          marginRem={[0.5, 0.5, 5, 0.5]}
+          marginRem={0.5}
           type="secondary"
           spinner
         />
@@ -143,7 +151,7 @@ export function TextInputModal(props: Props) {
         <MainButton
           alignSelf="center"
           label={submitLabel}
-          marginRem={[0.5, 0.5, 5, 0.5]}
+          marginRem={0.5}
           onPress={handleSubmit}
           type="secondary"
         />
