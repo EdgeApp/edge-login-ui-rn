@@ -81,15 +81,22 @@ export const ChangeRecoveryScene = (props: Props) => {
     const question = questions[index]
 
     const items = questionsList.map(extractQuestion).filter(stringPredicate)
+
     Airship.show<string | undefined>(bridge => (
       <RadioListModal
         bridge={bridge}
         title={sprintf(s.strings.recovery_question, index + 1)}
-        items={items.filter(
-          item =>
-            // Display the currently selected question and the unselected questions
-            question?.endsWith(item) || !questions.some(q => q?.endsWith(item))
-        )}
+        items={items
+          .filter(
+            stringItem =>
+              // Display the currently selected question and the unselected questions
+              question?.endsWith(stringItem) ||
+              !questions.some(q => q?.endsWith(stringItem))
+          )
+          .map(name => ({
+            name,
+            icon: ''
+          }))}
         selected={extractQuestion(question)}
       />
     )).then((questionText: string | undefined) => {
