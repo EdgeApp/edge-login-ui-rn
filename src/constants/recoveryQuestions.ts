@@ -7,7 +7,6 @@ export const questionsList: string[] = [
   `text:6:${s.strings.change_recovery_question4}`,
   `date::${s.strings.change_recovery_question5}`,
   `date::${s.strings.change_recovery_question6}`,
-  `text:10:${s.strings.change_recovery_question7}`,
   `text:10:${s.strings.change_recovery_question8}`,
   `text:10:${s.strings.change_recovery_question9}`,
   `text:10:${s.strings.change_recovery_question10}`,

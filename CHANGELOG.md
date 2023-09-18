@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## Unreleased
+
+- removed: Redundant recovery question
+
 ## 2.10.0 (2023-09-13)
 
 - added: Show a CAPTCHA modal when the core returns a `ChallengeError` for password login.
