@@ -210,15 +210,16 @@ export const PasswordLoginScene = (props: Props) => {
 
       const challengeError = asMaybeChallengeError?.(error)
       if (challengeError != null) {
-        const result = await Airship.show<'pass' | 'fail' | undefined>(
-          bridge => (
-            <ChallengeModal bridge={bridge} challengeError={challengeError} />
-          )
-        )
-        if (result === 'pass') {
+        const result = await Airship.show<boolean | undefined>(bridge => (
+          <ChallengeModal bridge={bridge} challengeError={challengeError} />
+        ))
+        if (result === true) {
           // Try again with the passed challenge ID included
           await handleSubmit(challengeError.challengeId)
+        } else {
+          setPasswordErrorMessage(s.strings.failed_captcha_error)
         }
+        return
       }
 
       console.warn('Unknown login error: ', error)
