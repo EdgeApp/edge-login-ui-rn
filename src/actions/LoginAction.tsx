@@ -1,4 +1,4 @@
-import { EdgeAccountOptions } from 'edge-core-js'
+import { asMaybeUsernameError, EdgeAccountOptions } from 'edge-core-js'
 import * as React from 'react'
 
 import s from '../common/locales/strings'
@@ -56,13 +56,16 @@ export const launchPasswordRecovery = (recoveryKey: string) => async (
       })
       logEvent('Recovery_Username_Success')
       return true
-    } catch (error: any) {
-      showError(
-        error != null && error.name === 'UsernameError'
-          ? s.strings.recovery_by_username_error
-          : error
-      )
+    } catch (error: unknown) {
       logEvent('Recovery_Username_Failure')
+
+      const usernameError = asMaybeUsernameError(error)
+      if (usernameError != null) {
+        showError(s.strings.recovery_by_username_error)
+        return false
+      }
+
+      showError(error)
       return false
     }
   }

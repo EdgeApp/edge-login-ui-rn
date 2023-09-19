@@ -1,4 +1,4 @@
-import { OtpError } from 'edge-core-js'
+import { asMaybeOtpError, asMaybePasswordError, OtpError } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
 import { ScrollView, View } from 'react-native'
@@ -108,18 +108,18 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
       username,
       answers: okAnswers
     }
-    await attemptLogin(attempt).catch(error => {
-      if (error != null && error.name === 'OtpError') {
-        saveOtpError(attempt, error)
-      } else {
-        const errorMessage =
-          error != null
-            ? error.name === 'PasswordError'
-              ? s.strings.recovery_error
-              : error.message
-            : 'Unknown error'
-        showError(errorMessage)
+    await attemptLogin(attempt).catch((error: unknown) => {
+      const otpError = asMaybeOtpError(error)
+      if (otpError != null) {
+        return saveOtpError(attempt, otpError)
       }
+
+      const passwordError = asMaybePasswordError(error)
+      if (passwordError != null) {
+        return showError(s.strings.recovery_error)
+      }
+
+      showError(error instanceof Error ? error.message : 'Unknown error')
     })
   }
   const renderQuestionAnswer = (index: number) => {
