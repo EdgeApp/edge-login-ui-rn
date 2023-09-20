@@ -1,33 +1,32 @@
 import type { ChallengeError } from 'edge-core-js'
 import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
-import { cacheStyles } from 'react-native-patina'
 import { WebView, WebViewNavigation } from 'react-native-webview'
 
 import s from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
-import { Theme, useTheme } from '../services/ThemeContext'
 import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
-  bridge: AirshipBridge<'pass' | 'fail' | undefined>
+  bridge: AirshipBridge<boolean | undefined>
   challengeError: ChallengeError
 }
 
 export const ChallengeModal = (props: Props) => {
   const { bridge, challengeError } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
 
   const handleCancel = useHandler(() => bridge.resolve(undefined))
-  const handleNavigationStateChange = useHandler((event: WebViewNavigation) => {
+  const handleLoading = useHandler((event: WebViewNavigation): boolean => {
     if (/\/success$/.test(event.url)) {
-      bridge.resolve('pass')
+      bridge.resolve(true)
+      return false
     }
     if (/\/failure$/.test(event.url)) {
-      bridge.resolve('fail')
+      bridge.resolve(false)
+      return false
     }
+    return true
   })
 
   return (
@@ -35,14 +34,14 @@ export const ChallengeModal = (props: Props) => {
       <ModalTitle>{s.strings.complete_captcha_title}</ModalTitle>
       <WebView
         source={{ uri: challengeError.challengeUri }}
-        style={styles.webview}
-        onNavigationStateChange={handleNavigationStateChange}
+        // Allow the modal background to appear inside the WebView.
+        // This is a magic value from the WebView documentation,
+        // so don't use the theme - normal colors don't do anything.
+        // eslint-disable-next-line react-native/no-color-literals
+        style={{ backgroundColor: '#00000000' }}
+        onShouldStartLoadWithRequest={handleLoading}
       />
       <ModalFooter onPress={handleCancel} />
     </ThemedModal>
   )
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  webview: { backgroundColor: theme.modal }
-}))

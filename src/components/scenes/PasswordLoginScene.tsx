@@ -1,5 +1,6 @@
 import {
   asMaybeChallengeError,
+  asMaybeOtpError,
   asMaybePasswordError,
   asMaybeUsernameError
 } from 'edge-core-js'
@@ -180,55 +181,52 @@ export const PasswordLoginScene = (props: Props) => {
   })
 
   const handleSubmit = useHandler(async (challengeId?: string) => {
-    Keyboard.dismiss()
-
     const otpAttempt: LoginAttempt = { type: 'password', username, password }
-    await dispatch(login(otpAttempt, { challengeId }))
-      .then(() => {
-        logEvent('Pasword_Login')
-      })
-      .catch(async error => {
-        if (error != null && error.name === 'OtpError') {
-          dispatch({
-            type: 'NAVIGATE',
-            data: { name: 'otpError', params: { otpAttempt, otpError: error } }
-          })
+
+    try {
+      Keyboard.dismiss()
+      await dispatch(login(otpAttempt, { challengeId }))
+      logEvent('Pasword_Login')
+    } catch (error: unknown) {
+      const otpError = asMaybeOtpError(error)
+      if (otpError != null) {
+        dispatch({
+          type: 'NAVIGATE',
+          data: { name: 'otpError', params: { otpAttempt, otpError } }
+        })
+      }
+
+      const usernameError = asMaybeUsernameError(error)
+      if (usernameError != null) {
+        setUsernameErrorMessage(s.strings.invalid_account)
+        return
+      }
+
+      const passwordError = asMaybePasswordError(error)
+      if (passwordError != null) {
+        setPasswordErrorMessage(s.strings.invalid_password)
+        return
+      }
+
+      const challengeError = asMaybeChallengeError?.(error)
+      if (challengeError != null) {
+        const result = await Airship.show<boolean | undefined>(bridge => (
+          <ChallengeModal bridge={bridge} challengeError={challengeError} />
+        ))
+        if (result === true) {
+          // Try again with the passed challenge ID included
+          await handleSubmit(challengeError.challengeId)
         } else {
-          console.log(error)
-
-          const challengeError = asMaybeChallengeError?.(error)
-          if (challengeError != null) {
-            const result = await Airship.show<'pass' | 'fail' | undefined>(
-              bridge => (
-                <ChallengeModal
-                  bridge={bridge}
-                  challengeError={challengeError}
-                />
-              )
-            )
-            if (result === 'pass') {
-              // Try again with the passed challenge ID included
-              await handleSubmit(challengeError.challengeId)
-            }
-          }
-
-          const usernameError = asMaybeUsernameError(error)
-          if (usernameError != null) {
-            setUsernameErrorMessage(s.strings.invalid_account)
-            return
-          }
-
-          const passwordError = asMaybePasswordError(error)
-          if (passwordError != null) {
-            setPasswordErrorMessage(s.strings.invalid_password)
-            return
-          }
-
-          console.warn('Unknown login error: ', error)
-          const unknownErrorMessage = error != null ? error.message : undefined
-          setPasswordErrorMessage(unknownErrorMessage)
+          setPasswordErrorMessage(s.strings.failed_captcha_error)
         }
-      })
+        return
+      }
+
+      console.warn('Unknown login error: ', error)
+      setPasswordErrorMessage(
+        error instanceof Error ? error.message : undefined
+      )
+    }
   })
 
   const handleDelete = useHandler((userInfo: LoginUserInfo) => {
