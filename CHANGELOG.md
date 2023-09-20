@@ -1,5 +1,10 @@
 # edge-login-ui-rn
 
+## 2.11.1 (2023-09-20)
+
+- fixed: Clean up error handling, particularly for incorrect CAPTCHA solutions.
+- fixed: Remove visual glitches in the CAPTCHA modal.
+
 ## 2.11.0 (2023-09-20)
 
 - changed: Update translations
