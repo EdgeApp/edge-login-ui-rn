@@ -97,7 +97,7 @@ export const NewAccountReviewScene = (props: NewAccountReviewProps) => {
       console.error('NewAccountReviewScene: onLogin not found')
       return
     }
-    onLogEvent(`Signup_Review_Done`, { lightAccount: false })
+    onLogEvent(`Signup_Review_Done`)
     onLogin(route.params.account)
 
     dispatch(checkAndRequestNotifications(branding)).catch(error =>

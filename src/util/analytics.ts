@@ -32,5 +32,4 @@ export type TrackingEventName =
 
 export interface TrackingValues {
   error?: unknown | string
-  lightAccount?: boolean
 }

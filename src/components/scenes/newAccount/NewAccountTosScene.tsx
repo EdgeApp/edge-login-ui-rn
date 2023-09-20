@@ -251,7 +251,6 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
     }
 
     onLogEvent('Signup_Terms_Agree_and_Create_User', {
-      lightAccount,
       error
     })
   })

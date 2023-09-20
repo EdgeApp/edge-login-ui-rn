@@ -293,7 +293,7 @@ export const NewAccountPasswordScene = (
   })
 
   const handleSubmit = useHandler((newPassword: string) => {
-    onLogEvent('Signup_Password_Valid', { lightAccount: false })
+    onLogEvent('Signup_Password_Valid')
     dispatch({
       type: 'NAVIGATE',
       data: {

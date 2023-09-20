@@ -187,9 +187,7 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
     )
   })
   const handleSubmit = useHandler((newPin: string) => {
-    onLogEvent('Signup_PIN_Valid', {
-      lightAccount
-    })
+    onLogEvent('Signup_PIN_Valid')
     dispatch({
       type: 'NAVIGATE',
       data: { name: 'newAccountTos', params: { ...route.params, pin: newPin } }
