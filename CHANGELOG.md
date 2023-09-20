@@ -1,7 +1,8 @@
 # edge-login-ui-rn
 
-## Unreleased
+## 2.11.0 (2023-09-20)
 
+- changed: Update translations
 - removed: Redundant recovery question
 
 ## 2.10.0 (2023-09-13)
