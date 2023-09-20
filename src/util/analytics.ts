@@ -31,21 +31,6 @@ export type TrackingEventName =
   | 'Signup_Welcome_Next'
 
 export interface TrackingValues {
-  error?: string
+  error?: unknown | string
   lightAccount?: boolean
-}
-
-export function logEvent(
-  event: TrackingEventName,
-  values: TrackingValues = {}
-) {
-  // @ts-expect-error
-  const { firebase } = global
-  const { error, lightAccount } = values
-
-  const params: any = {}
-  if (error != null) params.error = error
-  if (lightAccount != null) params.lightAccount = String(lightAccount)
-
-  if (firebase != null) firebase.analytics().logEvent(event, params)
 }

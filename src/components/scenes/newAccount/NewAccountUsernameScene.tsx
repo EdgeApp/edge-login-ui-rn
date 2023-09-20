@@ -15,7 +15,6 @@ import {
   CreateFlowParams,
   SceneProps
 } from '../../../types/routerTypes'
-import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
@@ -231,6 +230,7 @@ interface NewAccountUsernameProps extends SceneProps<'newAccountUsername'> {
 export const NewAccountUsernameScene = (props: NewAccountUsernameProps) => {
   const { branding, route } = props
   const dispatch = useDispatch()
+  const { onLogEvent = (event, values?) => {} } = useImports()
 
   const handleBack = useHandler(() => {
     dispatch(
@@ -242,7 +242,7 @@ export const NewAccountUsernameScene = (props: NewAccountUsernameProps) => {
   })
 
   const handleNext = useHandler((newUsername: string) => {
-    logEvent(`Signup_Username_Available`)
+    onLogEvent(`Signup_Username_Available`)
     dispatch({
       type: 'NAVIGATE',
       data: {
@@ -271,11 +271,14 @@ interface UpgradeUsernameProps extends SceneProps<'upgradeUsername'> {
 export const UpgradeUsernameScene = (props: UpgradeUsernameProps) => {
   const { branding, route } = props
   const dispatch = useDispatch()
-  const { onComplete = () => {} } = useImports()
+  const {
+    onComplete = () => {},
+    onLogEvent = (event, values?) => {}
+  } = useImports()
 
   const handleNext = useHandler(async (newUsername: string) => {
     const currentPin = await route.params.account.getPin()
-    logEvent(`Backup_Username_Available`)
+    onLogEvent(`Backup_Username_Available`)
     dispatch({
       type: 'NAVIGATE',
       data: {

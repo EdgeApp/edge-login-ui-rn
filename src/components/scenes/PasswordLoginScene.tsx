@@ -35,7 +35,6 @@ import { LoginUserInfo, useLocalUsers } from '../../hooks/useLocalUsers'
 import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
-import { logEvent } from '../../util/analytics'
 import { base58 } from '../../util/base58'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
@@ -69,7 +68,11 @@ interface Props extends SceneProps<'passwordLogin'> {
 export const PasswordLoginScene = (props: Props) => {
   const { branding, route } = props
   const { username, createAccountType = 'full' } = route.params
-  const { context, onComplete } = useImports()
+  const {
+    context,
+    onComplete,
+    onLogEvent = (event, values?) => {}
+  } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -186,7 +189,7 @@ export const PasswordLoginScene = (props: Props) => {
     try {
       Keyboard.dismiss()
       await dispatch(login(otpAttempt, { challengeId }))
-      logEvent('Pasword_Login')
+      onLogEvent('Pasword_Login')
     } catch (error: unknown) {
       const otpError = asMaybeOtpError(error)
       if (otpError != null) {
@@ -313,7 +316,7 @@ export const PasswordLoginScene = (props: Props) => {
 
   const handleForgotPassword = useHandler(() => {
     Keyboard.dismiss()
-    logEvent('Password_Login_Forgot_Password')
+    onLogEvent('Password_Login_Forgot_Password')
     Airship.show(bridge => (
       <TextInputModal
         bridge={bridge}
@@ -326,7 +329,7 @@ export const PasswordLoginScene = (props: Props) => {
   })
 
   const handleCreateAccount = useHandler(() => {
-    logEvent('Password_Login_Create_Account')
+    onLogEvent('Password_Login_Create_Account')
     dispatch({
       type: 'NAVIGATE',
       data: {

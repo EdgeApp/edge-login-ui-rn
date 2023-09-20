@@ -6,6 +6,7 @@ import { setAppConfig } from '../../common/appConfig'
 import { Branding, ParentButton } from '../../types/Branding'
 import {
   OnComplete,
+  OnLogEvent,
   OnLogin,
   OnNotificationPermit
 } from '../../types/ReduxTypes'
@@ -53,6 +54,8 @@ interface Props {
   onLogin: OnLogin
   // Called when the user makes a choice from RequestPermissionsModal:
   onNotificationPermit?: OnNotificationPermit
+  // Passed from the GUI for analytics reporting
+  onLogEvent?: OnLogEvent
 
   // The recoveryKey from the user's email, to trigger recovery login:
   recoveryLogin?: string
@@ -84,7 +87,7 @@ export function LoginScreen(props: Props): JSX.Element {
     regularFontFamily,
     headingFontFamily = regularFontFamily
   } = fontDescription
-  const { onComplete } = props
+  const { onComplete, onLogEvent = (event, values?) => {} } = props
 
   // Look up the requested user:
   const initialUserInfo =
@@ -120,6 +123,7 @@ export function LoginScreen(props: Props): JSX.Element {
         initialRoute: props.initialRoute,
         onComplete,
         onLogin: props.onLogin,
+        onLogEvent,
         onNotificationPermit: props.onNotificationPermit,
         recoveryKey: props.recoveryLogin,
         skipSecurityAlerts: props.skipSecurityAlerts,

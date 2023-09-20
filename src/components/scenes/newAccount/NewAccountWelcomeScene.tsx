@@ -7,10 +7,10 @@ import { sprintf } from 'sprintf-js'
 import { LOGO_BIG } from '../../../assets'
 import s from '../../../common/locales/strings'
 import * as Constants from '../../../constants/index'
+import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
-import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { DividerLine } from '../../themed/DividerLine'
 import { EdgeText } from '../../themed/EdgeText'
@@ -24,6 +24,7 @@ interface Props extends SceneProps<'newAccountWelcome'> {
 export const NewAccountWelcomeScene = (props: Props) => {
   const { branding } = props
   const dispatch = useDispatch()
+  const { onLogEvent = (event, values?) => {} } = useImports()
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -32,7 +33,7 @@ export const NewAccountWelcomeScene = (props: Props) => {
   const logoSrc = branding.primaryLogo || LOGO_BIG
 
   const handleDone = (): void => {
-    logEvent(`Signup_Welcome_Next`)
+    onLogEvent(`Signup_Welcome_Next`)
     dispatch({
       type: 'NAVIGATE',
       data: { name: 'newAccountUsername', params: {} }

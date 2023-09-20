@@ -5,7 +5,6 @@ import s from '../common/locales/strings'
 import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
-import { logEvent } from '../util/analytics'
 import { attemptLogin, LoginAttempt } from '../util/loginAttempt'
 import { completeLogin } from './LoginCompleteActions'
 
@@ -39,7 +38,7 @@ export const launchPasswordRecovery = (recoveryKey: string) => async (
   getState: GetState,
   imports: Imports
 ) => {
-  const { context } = imports
+  const { context, onLogEvent = (event, values?) => {} } = imports
 
   async function handleSubmit(username: string): Promise<boolean | string> {
     try {
@@ -54,10 +53,10 @@ export const launchPasswordRecovery = (recoveryKey: string) => async (
           params: { recoveryKey, userQuestions: questions, username }
         }
       })
-      logEvent('Recovery_Username_Success')
+      onLogEvent('Recovery_Username_Success')
       return true
     } catch (error: unknown) {
-      logEvent('Recovery_Username_Failure')
+      onLogEvent('Recovery_Username_Failure')
 
       const usernameError = asMaybeUsernameError(error)
       if (usernameError != null) {

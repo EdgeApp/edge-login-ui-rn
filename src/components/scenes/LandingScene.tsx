@@ -8,7 +8,6 @@ import { useImports } from '../../hooks/useImports'
 import { Branding } from '../../types/Branding'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
-import { logEvent } from '../../util/analytics'
 import { scale } from '../../util/scaling'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { MainButton } from '../themed/MainButton'
@@ -22,16 +21,17 @@ interface Props extends SceneProps<'landing'> {
 export const LandingScene = (props: Props) => {
   const dispatch = useDispatch()
   const { initialUserInfo } = useImports()
+  const { onLogEvent = (event, values?) => {} } = useImports()
 
   const handleCreate = useHandler(() => {
-    logEvent('Signup_Create_Account')
+    onLogEvent('Signup_Create_Account')
     dispatch({
       type: 'NAVIGATE',
       data: { name: 'newAccountWelcome', params: {} }
     })
   })
   const handlePassword = useHandler(() => {
-    logEvent('Signup_Signin')
+    onLogEvent('Signup_Signin')
     dispatch({
       type: 'NAVIGATE',
       data: {

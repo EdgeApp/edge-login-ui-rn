@@ -12,7 +12,6 @@ import {
   CreateFlowParams,
   SceneProps
 } from '../../types/routerTypes'
-import { logEvent } from '../../util/analytics'
 import { WarningCard } from '../common/WarningCard'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -283,6 +282,7 @@ export const NewAccountPasswordScene = (
   props: SceneProps<'newAccountPassword'>
 ) => {
   const { route } = props
+  const { onLogEvent = (event, values?) => {} } = useImports()
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {
@@ -293,7 +293,7 @@ export const NewAccountPasswordScene = (
   })
 
   const handleSubmit = useHandler((newPassword: string) => {
-    logEvent('Signup_Password_Valid', { lightAccount: false })
+    onLogEvent('Signup_Password_Valid', { lightAccount: false })
     dispatch({
       type: 'NAVIGATE',
       data: {
@@ -316,6 +316,7 @@ export const NewAccountPasswordScene = (
 // The scene for light account users to create a password for the upgrade/backup
 export const UpgradePasswordScene = (props: SceneProps<'upgradePassword'>) => {
   const { route } = props
+  const { onLogEvent = (event, values?) => {} } = useImports()
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {
@@ -326,7 +327,7 @@ export const UpgradePasswordScene = (props: SceneProps<'upgradePassword'>) => {
   })
 
   const handleSubmit = useHandler(async (newPassword: string) => {
-    logEvent('Backup_Password_Valid')
+    onLogEvent('Backup_Password_Valid')
     dispatch({
       type: 'NAVIGATE',
       data: {

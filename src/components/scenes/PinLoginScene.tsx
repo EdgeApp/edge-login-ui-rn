@@ -31,7 +31,6 @@ import { getLoginKey } from '../../keychain'
 import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
-import { logEvent } from '../../util/analytics'
 import { FourDigit } from '../abSpecific/FourDigitComponent'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { PinKeypad } from '../abSpecific/PinKeypad'
@@ -57,7 +56,11 @@ interface ErrorInfo {
 export function PinLoginScene(props: Props) {
   const { branding, route } = props
   const { loginId } = route.params
-  const { accountOptions, context } = useImports()
+  const {
+    accountOptions,
+    context,
+    onLogEvent = (event, values?) => {}
+  } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -247,7 +250,7 @@ export function PinLoginScene(props: Props) {
     if (newPin.length === 4 && pin.length === 3 && userInfo != null) {
       handlePinLogin(userInfo, newPin)
         .then(() => {
-          logEvent('Pin_Login')
+          onLogEvent('Pin_Login')
         })
         .catch(showError)
     }

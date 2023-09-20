@@ -13,7 +13,6 @@ import {
   CreateFlowParams,
   SceneProps
 } from '../../../types/routerTypes'
-import { logEvent } from '../../../util/analytics'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { AccountInfo } from '../../themed/AccountInfo'
 import { EdgeText } from '../../themed/EdgeText'
@@ -91,14 +90,14 @@ interface NewAccountReviewProps extends SceneProps<'newAccountReview'> {
 export const NewAccountReviewScene = (props: NewAccountReviewProps) => {
   const { branding, route } = props
   const dispatch = useDispatch()
-  const { onLogin } = useImports()
+  const { onLogin, onLogEvent = (event, values?) => {} } = useImports()
 
   const handleNext = useHandler(() => {
     if (onLogin == null) {
       console.error('NewAccountReviewScene: onLogin not found')
       return
     }
-    logEvent(`Signup_Review_Done`, { lightAccount: false })
+    onLogEvent(`Signup_Review_Done`, { lightAccount: false })
     onLogin(route.params.account)
 
     dispatch(checkAndRequestNotifications(branding)).catch(error =>
@@ -119,10 +118,10 @@ interface UpgradeReviewProps extends SceneProps<'upgradeAccountReview'> {
 export const UpgradeReviewScene = (props: UpgradeReviewProps) => {
   const { branding, route } = props
   const dispatch = useDispatch()
-  const { onComplete } = useImports()
+  const { onComplete, onLogEvent = (event, values?) => {} } = useImports()
 
   const handleNext = useHandler(() => {
-    logEvent(`Backup_Review_Done`)
+    onLogEvent(`Backup_Review_Done`)
 
     if (onComplete != null) onComplete()
 
