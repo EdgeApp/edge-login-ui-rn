@@ -8,6 +8,7 @@ import { useImports } from '../../hooks/useImports'
 import { Branding } from '../../types/Branding'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
+import { getCreateAccountText } from '../../util/experiments'
 import { scale } from '../../util/scaling'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { MainButton } from '../themed/MainButton'
@@ -20,8 +21,15 @@ interface Props extends SceneProps<'landing'> {
 
 export const LandingScene = (props: Props) => {
   const dispatch = useDispatch()
-  const { initialUserInfo } = useImports()
-  const { onLogEvent = (event, values?) => {} } = useImports()
+  const {
+    initialUserInfo,
+    experimentConfig,
+    onLogEvent = (event, values?) => {}
+  } = useImports()
+  const createAccText = React.useMemo(
+    () => getCreateAccountText(experimentConfig),
+    [experimentConfig]
+  )
 
   const handleCreate = useHandler(() => {
     onLogEvent('Signup_Create_Account')
@@ -57,7 +65,7 @@ export const LandingScene = (props: Props) => {
             <View style={styles.createButtonBox}>
               <MainButton
                 testID="createAccountButton"
-                label={s.strings.landing_create_account_button}
+                label={createAccText}
                 type="secondary"
                 onPress={handleCreate}
               />
