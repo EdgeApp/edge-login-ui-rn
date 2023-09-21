@@ -221,5 +221,6 @@
   "welcome_advantage_two_title": "A sua segurança é a chave",
   "welcome": "Bem-vindo(a) à %s!",
   "your_answer_label": "Sua resposta",
-  "complete_captcha_title": "Are you a human?"
+  "complete_captcha_title": "Are you a human?",
+  "failed_captcha_error": "Incorrect solution"
 }
