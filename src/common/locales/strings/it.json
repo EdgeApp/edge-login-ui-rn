@@ -222,5 +222,5 @@
   "welcome": "Benvenuto/a su %s!",
   "your_answer_label": "La tua risposta",
   "complete_captcha_title": "Sei un umano?",
-  "failed_captcha_error": "Incorrect solution"
+  "failed_captcha_error": "Soluzione non corretta"
 }
