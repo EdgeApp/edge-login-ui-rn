@@ -163,9 +163,9 @@ export const ResecurePinScene = (props: SceneProps<'resecurePin'>) => {
 export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
   const { route } = props
   const dispatch = useDispatch()
-  const { onLogEvent = (event, values?) => {} } = useImports()
+  const { experimentConfig, onLogEvent = (event, values?) => {} } = useImports()
 
-  const lightAccount = route.params.username == null
+  const lightAccount = experimentConfig?.createAccountType === 'light'
 
   const handleBack = useHandler(() => {
     dispatch(

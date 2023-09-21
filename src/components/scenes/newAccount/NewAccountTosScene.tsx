@@ -191,8 +191,12 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
   const imports = useImports()
   const {
     context,
+
     accountOptions,
+    experimentConfig,
+
     onLogin,
+
     onLogEvent = (event, values?) => {}
   } = imports
   const dispatch = useDispatch()
@@ -206,7 +210,8 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
 
   const handleNext = useHandler(async () => {
     const { username, password, pin } = route.params
-    const lightAccount = username == null
+
+    const lightAccount = experimentConfig?.createAccountType === 'light'
 
     let error
     try {

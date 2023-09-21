@@ -38,7 +38,7 @@ export interface TouchIdInfo {
 }
 
 export interface ExperimentConfig {
-  // createAccountType: 'light' | 'full' // TODO
+  createAccountType: 'light' | 'full'
   createAccountText: 'signUp' | 'getStarted' | 'createAccount'
 }
 
