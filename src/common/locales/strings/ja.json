@@ -221,5 +221,6 @@
   "welcome_advantage_two_title": "あなたのセキュリティが鍵となります",
   "welcome": "%sへようこそ",
   "your_answer_label": "あなたの回答",
-  "complete_captcha_title": "Are you a human?"
+  "complete_captcha_title": "Are you a human?",
+  "failed_captcha_error": "Incorrect solution"
 }
