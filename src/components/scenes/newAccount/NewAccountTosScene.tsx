@@ -19,7 +19,6 @@ import {
   CreateFlowParams,
   SceneProps
 } from '../../../types/routerTypes'
-import { logEvent } from '../../../util/analytics'
 import { showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { Checkbox } from '../../themed/Checkbox'
@@ -190,7 +189,12 @@ interface NewAccountTosProps extends SceneProps<'newAccountTos'> {
 export const NewAccountTosScene = (props: NewAccountTosProps) => {
   const { route, branding } = props
   const imports = useImports()
-  const { context, accountOptions, onLogin } = imports
+  const {
+    context,
+    accountOptions,
+    onLogin,
+    onLogEvent = (event, values?) => {}
+  } = imports
   const dispatch = useDispatch()
 
   const handleBack = useHandler((): void => {
@@ -246,8 +250,7 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
       error = String(e)
     }
 
-    logEvent('Signup_Terms_Agree_and_Create_User', {
-      lightAccount,
+    onLogEvent('Signup_Terms_Agree_and_Create_User', {
       error
     })
   })
@@ -270,6 +273,7 @@ interface UpgradeTosProps extends SceneProps<'upgradeTos'> {
 }
 export const UpgradeTosScene = (props: UpgradeTosProps) => {
   const { route, branding } = props
+  const { onLogEvent = (event, values?) => {} } = useImports()
   const dispatch = useDispatch()
 
   const handleBack = useHandler((): void => {
@@ -306,7 +310,7 @@ export const UpgradeTosScene = (props: UpgradeTosProps) => {
       error = String(e)
     }
 
-    logEvent('Backup_Terms_Agree_and_Create_User', { error })
+    onLogEvent('Backup_Terms_Agree_and_Create_User', { error })
   })
 
   return (

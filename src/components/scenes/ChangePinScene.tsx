@@ -10,7 +10,6 @@ import { useImports } from '../../hooks/useImports'
 import { useScrollToEnd } from '../../hooks/useScrollToEnd'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
-import { logEvent } from '../../util/analytics'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -164,6 +163,8 @@ export const ResecurePinScene = (props: SceneProps<'resecurePin'>) => {
 export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
   const { route } = props
   const dispatch = useDispatch()
+  const { onLogEvent = (event, values?) => {} } = useImports()
+
   const lightAccount = route.params.username == null
 
   const handleBack = useHandler(() => {
@@ -186,9 +187,7 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
     )
   })
   const handleSubmit = useHandler((newPin: string) => {
-    logEvent('Signup_PIN_Valid', {
-      lightAccount
-    })
+    onLogEvent('Signup_PIN_Valid')
     dispatch({
       type: 'NAVIGATE',
       data: { name: 'newAccountTos', params: { ...route.params, pin: newPin } }

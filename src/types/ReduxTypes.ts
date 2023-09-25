@@ -9,6 +9,7 @@ import * as ReactRedux from 'react-redux'
 
 import { InitialRouteName } from '../components/publicApi/types'
 import { RootState } from '../reducers/RootReducer'
+import { TrackingEventName, TrackingValues } from '../util/analytics'
 import { Action } from './ReduxActions'
 
 export type { Action, RootState }
@@ -41,12 +42,17 @@ export type OnLogin = (account: EdgeAccount, touchIdInfo?: TouchIdInfo) => void
 export type OnNotificationPermit = (
   settings: NotificationPermissionsInfo
 ) => void
+export type OnLogEvent = (
+  event: TrackingEventName,
+  values?: TrackingValues
+) => void
 
 export interface Imports {
   readonly accountOptions: EdgeAccountOptions
   readonly context: EdgeContext
   readonly initialUserInfo?: EdgeUserInfo
   readonly initialRoute?: InitialRouteName
+  readonly onLogEvent?: OnLogEvent
   readonly onComplete?: () => void
   readonly onLogin?: OnLogin
   readonly onNotificationPermit?: OnNotificationPermit

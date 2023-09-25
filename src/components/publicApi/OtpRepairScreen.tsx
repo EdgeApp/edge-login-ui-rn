@@ -3,6 +3,7 @@ import * as React from 'react'
 
 import { useClearOnUnmount } from '../../hooks/useClearOnUnmount'
 import { Branding } from '../../types/Branding'
+import { OnLogEvent } from '../../types/ReduxTypes'
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
 
@@ -10,12 +11,13 @@ interface Props {
   account: EdgeAccount
   branding: Branding
   context: EdgeContext
-  onComplete: () => void
   otpError: OtpError
+  onComplete: () => void
+  onLogEvent?: OnLogEvent
 }
 
 export function OtpRepairScreen(props: Props): JSX.Element {
-  const { account, branding, context, onComplete, otpError } = props
+  const { account, branding, context, otpError, onComplete, onLogEvent } = props
   useClearOnUnmount()
 
   return (
@@ -23,7 +25,8 @@ export function OtpRepairScreen(props: Props): JSX.Element {
       imports={{
         accountOptions: {},
         context,
-        onComplete
+        onComplete,
+        onLogEvent
       }}
       initialAction={{
         type: 'NAVIGATE',

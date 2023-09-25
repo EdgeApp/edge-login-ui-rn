@@ -2,6 +2,7 @@ import { EdgeAccount, EdgeContext } from 'edge-core-js'
 import * as React from 'react'
 
 import { useClearOnUnmount } from '../../hooks/useClearOnUnmount'
+import { OnLogEvent } from '../../types/ReduxTypes'
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
 
@@ -9,10 +10,11 @@ interface Props {
   account: EdgeAccount
   context: EdgeContext
   onComplete: () => void
+  onLogEvent: OnLogEvent
 }
 
 export function SecurityAlertsScreen(props: Props): JSX.Element {
-  const { account, context, onComplete } = props
+  const { account, context, onComplete, onLogEvent } = props
   useClearOnUnmount()
 
   return (
@@ -20,7 +22,8 @@ export function SecurityAlertsScreen(props: Props): JSX.Element {
       imports={{
         accountOptions: {},
         context,
-        onComplete
+        onComplete,
+        onLogEvent
       }}
       initialAction={{
         type: 'NAVIGATE',
