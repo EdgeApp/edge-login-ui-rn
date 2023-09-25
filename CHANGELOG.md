@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 2.12.0 (2023-09-25)
+
+- removed: Redundant tracking implementation
+
 ## 2.11.1 (2023-09-20)
 
 - fixed: Clean up error handling, particularly for incorrect CAPTCHA solutions.
