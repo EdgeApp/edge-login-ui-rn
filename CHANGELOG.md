@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 2.13.1 (2023-09-25)
+
+- fixed: Unintended breaking API changes from 2.13.0
+
 ## 2.13.0 (2023-09-25)
 
 - added: 'Create Account' button text experiment
