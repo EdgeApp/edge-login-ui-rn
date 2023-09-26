@@ -37,6 +37,11 @@ export interface TouchIdInfo {
   isTouchEnabled: boolean
 }
 
+export interface ExperimentConfig {
+  createAccountType: 'light' | 'full'
+  createAccountText: 'signUp' | 'getStarted' | 'createAccount'
+}
+
 export type OnComplete = () => void
 export type OnLogin = (account: EdgeAccount, touchIdInfo?: TouchIdInfo) => void
 export type OnNotificationPermit = (
@@ -58,6 +63,7 @@ export interface Imports {
   readonly onNotificationPermit?: OnNotificationPermit
   readonly recoveryKey?: string
   readonly skipSecurityAlerts?: boolean
+  readonly experimentConfig?: ExperimentConfig
   readonly customPermissionsFunction?: () => void
 }
 

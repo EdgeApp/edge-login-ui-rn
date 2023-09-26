@@ -36,6 +36,7 @@ import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { base58 } from '../../util/base58'
+import { getCreateAccountText } from '../../util/experiments'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
@@ -70,9 +71,11 @@ export const PasswordLoginScene = (props: Props) => {
   const { username, createAccountType = 'full' } = route.params
   const {
     context,
+    experimentConfig,
     onComplete,
     onLogEvent = (event, values?) => {}
   } = useImports()
+
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -101,6 +104,10 @@ export const PasswordLoginScene = (props: Props) => {
   const mDropContainerStyle = React.useMemo(() => {
     return { top: dropdownY, ...styles.dropContainer }
   }, [styles, dropdownY])
+  const createAccText = React.useMemo(
+    () => getCreateAccountText(experimentConfig),
+    [experimentConfig]
+  )
 
   const sAnimationMult = useSharedValue(0)
   const sScrollY = useSharedValue(0)
@@ -478,6 +485,7 @@ export const PasswordLoginScene = (props: Props) => {
 
   const renderButtons = () => {
     const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
+
     return (
       <View style={styles.buttonsBox}>
         <MainButton
@@ -503,7 +511,7 @@ export const PasswordLoginScene = (props: Props) => {
           type="textOnly"
           testID="createAccountButton"
           onPress={handleCreateAccount}
-          label={s.strings.create_an_account}
+          label={createAccText}
         />
         <TouchableOpacity onPress={handleQrModal}>
           <AntDesignIcon

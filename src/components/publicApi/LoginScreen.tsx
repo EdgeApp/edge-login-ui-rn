@@ -5,6 +5,7 @@ import { initializeLogin } from '../../actions/LoginInitActions'
 import { setAppConfig } from '../../common/appConfig'
 import { Branding, ParentButton } from '../../types/Branding'
 import {
+  ExperimentConfig,
   OnComplete,
   OnLogEvent,
   OnLogin,
@@ -59,6 +60,9 @@ interface Props {
 
   // The recoveryKey from the user's email, to trigger recovery login:
   recoveryLogin?: string
+
+  // Behavior and appearance management flags, for A/B testing.
+  experimentConfig?: ExperimentConfig
 
   // Do not show the security alerts screen during login,
   // since the app plans to show the `SecurityAlertsScreen` itself
@@ -127,6 +131,7 @@ export function LoginScreen(props: Props): JSX.Element {
         onNotificationPermit: props.onNotificationPermit,
         recoveryKey: props.recoveryLogin,
         skipSecurityAlerts: props.skipSecurityAlerts,
+        experimentConfig: props.experimentConfig,
         customPermissionsFunction: props.customPermissionsFunction
       }}
       initialAction={initializeLogin()}
