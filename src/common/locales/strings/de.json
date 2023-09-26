@@ -191,6 +191,7 @@
   "security_is_our_priority_modal_title": "Security is Our Priority",
   "send_email_error_header": "Es kann keine E-Mail versandt werden ",
   "show_account_info": "Kontoinformationen anzeigen",
+  "sign_up": "Sign Up",
   "skip_button": "Überspringen",
   "skip": "ÜBERSPRINGEN",
   "spin_load_hint": "Loading... please wait.",
@@ -221,5 +222,6 @@
   "welcome_advantage_two_title": "Ihre Sicherheit ist von größter Bedeutung",
   "welcome": "Willkommen bei %s",
   "your_answer_label": "Ihre Antwort",
-  "complete_captcha_title": "Are you a human?"
+  "complete_captcha_title": "Are you a human?",
+  "failed_captcha_error": "Incorrect solution"
 }
