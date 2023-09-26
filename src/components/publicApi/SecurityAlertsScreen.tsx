@@ -10,7 +10,7 @@ interface Props {
   account: EdgeAccount
   context: EdgeContext
   onComplete: () => void
-  onLogEvent: OnLogEvent
+  onLogEvent?: OnLogEvent
 }
 
 export function SecurityAlertsScreen(props: Props): JSX.Element {

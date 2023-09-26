@@ -9,7 +9,7 @@ interface Props {
   account: EdgeAccount
   context: EdgeContext
   onComplete: () => void
-  onLogEvent: OnLogEvent
+  onLogEvent?: OnLogEvent
 }
 
 export function UpgradeUsernameScreen(props: Props): JSX.Element {
