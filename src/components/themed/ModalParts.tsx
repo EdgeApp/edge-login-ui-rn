@@ -1,3 +1,6 @@
+/**
+ * IMPORTANT: Changes in this file MUST be duplicated in edge-react-gui!
+ */
 import * as React from 'react'
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'

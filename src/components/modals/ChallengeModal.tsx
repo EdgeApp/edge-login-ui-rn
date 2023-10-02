@@ -1,3 +1,6 @@
+/**
+ * IMPORTANT: Changes in this file MUST be duplicated in edge-react-gui!
+ */
 import type { ChallengeError } from 'edge-core-js'
 import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'

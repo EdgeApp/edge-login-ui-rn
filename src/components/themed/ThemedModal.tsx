@@ -1,3 +1,6 @@
+/**
+ * IMPORTANT: Changes in this file MUST be duplicated in edge-react-gui!
+ */
 import * as React from 'react'
 import { StyleSheet, ViewStyle } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'

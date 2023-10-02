@@ -1,3 +1,6 @@
+/**
+ * IMPORTANT: Changes in this file MUST be duplicated in edge-react-gui!
+ */
 import {
   EdgeAccount,
   EdgeAccountOptions,

@@ -1,3 +1,6 @@
+/**
+ * IMPORTANT: Changes in this file MUST be duplicated in edge-react-gui!
+ */
 import { EdgeLoginMessage } from 'edge-core-js'
 import * as React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
