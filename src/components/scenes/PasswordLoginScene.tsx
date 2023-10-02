@@ -356,6 +356,12 @@ export const PasswordLoginScene = (props: Props) => {
 
   const handleBack = useHandler(() => {
     if (onComplete != null) onComplete()
+    else {
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'landing', params: {} }
+      })
+    }
   })
 
   // The main hints dropdown animation depending on focus state of the
