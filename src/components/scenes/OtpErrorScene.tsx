@@ -4,7 +4,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import { completeLogin } from '../../actions/LoginCompleteActions'
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { useImports } from '../../hooks/useImports'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
@@ -55,7 +55,7 @@ class OtpErrorSceneComponent extends React.Component<Props> {
     try {
       const result = await hasReadyVoucher(otpError)
       if (result) {
-        showToast(s.strings.otp_scene_retrying)
+        showToast(lstrings.otp_scene_retrying)
         await login(otpAttempt)
       }
     } catch (error) {
@@ -92,13 +92,13 @@ class OtpErrorSceneComponent extends React.Component<Props> {
         const otpError = asMaybeOtpError(error)
         if (otpError != null) {
           saveOtpError(otpAttempt, otpError)
-          return s.strings.backup_key_incorrect
+          return lstrings.backup_key_incorrect
         }
         if (
           error instanceof Error &&
           error.message === 'Unexpected end of data'
         ) {
-          return s.strings.backup_key_incorrect
+          return lstrings.backup_key_incorrect
         }
         showError(error)
         return false
@@ -109,10 +109,10 @@ class OtpErrorSceneComponent extends React.Component<Props> {
       <TextInputModal
         bridge={bridge}
         onSubmit={handleSubmit}
-        title={s.strings.otp_backup_code_modal_title}
-        message={s.strings.otp_instructions}
-        inputLabel={s.strings.backup_key_label}
-        submitLabel={s.strings.submit}
+        title={lstrings.otp_backup_code_modal_title}
+        message={lstrings.otp_instructions}
+        inputLabel={lstrings.backup_key_label}
+        submitLabel={lstrings.submit}
         autoCapitalize="characters"
         returnKeyType="done"
       />
@@ -130,7 +130,7 @@ class OtpErrorSceneComponent extends React.Component<Props> {
     return (
       <ThemedScene
         onBack={this.props.onBack}
-        title={isIp ? s.strings.otp_header_ip : s.strings.otp_header}
+        title={isIp ? lstrings.otp_header_ip : lstrings.otp_header}
       >
         <IconHeaderRow
           renderIcon={theme => (
@@ -142,20 +142,20 @@ class OtpErrorSceneComponent extends React.Component<Props> {
           <MessageText>
             <Warning>
               {isIp
-                ? s.strings.otp_scene_header_ip
-                : s.strings.otp_scene_header_2fa}
+                ? lstrings.otp_scene_header_ip
+                : lstrings.otp_scene_header_2fa}
             </Warning>
           </MessageText>
         </IconHeaderRow>
-        <DividerWithText label={s.strings.to_fix} />
-        <MessageText>{s.strings.otp_scene_approve}</MessageText>
+        <DividerWithText label={lstrings.to_fix} />
+        <MessageText>{lstrings.otp_scene_approve}</MessageText>
         <DividerWithText />
-        <LinkRow label={s.strings.otp_scene_qr} onPress={handleQrModal} />
+        <LinkRow label={lstrings.otp_scene_qr} onPress={handleQrModal} />
         {isIp ? null : (
           <>
             <DividerWithText />
             <LinkRow
-              label={s.strings.otp_backup_code_modal_title}
+              label={lstrings.otp_backup_code_modal_title}
               onPress={this.handleBackupModal}
             />
           </>
@@ -164,7 +164,7 @@ class OtpErrorSceneComponent extends React.Component<Props> {
           <>
             <DividerWithText />
             <MessageText>
-              {sprintf(s.strings.otp_scene_wait, toLocalTime(date))}
+              {sprintf(lstrings.otp_scene_wait, toLocalTime(date))}
             </MessageText>
           </>
         )}
@@ -172,7 +172,7 @@ class OtpErrorSceneComponent extends React.Component<Props> {
           <>
             <DividerWithText />
             <LinkRow
-              label={s.strings.disable_otp_button_two}
+              label={lstrings.disable_otp_button_two}
               onPress={() => showResetModal(this.props.requestOtpReset)}
             />
           </>

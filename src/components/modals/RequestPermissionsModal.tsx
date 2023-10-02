@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { Checkbox } from '../themed/Checkbox'
 import { MainButton } from '../themed/MainButton'
 import { ThemedModal } from '../themed/ThemedModal'
@@ -48,30 +48,30 @@ export function RequestPermissionsModal(props: Props) {
 
   return (
     <ThemedModal bridge={bridge} paddingRem={1} warning onCancel={handleCancel}>
-      <TitleText>{s.strings.security_is_our_priority_modal_title}</TitleText>
+      <TitleText>{lstrings.security_is_our_priority_modal_title}</TitleText>
       <MessageText>{message}</MessageText>
       <Checkbox
         onChange={() => handlePress('optInPriceChanges')}
         value={selection.optInPriceChanges}
         textStyle={{}}
       >
-        {s.strings.notifications_opt_in_price_changes}
+        {lstrings.notifications_opt_in_price_changes}
       </Checkbox>
       <Checkbox
         onChange={() => handlePress('optInMarketing')}
         value={selection.optInMarketing}
         textStyle={{}}
       >
-        {s.strings.notifications_opt_in_marketing}
+        {lstrings.notifications_opt_in_marketing}
       </Checkbox>
       <MainButton
-        label={s.strings.enable}
+        label={lstrings.enable}
         marginRem={0.5}
         type="primary"
         onPress={() => handlePress('enable', true)}
       />
       <MainButton
-        label={s.strings.cancel}
+        label={lstrings.cancel}
         marginRem={0.5}
         type="escape"
         onPress={() => handlePress('enable', false)}

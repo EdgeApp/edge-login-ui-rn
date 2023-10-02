@@ -11,7 +11,7 @@ import {
 } from 'react-native-permissions'
 import { sprintf } from 'sprintf-js'
 
-import s from '../common/locales/strings'
+import { lstrings } from '../common/locales/strings'
 import {
   PermissionsModalChoices,
   RequestPermissionsModal
@@ -245,13 +245,13 @@ const logicMap: Array<Array<Array<string | undefined>>> = [
   [[], []]
 ]
 
-logicMap[0][0][0] = s.strings.notifications_and_refresh_permissions_branded_s
-logicMap[0][0][1] = s.strings.notifications_permissions_branded_s
-logicMap[0][1][0] = s.strings.refresh_permission_branded_s
+logicMap[0][0][0] = lstrings.notifications_and_refresh_permissions_branded_s
+logicMap[0][0][1] = lstrings.notifications_permissions_branded_s
+logicMap[0][1][0] = lstrings.refresh_permission_branded_s
 logicMap[0][1][1] = undefined
-logicMap[1][0][0] = s.strings.refresh_permission_branded_s
+logicMap[1][0][0] = lstrings.refresh_permission_branded_s
 logicMap[1][0][1] = undefined
-logicMap[1][1][0] = s.strings.refresh_permission_branded_s
+logicMap[1][1][0] = lstrings.refresh_permission_branded_s
 logicMap[1][1][1] = undefined
 
 export const checkAndRequestNotifications = (branding: Branding) => async (
@@ -291,7 +291,7 @@ export const checkAndRequestNotifications = (branding: Branding) => async (
       ? sprintf(
           logicMap[notifEnabled][isNotificationBlockedBit][refreshEnabled] ??
             '',
-          branding.appName ?? s.strings.app_name_default
+          branding.appName ?? lstrings.app_name_default
         )
       : undefined
 

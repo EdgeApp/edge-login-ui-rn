@@ -13,7 +13,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -65,12 +65,12 @@ export const AccountInfo = (props: Props) => {
 
   const infoRows: InfoRow[] = [
     ...(username != null
-      ? [{ label: s.strings.username, value: username }]
+      ? [{ label: lstrings.username, value: username }]
       : []),
     ...(password != null
-      ? [{ label: s.strings.password, value: password }]
+      ? [{ label: lstrings.password, value: password }]
       : []),
-    { label: s.strings.pin, value: pin }
+    { label: lstrings.pin, value: pin }
   ]
   const renderInfoRow = (label: string, value: string | undefined) => (
     <View style={styles.row}>
@@ -112,8 +112,8 @@ export const AccountInfo = (props: Props) => {
         <Animated.View style={[styles.header, headerStyle]}>
           <EdgeText style={styles.headerText}>
             {isExpanded
-              ? s.strings.hide_account_info
-              : s.strings.show_account_info}
+              ? lstrings.hide_account_info
+              : lstrings.show_account_info}
           </EdgeText>
           <Animated.View style={[styles.headerIcon, iconStyle]}>
             <MaterialIcon

@@ -11,7 +11,7 @@ import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
 import { completeLogin } from '../../actions/LoginCompleteActions'
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { Dispatch, GetState, Imports } from '../../types/ReduxTypes'
 import { QrCode } from '../common/QrCode'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -73,7 +73,7 @@ class QrCodeModalComponent extends React.Component<Props, State> {
     }
   }
 
-  handleStart = (username: string = s.strings.missing_username): void => {
+  handleStart = (username: string = lstrings.missing_username): void => {
     this.setState({ username })
   }
 
@@ -140,11 +140,11 @@ class QrCodeModalComponent extends React.Component<Props, State> {
       pendingLogin == null ? null : 'edge://edge/' + pendingLogin.id
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleCancel} scroll>
-        <ModalTitle>{s.strings.qr_modal_title}</ModalTitle>
+        <ModalTitle>{lstrings.qr_modal_title}</ModalTitle>
         <ModalMessage>
           {username != null
-            ? sprintf(s.strings.qr_modal_started, username)
-            : s.strings.qr_modal_message}
+            ? sprintf(lstrings.qr_modal_started, username)
+            : lstrings.qr_modal_message}
         </ModalMessage>
         <View style={styles.qrContainer}>
           {qrData == null ? (

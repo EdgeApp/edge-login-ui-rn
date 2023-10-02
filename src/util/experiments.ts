@@ -1,4 +1,4 @@
-import s from '../common/locales/strings'
+import { lstrings } from '../common/locales/strings'
 import { ExperimentConfig } from '../types/ReduxTypes'
 
 export const getExperimentVal = <T extends keyof ExperimentConfig>(
@@ -18,8 +18,8 @@ export const getCreateAccountText = (
     'createAccount'
   )
   return createAccTextVar === 'signUp'
-    ? s.strings.sign_up
+    ? lstrings.sign_up
     : createAccTextVar === 'getStarted'
-    ? s.strings.get_started
-    : s.strings.create_an_account
+    ? lstrings.get_started
+    : lstrings.create_an_account
 }

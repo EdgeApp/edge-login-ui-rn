@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { MainButton } from '../themed/MainButton'
@@ -61,7 +61,7 @@ export function TextInputModal(props: Props) {
     returnKeyType,
     secureTextEntry,
     multiline = false,
-    submitLabel = s.strings.submit,
+    submitLabel = lstrings.submit,
     title,
     maxLength,
     warning,
@@ -111,7 +111,7 @@ export function TextInputModal(props: Props) {
       {warningMessage != null ? (
         <Alert
           type="warning"
-          title={s.strings.warning}
+          title={lstrings.warning}
           marginRem={0.5}
           message={warningMessage}
           numberOfLines={0}

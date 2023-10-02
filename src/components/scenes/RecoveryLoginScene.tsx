@@ -6,7 +6,7 @@ import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
 import { login } from '../../actions/LoginAction'
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { LoginAttempt } from '../../util/loginAttempt'
@@ -32,7 +32,7 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
-  const answerPrompt = s.strings.your_answer_label
+  const answerPrompt = lstrings.your_answer_label
   const showCaseSensitivityWarning = questions.some(
     q => q.startsWith('text:') || !q.includes(':')
   )
@@ -69,13 +69,13 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
     const validateAnswer = async (answer: string) => {
       return answer.length >= minLength
         ? true
-        : sprintf(s.strings.min_length_error, minLength)
+        : sprintf(lstrings.min_length_error, minLength)
     }
     Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
-        title={sprintf(s.strings.recovery_answer, index + 1)}
-        inputLabel={s.strings.recovery_answer_placeholder}
+        title={sprintf(lstrings.recovery_answer, index + 1)}
+        inputLabel={lstrings.recovery_answer_placeholder}
         returnKeyType="go"
         autoCapitalize="none"
         autoCorrect={false}
@@ -116,7 +116,7 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
 
       const passwordError = asMaybePasswordError(error)
       if (passwordError != null) {
-        return showError(s.strings.recovery_error)
+        return showError(lstrings.recovery_error)
       }
 
       showError(error instanceof Error ? error.message : 'Unknown error')
@@ -127,15 +127,15 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
       <View>
         <Tile
           type="static"
-          title={sprintf(s.strings.recovery_question, index + 1)}
+          title={sprintf(lstrings.recovery_question, index + 1)}
           body={
             questions[index]?.split(':').slice(-1)[0] ??
-            sprintf(s.strings.recovery_question, index + 1)
+            sprintf(lstrings.recovery_question, index + 1)
           }
         />
         <Tile
           type="touchable"
-          title={sprintf(s.strings.recovery_answer, index + 1)}
+          title={sprintf(lstrings.recovery_answer, index + 1)}
           body={answers[index] ?? answerPrompt}
           onPress={handleAnswer(index)}
         />
@@ -153,7 +153,7 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
   }
   const renderWarning = () => {
     return showCaseSensitivityWarning ? (
-      <WarningCard title={s.strings.answer_case_sensitive} marginRem={1} />
+      <WarningCard title={lstrings.answer_case_sensitive} marginRem={1} />
     ) : null
   }
 
@@ -162,7 +162,7 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
       <View style={styles.buttonsContainer}>
         <MainButton
           alignSelf="stretch"
-          label={s.strings.submit}
+          label={lstrings.submit}
           marginRem={[1, 0.5]}
           onPress={handleSubmit}
           disabled={

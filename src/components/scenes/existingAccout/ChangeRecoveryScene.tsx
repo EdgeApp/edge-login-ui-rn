@@ -10,7 +10,7 @@ import {
   sendRecoveryEmail,
   shareRecovery
 } from '../../../actions/PasswordRecoveryActions'
-import s from '../../../common/locales/strings'
+import { lstrings } from '../../../common/locales/strings'
 import { questionsList } from '../../../constants/recoveryQuestions'
 import { useImports } from '../../../hooks/useImports'
 import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
@@ -48,8 +48,8 @@ export const ChangeRecoveryScene = (props: Props) => {
   const styles = getStyles(theme)
   const { onComplete = () => {} } = useImports()
 
-  const questionPrompt = s.strings.choose_recovery_question
-  const answerPrompt = s.strings.your_answer_label
+  const questionPrompt = lstrings.choose_recovery_question
+  const answerPrompt = lstrings.your_answer_label
 
   const [recoveryLocked, setRecoveryLocked] = useState(userQuestions.length > 0)
 
@@ -85,7 +85,7 @@ export const ChangeRecoveryScene = (props: Props) => {
     Airship.show<string | undefined>(bridge => (
       <RadioListModal
         bridge={bridge}
-        title={sprintf(s.strings.recovery_question, index + 1)}
+        title={sprintf(lstrings.recovery_question, index + 1)}
         items={items
           .filter(
             stringItem =>
@@ -154,14 +154,14 @@ export const ChangeRecoveryScene = (props: Props) => {
     const validateAnswer = async (answer: string) => {
       return answer.length >= minLength
         ? true
-        : sprintf(s.strings.min_length_error, minLength)
+        : sprintf(lstrings.min_length_error, minLength)
     }
 
     await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
-        title={sprintf(s.strings.recovery_answer, index + 1)}
-        inputLabel={s.strings.recovery_answer_placeholder}
+        title={sprintf(lstrings.recovery_answer, index + 1)}
+        inputLabel={lstrings.recovery_answer_placeholder}
         returnKeyType="go"
         autoCapitalize="none"
         autoCorrect={false}
@@ -177,11 +177,11 @@ export const ChangeRecoveryScene = (props: Props) => {
   const renderSaveRecoveryMessage = (showEmailPrompt: boolean) => {
     return (
       <ModalMessage>
-        {s.strings.recovery_save_hint_token + '\n\n'}
+        {lstrings.recovery_save_hint_token + '\n\n'}
         <Text style={styles.warningText}>
-          {s.strings.recovery_save_hint_username_answers + '\n\n'}
+          {lstrings.recovery_save_hint_username_answers + '\n\n'}
         </Text>
-        {showEmailPrompt ? s.strings.recovery_save_email_prompt : null}
+        {showEmailPrompt ? lstrings.recovery_save_email_prompt : null}
       </ModalMessage>
     )
   }
@@ -201,9 +201,9 @@ export const ChangeRecoveryScene = (props: Props) => {
       await Airship.show(bridge => (
         <ButtonsModal
           bridge={bridge}
-          title={s.strings.recovery_success_title}
-          message={s.strings.recovery_success_message}
-          buttons={{ ok: { label: s.strings.ok } }}
+          title={lstrings.recovery_success_title}
+          message={lstrings.recovery_success_message}
+          buttons={{ ok: { label: lstrings.ok } }}
         />
       ))
       setAnswers([])
@@ -217,16 +217,16 @@ export const ChangeRecoveryScene = (props: Props) => {
     const emailAddress: string | undefined = await Airship.show(bridge => (
       <TextInputModal
         bridge={bridge}
-        title={s.strings.save_recovery_token}
-        inputLabel={s.strings.recovery_complete_enter_email_label}
+        title={lstrings.save_recovery_token}
+        inputLabel={lstrings.recovery_complete_enter_email_label}
         message={renderSaveRecoveryMessage(true)}
-        submitLabel={s.strings.next_label}
+        submitLabel={lstrings.next_label}
         keyboardType="email-address"
         autoFocus={false}
         autoCapitalize="none"
         returnKeyType="go"
         onSubmit={async (email: string) => {
-          return validateEmail(email) ? true : s.strings.recovery_invalid_email
+          return validateEmail(email) ? true : lstrings.recovery_invalid_email
         }}
       />
     ))
@@ -238,10 +238,10 @@ export const ChangeRecoveryScene = (props: Props) => {
     await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.save_recovery_token}
+        title={lstrings.save_recovery_token}
         buttons={{
-          ok: { label: s.strings.ok },
-          cancel: { label: s.strings.cancel, type: 'secondary' }
+          ok: { label: lstrings.ok },
+          cancel: { label: lstrings.cancel, type: 'secondary' }
         }}
       >
         {renderSaveRecoveryMessage(false)}
@@ -258,14 +258,14 @@ export const ChangeRecoveryScene = (props: Props) => {
       Airship.show(bridge => (
         <ButtonsModal
           bridge={bridge}
-          title={s.strings.recovery_change_title}
-          message={s.strings.recovery_change_message}
+          title={lstrings.recovery_change_title}
+          message={lstrings.recovery_change_message}
           buttons={{
             ok: {
-              label: s.strings.ok
+              label: lstrings.ok
             },
             cancel: {
-              label: s.strings.cancel,
+              label: lstrings.cancel,
               type: 'secondary'
             }
           }}
@@ -286,11 +286,11 @@ export const ChangeRecoveryScene = (props: Props) => {
       Airship.show(bridge => (
         <ButtonsModal
           bridge={bridge}
-          title={s.strings.recovery_reset_confirm_title}
-          message={s.strings.recovery_reset_confirm_message}
+          title={lstrings.recovery_reset_confirm_title}
+          message={lstrings.recovery_reset_confirm_message}
           buttons={{
-            confirm: { label: s.strings.confirm },
-            cancel: { label: s.strings.cancel, type: 'secondary' }
+            confirm: { label: lstrings.confirm },
+            cancel: { label: lstrings.cancel, type: 'secondary' }
           }}
         />
       )).then(async button => {
@@ -310,7 +310,7 @@ export const ChangeRecoveryScene = (props: Props) => {
       <View>
         <Tile
           type="touchable"
-          title={sprintf(s.strings.recovery_question, index + 1)}
+          title={sprintf(lstrings.recovery_question, index + 1)}
           body={question ?? questionPrompt}
           onPress={handleQuestion(index)}
           contentPadding={false}
@@ -318,7 +318,7 @@ export const ChangeRecoveryScene = (props: Props) => {
         />
         <Tile
           type={questions[index] == null ? 'static' : 'touchable'}
-          title={sprintf(s.strings.recovery_answer, index + 1)}
+          title={sprintf(lstrings.recovery_answer, index + 1)}
           body={answer}
           onPress={handleAnswer(index)}
           contentPadding={false}
@@ -330,7 +330,7 @@ export const ChangeRecoveryScene = (props: Props) => {
 
   const renderCaseSensitivityWarning = () => {
     return showCaseSensitivityWarning && !recoveryLocked ? (
-      <WarningCard title={s.strings.answer_case_sensitive} marginRem={1} />
+      <WarningCard title={lstrings.answer_case_sensitive} marginRem={1} />
     ) : null
   }
   const renderModifyButtons = () => {
@@ -338,7 +338,7 @@ export const ChangeRecoveryScene = (props: Props) => {
       <View style={styles.buttonsContainer}>
         <MainButton
           alignSelf="center"
-          label={s.strings.recovery_change_button}
+          label={lstrings.recovery_change_button}
           marginRem={1}
           onPress={changeRecovery}
           type="secondary"
@@ -346,7 +346,7 @@ export const ChangeRecoveryScene = (props: Props) => {
         <TouchableOpacity onPress={deleteRecovery}>
           <View style={styles.disableButtonContainer}>
             <Text numberOfLines={1} style={styles.disableButton}>
-              {s.strings.recovery_disable_button}
+              {lstrings.recovery_disable_button}
             </Text>
           </View>
         </TouchableOpacity>
@@ -358,7 +358,7 @@ export const ChangeRecoveryScene = (props: Props) => {
       <View style={styles.buttonsContainer}>
         <MainButton
           alignSelf="stretch"
-          label={s.strings.confirm_email}
+          label={lstrings.confirm_email}
           marginRem={[1, 0, 0.5, 0]}
           onPress={saveRecoveryViaEmail}
           disabled={!confirmButtonsEnabled}
@@ -366,7 +366,7 @@ export const ChangeRecoveryScene = (props: Props) => {
         />
         <MainButton
           alignSelf="stretch"
-          label={s.strings.confirm_share}
+          label={lstrings.confirm_share}
           marginRem={[0.5, 0]}
           onPress={saveRecoveryViaShare}
           disabled={!confirmButtonsEnabled}
@@ -374,7 +374,7 @@ export const ChangeRecoveryScene = (props: Props) => {
         />
         <MainButton
           alignSelf="stretch"
-          label={s.strings.cancel}
+          label={lstrings.cancel}
           paddingRem={[1, 0]}
           onPress={onComplete}
           type="escape"

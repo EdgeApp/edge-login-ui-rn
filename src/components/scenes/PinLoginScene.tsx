@@ -24,7 +24,7 @@ import { sprintf } from 'sprintf-js'
 
 import { completeLogin } from '../../actions/LoginCompleteActions'
 import { FaceIdXml } from '../../assets/xml/FaceId'
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { useImports } from '../../hooks/useImports'
 import { LoginUserInfo, useLocalUsers } from '../../hooks/useLocalUsers'
 import { getLoginKey } from '../../keychain'
@@ -157,14 +157,14 @@ export function PinLoginScene(props: Props) {
     Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.forget_account}
+        title={lstrings.forget_account}
         message={sprintf(
-          s.strings.forget_username_account,
-          userInfo.username ?? s.strings.username
+          lstrings.forget_username_account,
+          userInfo.username ?? lstrings.username
         )}
         buttons={{
-          ok: { label: s.strings.forget },
-          cancel: { label: s.strings.cancel, type: 'secondary' }
+          ok: { label: lstrings.forget },
+          cancel: { label: lstrings.cancel, type: 'secondary' }
         }}
       />
     ))
@@ -201,9 +201,9 @@ export function PinLoginScene(props: Props) {
       setErrorInfo({
         message:
           passwordError != null
-            ? s.strings.invalid_pin
+            ? lstrings.invalid_pin
             : usernameError != null
-            ? s.strings.pin_not_enabled
+            ? lstrings.pin_not_enabled
             : networkError != null
             ? translateNetworkError(networkError, userInfo)
             : error instanceof Error
@@ -218,11 +218,11 @@ export function PinLoginScene(props: Props) {
 
   const handleTouchLogin = async (userInfo: EdgeUserInfo): Promise<void> => {
     try {
-      const { loginId, username = s.strings.missing_username } = userInfo
+      const { loginId, username = lstrings.missing_username } = userInfo
       const loginKey = await getLoginKey(
         userInfo,
         `Touch to login user: "${username}"`,
-        s.strings.login_with_password
+        lstrings.login_with_password
       )
       if (loginKey == null) return
 
@@ -297,7 +297,7 @@ export function PinLoginScene(props: Props) {
       errorMessage = errorInfo.message
       if (errorInfo.wait > 0) {
         errorMessage +=
-          ': ' + sprintf(s.strings.account_locked_for, errorInfo.wait)
+          ': ' + sprintf(lstrings.account_locked_for, errorInfo.wait)
       }
     }
 
@@ -308,7 +308,7 @@ export function PinLoginScene(props: Props) {
       usernameLabel = userInfo.username
     } else if (!isSingleSavedUser) {
       // Light account + other saved users: "Tap to Switch..."
-      usernameLabel = s.strings.tap_to_switch_user
+      usernameLabel = lstrings.tap_to_switch_user
     }
     // Light account + no other saved users: hide username label
 
@@ -396,20 +396,20 @@ export function PinLoginScene(props: Props) {
   const renderTouchImageText = () => {
     if (userInfo == null || !userInfo.touchLoginEnabled) return ''
     if (touch === 'FaceID') {
-      return s.strings.use_faceId
+      return lstrings.use_faceId
     }
     if (touch === 'TouchID' && Platform.OS === 'ios') {
-      return s.strings.use_touchId
+      return lstrings.use_touchId
     }
     if (touch === 'TouchID' && Platform.OS !== 'ios') {
-      return s.strings.use_fingerprint
+      return lstrings.use_fingerprint
     }
     return ''
   }
 
   return (
     <ThemedScene
-      backButtonText={s.strings.exit_pin}
+      backButtonText={lstrings.exit_pin}
       onBack={handleBack}
       noUnderline
       branding={branding}
@@ -439,10 +439,10 @@ function translateNetworkError(
   userInfo: LoginUserInfo
 ): string {
   if (userInfo.username != null) {
-    return `${error.message} ${s.strings.pin_network_error_full_password}`
+    return `${error.message} ${lstrings.pin_network_error_full_password}`
   }
   if (userInfo.keyLoginEnabled) {
-    return `${error.message} ${s.strings.pin_network_error_biometric}`
+    return `${error.message} ${lstrings.pin_network_error_biometric}`
   }
   return error.message
 }

@@ -1,7 +1,7 @@
 import { asMaybeUsernameError, EdgeAccountOptions } from 'edge-core-js'
 import * as React from 'react'
 
-import s from '../common/locales/strings'
+import { lstrings } from '../common/locales/strings'
 import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
@@ -60,7 +60,7 @@ export const launchPasswordRecovery = (recoveryKey: string) => async (
 
       const usernameError = asMaybeUsernameError(error)
       if (usernameError != null) {
-        showError(s.strings.recovery_by_username_error)
+        showError(lstrings.recovery_by_username_error)
         return false
       }
 
@@ -73,9 +73,9 @@ export const launchPasswordRecovery = (recoveryKey: string) => async (
     <TextInputModal
       bridge={bridge}
       onSubmit={handleSubmit}
-      title={s.strings.password_recovery}
-      message={s.strings.recover_by_username}
-      inputLabel={s.strings.username}
+      title={lstrings.password_recovery}
+      message={lstrings.recover_by_username}
+      inputLabel={lstrings.username}
       autoCapitalize="none"
       autoCorrect={false}
       autoFocus

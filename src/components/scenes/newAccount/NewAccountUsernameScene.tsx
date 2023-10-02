@@ -5,7 +5,7 @@ import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
 import { maybeRouteComplete } from '../../../actions/LoginInitActions'
-import s from '../../../common/locales/strings'
+import { lstrings } from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
@@ -138,8 +138,8 @@ export const ChangeUsernameComponent = (props: Props) => {
           setTimerId(undefined)
           if (isAvailable) {
             setErrorText(undefined)
-            setAvailableText(s.strings.username_available)
-          } else setErrorText(s.strings.username_exists_error)
+            setAvailableText(lstrings.username_available)
+          } else setErrorText(lstrings.username_exists_error)
         }, AVAILABILITY_CHECK_DELAY_MS)
         setTimerId(newTimerId)
       }
@@ -147,7 +147,7 @@ export const ChangeUsernameComponent = (props: Props) => {
   })
 
   return (
-    <ThemedScene onBack={handleBack} title={s.strings.choose_title_username}>
+    <ThemedScene onBack={handleBack} title={lstrings.choose_title_username}>
       <View style={styles.content}>
         <KeyboardAwareScrollView
           contentContainerStyle={styles.mainScrollView}
@@ -155,15 +155,15 @@ export const ChangeUsernameComponent = (props: Props) => {
         >
           <EdgeText style={styles.description} numberOfLines={2}>
             {sprintf(
-              s.strings.username_desc,
-              branding.appName || s.strings.app_name_default
+              lstrings.username_desc,
+              branding.appName || lstrings.app_name_default
             )}
           </EdgeText>
 
           <OutlinedTextInput
             autoCorrect={false}
             autoFocus
-            label={s.strings.username}
+            label={lstrings.username}
             onChangeText={handleChangeText}
             onSubmitEditing={handleNext}
             returnKeyType="go"
@@ -178,7 +178,7 @@ export const ChangeUsernameComponent = (props: Props) => {
           />
           <MainButton
             alignSelf="center"
-            label={s.strings.next_label}
+            label={lstrings.next_label}
             type="secondary"
             marginRem={[1.5, 0.5]}
             disabled={isNextDisabled}
@@ -196,9 +196,9 @@ const isAscii = (text: string): boolean => {
 
 const getUsernameFormatError = (text: string): null | string => {
   if (text.length < 3) {
-    return s.strings.username_3_characters_error
+    return lstrings.username_3_characters_error
   } else if (!isAscii(text)) {
-    return s.strings.username_ascii_error
+    return lstrings.username_ascii_error
   } else {
     return null
   }

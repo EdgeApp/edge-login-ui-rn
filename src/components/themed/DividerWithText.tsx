@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Text, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
  * Renders a horizontal line with text in the middle.
  */
 function DividerWithTextComponent(props: Props & ThemeProps) {
-  const { label = s.strings.or, theme } = props
+  const { label = lstrings.or, theme } = props
   const styles = getStyles(theme)
 
   return (

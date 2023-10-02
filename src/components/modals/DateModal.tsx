@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 
 export interface Props {
@@ -75,7 +75,7 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
         }
       >
         <TouchableOpacity onPress={this.handleDone}>
-          <Text style={textStyle}>{s.strings.done}</Text>
+          <Text style={textStyle}>{lstrings.done}</Text>
         </TouchableOpacity>
         <DateTimePicker
           display="spinner"

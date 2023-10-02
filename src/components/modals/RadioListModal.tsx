@@ -4,7 +4,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -40,7 +40,7 @@ export function RadioListModal(props: Props) {
       ? { checked: true }
       : { checked: false }
     const accessibilityHint = `${
-      isSelected ? s.strings.on_hint : s.strings.off_hint
+      isSelected ? lstrings.on_hint : lstrings.off_hint
     } ${name}`
 
     const iconElement =

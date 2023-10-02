@@ -3,7 +3,7 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { GradientFadeOut } from '../modals/GradientFadeout'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -66,7 +66,7 @@ export function ModalFooter(props: ModalFooterProps) {
   return (
     <TouchableOpacity onPress={props.onPress} style={styles.closeContainer}>
       <AntDesignIcon
-        accessibilityHint={s.strings.modal_close_hint}
+        accessibilityHint={lstrings.modal_close_hint}
         color={theme.iconTappable}
         name="close"
         size={theme.rem(1.25)}

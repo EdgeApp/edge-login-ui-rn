@@ -11,7 +11,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { Branding } from '../../types/Branding'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
@@ -105,7 +105,7 @@ export function ThemedScene(props: Props) {
                 style={styles.rightButton}
                 onPress={onSkip}
               >
-                <Text style={styles.buttonText}>{s.strings.skip}</Text>
+                <Text style={styles.buttonText}>{lstrings.skip}</Text>
               </TouchableOpacity>
             )}
             {parentButton == null || parentButton.text == null ? null : (

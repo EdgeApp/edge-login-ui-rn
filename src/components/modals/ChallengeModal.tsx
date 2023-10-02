@@ -3,7 +3,7 @@ import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 import { WebView, WebViewNavigation } from 'react-native-webview'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
@@ -31,7 +31,7 @@ export const ChallengeModal = (props: Props) => {
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle>{s.strings.complete_captcha_title}</ModalTitle>
+      <ModalTitle>{lstrings.complete_captcha_title}</ModalTitle>
       <WebView
         source={{ uri: challengeError.challengeUri }}
         // Allow the modal background to appear inside the WebView.

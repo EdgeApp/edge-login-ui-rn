@@ -7,7 +7,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ModalScrollArea, ModalTitle } from '../themed/ModalParts'
@@ -64,10 +64,10 @@ export const SecurityAlertsModal = (props: Props) => {
         <Text style={styles.rowText}>
           <Text style={styles.bold}>
             {isReset
-              ? sprintf(s.strings.alert_modal_reset_s, username)
-              : sprintf(s.strings.alert_modal_voucher_s, username)}
+              ? sprintf(lstrings.alert_modal_reset_s, username)
+              : sprintf(lstrings.alert_modal_voucher_s, username)}
           </Text>
-          {s.strings.alert_modal_action}
+          {lstrings.alert_modal_action}
         </Text>
         <AntDesignIcon
           color={theme.iconTappable}
@@ -81,7 +81,7 @@ export const SecurityAlertsModal = (props: Props) => {
 
   return (
     <ThemedModal bridge={bridge} warning onCancel={handleCancel}>
-      <ModalTitle>{s.strings.security_is_our_priority_modal_title}</ModalTitle>
+      <ModalTitle>{lstrings.security_is_our_priority_modal_title}</ModalTitle>
       <ModalScrollArea>{renderList()}</ModalScrollArea>
     </ThemedModal>
   )

@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Keyboard, KeyboardAvoidingView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useImports } from '../../hooks/useImports'
 import { useDispatch } from '../../types/ReduxTypes'
@@ -43,7 +43,7 @@ const ChangePasswordSceneComponent = ({
   onBack,
   onSkip,
   onSubmit,
-  mainButtonLabel = s.strings.done
+  mainButtonLabel = lstrings.done
 }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -97,7 +97,7 @@ const ChangePasswordSceneComponent = ({
     setConfirmPassword(confirmPassword)
     setIsShowError(false)
     if (confirmPassword !== password) {
-      setConfirmPasswordErrorMessage(s.strings.password_mismatch_error)
+      setConfirmPasswordErrorMessage(lstrings.password_mismatch_error)
       setIsShowError(true)
     }
   }
@@ -112,14 +112,14 @@ const ChangePasswordSceneComponent = ({
           />
         ) : (
           <EdgeText style={styles.description} numberOfLines={4}>
-            {s.strings.password_desc}
+            {lstrings.password_desc}
           </EdgeText>
         )}
         <OutlinedTextInput
           value={password}
           secureTextEntry
           returnKeyType="next"
-          label={s.strings.password}
+          label={lstrings.password}
           autoFocus={focusFirst}
           onChangeText={handleValidatePassword}
           onSubmitEditing={handleFocusSwitch}
@@ -132,7 +132,7 @@ const ChangePasswordSceneComponent = ({
           value={confirmPassword}
           secureTextEntry
           returnKeyType="go"
-          label={s.strings.confirm_password}
+          label={lstrings.confirm_password}
           autoFocus={focusSecond}
           onChangeText={handleChangeConfirmPassword}
           onSubmitEditing={handlePress}
@@ -218,13 +218,13 @@ export const ChangePasswordScene = (props: SceneProps<'changePassword'>) => {
     await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.password_changed}
-        message={s.strings.pwd_change_modal}
-        buttons={{ ok: { label: s.strings.ok } }}
+        title={lstrings.password_changed}
+        message={lstrings.pwd_change_modal}
+        buttons={{ ok: { label: lstrings.ok } }}
       >
         <WarningCard
-          title={s.strings.warning}
-          header={s.strings.password_change_warning}
+          title={lstrings.warning}
+          header={lstrings.password_change_warning}
           marginRem={[1, 0.5]}
         />
       </ButtonsModal>
@@ -257,9 +257,9 @@ export const ResecurePasswordScene = (
     await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.password_changed}
-        message={s.strings.pwd_change_modal}
-        buttons={{ ok: { label: s.strings.ok } }}
+        title={lstrings.password_changed}
+        message={lstrings.pwd_change_modal}
+        buttons={{ ok: { label: lstrings.ok } }}
       />
     ))
     dispatch({
@@ -271,7 +271,7 @@ export const ResecurePasswordScene = (
   return (
     <ChangePasswordSceneComponent
       onSkip={handleSkip}
-      title={s.strings.change_password}
+      title={lstrings.change_password}
       onSubmit={handleSubmit}
     />
   )
@@ -307,8 +307,8 @@ export const NewAccountPasswordScene = (
     <ChangePasswordSceneComponent
       onBack={handleBack}
       onSubmit={handleSubmit}
-      title={s.strings.choose_title_password}
-      mainButtonLabel={s.strings.next_label}
+      title={lstrings.choose_title_password}
+      mainButtonLabel={lstrings.next_label}
     />
   )
 }
@@ -341,8 +341,8 @@ export const UpgradePasswordScene = (props: SceneProps<'upgradePassword'>) => {
     <ChangePasswordSceneComponent
       onBack={handleBack}
       onSubmit={handleSubmit}
-      title={s.strings.choose_title_password}
-      mainButtonLabel={s.strings.next_label}
+      title={lstrings.choose_title_password}
+      mainButtonLabel={lstrings.next_label}
     />
   )
 }

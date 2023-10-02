@@ -28,7 +28,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import { launchPasswordRecovery, login } from '../../actions/LoginAction'
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
 import { LoginUserInfo, useLocalUsers } from '../../hooks/useLocalUsers'
@@ -208,13 +208,13 @@ export const PasswordLoginScene = (props: Props) => {
 
       const usernameError = asMaybeUsernameError(error)
       if (usernameError != null) {
-        setUsernameErrorMessage(s.strings.invalid_account)
+        setUsernameErrorMessage(lstrings.invalid_account)
         return
       }
 
       const passwordError = asMaybePasswordError(error)
       if (passwordError != null) {
-        setPasswordErrorMessage(s.strings.invalid_password)
+        setPasswordErrorMessage(lstrings.invalid_password)
         return
       }
 
@@ -227,7 +227,7 @@ export const PasswordLoginScene = (props: Props) => {
           // Try again with the passed challenge ID included
           await handleSubmit(challengeError.challengeId)
         } else {
-          setPasswordErrorMessage(s.strings.failed_captcha_error)
+          setPasswordErrorMessage(lstrings.failed_captcha_error)
         }
         return
       }
@@ -244,14 +244,14 @@ export const PasswordLoginScene = (props: Props) => {
     Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.forget_account}
+        title={lstrings.forget_account}
         message={sprintf(
-          s.strings.forget_username_account,
-          userInfo.username ?? s.strings.username
+          lstrings.forget_username_account,
+          userInfo.username ?? lstrings.username
         )}
         buttons={{
-          ok: { label: s.strings.forget },
-          cancel: { label: s.strings.cancel, type: 'secondary' }
+          ok: { label: lstrings.forget },
+          cancel: { label: lstrings.cancel, type: 'secondary' }
         }}
       />
     ))
@@ -315,7 +315,7 @@ export const PasswordLoginScene = (props: Props) => {
   const handleSubmitRecoveryKey = useHandler(
     async (recoveryKey: string): Promise<boolean | string> => {
       if (base58.parseUnsafe(recoveryKey)?.length !== 32)
-        return s.strings.recovery_token_invalid
+        return lstrings.recovery_token_invalid
       dispatch(launchPasswordRecovery(recoveryKey))
       return true
     }
@@ -328,9 +328,9 @@ export const PasswordLoginScene = (props: Props) => {
       <TextInputModal
         bridge={bridge}
         onSubmit={handleSubmitRecoveryKey}
-        title={s.strings.password_recovery}
-        message={s.strings.initiate_password_recovery}
-        inputLabel={s.strings.recovery_token}
+        title={lstrings.password_recovery}
+        message={lstrings.initiate_password_recovery}
+        inputLabel={lstrings.recovery_token}
       />
     ))
   })
@@ -406,7 +406,7 @@ export const PasswordLoginScene = (props: Props) => {
             autoFocus
             clearIcon={!hasSavedUsers}
             error={usernameErrorMessage}
-            label={s.strings.username}
+            label={lstrings.username}
             marginRem={[0.5, 1, 0.5, 1]}
             returnKeyType="next"
             testID="usernameFormField"
@@ -476,7 +476,7 @@ export const PasswordLoginScene = (props: Props) => {
           autoCorrect={false}
           autoFocus={false}
           error={passwordErrorMessage}
-          label={s.strings.password}
+          label={lstrings.password}
           marginRem={[0.5, 1, 0.5, 1]}
           returnKeyType="done"
           secureTextEntry
@@ -497,11 +497,11 @@ export const PasswordLoginScene = (props: Props) => {
         <MainButton
           type="textOnly"
           onPress={handleForgotPassword}
-          label={s.strings.forgot_password}
+          label={lstrings.forgot_password}
         />
         <View style={styles.loginButtonBox}>
           <MainButton
-            label={s.strings.login_button}
+            label={lstrings.login_button}
             testID="loginButton"
             type={buttonType}
             disabled={
