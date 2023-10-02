@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 2.13.2 (2023-10-02)
+
+- fixed: Password login scene back button when on legacy landing variant
+
 ## 2.13.1 (2023-09-25)
 
 - fixed: Unintended breaking API changes from 2.13.0
