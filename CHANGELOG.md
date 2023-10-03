@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## 2.14.0 (2023-10-03)
+
+- changed: Update modals to be in sync with their GUI counterparts
+
 ## 2.13.2 (2023-10-02)
 
 - fixed: Password login scene back button when on legacy landing variant
