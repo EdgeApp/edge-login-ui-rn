@@ -3,7 +3,7 @@ import { TouchableWithoutFeedback, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { PinButton } from '../themed/PinButton'
 
@@ -27,19 +27,19 @@ class PinKeypadComponent extends React.PureComponent<Props> {
           <View style={styles.keypadRow}>
             <View style={styles.keypadBox}>
               <PinButton
-                label={s.strings.keypad_one}
+                label={lstrings.keypad_one}
                 onPress={() => onPress('1')}
               />
             </View>
             <View style={styles.keypadBox}>
               <PinButton
-                label={s.strings.keypad_two}
+                label={lstrings.keypad_two}
                 onPress={() => onPress('2')}
               />
             </View>
             <View style={styles.keypadBox}>
               <PinButton
-                label={s.strings.keypad_three}
+                label={lstrings.keypad_three}
                 onPress={() => onPress('3')}
               />
             </View>
@@ -47,19 +47,19 @@ class PinKeypadComponent extends React.PureComponent<Props> {
           <View style={styles.keypadRow}>
             <View style={styles.keypadBox}>
               <PinButton
-                label={s.strings.keypad_four}
+                label={lstrings.keypad_four}
                 onPress={() => onPress('4')}
               />
             </View>
             <View style={styles.keypadBox}>
               <PinButton
-                label={s.strings.keypad_five}
+                label={lstrings.keypad_five}
                 onPress={() => onPress('5')}
               />
             </View>
             <View style={styles.keypadBox}>
               <PinButton
-                label={s.strings.keypad_six}
+                label={lstrings.keypad_six}
                 onPress={() => onPress('6')}
               />
             </View>
@@ -67,19 +67,19 @@ class PinKeypadComponent extends React.PureComponent<Props> {
           <View style={styles.keypadRow}>
             <View style={styles.keypadBox}>
               <PinButton
-                label={s.strings.keypad_seven}
+                label={lstrings.keypad_seven}
                 onPress={() => onPress('7')}
               />
             </View>
             <View style={styles.keypadBox}>
               <PinButton
-                label={s.strings.keypad_eight}
+                label={lstrings.keypad_eight}
                 onPress={() => onPress('8')}
               />
             </View>
             <View style={styles.keypadBox}>
               <PinButton
-                label={s.strings.keypad_nine}
+                label={lstrings.keypad_nine}
                 onPress={() => onPress('9')}
               />
             </View>
@@ -88,7 +88,7 @@ class PinKeypadComponent extends React.PureComponent<Props> {
             <View style={styles.keypadColumnBlank} />
             <View style={styles.keypadBox}>
               <PinButton
-                label={s.strings.keypad_zero}
+                label={lstrings.keypad_zero}
                 onPress={() => onPress('0')}
               />
             </View>

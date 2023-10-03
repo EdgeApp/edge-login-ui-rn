@@ -5,7 +5,7 @@ import { cacheStyles } from 'react-native-patina'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -26,16 +26,16 @@ export const PasswordStatus = (props: Props) => {
 
   const { passed, tooShort, noLowerCase, noUpperCase, noNumber } = passwordEval
   const list = [
-    { title: s.strings.must_ten_characters, value: !tooShort },
+    { title: lstrings.must_ten_characters, value: !tooShort },
     {
-      title: s.strings.must_one_lowercase,
+      title: lstrings.must_one_lowercase,
       value: !noLowerCase
     },
     {
-      title: s.strings.must_one_uppercase,
+      title: lstrings.must_one_uppercase,
       value: !noUpperCase
     },
-    { title: s.strings.must_one_number, value: !noNumber }
+    { title: lstrings.must_one_number, value: !noNumber }
   ]
 
   return (
@@ -49,7 +49,7 @@ export const PasswordStatus = (props: Props) => {
           disabledIcon={props => <SimpleLineIcons {...props} name="info" />}
         />
         <EdgeText style={[styles.message, passed && styles.passed]}>
-          {s.strings.password_requirements}
+          {lstrings.password_requirements}
         </EdgeText>
       </View>
       {list.map(({ title, value }) => (

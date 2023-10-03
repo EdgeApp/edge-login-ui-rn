@@ -5,7 +5,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { sprintf } from 'sprintf-js'
 
 import { LOGO_BIG } from '../../../assets'
-import s from '../../../common/locales/strings'
+import { lstrings } from '../../../common/locales/strings'
 import * as Constants from '../../../constants/index'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
@@ -28,7 +28,7 @@ export const NewAccountWelcomeScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const appName = branding.appName || s.strings.app_name_default
+  const appName = branding.appName || lstrings.app_name_default
   const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
   const logoSrc = branding.primaryLogo || LOGO_BIG
 
@@ -48,11 +48,11 @@ export const NewAccountWelcomeScene = (props: Props) => {
   }
 
   return (
-    <ThemedScene onBack={handleExit} title={s.strings.get_started}>
+    <ThemedScene onBack={handleExit} title={lstrings.get_started}>
       <View style={styles.content}>
         <Image source={logoSrc} style={styles.logo} resizeMode="contain" />
         <EdgeText style={styles.welcome}>
-          {sprintf(s.strings.welcome, appName)}
+          {sprintf(lstrings.welcome, appName)}
         </EdgeText>
         <View style={styles.advantage}>
           <MaterialCommunityIcons
@@ -62,13 +62,13 @@ export const NewAccountWelcomeScene = (props: Props) => {
           />
           <View style={styles.advantageTextContainer}>
             <EdgeText style={styles.advantageTitle}>
-              {sprintf(s.strings.welcome_advantage_one_title, appName)}
+              {sprintf(lstrings.welcome_advantage_one_title, appName)}
             </EdgeText>
             <EdgeText style={styles.advantageDescription} numberOfLines={2}>
-              {s.strings.welcome_advantage_one_description_line1}
+              {lstrings.welcome_advantage_one_description_line1}
             </EdgeText>
             <EdgeText style={styles.advantageDescription} numberOfLines={2}>
-              {s.strings.welcome_advantage_one_description_line2}
+              {lstrings.welcome_advantage_one_description_line2}
             </EdgeText>
           </View>
         </View>
@@ -81,16 +81,16 @@ export const NewAccountWelcomeScene = (props: Props) => {
           />
           <View style={styles.advantageTextContainer}>
             <EdgeText style={styles.advantageTitle}>
-              {s.strings.welcome_advantage_two_title}
+              {lstrings.welcome_advantage_two_title}
             </EdgeText>
             <EdgeText style={styles.advantageDescription} numberOfLines={5}>
-              {sprintf(s.strings.welcome_advantage_two_description, appName)}
+              {sprintf(lstrings.welcome_advantage_two_description, appName)}
             </EdgeText>
           </View>
         </View>
         <View style={styles.actions}>
           <MainButton
-            label={s.strings.get_started}
+            label={lstrings.get_started}
             type={buttonType}
             onPress={handleDone}
           />

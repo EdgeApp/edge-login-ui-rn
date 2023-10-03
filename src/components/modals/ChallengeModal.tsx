@@ -1,11 +1,14 @@
+/**
+ * IMPORTANT: Changes in this file MUST be duplicated in edge-react-gui!
+ */
 import type { ChallengeError } from 'edge-core-js'
 import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 import { WebView, WebViewNavigation } from 'react-native-webview'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
-import { ModalFooter, ModalTitle } from '../themed/ModalParts'
+import { ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
@@ -31,7 +34,7 @@ export const ChallengeModal = (props: Props) => {
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle>{s.strings.complete_captcha_title}</ModalTitle>
+      <ModalTitle>{lstrings.complete_captcha_title}</ModalTitle>
       <WebView
         source={{ uri: challengeError.challengeUri }}
         // Allow the modal background to appear inside the WebView.
@@ -41,7 +44,6 @@ export const ChallengeModal = (props: Props) => {
         style={{ backgroundColor: '#00000000' }}
         onShouldStartLoadWithRequest={handleLoading}
       />
-      <ModalFooter onPress={handleCancel} />
     </ThemedModal>
   )
 }

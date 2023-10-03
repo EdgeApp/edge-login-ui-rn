@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Text, View } from 'react-native'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import * as Constants from '../../constants/index'
 import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
@@ -58,7 +58,7 @@ export const LandingScene = (props: Props) => {
             <View style={styles.featureBoxContent}>
               <View style={styles.featureBoxDescription}>
                 <Text style={styles.tagText}>
-                  {props.landingSceneText || s.strings.landing_tagline}
+                  {props.landingSceneText || lstrings.landing_tagline}
                 </Text>
               </View>
             </View>
@@ -74,7 +74,7 @@ export const LandingScene = (props: Props) => {
               <MainButton
                 testID="alreadyHaveAccountButton"
                 onPress={handlePassword}
-                label={s.strings.landing_already_have_account}
+                label={lstrings.landing_already_have_account}
                 type="textOnly"
               />
             </View>

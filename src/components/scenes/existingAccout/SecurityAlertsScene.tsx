@@ -6,7 +6,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import { submitLogin } from '../../../actions/LoginCompleteActions'
-import s from '../../../common/locales/strings'
+import { lstrings } from '../../../common/locales/strings'
 import { useImports } from '../../../hooks/useImports'
 import { useDispatch } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
@@ -90,25 +90,25 @@ export class SecurityAlertsSceneComponent extends React.Component<
           >
             <MessageText>
               {count > 1
-                ? s.strings.alert_scene_message_many
-                : s.strings.alert_scene_message}
+                ? lstrings.alert_scene_message_many
+                : lstrings.alert_scene_message}
             </MessageText>
           </IconHeaderRow>
           <MessageText>
-            <Warning>{s.strings.alert_scene_warning}</Warning>
+            <Warning>{lstrings.alert_scene_warning}</Warning>
           </MessageText>
           {this.renderVouchers()}
           {this.renderReset()}
           {showSkip ? (
             <LinkRow
-              label={s.strings.skip_button}
+              label={lstrings.skip_button}
               onPress={this.handleSkip}
               renderIcon={() => null}
             />
           ) : null}
         </ScrollView>
         <MainButton
-          label={s.strings.alert_scene_deny}
+          label={lstrings.alert_scene_deny}
           marginRem={1}
           onPress={this.handleDeny}
         />
@@ -125,9 +125,9 @@ export class SecurityAlertsSceneComponent extends React.Component<
 
     return (
       <View style={styles.tile}>
-        <MessageText>{s.strings.alert_scene_reset_message}</MessageText>
+        <MessageText>{lstrings.alert_scene_reset_message}</MessageText>
         <MessageText>
-          {s.strings.alert_scene_reset_date}
+          {lstrings.alert_scene_reset_date}
           {otpResetDate.toLocaleString()}
         </MessageText>
         {spinReset ? (
@@ -137,7 +137,7 @@ export class SecurityAlertsSceneComponent extends React.Component<
           />
         ) : (
           <LinkRow
-            label={s.strings.alert_scene_approve}
+            label={lstrings.alert_scene_approve}
             onPress={this.handleApproveReset}
             renderIcon={theme => (
               <AntDesignIcon name="check" size={theme.rem(1)} />
@@ -157,13 +157,13 @@ export class SecurityAlertsSceneComponent extends React.Component<
       <View style={styles.tile} key={voucher.voucherId}>
         <MessageText>
           {voucher.deviceDescription != null
-            ? s.strings.alert_scene_device + voucher.deviceDescription + '\n'
+            ? lstrings.alert_scene_device + voucher.deviceDescription + '\n'
             : null}
-          {s.strings.alert_scene_ip + voucher.ipDescription + '\n'}
-          {s.strings.alert_scene_date + toLocalTime(voucher.created)}
+          {lstrings.alert_scene_ip + voucher.ipDescription + '\n'}
+          {lstrings.alert_scene_date + toLocalTime(voucher.created)}
         </MessageText>
         <MessageText>
-          {s.strings.alert_scene_reset_date + toLocalTime(voucher.activates)}
+          {lstrings.alert_scene_reset_date + toLocalTime(voucher.activates)}
         </MessageText>
         {spinVoucher[voucher.voucherId] ? (
           <ActivityIndicator
@@ -172,7 +172,7 @@ export class SecurityAlertsSceneComponent extends React.Component<
           />
         ) : (
           <LinkRow
-            label={s.strings.alert_scene_approve}
+            label={lstrings.alert_scene_approve}
             onPress={() => this.handleApproveVoucher(voucher.voucherId)}
             renderIcon={theme => (
               <AntDesignIcon name="check" size={theme.rem(1)} />

@@ -5,7 +5,7 @@ import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -30,8 +30,8 @@ function AlertDropdownComponent(props: Props & ThemeProps) {
         <Text style={styles.text}>
           <Text style={styles.boldText}>
             {warning
-              ? s.strings.alert_dropdown_warning
-              : s.strings.alert_dropdown_alert}{' '}
+              ? lstrings.alert_dropdown_warning
+              : lstrings.alert_dropdown_alert}{' '}
           </Text>
           {message}
         </Text>

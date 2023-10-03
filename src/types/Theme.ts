@@ -233,6 +233,10 @@ export interface Theme {
   fontFamily: string
   fontWeightBold: FontWeight
 
+  // Used to control the OS status bar, modal blur,
+  // and other binary light / dark choices:
+  isDark: boolean
+
   // Icons
   icon: string
   iconDeactivated: string

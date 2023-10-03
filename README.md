@@ -21,7 +21,7 @@ The login UI depends on some extra external native libraries, which you will hav
 - react-native-localize v2
 - react-native-permissions v3
   - Activate the [notification permission for iOS](https://www.npmjs.com/package/react-native-permissions#iOS).
-- react-native-reanimated v2
+- react-native-reanimated v3
   - Follow the [extra installation steps](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/installation/).
   - Setting up reanimated also involves setting up react-native-gesture-handler.
 - react-native-safe-area-context (4.5.0+)
@@ -31,6 +31,7 @@ The login UI depends on some extra external native libraries, which you will hav
   - Follow the [extra installation steps](https://www.npmjs.com/package/react-native-vector-icons#installation).
   - We use AntDesign, Entypo, MaterialIcons, FontAwesome, FontAwesome5, and SimpleLineIcons.
 - react-native-webview v13
+- rn-id-blurview v1
 
 To initialize the Edge core library, your application needs to mount the `MakeEdgeContext` component and keep it around for the lifetime of the app. The `MakeEdgeContext` component will create and manage an `EdgeContext` object.
 

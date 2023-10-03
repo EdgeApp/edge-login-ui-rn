@@ -3,7 +3,7 @@ import { ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { checkAndRequestNotifications } from '../../../actions/LoginInitActions'
-import s from '../../../common/locales/strings'
+import { lstrings } from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
@@ -31,18 +31,18 @@ const AccountReviewComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   return (
-    <ThemedScene title={s.strings.review}>
+    <ThemedScene title={lstrings.review}>
       <ScrollView contentContainerStyle={styles.content}>
         <EdgeText style={styles.description} numberOfLines={2}>
-          {s.strings.tap_to_review_button}
+          {lstrings.tap_to_review_button}
         </EdgeText>
         <FormError
           marginRem={[0, 0, 2]}
-          title={s.strings.alert_dropdown_warning}
+          title={lstrings.alert_dropdown_warning}
           numberOfLines={2}
           isWarning
         >
-          {s.strings.warning_message}
+          {lstrings.warning_message}
         </FormError>
         <AccountInfo
           marginRem={[0, 2.5]}
@@ -52,7 +52,7 @@ const AccountReviewComponent = (props: Props) => {
         />
         <View style={styles.actions}>
           <MainButton
-            label={s.strings.create}
+            label={lstrings.create}
             type="secondary"
             onPress={onNext}
           />

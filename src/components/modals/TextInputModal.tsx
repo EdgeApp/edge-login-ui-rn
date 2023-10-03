@@ -1,12 +1,15 @@
+/**
+ * IMPORTANT: Changes in this file MUST be duplicated in edge-react-gui!
+ */
 import * as React from 'react'
 import { Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { MainButton } from '../themed/MainButton'
-import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -41,10 +44,10 @@ interface Props {
     | 'numeric'
     | 'email-address'
     | 'phone-pad'
-  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
-  secureTextEntry?: boolean
   multiline?: boolean
   maxLength?: number
+  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
+  secureTextEntry?: boolean
 }
 
 export function TextInputModal(props: Props) {
@@ -61,7 +64,7 @@ export function TextInputModal(props: Props) {
     returnKeyType,
     secureTextEntry,
     multiline = false,
-    submitLabel = s.strings.submit,
+    submitLabel = lstrings.submit,
     title,
     maxLength,
     warning,
@@ -95,20 +98,28 @@ export function TextInputModal(props: Props) {
       }
     )
   }
-  const handleCancel = () => bridge.resolve(undefined)
+
   return (
-    <ThemedModal warning={warning} bridge={bridge} onCancel={handleCancel}>
-      {title == null ? null : <ModalTitle>{title}</ModalTitle>}
-      {message == null ? null : <ModalMessage>{message}</ModalMessage>}
-      {warningMessage == null ? null : (
+    <ThemedModal
+      warning={warning}
+      bridge={bridge}
+      onCancel={() => bridge.resolve(undefined)}
+    >
+      {title != null ? <ModalTitle>{title}</ModalTitle> : null}
+      {typeof message === 'string' ? (
+        <ModalMessage>{message}</ModalMessage>
+      ) : (
+        <>{message}</>
+      )}
+      {warningMessage != null ? (
         <Alert
           type="warning"
-          title={s.strings.warning}
+          title={lstrings.warning}
           marginRem={0.5}
           message={warningMessage}
           numberOfLines={0}
         />
-      )}
+      ) : null}
       <OutlinedTextInput
         // Text input props:
         autoCapitalize={autoCapitalize}
@@ -135,7 +146,7 @@ export function TextInputModal(props: Props) {
         <MainButton
           alignSelf="center"
           disabled
-          marginRem={[0.5, 0.5, 5, 0.5]}
+          marginRem={0.5}
           type="secondary"
           spinner
         />
@@ -143,12 +154,11 @@ export function TextInputModal(props: Props) {
         <MainButton
           alignSelf="center"
           label={submitLabel}
-          marginRem={[0.5, 0.5, 5, 0.5]}
+          marginRem={0.5}
           onPress={handleSubmit}
           type="secondary"
         />
       )}
-      <ModalFooter onPress={handleCancel} fadeOut />
     </ThemedModal>
   )
 }

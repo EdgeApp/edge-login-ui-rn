@@ -1,46 +1,49 @@
+/**
+ * IMPORTANT: Changes in this file MUST be duplicated in edge-react-gui!
+ */
 import * as React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, ViewStyle } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
+import { BlurView } from 'rn-id-blurview'
 
 import { fixSides } from '../../util/sides'
 import { useTheme } from '../services/ThemeContext'
+import { ModalFooter, ModalScrollArea } from './ModalParts'
 
 interface Props<T> {
   bridge: AirshipBridge<T>
   children?: React.ReactNode
+  onCancel: () => void
 
   // Control over the content area:
+  closeButton?: boolean
+  flexDirection?: ViewStyle['flexDirection']
+  justifyContent?: ViewStyle['justifyContent']
   paddingRem?: number[] | number
 
-  // Adds a yellow warning border:
-  warning?: boolean
+  // Scroll area with a fade
+  scroll?: boolean
 
-  onCancel: () => void
+  // Gives the box a border:
+  warning?: boolean
 }
 
+/**
+ * The Airship modal, but connected to our theming system.
+ */
 export function ThemedModal<T>(props: Props<T>) {
   const {
     bridge,
-    children = null,
+    closeButton = true,
+    children,
+    flexDirection,
+    justifyContent,
     warning = false,
-    paddingRem,
+    scroll = false,
     onCancel
   } = props
+  const paddingRem = fixSides(props.paddingRem, 1)
   const theme = useTheme()
-
-  // Since we can't add native dependencies without a major version bump,
-  // we rely on the GUI to sneak this one to us:
-  // @ts-expect-error
-  const { ReactNativeBlurView } = global
-  const underlay =
-    typeof ReactNativeBlurView === 'function' ? (
-      <ReactNativeBlurView
-        blurType={theme.modalBlurType}
-        style={StyleSheet.absoluteFill}
-      />
-    ) : (
-      'rgba(0, 0, 0, 0.75)'
-    )
 
   // TODO: The warning styles are incorrectly hard-coded:
   const borderColor = warning ? theme.warningText : theme.modalBorderColor
@@ -49,15 +52,25 @@ export function ThemedModal<T>(props: Props<T>) {
   return (
     <AirshipModal
       bridge={bridge}
-      onCancel={onCancel}
       backgroundColor={theme.modal}
       borderRadius={theme.rem(theme.modalBorderRadiusRem)}
       borderColor={borderColor}
       borderWidth={borderWidth}
-      padding={fixSides(paddingRem, 1).map(theme.rem)}
-      underlay={underlay}
+      flexDirection={flexDirection}
+      justifyContent={justifyContent}
+      onCancel={onCancel}
+      padding={paddingRem.map(theme.rem)}
+      underlay={
+        <BlurView
+          blurType={theme.isDark ? 'light' : 'dark'}
+          style={StyleSheet.absoluteFill}
+        />
+      }
     >
-      {children}
+      <>
+        {scroll ? <ModalScrollArea>{children}</ModalScrollArea> : children}
+        {closeButton ? <ModalFooter onPress={onCancel} /> : null}
+      </>
     </AirshipModal>
   )
 }

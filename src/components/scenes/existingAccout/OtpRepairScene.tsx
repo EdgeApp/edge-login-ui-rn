@@ -3,7 +3,7 @@ import * as React from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../../common/locales/strings'
+import { lstrings } from '../../../common/locales/strings'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
@@ -57,13 +57,13 @@ class OtpRepairSceneComponent extends React.Component<Props> {
         const otpError = asMaybeOtpError(error)
         if (otpError != null) {
           saveOtpError(account, otpError)
-          return s.strings.backup_key_incorrect
+          return lstrings.backup_key_incorrect
         }
         if (
           error instanceof Error &&
           error.message === 'Unexpected end of data'
         ) {
-          return s.strings.backup_key_incorrect
+          return lstrings.backup_key_incorrect
         }
         showError(error)
         return false
@@ -74,10 +74,10 @@ class OtpRepairSceneComponent extends React.Component<Props> {
       <TextInputModal
         bridge={bridge}
         onSubmit={handleSubmit}
-        title={s.strings.otp_backup_code_modal_title}
-        message={s.strings.otp_instructions}
-        inputLabel={s.strings.backup_key_label}
-        submitLabel={s.strings.submit}
+        title={lstrings.otp_backup_code_modal_title}
+        message={lstrings.otp_instructions}
+        inputLabel={lstrings.backup_key_label}
+        submitLabel={lstrings.submit}
         autoCapitalize="characters"
         returnKeyType="done"
       />
@@ -95,7 +95,7 @@ class OtpRepairSceneComponent extends React.Component<Props> {
     return (
       <ThemedScene
         onBack={this.props.onBack}
-        title={s.strings.otp_header_repair}
+        title={lstrings.otp_header_repair}
       >
         <IconHeaderRow
           renderIcon={theme => (
@@ -108,26 +108,26 @@ class OtpRepairSceneComponent extends React.Component<Props> {
             <Warning>
               {isIp
                 ? sprintf(
-                    s.strings.otp_repair_header_ip_branded,
+                    lstrings.otp_repair_header_ip_branded,
                     this.props.branding.appName
                   )
                 : sprintf(
-                    s.strings.otp_repair_header_2fa_branded,
+                    lstrings.otp_repair_header_2fa_branded,
                     this.props.branding.appName
                   )}
             </Warning>
           </MessageText>
         </IconHeaderRow>
 
-        <DividerWithText label={s.strings.to_fix} />
-        <MessageText>{s.strings.otp_scene_approve}</MessageText>
+        <DividerWithText label={lstrings.to_fix} />
+        <MessageText>{lstrings.otp_scene_approve}</MessageText>
         <DividerWithText />
-        <LinkRow label={s.strings.otp_scene_qr} onPress={handleQrModal} />
+        <LinkRow label={lstrings.otp_scene_qr} onPress={handleQrModal} />
         {isIp ? null : (
           <>
             <DividerWithText />
             <LinkRow
-              label={s.strings.otp_backup_code_modal_title}
+              label={lstrings.otp_backup_code_modal_title}
               onPress={this.handleBackupModal}
             />
           </>
@@ -136,7 +136,7 @@ class OtpRepairSceneComponent extends React.Component<Props> {
           <>
             <DividerWithText />
             <MessageText>
-              {sprintf(s.strings.otp_scene_wait, toLocalTime(date))}
+              {sprintf(lstrings.otp_scene_wait, toLocalTime(date))}
             </MessageText>
           </>
         )}
@@ -144,7 +144,7 @@ class OtpRepairSceneComponent extends React.Component<Props> {
           <>
             <DividerWithText />
             <LinkRow
-              label={s.strings.disable_otp_button_two}
+              label={lstrings.disable_otp_button_two}
               onPress={() => showResetModal(this.props.requestOtpReset)}
             />
           </>

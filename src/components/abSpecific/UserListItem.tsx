@@ -3,7 +3,7 @@ import { LayoutChangeEvent, TouchableOpacity } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { LoginUserInfo } from '../../hooks/useLocalUsers'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -29,7 +29,7 @@ export function UserListItem(props: Props) {
     onClick(userInfo)
   })
 
-  const username = userInfo.username ?? s.strings.missing_username
+  const username = userInfo.username ?? lstrings.missing_username
   return (
     <TouchableOpacity
       accessible={false}

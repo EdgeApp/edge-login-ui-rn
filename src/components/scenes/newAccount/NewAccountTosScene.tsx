@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { loadTouchState } from '../../../actions/TouchActions'
 import { getAppConfig } from '../../../common/appConfig'
-import s from '../../../common/locales/strings'
+import { lstrings } from '../../../common/locales/strings'
 import * as Constants from '../../../constants/index'
 import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
@@ -50,12 +50,12 @@ const TosComponent = (props: Props) => {
   const scrollViewRef = useScrollToEnd(showNext)
   const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
 
-  const { appName = s.strings.app_name_default } = branding
+  const { appName = lstrings.app_name_default } = branding
   const terms: string[] = [
-    sprintf(s.strings.terms_one, appName),
-    hidePasswordTerms ? s.strings.terms_two_alt : s.strings.terms_two,
-    ...(hidePasswordTerms ? [] : [sprintf(s.strings.terms_three, appName)]),
-    sprintf(s.strings.terms_four, appName)
+    sprintf(lstrings.terms_one, appName),
+    hidePasswordTerms ? lstrings.terms_two_alt : lstrings.terms_two,
+    ...(hidePasswordTerms ? [] : [sprintf(lstrings.terms_three, appName)]),
+    sprintf(lstrings.terms_four, appName)
   ]
 
   const handleStatusChange = useHandler((index: number, value: boolean) => {
@@ -70,8 +70,8 @@ const TosComponent = (props: Props) => {
       data: {
         name: 'newAccountWait',
         params: {
-          title: s.strings.great_job,
-          message: s.strings.hang_tight + '\n' + s.strings.secure_account
+          title: lstrings.great_job,
+          message: lstrings.hang_tight + '\n' + lstrings.secure_account
         }
       }
     })
@@ -79,9 +79,9 @@ const TosComponent = (props: Props) => {
       onNext().catch((e: any) => {
         console.error(e)
         Alert.alert(
-          s.strings.create_account_error_title,
-          s.strings.create_account_error_message + '\n' + e.message,
-          [{ text: s.strings.ok }]
+          lstrings.create_account_error_title,
+          lstrings.create_account_error_message + '\n' + e.message,
+          [{ text: lstrings.ok }]
         )
         dispatch({
           type: 'NAVIGATE',
@@ -92,11 +92,11 @@ const TosComponent = (props: Props) => {
   })
 
   return (
-    <ThemedScene onBack={onBack} title={s.strings.account_confirmation}>
+    <ThemedScene onBack={onBack} title={lstrings.account_confirmation}>
       <ScrollView ref={scrollViewRef} contentContainerStyle={styles.content}>
         <EdgeText
           style={styles.subtitle}
-        >{`${s.strings.review}: ${s.strings.read_understod_2}`}</EdgeText>
+        >{`${lstrings.review}: ${lstrings.read_understod_2}`}</EdgeText>
         {terms.map((term, index) => (
           <Checkbox
             key={index}
@@ -115,15 +115,15 @@ const TosComponent = (props: Props) => {
             await Linking.openURL(getAppConfig().termsOfServiceSite)
           }
         >
-          {s.strings.read_understod_1}
+          {lstrings.read_understod_1}
           <EdgeText style={styles.agreeTextLink}>
-            {s.strings.read_understod_2}
+            {lstrings.read_understod_2}
           </EdgeText>
         </EdgeText>
         <View style={styles.actions}>
           <Fade visible={showNext}>
             <MainButton
-              label={s.strings.confirm}
+              label={lstrings.confirm}
               paddingRem={0.7}
               type={buttonType}
               onPress={handleNextPress}

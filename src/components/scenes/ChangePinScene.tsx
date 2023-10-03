@@ -4,7 +4,7 @@ import { cacheStyles } from 'react-native-patina'
 
 import { submitLogin } from '../../actions/LoginCompleteActions'
 import { maybeRouteComplete } from '../../actions/LoginInitActions'
-import s from '../../common/locales/strings'
+import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useImports } from '../../hooks/useImports'
 import { useScrollToEnd } from '../../hooks/useScrollToEnd'
@@ -30,13 +30,13 @@ interface Props {
 }
 
 const ChangePinSceneComponent = ({
-  body = s.strings.pin_desc,
+  body = lstrings.pin_desc,
   initPin,
   title,
   onBack,
   onSkip,
   onSubmit,
-  mainButtonLabel = s.strings.done
+  mainButtonLabel = lstrings.done
 }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -108,9 +108,9 @@ export const ChangePinScene = (props: SceneProps<'changePin'>) => {
       await Airship.show(bridge => (
         <ButtonsModal
           bridge={bridge}
-          title={s.strings.pin_changed}
-          message={s.strings.pin_successfully_changed}
-          buttons={{ ok: { label: s.strings.ok } }}
+          title={lstrings.pin_changed}
+          message={lstrings.pin_successfully_changed}
+          buttons={{ ok: { label: lstrings.ok } }}
         />
       ))
       onComplete()
@@ -140,9 +140,9 @@ export const ResecurePinScene = (props: SceneProps<'resecurePin'>) => {
       await Airship.show(bridge => (
         <ButtonsModal
           bridge={bridge}
-          title={s.strings.pin_changed}
-          message={s.strings.pin_successfully_changed}
-          buttons={{ ok: { label: s.strings.ok } }}
+          title={lstrings.pin_changed}
+          message={lstrings.pin_successfully_changed}
+          buttons={{ ok: { label: lstrings.ok } }}
         />
       ))
       handleComplete()
@@ -153,7 +153,7 @@ export const ResecurePinScene = (props: SceneProps<'resecurePin'>) => {
   return (
     <ChangePinSceneComponent
       onSkip={handleComplete}
-      title={s.strings.change_pin}
+      title={lstrings.change_pin}
       onSubmit={handleSubmit}
     />
   )
@@ -196,11 +196,11 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
 
   return (
     <ChangePinSceneComponent
-      body={lightAccount ? s.strings.pin_desc_alt : undefined}
-      title={s.strings.choose_title_pin}
+      body={lightAccount ? lstrings.pin_desc_alt : undefined}
+      title={lstrings.choose_title_pin}
       onBack={handleBack}
       onSubmit={handleSubmit}
-      mainButtonLabel={s.strings.next_label}
+      mainButtonLabel={lstrings.next_label}
     />
   )
 }

@@ -1,3 +1,6 @@
+/**
+ * IMPORTANT: Changes in this file MUST be duplicated in edge-react-gui!
+ */
 import * as React from 'react'
 import {
   FlatList,
@@ -8,11 +11,11 @@ import {
 } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
+import { useFilter } from '../../hooks/useFilter'
 import { useTheme } from '../services/ThemeContext'
 import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
-import { GradientFadeOut } from './GradientFadeout'
 
 interface Props<T> {
   bridge: AirshipBridge<any>
@@ -71,11 +74,13 @@ export function ListModal<T>({
 }: Props<T>) {
   const theme = useTheme()
   const [text, setText] = React.useState<string>(initialValue)
+  const [filteredRows, setFilteredRows] = useFilter(rowsData, rowDataFilter)
   const renderItem: ListRenderItem<T> = ({ item }) =>
     rowComponent ? rowComponent(item) : null
   const handleCancel = () => bridge.resolve(undefined)
   const handleChangeText = (text: string) => {
     setText(text)
+    setFilteredRows(text)
   }
 
   const handleSubmitEditing = () =>
@@ -86,10 +91,14 @@ export function ListModal<T>({
   }, [theme])
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      {title != null ? <ModalTitle>{title}</ModalTitle> : null}
-      {message != null ? <ModalMessage>{message}</ModalMessage> : null}
-      {textInput ? (
+    <ThemedModal
+      bridge={bridge}
+      closeButton={closeArrow}
+      onCancel={handleCancel}
+    >
+      {title == null ? null : <ModalTitle>{title}</ModalTitle>}
+      {message == null ? null : <ModalMessage>{message}</ModalMessage>}
+      {textInput == null ? null : (
         <OutlinedTextInput
           // Our props:
           searchIcon
@@ -98,25 +107,23 @@ export function ListModal<T>({
           autoCapitalize="words"
           returnKeyType="done"
           marginRem={[1, 0.5]}
+          testID={title}
           onChangeText={handleChangeText}
           onSubmitEditing={handleSubmitEditing}
           value={text}
           // Outlined Text input props:
           {...textProps}
         />
-      ) : null}
+      )}
       <FlatList
         contentContainerStyle={scrollPadding}
-        data={rowsData}
-        initialNumToRender={12}
-        onScroll={() => Keyboard.dismiss()}
+        data={filteredRows}
         keyboardShouldPersistTaps="handled"
-        renderItem={renderItem}
         keyExtractor={(_, i) => `${i}`}
+        renderItem={renderItem}
+        onScroll={() => Keyboard.dismiss()}
         onViewableItemsChanged={onViewableItemsChanged}
       />
-      <GradientFadeOut />
-      {!closeArrow ? null : <ModalFooter onPress={handleCancel} fadeOut />}
     </ThemedModal>
   )
 }

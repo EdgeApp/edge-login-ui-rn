@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Keyboard } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import s from '../common/locales/strings'
+import { lstrings } from '../common/locales/strings'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship } from '../components/services/AirshipInstance'
 import * as Constants from '../constants/index'
@@ -39,8 +39,8 @@ export const completeLogin = (account: EdgeAccount) => async (
     await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
-        message={s.strings.recovery_successful}
-        buttons={{ ok: { label: s.strings.ok } }}
+        message={lstrings.recovery_successful}
+        buttons={{ ok: { label: lstrings.ok } }}
       />
     ))
     dispatch({
@@ -137,9 +137,9 @@ async function twofaReminder(account: EdgeAccount) {
     return await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.otp_authentication_header}
-        message={sprintf(s.strings.otp_authentication_message, account.otpKey)}
-        buttons={{ ok: { label: s.strings.ok } }}
+        title={lstrings.otp_authentication_header}
+        message={sprintf(lstrings.otp_authentication_message, account.otpKey)}
+        buttons={{ ok: { label: lstrings.ok } }}
       />
     ))
   }
@@ -149,11 +149,11 @@ async function twofaReminder(account: EdgeAccount) {
     const result = await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.otp_reset_modal_header}
-        message={s.strings.otp_reset_modal_message}
+        title={lstrings.otp_reset_modal_header}
+        message={lstrings.otp_reset_modal_message}
         buttons={{
-          yes: { label: s.strings.enable },
-          no: { label: s.strings.skip_button, type: 'secondary' }
+          yes: { label: lstrings.enable },
+          no: { label: lstrings.skip_button, type: 'secondary' }
         }}
       />
     ))
@@ -165,13 +165,13 @@ async function twofaReminder(account: EdgeAccount) {
     return await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.otp_reset_modal_header}
-        message={s.strings.otp_reset_modal_message}
+        title={lstrings.otp_reset_modal_header}
+        message={lstrings.otp_reset_modal_message}
         buttons={{
-          enable: { label: s.strings.enable, type: 'primary' },
-          cancel: { label: s.strings.skip_button, type: 'secondary' },
+          enable: { label: lstrings.enable, type: 'primary' },
+          cancel: { label: lstrings.skip_button, type: 'secondary' },
           dontAsk: {
-            label: s.strings.otp_reset_modal_dont_ask,
+            label: lstrings.otp_reset_modal_dont_ask,
             type: 'secondary'
           }
         }}

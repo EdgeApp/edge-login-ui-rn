@@ -1,79 +1,103 @@
+/**
+ * IMPORTANT: Changes in this file MUST be duplicated in edge-react-gui!
+ */
 import DateTimePicker from '@react-native-community/datetimepicker'
 import * as React from 'react'
-import { useState } from 'react'
 import {
+  Appearance,
   Platform,
   Text,
   TextStyle,
-  TouchableOpacity,
-  useColorScheme
+  TouchableOpacity
 } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
 
-import s from '../../common/locales/strings'
-import { useHandler } from '../../hooks/useHandler.js'
-import { useTheme } from '../services/ThemeContext'
+import { lstrings } from '../../common/locales/strings'
+import { ThemeProps, withTheme } from '../services/ThemeContext'
 
-interface OwnProps {
+export interface Props {
   bridge: AirshipBridge<Date>
   initialValue: Date
 }
 
-type Props = OwnProps
+interface State {
+  darkMode: boolean
+  date: Date
+}
+
 /**
  * Shows the native iOS date picker inside a modal.
  */
+export class DateModalIos extends React.Component<Props & ThemeProps, State> {
+  subscription: { remove: () => void } | undefined
 
-const DateModaliOS = (props: Props) => {
+  constructor(props: Props & ThemeProps) {
+    super(props)
+    this.state = {
+      darkMode: Appearance.getColorScheme() === 'dark',
+      date: props.initialValue
+    }
+  }
+
+  componentDidMount() {
+    this.subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      this.setState({ darkMode: colorScheme === 'dark' })
+    })
+  }
+
+  componentWillUnmount() {
+    if (this.subscription != null) this.subscription.remove()
+  }
+
   /**
    * Wrap the data picker component in an Airship modal.
    * This modal doesn't use the normal theme colors,
    * since the native component inside uses its own phone-based colors.
    */
-  const themeMode = useColorScheme()
-  const theme = useTheme()
+  render() {
+    const { bridge, theme } = this.props
+    const { darkMode, date } = this.state
 
-  const { bridge, initialValue } = props
+    const textStyle: TextStyle = {
+      color: darkMode ? theme.dateModalTextDark : theme.dateModalTextLight,
+      fontSize: theme.rem(1),
+      textAlign: 'right',
+      paddingHorizontal: theme.rem(1),
+      paddingVertical: theme.rem(0.5)
+    }
 
-  const [date, setDate] = useState(initialValue)
-  const textStyle: TextStyle = {
-    color:
-      themeMode === 'dark' ? theme.dateModalTextDark : theme.dateModalTextLight,
-    fontSize: theme.rem(1),
-    textAlign: 'right',
-    paddingHorizontal: theme.rem(1),
-    paddingVertical: theme.rem(0.5)
+    return (
+      <AirshipModal
+        bridge={bridge}
+        onCancel={this.handleDone}
+        borderRadius={0}
+        backgroundColor={
+          darkMode
+            ? theme.dateModalBackgroundDark
+            : theme.dateModalBackgroundLight
+        }
+      >
+        <TouchableOpacity onPress={this.handleDone}>
+          <Text style={textStyle}>{lstrings.done}</Text>
+        </TouchableOpacity>
+        <DateTimePicker
+          display="spinner"
+          mode="date"
+          onChange={this.handleChange}
+          value={date}
+        />
+      </AirshipModal>
+    )
   }
-  const handleChange = useHandler((event: unknown, date?: Date) => {
-    if (date != null) setDate(date)
-  })
-  const handleDone = useHandler(() => {
-    bridge.resolve(date)
-  })
 
-  return (
-    <AirshipModal
-      bridge={bridge}
-      onCancel={handleDone}
-      borderRadius={0}
-      backgroundColor={
-        themeMode === 'dark'
-          ? theme.dateModalBackgroundDark
-          : theme.dateModalBackgroundLight
-      }
-    >
-      <TouchableOpacity onPress={handleDone}>
-        <Text style={textStyle}>{s.strings.done}</Text>
-      </TouchableOpacity>
-      <DateTimePicker
-        display="spinner"
-        mode="date"
-        onChange={handleChange}
-        value={date}
-        timeZoneOffsetInMinutes={0}
-      />
-    </AirshipModal>
-  )
+  handleChange = (event: unknown, date?: Date) => {
+    // @ts-expect-error
+    this.setState({ date })
+  }
+
+  handleDone = () => {
+    this.props.bridge.resolve(this.state.date)
+  }
 }
 
 /**
@@ -83,19 +107,17 @@ const DateModaliOS = (props: Props) => {
 export function DateModalAndroid(props: Props) {
   const { bridge, initialValue } = props
 
-  const handleChange = useHandler((event: unknown, date: Date | undefined) => {
-    if (date != null) bridge.resolve(date)
-    else bridge.reject(new Error('Date was undefined'))
-    bridge.remove()
-  })
-
   return (
     <DateTimePicker
       mode="date"
-      onChange={handleChange}
+      onChange={(event, date?: Date) => {
+        bridge.resolve(date != null ? date : initialValue)
+        bridge.remove()
+      }}
       value={initialValue}
-      timeZoneOffsetInMinutes={0}
     />
   )
 }
-export const DateModal = Platform.OS === 'ios' ? DateModaliOS : DateModalAndroid
+
+export const DateModal =
+  Platform.OS === 'android' ? DateModalAndroid : withTheme(DateModalIos)
