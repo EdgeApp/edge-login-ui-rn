@@ -1,5 +1,11 @@
 # edge-login-ui-rn
 
+## Unreleased
+
+## 2.14.1 (2023-10-06)
+
+- fixed: Revert the `RadioListModal` to the previous working state.
+
 ## 2.14.0 (2023-10-03)
 
 - changed: Update modals to be in sync with their GUI counterparts
