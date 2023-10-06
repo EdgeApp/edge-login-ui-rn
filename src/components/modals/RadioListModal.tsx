@@ -1,29 +1,17 @@
-/**
- * IMPORTANT: Changes in this file MUST be duplicated in edge-react-gui!
- */
 import * as React from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { lstrings } from '../../common/locales/strings'
-import { useHandler } from '../../hooks/useHandler'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ListModal } from './ListModal'
 
-interface Item {
-  // Icon strings are image uri, numbers are local files:
-  icon: string | number | React.ReactNode
-  name: string
-  text?: string
-}
-
 interface Props {
   bridge: AirshipBridge<string | undefined>
   title: string
-  items: Item[]
+  items: string[]
   selected?: string
 }
 
@@ -32,52 +20,29 @@ export function RadioListModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const renderRow = useHandler((item: Item) => {
-    const { name, icon, text } = item
-
-    const isSelected = selected === name
-    const radio = isSelected
-      ? { icon: 'ios-radio-button-on', color: theme.iconTappable }
-      : { icon: 'ios-radio-button-off', color: theme.iconTappable }
-    const accessibilityState = isSelected
-      ? { checked: true }
-      : { checked: false }
-    const accessibilityHint = `${
-      isSelected ? lstrings.on_hint : lstrings.off_hint
-    } ${name}`
-
-    const iconElement =
-      typeof icon === 'string' ? (
-        <Image
-          resizeMode="contain"
-          source={{ uri: icon }}
-          style={styles.icon}
-        />
-      ) : typeof icon === 'number' ? (
-        <Image resizeMode="contain" source={icon} style={styles.icon} />
-      ) : (
-        icon
-      )
-
+  function renderRow(item: string): React.ReactNode {
+    const radio = {
+      icon: `ios-radio-button-${selected === item ? 'on' : 'off'}`,
+      color: theme.iconTappable
+    }
     return (
-      <TouchableOpacity onPress={() => bridge.resolve(name)}>
+      <TouchableOpacity onPress={() => bridge.resolve(item)}>
         <View style={styles.row}>
-          <View style={styles.iconContainer}>{iconElement}</View>
-          <EdgeText style={styles.rowText}>{name}</EdgeText>
-          {text != null ? <Text style={styles.text}>{text}</Text> : null}
+          <View style={styles.textContainer}>
+            <EdgeText style={styles.text} numberOfLines={0} disableFontScaling>
+              {item}
+            </EdgeText>
+          </View>
           <IonIcon
-            accessibilityActions={[{ name: 'activate', label: name }]}
-            accessibilityHint={accessibilityHint}
-            accessibilityRole="radio"
-            accessibilityState={accessibilityState}
-            color={radio.color}
+            style={styles.radio}
             name={radio.icon}
+            color={radio.color}
             size={theme.rem(1.25)}
           />
         </View>
       </TouchableOpacity>
     )
-  })
+  }
 
   return (
     <ListModal
@@ -85,6 +50,7 @@ export function RadioListModal(props: Props) {
       title={title}
       textInput={false}
       rowsData={items}
+      // @ts-expect-error
       rowComponent={renderRow}
       fullScreen={false}
     />
@@ -98,22 +64,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'flex-start',
     margin: theme.rem(0.5)
   },
-  iconContainer: {
-    marginLeft: theme.rem(0.5),
-    marginRight: theme.rem(1)
+  radio: {
+    alignSelf: 'center',
+    marginRight: theme.rem(0.25),
+    marginLeft: theme.rem(0.375)
   },
-  icon: {
-    height: theme.rem(1.25),
-    width: theme.rem(1.25)
+  textContainer: {
+    flex: 1
   },
   text: {
-    color: theme.secondaryText,
-    fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(0.75),
-    marginRight: theme.rem(0.5),
-    includeFontPadding: false
-  },
-  rowText: {
-    flexGrow: 1
+    fontSize: theme.rem(1)
   }
 }))
