@@ -204,6 +204,7 @@ export const PasswordLoginScene = (props: Props) => {
           type: 'NAVIGATE',
           data: { name: 'otpError', params: { otpAttempt, otpError } }
         })
+        return
       }
 
       const usernameError = asMaybeUsernameError(error)
