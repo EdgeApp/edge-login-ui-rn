@@ -65,30 +65,18 @@ const TosComponent = (props: Props) => {
   })
 
   const handleNextPress = useHandler(() => {
-    dispatch({
-      type: 'NAVIGATE',
-      data: {
-        name: 'newAccountWait',
-        params: {
-          title: lstrings.great_job,
-          message: lstrings.hang_tight + '\n' + lstrings.secure_account
-        }
-      }
-    })
-    setTimeout(() => {
-      onNext().catch((e: any) => {
-        console.error(e)
-        Alert.alert(
-          lstrings.create_account_error_title,
-          lstrings.create_account_error_message + '\n' + e.message,
-          [{ text: lstrings.ok }]
-        )
-        dispatch({
-          type: 'NAVIGATE',
-          data: { name: 'newAccountUsername', params: {} }
-        })
+    onNext().catch((e: any) => {
+      console.error(e)
+      Alert.alert(
+        lstrings.create_account_error_title,
+        lstrings.create_account_error_message + '\n' + e.message,
+        [{ text: lstrings.ok }]
+      )
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'newAccountUsername', params: {} }
       })
-    }, 300)
+    })
   })
 
   return (
@@ -215,6 +203,17 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
 
     let error
     try {
+      dispatch({
+        type: 'NAVIGATE',
+        data: {
+          name: 'newAccountWait',
+          params: {
+            title: lstrings.great_job,
+            message: lstrings.hang_tight + '\n' + lstrings.secure_account
+          }
+        }
+      })
+
       const account = await context.createAccount({
         ...accountOptions,
         username,
