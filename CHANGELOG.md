@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: Signup captcha experiment.
+
 ## 2.14.1 (2023-10-06)
 
 - fixed: Revert the `RadioListModal` to the previous working state.

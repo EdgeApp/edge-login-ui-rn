@@ -40,6 +40,7 @@ export interface TouchIdInfo {
 export interface ExperimentConfig {
   createAccountType: 'light' | 'full'
   createAccountText: 'signUp' | 'getStarted' | 'createAccount'
+  signupCaptcha: 'withCaptcha' | 'withoutCaptcha'
 }
 
 export const asExperimentConfig = asObject<ExperimentConfig>({
@@ -47,6 +48,10 @@ export const asExperimentConfig = asObject<ExperimentConfig>({
   createAccountText: asOptional(
     asValue('signUp', 'getStarted', 'createAccount'),
     'createAccount'
+  ),
+  signupCaptcha: asOptional(
+    asValue('withCaptcha', 'withoutCaptcha'),
+    'withoutCaptcha'
   )
 })
 

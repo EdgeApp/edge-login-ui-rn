@@ -19,7 +19,8 @@ import {
   CreateFlowParams,
   SceneProps
 } from '../../../types/routerTypes'
-import { showError } from '../../services/AirshipInstance'
+import { ChallengeModal } from '../../modals/ChallengeModal'
+import { Airship, showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { Checkbox } from '../../themed/Checkbox'
 import { EdgeText } from '../../themed/EdgeText'
@@ -200,6 +201,24 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
     const { username, password, pin } = route.params
 
     const lightAccount = experimentConfig.createAccountType === 'light'
+
+    if (experimentConfig.signupCaptcha === 'withCaptcha') {
+      onLogEvent('Signup_Captcha_Shown')
+      const result = await Airship.show<boolean | undefined>(bridge => {
+        return <ChallengeModal bridge={bridge} />
+      })
+      // User closed the modal
+      if (result == null) {
+        onLogEvent('Signup_Captcha_Quit')
+        return
+      }
+      if (!result) {
+        onLogEvent('Signup_Captcha_Failed')
+        showError(lstrings.failed_captcha_error)
+        return
+      }
+      onLogEvent('Signup_Captcha_Passed')
+    }
 
     let error
     try {
