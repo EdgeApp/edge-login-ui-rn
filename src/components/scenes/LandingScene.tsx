@@ -8,7 +8,7 @@ import { useImports } from '../../hooks/useImports'
 import { Branding } from '../../types/Branding'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
-import { getCreateAccountText } from '../../util/experiments'
+import { getCreateAccountTextString } from '../../util/experiments'
 import { scale } from '../../util/scaling'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { MainButton } from '../themed/MainButton'
@@ -27,7 +27,7 @@ export const LandingScene = (props: Props) => {
     onLogEvent = (event, values?) => {}
   } = useImports()
   const createAccText = React.useMemo(
-    () => getCreateAccountText(experimentConfig),
+    () => getCreateAccountTextString(experimentConfig),
     [experimentConfig]
   )
 

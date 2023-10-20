@@ -211,7 +211,7 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
   const handleNext = useHandler(async () => {
     const { username, password, pin } = route.params
 
-    const lightAccount = experimentConfig?.createAccountType === 'light'
+    const lightAccount = experimentConfig.createAccountType === 'light'
 
     let error
     try {

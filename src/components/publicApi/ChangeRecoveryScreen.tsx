@@ -4,7 +4,7 @@ import * as React from 'react'
 import { initializeChangeRecovery } from '../../actions/PasswordRecoveryActions'
 import { useClearOnUnmount } from '../../hooks/useClearOnUnmount'
 import { Branding } from '../../types/Branding'
-import { OnLogEvent } from '../../types/ReduxTypes'
+import { asExperimentConfig, OnLogEvent } from '../../types/ReduxTypes'
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
 
@@ -26,7 +26,8 @@ export function PasswordRecoveryScreen(props: Props): JSX.Element {
         accountOptions: {},
         context,
         onComplete,
-        onLogEvent
+        onLogEvent,
+        experimentConfig: asExperimentConfig({})
       }}
       initialAction={initializeChangeRecovery(account)}
     >

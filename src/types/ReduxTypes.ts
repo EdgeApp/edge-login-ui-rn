@@ -1,4 +1,4 @@
-import { asBoolean, asJSON, asObject } from 'cleaners'
+import { asBoolean, asJSON, asObject, asOptional, asValue } from 'cleaners'
 import {
   EdgeAccount,
   EdgeAccountOptions,
@@ -42,6 +42,14 @@ export interface ExperimentConfig {
   createAccountText: 'signUp' | 'getStarted' | 'createAccount'
 }
 
+export const asExperimentConfig = asObject<ExperimentConfig>({
+  createAccountType: asOptional(asValue('light', 'full'), 'full'),
+  createAccountText: asOptional(
+    asValue('signUp', 'getStarted', 'createAccount'),
+    'createAccount'
+  )
+})
+
 export type OnComplete = () => void
 export type OnLogin = (account: EdgeAccount, touchIdInfo?: TouchIdInfo) => void
 export type OnNotificationPermit = (
@@ -63,7 +71,7 @@ export interface Imports {
   readonly onNotificationPermit?: OnNotificationPermit
   readonly recoveryKey?: string
   readonly skipSecurityAlerts?: boolean
-  readonly experimentConfig?: ExperimentConfig
+  readonly experimentConfig: ExperimentConfig
   readonly customPermissionsFunction?: () => void
 }
 
