@@ -95,7 +95,7 @@
   "login_with_password": "Accedi con la password",
   "min_length_error": "Minimo %s caratteri",
   "missing_username": "<No Username>",
-  "modal_close_hint": "Close modal",
+  "modal_close_hint": "Chiudi finestra",
   "must_one_lowercase": "Deve avere almeno una lettera minuscola",
   "must_one_number": "Deve avere almeno un numero",
   "must_one_uppercase": "Deve avere almeno una lettera maiuscola",
