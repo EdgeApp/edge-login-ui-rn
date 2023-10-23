@@ -95,6 +95,7 @@
   "login_with_password": "Вход с паролем",
   "min_length_error": "Minimum of %s characters required",
   "missing_username": "<No Username>",
+  "modal_close_hint": "Close modal",
   "must_one_lowercase": "Должна быть как минимум одна буква в нижнем регистре",
   "must_one_number": "Должна быть как минимум одна цифра",
   "must_one_uppercase": "Должна быть как минимум одна буква в верхнем регистре",
@@ -105,6 +106,8 @@
   "notifications_opt_in_price_changes": "Also tell me about price changes",
   "notifications_permissions_branded_s": "Please enable notifications to ensure the highest level of security for your account. %1$s will notify you if other devices attempt to log in to your account and will allow you to accept or reject access.",
   "ok": "ОК",
+  "off_hint": "Off",
+  "on_hint": "On",
   "or": "или",
   "otp_authentication_header": "двух факторная аутентификация была включена",
   "otp_authentication_message": "2FA был включен. Создан уникальный код аутентификации. Если вы потеряете телефон или удалите приложение, то потребуется 7 дней, чтобы отключить 2FA и получить доступ к вашей учетной записи с другого устройства без следующего кода аутентификации.\n\n%s",
@@ -191,6 +194,7 @@
   "security_is_our_priority_modal_title": "Security is Our Priority",
   "send_email_error_header": "Не удается отправить сообщение по электронной почте",
   "show_account_info": "View account information",
+  "sign_up": "Sign Up",
   "skip_button": "Пропустить",
   "skip": "Пропустить",
   "spin_load_hint": "Loading... please wait.",
@@ -221,5 +225,6 @@
   "welcome_advantage_two_title": "Your security is key",
   "welcome": "Welcome to %s!",
   "your_answer_label": "Ваш ответ",
-  "complete_captcha_title": "Are you a human?"
+  "complete_captcha_title": "Are you a human?",
+  "failed_captcha_error": "Incorrect solution"
 }
