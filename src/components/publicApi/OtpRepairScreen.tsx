@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import { useClearOnUnmount } from '../../hooks/useClearOnUnmount'
 import { Branding } from '../../types/Branding'
-import { OnLogEvent } from '../../types/ReduxTypes'
+import { asExperimentConfig, OnLogEvent } from '../../types/ReduxTypes'
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
 
@@ -26,7 +26,8 @@ export function OtpRepairScreen(props: Props): JSX.Element {
         accountOptions: {},
         context,
         onComplete,
-        onLogEvent
+        onLogEvent,
+        experimentConfig: asExperimentConfig({})
       }}
       initialAction={{
         type: 'NAVIGATE',

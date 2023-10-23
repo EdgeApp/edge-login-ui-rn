@@ -165,7 +165,7 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
   const dispatch = useDispatch()
   const { experimentConfig, onLogEvent = (event, values?) => {} } = useImports()
 
-  const lightAccount = experimentConfig?.createAccountType === 'light'
+  const lightAccount = experimentConfig.createAccountType === 'light'
 
   const handleBack = useHandler(() => {
     dispatch(

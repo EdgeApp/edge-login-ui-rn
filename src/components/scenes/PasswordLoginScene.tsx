@@ -36,7 +36,7 @@ import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { base58 } from '../../util/base58'
-import { getCreateAccountText } from '../../util/experiments'
+import { getCreateAccountTextString } from '../../util/experiments'
 import { LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
@@ -105,7 +105,7 @@ export const PasswordLoginScene = (props: Props) => {
     return { top: dropdownY, ...styles.dropContainer }
   }, [styles, dropdownY])
   const createAccText = React.useMemo(
-    () => getCreateAccountText(experimentConfig),
+    () => getCreateAccountTextString(experimentConfig),
     [experimentConfig]
   )
 
@@ -224,7 +224,8 @@ export const PasswordLoginScene = (props: Props) => {
         const result = await Airship.show<boolean | undefined>(bridge => (
           <ChallengeModal bridge={bridge} challengeError={challengeError} />
         ))
-        if (result === true) {
+        if (result == null) return // User closed the modal
+        if (result) {
           // Try again with the passed challenge ID included
           await handleSubmit(challengeError.challengeId)
         } else {

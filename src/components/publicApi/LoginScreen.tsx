@@ -5,6 +5,7 @@ import { initializeLogin } from '../../actions/LoginInitActions'
 import { setAppConfig } from '../../common/appConfig'
 import { Branding, ParentButton } from '../../types/Branding'
 import {
+  asExperimentConfig,
   ExperimentConfig,
   OnComplete,
   OnLogEvent,
@@ -118,6 +119,9 @@ export function LoginScreen(props: Props): JSX.Element {
     primaryLogoCallback: props.primaryLogoCallback
   }
 
+  // Clean to populate with defaults
+  const experimentConfig = asExperimentConfig(props.experimentConfig ?? {})
+
   return (
     <ReduxStore
       imports={{
@@ -131,7 +135,7 @@ export function LoginScreen(props: Props): JSX.Element {
         onNotificationPermit: props.onNotificationPermit,
         recoveryKey: props.recoveryLogin,
         skipSecurityAlerts: props.skipSecurityAlerts,
-        experimentConfig: props.experimentConfig,
+        experimentConfig,
         customPermissionsFunction: props.customPermissionsFunction
       }}
       initialAction={initializeLogin()}

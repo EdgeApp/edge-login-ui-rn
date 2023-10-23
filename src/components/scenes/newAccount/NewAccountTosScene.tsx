@@ -19,7 +19,8 @@ import {
   CreateFlowParams,
   SceneProps
 } from '../../../types/routerTypes'
-import { showError } from '../../services/AirshipInstance'
+import { ChallengeModal } from '../../modals/ChallengeModal'
+import { Airship, showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { Checkbox } from '../../themed/Checkbox'
 import { EdgeText } from '../../themed/EdgeText'
@@ -65,30 +66,18 @@ const TosComponent = (props: Props) => {
   })
 
   const handleNextPress = useHandler(() => {
-    dispatch({
-      type: 'NAVIGATE',
-      data: {
-        name: 'newAccountWait',
-        params: {
-          title: lstrings.great_job,
-          message: lstrings.hang_tight + '\n' + lstrings.secure_account
-        }
-      }
-    })
-    setTimeout(() => {
-      onNext().catch((e: any) => {
-        console.error(e)
-        Alert.alert(
-          lstrings.create_account_error_title,
-          lstrings.create_account_error_message + '\n' + e.message,
-          [{ text: lstrings.ok }]
-        )
-        dispatch({
-          type: 'NAVIGATE',
-          data: { name: 'newAccountUsername', params: {} }
-        })
+    onNext().catch((e: any) => {
+      console.error(e)
+      Alert.alert(
+        lstrings.create_account_error_title,
+        lstrings.create_account_error_message + '\n' + e.message,
+        [{ text: lstrings.ok }]
+      )
+      dispatch({
+        type: 'NAVIGATE',
+        data: { name: 'newAccountUsername', params: {} }
       })
-    }, 300)
+    })
   })
 
   return (
@@ -211,10 +200,39 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
   const handleNext = useHandler(async () => {
     const { username, password, pin } = route.params
 
-    const lightAccount = experimentConfig?.createAccountType === 'light'
+    const lightAccount = experimentConfig.createAccountType === 'light'
+
+    if (experimentConfig.signupCaptcha === 'withCaptcha') {
+      onLogEvent('Signup_Captcha_Shown')
+      const result = await Airship.show<boolean | undefined>(bridge => {
+        return <ChallengeModal bridge={bridge} />
+      })
+      // User closed the modal
+      if (result == null) {
+        onLogEvent('Signup_Captcha_Quit')
+        return
+      }
+      if (!result) {
+        onLogEvent('Signup_Captcha_Failed')
+        showError(lstrings.failed_captcha_error)
+        return
+      }
+      onLogEvent('Signup_Captcha_Passed')
+    }
 
     let error
     try {
+      dispatch({
+        type: 'NAVIGATE',
+        data: {
+          name: 'newAccountWait',
+          params: {
+            title: lstrings.great_job,
+            message: lstrings.hang_tight + '\n' + lstrings.secure_account
+          }
+        }
+      })
+
       const account = await context.createAccount({
         ...accountOptions,
         username,

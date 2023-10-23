@@ -1,7 +1,7 @@
 import { EdgeAccount, EdgeContext } from 'edge-core-js'
 import * as React from 'react'
 
-import { OnLogEvent } from '../../types/ReduxTypes'
+import { asExperimentConfig, OnLogEvent } from '../../types/ReduxTypes'
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
 
@@ -21,7 +21,8 @@ export function UpgradeUsernameScreen(props: Props): JSX.Element {
         accountOptions: {},
         context,
         onComplete,
-        onLogEvent
+        onLogEvent,
+        experimentConfig: asExperimentConfig({})
       }}
       initialAction={{
         type: 'NAVIGATE',

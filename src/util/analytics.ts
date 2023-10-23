@@ -19,6 +19,10 @@ export type TrackingEventName =
   | 'Backup_Review_Done'
 
   // Regular/Light Account Creation Flow
+  | 'Signup_Captcha_Failed'
+  | 'Signup_Captcha_Passed'
+  | 'Signup_Captcha_Shown'
+  | 'Signup_Captcha_Quit'
   | 'Signup_Username_Available'
   | 'Signup_Password_Valid'
   | 'Signup_PIN_Valid'
