@@ -95,6 +95,7 @@
   "login_with_password": "Connexion avec un mot de passe",
   "min_length_error": "Minimum of %s characters required",
   "missing_username": "<No Username>",
+  "modal_close_hint": "Close modal",
   "must_one_lowercase": "Doit avoir au moins 1 lettre minuscule",
   "must_one_number": "Doit avoir au moins 1 numéro",
   "must_one_uppercase": "Doit avoir au moins 1 lettre majuscule",
@@ -105,6 +106,8 @@
   "notifications_opt_in_price_changes": "Also tell me about price changes",
   "notifications_permissions_branded_s": "Please enable notifications to ensure the highest level of security for your account. %1$s will notify you if other devices attempt to log in to your account and will allow you to accept or reject access.",
   "ok": "OK",
+  "off_hint": "Off",
+  "on_hint": "On",
   "or": "or",
   "otp_authentication_header": "2FA has been enabled",
   "otp_authentication_message": "2FA has been enabled. A unique authentication code has been generated. If you lose your phone or uninstall the app, it will take 7 days to disable 2FA and access your account from another device without the following authentication code.\n\n%s",
@@ -191,6 +194,7 @@
   "security_is_our_priority_modal_title": "Security is Our Priority",
   "send_email_error_header": "Impossible d'envoyer l'e-mail",
   "show_account_info": "View account information",
+  "sign_up": "Sign Up",
   "skip_button": "Passer",
   "skip": "IGNORER",
   "spin_load_hint": "Loading... please wait.",
@@ -221,5 +225,6 @@
   "welcome_advantage_two_title": "Your security is key",
   "welcome": "Welcome to %s!",
   "your_answer_label": "Votre réponse",
-  "complete_captcha_title": "Are you a human?"
+  "complete_captcha_title": "Are you a human?",
+  "failed_captcha_error": "Incorrect solution"
 }

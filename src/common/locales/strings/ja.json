@@ -95,6 +95,7 @@
   "login_with_password": "パスワードでログイン",
   "min_length_error": "%s 文字以上が必要です",
   "missing_username": "<No Username>",
+  "modal_close_hint": "Close modal",
   "must_one_lowercase": "少なくとも小文字が一つ必要です",
   "must_one_number": "少なくとも数字が一つ必要です",
   "must_one_uppercase": "少なくとも大文字が一つ必要です",
@@ -105,6 +106,8 @@
   "notifications_opt_in_price_changes": "価格の変更についても教えてください",
   "notifications_permissions_branded_s": "最高のセキュリティレベルを確保するために、通知の更新を有効にしてください。%1$sは、他のデバイスがアカウントにアクセスしようとする際に通知し、アクセスを承認または拒否できます。",
   "ok": "OK",
+  "off_hint": "Off",
+  "on_hint": "On",
   "or": "または",
   "otp_authentication_header": "二段階認証が有効になりました",
   "otp_authentication_message": "二段階認証が有効になりました。固有の認証コードが生成されました。 携帯電話を紛失またはアプリをアンインストールした場合は、2FAを無効にし、次の認証コードを使用せずに別のデバイスからアカウントにアクセスするには7日かかります。\n\n%s",
@@ -191,6 +194,7 @@
   "security_is_our_priority_modal_title": "セキュリティは私たちの優先事項です",
   "send_email_error_header": "メールを送信できません",
   "show_account_info": "アカウント情報を表示",
+  "sign_up": "Sign Up",
   "skip_button": "スキップ",
   "skip": "スキップ",
   "spin_load_hint": "読み込み中です。しばらくお待ち下さい...",
@@ -221,5 +225,6 @@
   "welcome_advantage_two_title": "あなたのセキュリティが鍵となります",
   "welcome": "%sへようこそ",
   "your_answer_label": "あなたの回答",
-  "complete_captcha_title": "Are you a human?"
+  "complete_captcha_title": "Are you a human?",
+  "failed_captcha_error": "Incorrect solution"
 }
