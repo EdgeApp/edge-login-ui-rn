@@ -1,6 +1,6 @@
 # edge-login-ui-rn
 
-## Unreleased
+## 2.15.0 (2023-10-23)
 
 - added: Signup captcha experiment.
 
