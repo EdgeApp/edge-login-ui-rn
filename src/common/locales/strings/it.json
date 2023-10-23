@@ -95,6 +95,7 @@
   "login_with_password": "Accedi con la password",
   "min_length_error": "Minimo %s caratteri",
   "missing_username": "<No Username>",
+  "modal_close_hint": "Chiudi finestra",
   "must_one_lowercase": "Deve avere almeno una lettera minuscola",
   "must_one_number": "Deve avere almeno un numero",
   "must_one_uppercase": "Deve avere almeno una lettera maiuscola",
@@ -105,6 +106,8 @@
   "notifications_opt_in_price_changes": "Informami anche sulle variazioni di prezzo",
   "notifications_permissions_branded_s": "Abilita le notifiche per assicurare il più alto livello di sicurezza al tuo account. %1$s ti avviserà se altri dispositivi tenteranno di accedere al tuo account e ti permetterà di consentire o rifiutare l'accesso.",
   "ok": "OK",
+  "off_hint": "Off",
+  "on_hint": "On",
   "or": "o",
   "otp_authentication_header": "2FA è stata attivato",
   "otp_authentication_message": "Il 2FA è stata attivato. È stato generato un codice di autenticazione univoco. Se perdi il telefono o disinstalli l'app, ci vorranno 7 giorni per disabilitare il 2FA e accedere al tuo account da un altro dispositivo senza il seguente codice di autenticazione.\n\n%s",
@@ -191,6 +194,7 @@
   "security_is_our_priority_modal_title": "La sicurezza è la nostra priorità",
   "send_email_error_header": "Non posso inviare email",
   "show_account_info": "Mostra le informazioni sull'account",
+  "sign_up": "Registrati",
   "skip_button": "Salta",
   "skip": "SALTA",
   "spin_load_hint": "Caricamento in corso... si prega di attendere.",
@@ -221,5 +225,6 @@
   "welcome_advantage_two_title": "La tua sicurezza è la chiave",
   "welcome": "Benvenuto/a su %s!",
   "your_answer_label": "La tua risposta",
-  "complete_captcha_title": "Sei un umano?"
+  "complete_captcha_title": "Sei un umano?",
+  "failed_captcha_error": "Soluzione non corretta"
 }
