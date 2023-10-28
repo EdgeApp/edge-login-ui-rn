@@ -21,7 +21,7 @@ import { Tile } from '../../common/Tile'
 import { WarningCard } from '../../common/WarningCard'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { DateModal } from '../../modals/DateModal'
-import { RadioListModal } from '../../modals/RadioListModal'
+import { QuestionListModal } from '../../modals/QuestionListModal'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
@@ -82,7 +82,7 @@ export const ChangeRecoveryScene = (props: Props) => {
 
     const items = questionsList.map(extractQuestion).filter(stringPredicate)
     Airship.show<string | undefined>(bridge => (
-      <RadioListModal
+      <QuestionListModal
         bridge={bridge}
         title={sprintf(lstrings.recovery_question, index + 1)}
         items={items.filter(

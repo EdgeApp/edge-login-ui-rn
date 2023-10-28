@@ -22,7 +22,7 @@ interface Props<T> {
   // Header Props
   title?: string
   message?: string
-  textInput?: boolean // Defaults to 'true'
+  hideSearch?: boolean // Defaults to 'false'
   initialValue?: string // Defaults to ''
   // OutlinedTextInput properties:
   searchIcon?: boolean // Defaults to 'true'
@@ -61,7 +61,7 @@ export function ListModal<T>({
   bridge,
   title,
   message,
-  textInput = true,
+  hideSearch = false,
   initialValue = '',
   rowsData = [],
   fullScreen = true,
@@ -98,7 +98,7 @@ export function ListModal<T>({
     >
       {title == null ? null : <ModalTitle>{title}</ModalTitle>}
       {message == null ? null : <ModalMessage>{message}</ModalMessage>}
-      {textInput == null ? null : (
+      {hideSearch ? null : (
         <OutlinedTextInput
           // Our props:
           searchIcon

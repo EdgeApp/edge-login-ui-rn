@@ -15,7 +15,7 @@ interface Props {
   selected?: string
 }
 
-export function RadioListModal(props: Props) {
+export function QuestionListModal(props: Props) {
   const { bridge, items, selected, title } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -48,7 +48,7 @@ export function RadioListModal(props: Props) {
     <ListModal
       bridge={bridge}
       title={title}
-      textInput={false}
+      hideSearch
       rowsData={items}
       // @ts-expect-error
       rowComponent={renderRow}
