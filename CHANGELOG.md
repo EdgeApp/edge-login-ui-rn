@@ -1,5 +1,10 @@
 # edge-login-ui-rn
 
+## Unreleased
+
+- fixed: Search box incorrectly showing in Password recovery questions modal
+- changed: ListModal props updated: `textInput`->`hideSearch`
+
 ## 2.15.0 (2023-10-23)
 
 - added: Signup captcha experiment.
