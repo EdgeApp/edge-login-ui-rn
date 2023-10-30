@@ -1,6 +1,6 @@
 # edge-login-ui-rn
 
-## Unreleased
+## 2.16.0 (2023-10-30)
 
 - fixed: Search box incorrectly showing in Password recovery questions modal
 - changed: ListModal props updated: `textInput`->`hideSearch`
