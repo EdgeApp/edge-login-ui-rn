@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## Unreleased
+
+- added: Add skipOtpReminder for testing
+
 ## 2.16.0 (2023-10-30)
 
 - fixed: Search box incorrectly showing in Password recovery questions modal

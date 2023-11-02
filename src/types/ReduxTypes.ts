@@ -75,6 +75,7 @@ export interface Imports {
   readonly onLogin?: OnLogin
   readonly onNotificationPermit?: OnNotificationPermit
   readonly recoveryKey?: string
+  readonly skipOtpReminder?: boolean
   readonly skipSecurityAlerts?: boolean
   readonly experimentConfig: ExperimentConfig
   readonly customPermissionsFunction?: () => void

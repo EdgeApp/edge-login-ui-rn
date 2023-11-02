@@ -25,7 +25,7 @@ export const completeLogin = (account: EdgeAccount) => async (
   imports: Imports
 ) => {
   // Problem logins:
-  const { skipSecurityAlerts = false } = imports
+  const { skipOtpReminder = false, skipSecurityAlerts = false } = imports
   if (!skipSecurityAlerts && hasSecurityAlerts(account)) {
     dispatch({
       type: 'NAVIGATE',
@@ -51,7 +51,9 @@ export const completeLogin = (account: EdgeAccount) => async (
   }
 
   // Normal logins:
-  await twofaReminder(account)
+  if (!skipOtpReminder) {
+    await twofaReminder(account)
+  }
   dispatch(submitLogin(account))
 }
 
