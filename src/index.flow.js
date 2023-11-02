@@ -87,6 +87,8 @@ declare export class LoginScreen
       // The recoveryKey from the user's email, to trigger recovery login:
       recoveryLogin?: string,
 
+      skipOtpReminder?: boolean,
+
       // Do not show the security alerts screen during login,
       // since the app plans to show the `SecurityAlertsScreen` itself
       // based on `hasSecurityAlerts` and `watchSecurityAlerts`:

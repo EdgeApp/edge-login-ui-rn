@@ -70,6 +70,9 @@ interface Props {
   // based on `hasSecurityAlerts` and `watchSecurityAlerts`:
   skipSecurityAlerts?: boolean
 
+  // Do not show the OTP reminder during login
+  skipOtpReminder?: boolean
+
   // Call that overwrites the internal checkAndRequestNotifications function. Executed on Login initialization:
   customPermissionsFunction?: () => void
 
@@ -86,6 +89,7 @@ export function LoginScreen(props: Props): JSX.Element {
     context,
     fontDescription = { regularFontFamily: 'System' },
     initialLoginId,
+    skipOtpReminder,
     username
   } = props
   const {
@@ -134,6 +138,7 @@ export function LoginScreen(props: Props): JSX.Element {
         onLogEvent,
         onNotificationPermit: props.onNotificationPermit,
         recoveryKey: props.recoveryLogin,
+        skipOtpReminder,
         skipSecurityAlerts: props.skipSecurityAlerts,
         experimentConfig,
         customPermissionsFunction: props.customPermissionsFunction
