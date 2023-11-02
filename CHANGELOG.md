@@ -1,6 +1,6 @@
 # edge-login-ui-rn
 
-## Unreleased
+## 2.17.0 (2023-11-02)
 
 - added: Add skipOtpReminder for testing
 
