@@ -46,10 +46,8 @@ export const initializeLogin = () => async (
   getState: GetState,
   imports: Imports
 ) => {
-  const { customPermissionsFunction } = imports
   const touchPromise = dispatch(loadTouchState())
   dispatch(checkSecurityMessages()).catch(error => console.log(error))
-  if (customPermissionsFunction != null) customPermissionsFunction()
 
   await touchPromise
 
