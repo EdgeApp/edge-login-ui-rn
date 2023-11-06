@@ -17,7 +17,7 @@ import {
   RequestPermissionsModal
 } from '../components/modals/RequestPermissionsModal'
 import { SecurityAlertsModal } from '../components/modals/SecurityAlertsModal'
-import { Airship, showError } from '../components/services/AirshipInstance'
+import { Airship } from '../components/services/AirshipInstance'
 import { arrangeUsers, upgradeUser } from '../hooks/useLocalUsers'
 import { scene as sceneReducer } from '../reducers/SceneReducer'
 import { Branding } from '../types/Branding'
@@ -302,65 +302,62 @@ export const checkAndRequestNotifications = (branding: Branding) => async (
   )
   console.log(`permissionMessage:${permissionMessage}`)
 
-  if (permissionMessage != null) {
-    const choiceMap: PermissionsModalChoices = {
-      optInPriceChanges: !(
-        notificationPermissionsInfo?.notificationOptIns.ignorePriceChanges ??
-        false
-      ),
-      optInMarketing: !(
-        notificationPermissionsInfo?.notificationOptIns.ignoreMarketing ?? false
-      )
-    }
-    Airship.show<Required<PermissionsModalChoices> | undefined>(bridge => (
-      <RequestPermissionsModal
-        bridge={bridge}
-        message={permissionMessage}
-        choices={choiceMap}
-      />
-    ))
-      .then(async choices => {
-        console.log(
-          `checkAndRequestNotifications result ${JSON.stringify(choices)}`
-        )
-
-        // Don't do anything if the user didn't make a choice (dismissed modal)
-        if (choices == null) return
-
-        const notificationPermissionsInfo: NotificationPermissionsInfo = {
-          isNotificationBlocked: !choices?.enable,
-          notificationOptIns: {
-            ignoreMarketing: !choices.optInMarketing,
-            ignorePriceChanges: !choices.optInPriceChanges
-          }
-        }
-
-        await disklet.setText(
-          notificationPermissionsInfoFile,
-          JSON.stringify(notificationPermissionsInfo)
-        )
-
-        if (choices.enable) {
-          if (notificationStatus === RESULTS.DENIED) {
-            requestNotifications(
-              isIos ? ['alert', 'badge', 'sound'] : []
-            ).catch(error => console.log(error))
-          }
-          if (
-            notificationStatus === RESULTS.BLOCKED ||
-            statusAppRefresh === RESULTS.BLOCKED
-          ) {
-            openSettings().catch(error => console.log(error))
-          }
-        }
-
-        if (onNotificationPermit != null)
-          onNotificationPermit(notificationPermissionsInfo)
-      })
-      .catch(showError)
-  } else {
+  if (permissionMessage == null) {
     if (onNotificationPermit != null && notificationPermissionsInfo != null) {
       onNotificationPermit(notificationPermissionsInfo)
     }
+    return
   }
+
+  const choiceMap: PermissionsModalChoices = {
+    optInPriceChanges: !(
+      notificationPermissionsInfo?.notificationOptIns.ignorePriceChanges ??
+      false
+    ),
+    optInMarketing: !(
+      notificationPermissionsInfo?.notificationOptIns.ignoreMarketing ?? false
+    )
+  }
+  const choices = await Airship.show<
+    Required<PermissionsModalChoices> | undefined
+  >(bridge => (
+    <RequestPermissionsModal
+      bridge={bridge}
+      message={permissionMessage}
+      choices={choiceMap}
+    />
+  ))
+
+  console.log(`checkAndRequestNotifications result ${JSON.stringify(choices)}`)
+
+  // Don't do anything if the user didn't make a choice (dismissed modal)
+  if (choices == null) return
+  const newPermissionsInfo: NotificationPermissionsInfo = {
+    isNotificationBlocked: !choices?.enable,
+    notificationOptIns: {
+      ignoreMarketing: !choices.optInMarketing,
+      ignorePriceChanges: !choices.optInPriceChanges
+    }
+  }
+
+  await disklet.setText(
+    notificationPermissionsInfoFile,
+    JSON.stringify(newPermissionsInfo)
+  )
+
+  if (choices.enable) {
+    if (notificationStatus === RESULTS.DENIED) {
+      requestNotifications(
+        isIos ? ['alert', 'badge', 'sound'] : []
+      ).catch(error => console.log(error))
+    }
+    if (
+      notificationStatus === RESULTS.BLOCKED ||
+      statusAppRefresh === RESULTS.BLOCKED
+    ) {
+      openSettings().catch(error => console.log(error))
+    }
+  }
+
+  if (onNotificationPermit != null) onNotificationPermit(newPermissionsInfo)
 }
