@@ -1,5 +1,10 @@
 # edge-login-ui-rn
 
+## 2.17.1 (2023-11-06)
+
+- fixed: Correctly request permissions on Android 13 or higher.
+- fixed: Show the permission notification reminder on the password login scene.
+
 ## 2.17.0 (2023-11-02)
 
 - added: Add skipOtpReminder for testing
