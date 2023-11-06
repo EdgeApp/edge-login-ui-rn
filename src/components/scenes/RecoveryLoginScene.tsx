@@ -5,11 +5,12 @@ import { ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
-import { login } from '../../actions/LoginAction'
+import { completeLogin } from '../../actions/LoginCompleteActions'
 import { lstrings } from '../../common/locales/strings'
+import { useImports } from '../../hooks/useImports'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
-import { LoginAttempt } from '../../util/loginAttempt'
+import { attemptLogin, LoginAttempt } from '../../util/loginAttempt'
 import { Tile } from '../common/Tile'
 import { WarningCard } from '../common/WarningCard'
 import { DateModal } from '../modals/DateModal'
@@ -31,6 +32,7 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
+  const { accountOptions, context } = useImports()
 
   const answerPrompt = lstrings.your_answer_label
   const showCaseSensitivityWarning = questions.some(
@@ -38,9 +40,6 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
   )
   const [answers, setAnswers] = useState<Array<string | null>>([])
 
-  const attemptLogin = async (attempt: LoginAttempt) => {
-    return await dispatch(login(attempt))
-  }
   const saveOtpError = (otpAttempt: LoginAttempt, otpError: OtpError) => {
     dispatch({
       type: 'NAVIGATE',
@@ -108,7 +107,10 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
       username,
       answers: okAnswers
     }
-    await attemptLogin(attempt).catch((error: unknown) => {
+    try {
+      const account = await attemptLogin(context, attempt, accountOptions)
+      await dispatch(completeLogin(account))
+    } catch (error: unknown) {
       const otpError = asMaybeOtpError(error)
       if (otpError != null) {
         return saveOtpError(attempt, otpError)
@@ -120,7 +122,7 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
       }
 
       showError(error instanceof Error ? error.message : 'Unknown error')
-    })
+    }
   }
   const renderQuestionAnswer = (index: number) => {
     return (

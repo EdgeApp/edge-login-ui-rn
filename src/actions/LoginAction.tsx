@@ -1,33 +1,10 @@
-import { asMaybeUsernameError, EdgeAccountOptions } from 'edge-core-js'
+import { asMaybeUsernameError } from 'edge-core-js'
 import * as React from 'react'
 
 import { lstrings } from '../common/locales/strings'
 import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
-import { attemptLogin, LoginAttempt } from '../util/loginAttempt'
-import { completeLogin } from './LoginCompleteActions'
-
-/**
- * Logs the user in, using password, PIN, or recovery.
- * There is no error handling in here, since components do that best.
- */
-export const login = (
-  attempt: LoginAttempt,
-  opts?: EdgeAccountOptions
-) => async (
-  dispatch: Dispatch,
-  getState: GetState,
-  imports: Imports
-): Promise<void> => {
-  const { accountOptions, context } = imports
-
-  const account = await attemptLogin(context, attempt, {
-    ...accountOptions,
-    ...opts
-  })
-  dispatch(completeLogin(account))
-}
 
 /**
  * Ask the user for the username that goes with a recovery key,
