@@ -3,6 +3,7 @@ import * as React from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
+import { completeLogin } from '../../../actions/LoginCompleteActions'
 import { lstrings } from '../../../common/locales/strings'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
@@ -10,7 +11,7 @@ import { useDispatch } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
 import { toLocalTime } from '../../../util/utils'
 import { showResetModal } from '../../modals/OtpResetModal'
-import { showQrCodeModal } from '../../modals/QrCodeModal'
+import { QrCodeModal } from '../../modals/QrCodeModal'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { DividerWithText } from '../../themed/DividerWithText'
@@ -161,13 +162,23 @@ class OtpRepairSceneComponent extends React.Component<Props> {
 export function OtpRepairScene(props: OwnProps) {
   const { branding, route } = props
   const { account, otpError } = route.params
-  const { context, onComplete = () => {} } = useImports()
+  const { accountOptions, context, onComplete = () => {} } = useImports()
   const dispatch = useDispatch()
 
   const [otpResetDate, setOtpResetDate] = React.useState(otpError.resetDate)
 
-  function handleQrModal() {
-    dispatch(showQrCodeModal())
+  function handleQrModal(): void {
+    Airship.show<EdgeAccount | undefined>(bridge => (
+      <QrCodeModal
+        bridge={bridge}
+        accountOptions={accountOptions}
+        context={context}
+      />
+    ))
+      .then(async account => {
+        if (account != null) await dispatch(completeLogin(account))
+      })
+      .catch(error => showError(error))
   }
 
   async function requestOtpReset() {

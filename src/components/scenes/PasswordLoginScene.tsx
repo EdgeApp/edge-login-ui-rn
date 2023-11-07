@@ -2,7 +2,8 @@ import {
   asMaybeChallengeError,
   asMaybeOtpError,
   asMaybePasswordError,
-  asMaybeUsernameError
+  asMaybeUsernameError,
+  EdgeAccount
 } from 'edge-core-js'
 import * as React from 'react'
 import {
@@ -44,7 +45,7 @@ import { UserListItem } from '../abSpecific/UserListItem'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ChallengeModal } from '../modals/ChallengeModal'
 import { GradientFadeOut } from '../modals/GradientFadeout'
-import { showQrCodeModal } from '../modals/QrCodeModal'
+import { QrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { CreateAccountType } from '../publicApi/types'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -359,7 +360,17 @@ export const PasswordLoginScene = (props: Props) => {
 
   const handleQrModal = useHandler(() => {
     Keyboard.dismiss()
-    dispatch(showQrCodeModal())
+    Airship.show<EdgeAccount | undefined>(bridge => (
+      <QrCodeModal
+        bridge={bridge}
+        accountOptions={accountOptions}
+        context={context}
+      />
+    ))
+      .then(async account => {
+        if (account != null) await dispatch(completeLogin(account))
+      })
+      .catch(error => showError(error))
   })
 
   const handleBack = useHandler(() => {

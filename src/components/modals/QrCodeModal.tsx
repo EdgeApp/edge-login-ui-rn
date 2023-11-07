@@ -1,6 +1,3 @@
-/**
- * IMPORTANT: Changes in this file MUST be duplicated in edge-react-gui!
- */
 import {
   EdgeAccount,
   EdgeAccountOptions,
@@ -13,155 +10,115 @@ import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
-import { completeLogin } from '../../actions/LoginCompleteActions'
 import { lstrings } from '../../common/locales/strings'
-import { Dispatch, GetState, Imports } from '../../types/ReduxTypes'
+import { useHandler } from '../../hooks/useHandler'
 import { QrCode } from '../common/QrCode'
-import { Airship, showError } from '../services/AirshipInstance'
-import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { showError } from '../services/AirshipInstance'
+import { Theme, useTheme } from '../services/ThemeContext'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
-/**
- * Dispatch this redux action to launch the QR code modal
- * with the correct props.
- */
-export const showQrCodeModal = () => (
-  dispatch: Dispatch,
-  getState: GetState,
-  imports: Imports
-) => {
-  const { context, accountOptions } = imports
+interface Props {
+  bridge: AirshipBridge<EdgeAccount | undefined>
 
-  Airship.show(bridge => (
-    <QrCodeModal
-      bridge={bridge}
-      accountOptions={accountOptions}
-      context={context}
-      completeLogin={async account => await dispatch(completeLogin(account))}
-    />
-  ))
-}
-
-interface OwnProps {
-  bridge: AirshipBridge<void>
+  // We cannot call `useImport` from an Airship component:
   accountOptions: EdgeAccountOptions
   context: EdgeContext
-  completeLogin: (account: EdgeAccount) => Promise<void>
-}
-type Props = OwnProps & ThemeProps
-
-interface State {
-  pendingLogin?: EdgePendingEdgeLogin
-  username?: string
 }
 
-class QrCodeModalComponent extends React.Component<Props, State> {
-  cleanups: Array<() => unknown> = []
+export function QrCodeModal(props: Props) {
+  const { accountOptions, bridge, context } = props
 
-  constructor(props: Props) {
-    super(props)
-    this.state = {}
-  }
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-  componentDidMount() {
-    this.prepareLobby().catch(showError)
-  }
+  const [qrData, setQrData] = React.useState<string | undefined>()
+  const [username, setUsername] = React.useState<string | undefined>()
 
-  componentWillUnmount() {
-    for (const cleanup of this.cleanups) cleanup()
-    if (this.state.pendingLogin != null) {
-      // Close the request, ignoring errors (in case it is already closed):
-      Promise.resolve(this.state.pendingLogin.cancelRequest()).catch(() => {})
+  React.useEffect(() => {
+    const cleanups: Array<() => unknown> = []
+    let pendingLogin: EdgePendingEdgeLogin | undefined
+
+    const handleError = (error: unknown): void => {
+      showError(error)
+      bridge.resolve(undefined)
     }
-  }
 
-  handleStart = (username: string = lstrings.missing_username): void => {
-    this.setState({ username })
-  }
-
-  handleDone = (account: EdgeAccount): void => {
-    const { bridge, completeLogin } = this.props
-    completeLogin(account).catch(showError)
-    bridge.resolve()
-  }
-
-  handleError = (error: unknown): void => {
-    const { bridge } = this.props
-    showError(error)
-    bridge.resolve()
-  }
-
-  async prepareLobby() {
-    const { accountOptions, context } = this.props
-    const out: EdgePendingEdgeLogin = await context.requestEdgeLogin({
-      ...accountOptions,
-      // These are no longer used in recent core versions:
-      // @ts-expect-error
-      displayImageUrl:
-        'https://github.com/Airbitz/edge-brand-guide/blob/master/Logo/Mark/Edge-Final-Logo_Mark-Green.png',
-      displayName: 'Edge Wallet'
-    })
-
-    if (out.state != null) {
-      // New core versions have the callbacks on the request:
-      out.watch('state', state => {
-        if (state === 'started') {
-          this.handleStart(out.username)
-        }
-        if (state === 'done' && out.account != null) {
-          this.handleDone(out.account)
-        }
-        if (state === 'error') this.handleError(out.error)
+    context
+      .requestEdgeLogin({
+        ...accountOptions,
+        // These are no longer used in recent core versions:
+        // @ts-expect-error
+        displayImageUrl:
+          'https://github.com/Airbitz/edge-brand-guide/blob/master/Logo/Mark/Edge-Final-Logo_Mark-Green.png',
+        displayName: 'Edge Wallet'
       })
-    } else {
-      // Older core versions have the callbacks on the context:
-      this.cleanups = [
-        // @ts-expect-error
-        context.on('login', account => this.handleDone(account)),
-        // @ts-expect-error
-        context.on('loginStart', ({ username }) => this.handleStart(username)),
-        // @ts-expect-error
-        context.on('loginError', ({ error }) => this.handleError(error))
-      ]
+      .then(pending => {
+        pendingLogin = pending
+        if (pending.state != null) {
+          // New core versions have the callbacks on the request:
+          pending.watch('state', state => {
+            if (state === 'started') {
+              setUsername(pending.username ?? lstrings.missing_username)
+            }
+            if (state === 'done' && pending.account != null) {
+              bridge.resolve(pending.account)
+            }
+            if (state === 'error') handleError(pending.error)
+          })
+        } else {
+          // Older core versions have the callbacks on the context:
+          cleanups.push(
+            context.on(
+              // @ts-expect-error
+              'login',
+              account => bridge.resolve(account)
+            )
+          )
+          cleanups.push(
+            context.on(
+              // @ts-expect-error
+              'loginStart',
+              ({ username }) => setUsername(username)
+            )
+          )
+          cleanups.push(
+            context.on(
+              // @ts-expect-error
+              'loginError',
+              ({ error }) => handleError(error)
+            )
+          )
+        }
+        setQrData('edge://edge/' + pending.id)
+      })
+
+    return () => {
+      // Close the request, ignoring errors (in case it is already closed):
+      Promise.resolve(pendingLogin?.cancelRequest()).catch(() => {})
+      for (const cleanup of cleanups) cleanup()
     }
+  }, [accountOptions, bridge, context])
 
-    this.setState({ pendingLogin: out })
-  }
+  const handleCancel = useHandler(() => bridge.resolve(undefined))
 
-  handleCancel = (): void => {
-    const { bridge } = this.props
-    bridge.resolve(undefined)
-  }
-
-  render() {
-    const { bridge, theme } = this.props
-    const { pendingLogin, username } = this.state
-    const styles = getStyles(theme)
-    const isLoadingQrCode = username != null || pendingLogin == null
-    const qrData =
-      pendingLogin == null ? null : 'edge://edge/' + pendingLogin.id
-    return (
-      <ThemedModal bridge={bridge} onCancel={this.handleCancel} scroll>
-        <ModalTitle>{lstrings.qr_modal_title}</ModalTitle>
-        <ModalMessage>
-          {username != null
-            ? sprintf(lstrings.qr_modal_started, username)
-            : lstrings.qr_modal_message}
-        </ModalMessage>
-        <View style={styles.qrContainer}>
-          {qrData == null ? (
-            <ActivityIndicator
-              color={theme.primaryText}
-              animating={isLoadingQrCode}
-            />
-          ) : (
-            <QrCode key="qrcode" data={qrData} size={theme.rem(14)} />
-          )}
-        </View>
-      </ThemedModal>
-    )
-  }
+  return (
+    <ThemedModal bridge={bridge} onCancel={handleCancel} scroll>
+      <ModalTitle>{lstrings.qr_modal_title}</ModalTitle>
+      <ModalMessage>
+        {username != null
+          ? sprintf(lstrings.qr_modal_started, username)
+          : lstrings.qr_modal_message}
+      </ModalMessage>
+      <View style={styles.qrContainer}>
+        {qrData == null ? (
+          <ActivityIndicator color={theme.primaryText} />
+        ) : (
+          <QrCode key="qrcode" data={qrData} size={theme.rem(14)} />
+        )}
+      </View>
+    </ThemedModal>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -172,5 +129,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     padding: theme.rem(1)
   }
 }))
-
-const QrCodeModal = withTheme(QrCodeModalComponent)

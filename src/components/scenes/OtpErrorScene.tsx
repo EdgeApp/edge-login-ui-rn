@@ -1,4 +1,4 @@
-import { asMaybeOtpError, OtpError } from 'edge-core-js'
+import { asMaybeOtpError, EdgeAccount, OtpError } from 'edge-core-js'
 import * as React from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
@@ -12,7 +12,7 @@ import { attemptLogin, LoginAttempt } from '../../util/loginAttempt'
 import { makePeriodicTask } from '../../util/periodicTask'
 import { toLocalTime } from '../../util/utils'
 import { showResetModal } from '../modals/OtpResetModal'
-import { showQrCodeModal } from '../modals/QrCodeModal'
+import { QrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { DividerWithText } from '../themed/DividerWithText'
@@ -205,7 +205,17 @@ export function OtpErrorScene(props: OwnProps) {
   }
 
   const handleQrModal = (): void => {
-    dispatch(showQrCodeModal())
+    Airship.show<EdgeAccount | undefined>(bridge => (
+      <QrCodeModal
+        bridge={bridge}
+        accountOptions={accountOptions}
+        context={context}
+      />
+    ))
+      .then(async account => {
+        if (account != null) await dispatch(completeLogin(account))
+      })
+      .catch(error => showError(error))
   }
 
   async function hasReadyVoucher(): Promise<boolean> {
