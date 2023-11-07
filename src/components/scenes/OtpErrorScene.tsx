@@ -5,6 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import { completeLogin } from '../../actions/LoginCompleteActions'
 import { lstrings } from '../../common/locales/strings'
+import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
@@ -26,72 +27,92 @@ export interface OtpErrorParams {
   otpError: OtpError
 }
 
-interface OwnProps extends SceneProps<'otpError'> {}
-interface StateProps {
-  otpError: OtpError
-  otpAttempt: LoginAttempt
-  otpResetDate?: Date
-}
-interface DispatchProps {
-  onBack: () => void
-  handleQrModal: () => void
-  hasReadyVoucher: (otpError: OtpError) => Promise<boolean>
-  login: (otpAttempt: LoginAttempt, otpKey?: string) => Promise<void>
-  requestOtpReset: () => Promise<void>
-  saveOtpError: (otpAttempt: LoginAttempt, otpError: OtpError) => void
-}
-type Props = OwnProps & StateProps & DispatchProps
+interface Props extends SceneProps<'otpError'> {}
 
-class OtpErrorSceneComponent extends React.Component<Props> {
-  checkVoucher = makePeriodicTask(async () => {
-    const {
-      hasReadyVoucher,
-      login,
-      otpAttempt,
-      otpError,
-      saveOtpError
-    } = this.props
+export function OtpErrorScene(props: Props) {
+  const { route } = props
+  const { otpAttempt, otpError } = route.params
+  const { resetToken, voucherId } = otpError
+  const { accountOptions, context } = useImports()
+  const dispatch = useDispatch()
 
-    try {
-      const result = await hasReadyVoucher(otpError)
-      if (result) {
+  const [otpResetDate, setOtpResetDate] = React.useState(otpError.resetDate)
+  const inModal = React.useRef<boolean>(false)
+
+  //
+  // Background refresh loop
+  //
+
+  React.useEffect(() => {
+    const checkVoucher = makePeriodicTask(async () => {
+      try {
+        if (inModal.current) return
+        if (voucherId == null) return
+
+        // Is our voucher pending?
+        const messages = await context.fetchLoginMessages()
+        for (const message of messages) {
+          const { pendingVouchers } = message
+          for (const voucher of pendingVouchers) {
+            if (voucher.voucherId === voucherId) return
+          }
+        }
+
         showToast(lstrings.otp_scene_retrying)
-        await login(otpAttempt)
-      }
-    } catch (error) {
-      const otpError = asMaybeOtpError(error)
-      if (otpError != null) {
-        saveOtpError(otpAttempt, otpError)
-      } else {
+        const account = await attemptLogin(context, otpAttempt, accountOptions)
+        dispatch(completeLogin(account))
+      } catch (error) {
+        const otpError = asMaybeOtpError(error)
+        if (otpError != null) {
+          dispatch({
+            type: 'NAVIGATE',
+            data: { name: 'otpError', params: { otpAttempt, otpError } }
+          })
+          setOtpResetDate(otpError.resetDate)
+          return
+        }
+
         showError(error)
       }
-    }
-  }, 5000)
+    }, 5000)
 
-  componentDidMount() {
-    this.checkVoucher.start()
-  }
+    checkVoucher.start()
+    return () => checkVoucher.stop()
+  }, [accountOptions, context, dispatch, otpAttempt, voucherId])
 
-  componentWillUnmount() {
-    this.checkVoucher.stop()
-  }
+  //
+  // Handlers
+  //
 
-  handleBackupModal = () => {
-    const { login, otpAttempt, saveOtpError } = this.props
+  const handleBack = useHandler(() => {
+    dispatch({
+      type: 'NAVIGATE',
+      data: {
+        name: 'passwordLogin',
+        params: { username: otpAttempt.username }
+      }
+    })
+  })
 
-    const handleSubmit = async (otpKey: string): Promise<boolean | string> => {
+  const handleBackupModal = useHandler(() => {
+    inModal.current = true
+    async function handleSubmit(otpKey: string): Promise<boolean | string> {
       try {
-        this.checkVoucher.stop()
-        await login(otpAttempt, otpKey)
+        const account = await attemptLogin(context, otpAttempt, {
+          ...accountOptions,
+          otpKey
+        })
+        dispatch(completeLogin(account))
         return true
       } catch (error) {
-        // Restart the background checking if the login failed:
-        this.checkVoucher.start()
-
         // Translate known errors:
         const otpError = asMaybeOtpError(error)
         if (otpError != null) {
-          saveOtpError(otpAttempt, otpError)
+          dispatch({
+            type: 'NAVIGATE',
+            data: { name: 'otpError', params: { otpAttempt, otpError } }
+          })
+          setOtpResetDate(otpError.resetDate)
           return lstrings.backup_key_incorrect
         }
         if (
@@ -104,107 +125,24 @@ class OtpErrorSceneComponent extends React.Component<Props> {
         return false
       }
     }
-
     Airship.show(bridge => (
       <TextInputModal
         bridge={bridge}
-        onSubmit={handleSubmit}
-        title={lstrings.otp_backup_code_modal_title}
-        message={lstrings.otp_instructions}
-        inputLabel={lstrings.backup_key_label}
-        submitLabel={lstrings.submit}
         autoCapitalize="characters"
+        inputLabel={lstrings.backup_key_label}
+        message={lstrings.otp_instructions}
         returnKeyType="done"
+        submitLabel={lstrings.submit}
+        title={lstrings.otp_backup_code_modal_title}
+        onSubmit={handleSubmit}
       />
     ))
-  }
+      .catch(error => showError(error))
+      .finally(() => (inModal.current = false))
+  })
 
-  render() {
-    const { handleQrModal, otpError, otpResetDate } = this.props
-    const isIp = otpError.reason === 'ip'
-
-    // Find the automatic login date:
-    let date = otpResetDate
-    if (otpError.voucherActivates != null) date = otpError.voucherActivates
-
-    return (
-      <ThemedScene
-        onBack={this.props.onBack}
-        title={isIp ? lstrings.otp_header_ip : lstrings.otp_header}
-      >
-        <IconHeaderRow
-          renderIcon={theme => (
-            <Warning>
-              <FontAwesome name="exclamation-triangle" size={theme.rem(2.5)} />
-            </Warning>
-          )}
-        >
-          <MessageText>
-            <Warning>
-              {isIp
-                ? lstrings.otp_scene_header_ip
-                : lstrings.otp_scene_header_2fa}
-            </Warning>
-          </MessageText>
-        </IconHeaderRow>
-        <DividerWithText label={lstrings.to_fix} />
-        <MessageText>{lstrings.otp_scene_approve}</MessageText>
-        <DividerWithText />
-        <LinkRow label={lstrings.otp_scene_qr} onPress={handleQrModal} />
-        {isIp ? null : (
-          <>
-            <DividerWithText />
-            <LinkRow
-              label={lstrings.otp_backup_code_modal_title}
-              onPress={this.handleBackupModal}
-            />
-          </>
-        )}
-        {date == null ? null : (
-          <>
-            <DividerWithText />
-            <MessageText>
-              {sprintf(lstrings.otp_scene_wait, toLocalTime(date))}
-            </MessageText>
-          </>
-        )}
-        {otpError.resetToken == null || date != null ? null : (
-          <>
-            <DividerWithText />
-            <LinkRow
-              label={lstrings.disable_otp_button_two}
-              onPress={() => {
-                showResetModal(this.props.requestOtpReset).catch(error =>
-                  showError(error)
-                )
-              }}
-            />
-          </>
-        )}
-      </ThemedScene>
-    )
-  }
-}
-
-export function OtpErrorScene(props: OwnProps) {
-  const { route } = props
-  const { otpAttempt, otpError } = route.params
-  const { accountOptions, context } = useImports()
-  const dispatch = useDispatch()
-
-  const [otpResetDate, setOtpResetDate] = React.useState(otpError.resetDate)
-
-  const handleBack = (): void => {
-    dispatch({
-      type: 'NAVIGATE',
-      data: {
-        name: 'passwordLogin',
-        params: { username: otpAttempt.username }
-      }
-    })
-  }
-
-  const handleQrModal = (): void => {
+  const handleQrModal = useHandler(() => {
+    inModal.current = true
     Airship.show<EdgeAccount | undefined>(bridge => (
       <QrCodeModal
         bridge={bridge}
@@ -216,61 +154,85 @@ export function OtpErrorScene(props: OwnProps) {
         if (account != null) await dispatch(completeLogin(account))
       })
       .catch(error => showError(error))
-  }
+      .finally(() => (inModal.current = false))
+  })
 
-  async function hasReadyVoucher(): Promise<boolean> {
-    const { voucherId } = otpError
-    if (voucherId == null) return false
-
-    // Is that voucher pending?
-    const messages = await context.fetchLoginMessages()
-    for (const message of messages) {
-      const { pendingVouchers } = message
-      for (const voucher of pendingVouchers) {
-        if (voucher.voucherId === voucherId) return false
+  const handleResetModal = useHandler(() => {
+    inModal.current = true
+    async function handleSubmit(): Promise<void> {
+      if (resetToken == null) {
+        throw new Error('No OTP reset token')
       }
+      const date = await context.requestOtpReset(
+        otpAttempt.username,
+        resetToken
+      )
+      setOtpResetDate(date)
     }
-    return true
-  }
+    showResetModal(handleSubmit)
+      .catch(error => showError(error))
+      .finally(() => (inModal.current = false))
+  })
 
-  async function requestOtpReset() {
-    const { resetToken } = otpError
-    if (resetToken == null) {
-      throw new Error('No OTP reset token')
-    }
+  //
+  // Render
+  //
 
-    const date = await context.requestOtpReset(otpAttempt.username, resetToken)
-    setOtpResetDate(date)
-  }
+  const isIp = otpError.reason === 'ip'
 
-  function saveOtpError(otpAttempt: LoginAttempt, otpError: OtpError) {
-    setOtpResetDate(otpError.resetDate)
-    dispatch({
-      type: 'NAVIGATE',
-      data: { name: 'otpError', params: { otpAttempt, otpError } }
-    })
-  }
-
-  async function login(attempt: LoginAttempt, otpKey?: string): Promise<void> {
-    const account = await attemptLogin(context, attempt, {
-      ...accountOptions,
-      otpKey
-    })
-    dispatch(completeLogin(account))
-  }
+  // Find the automatic login date:
+  const date = otpError.voucherActivates ?? otpResetDate
 
   return (
-    <OtpErrorSceneComponent
-      handleQrModal={handleQrModal}
-      hasReadyVoucher={hasReadyVoucher}
-      login={login}
-      otpAttempt={otpAttempt}
-      otpError={otpError}
-      otpResetDate={otpResetDate}
-      requestOtpReset={requestOtpReset}
-      route={route}
-      saveOtpError={saveOtpError}
+    <ThemedScene
       onBack={handleBack}
-    />
+      title={isIp ? lstrings.otp_header_ip : lstrings.otp_header}
+    >
+      <IconHeaderRow
+        renderIcon={theme => (
+          <Warning>
+            <FontAwesome name="exclamation-triangle" size={theme.rem(2.5)} />
+          </Warning>
+        )}
+      >
+        <MessageText>
+          <Warning>
+            {isIp
+              ? lstrings.otp_scene_header_ip
+              : lstrings.otp_scene_header_2fa}
+          </Warning>
+        </MessageText>
+      </IconHeaderRow>
+      <DividerWithText label={lstrings.to_fix} />
+      <MessageText>{lstrings.otp_scene_approve}</MessageText>
+      <DividerWithText />
+      <LinkRow label={lstrings.otp_scene_qr} onPress={handleQrModal} />
+      {isIp ? null : (
+        <>
+          <DividerWithText />
+          <LinkRow
+            label={lstrings.otp_backup_code_modal_title}
+            onPress={handleBackupModal}
+          />
+        </>
+      )}
+      {date == null ? null : (
+        <>
+          <DividerWithText />
+          <MessageText>
+            {sprintf(lstrings.otp_scene_wait, toLocalTime(date))}
+          </MessageText>
+        </>
+      )}
+      {resetToken == null || date != null ? null : (
+        <>
+          <DividerWithText />
+          <LinkRow
+            label={lstrings.disable_otp_button_two}
+            onPress={handleResetModal}
+          />
+        </>
+      )}
+    </ThemedScene>
   )
 }

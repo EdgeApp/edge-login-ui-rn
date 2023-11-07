@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Do not perform a double-login when using the QR modal on the OTP error scene.
+
 ## 2.17.2 (2023-11-13)
 
 - fixed: Always show the notifications permission modal after all login/sign-up methods.
