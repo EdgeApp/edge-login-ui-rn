@@ -1,26 +1,19 @@
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
-import { ACCENT_MINT } from '../../constants/index'
-import { Branding } from '../../types/Branding'
 import { SceneProps } from '../../types/routerTypes'
+import { useTheme } from '../services/ThemeContext'
 
-interface Props extends SceneProps<'loading'> {
-  branding: Branding
-}
+export function LoadingScene(props: SceneProps<'loading'>): JSX.Element {
+  const theme = useTheme()
 
-export class LoadingScene extends React.Component<Props> {
-  render() {
-    return <View style={styles.container}>{this.renderSpinner()}</View>
-  }
-
-  renderSpinner = () => {
-    return (
+  return (
+    <View style={styles.container}>
       <View style={styles.spinner}>
-        <ActivityIndicator color={ACCENT_MINT} size="large" />
+        <ActivityIndicator color={theme.iconTappable} size="large" />
       </View>
-    )
-  }
+    </View>
+  )
 }
 
 const styles = {
