@@ -63,12 +63,14 @@ export function OtpRepairScene(props: Props): JSX.Element {
           setOtpResetDate(otpError.resetDate)
           return lstrings.backup_key_incorrect
         }
+
         if (
           error instanceof Error &&
           error.message === 'Unexpected end of data'
         ) {
           return lstrings.backup_key_incorrect
         }
+
         showError(error)
         return false
       }
