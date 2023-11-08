@@ -173,7 +173,11 @@ class OtpErrorSceneComponent extends React.Component<Props> {
             <DividerWithText />
             <LinkRow
               label={lstrings.disable_otp_button_two}
-              onPress={() => showResetModal(this.props.requestOtpReset)}
+              onPress={() => {
+                showResetModal(this.props.requestOtpReset).catch(error =>
+                  showError(error)
+                )
+              }}
             />
           </>
         )}
