@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { checkAndRequestNotifications } from '../../../actions/LoginInitActions'
+import { completeLogin } from '../../../actions/LoginCompleteActions'
 import { lstrings } from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
@@ -88,21 +88,13 @@ interface NewAccountReviewProps extends SceneProps<'newAccountReview'> {
 }
 
 export const NewAccountReviewScene = (props: NewAccountReviewProps) => {
-  const { branding, route } = props
+  const { route } = props
+  const { onLogEvent = (event, values?) => {} } = useImports()
   const dispatch = useDispatch()
-  const { onLogin, onLogEvent = (event, values?) => {} } = useImports()
 
   const handleNext = useHandler(() => {
-    if (onLogin == null) {
-      console.error('NewAccountReviewScene: onLogin not found')
-      return
-    }
     onLogEvent(`Signup_Review_Done`)
-    onLogin(route.params.account)
-
-    dispatch(checkAndRequestNotifications(branding)).catch(error =>
-      console.log(error)
-    )
+    dispatch(completeLogin(route.params.account))
   })
 
   return <AccountReviewComponent {...route.params} onNext={handleNext} />
@@ -116,18 +108,13 @@ interface UpgradeReviewProps extends SceneProps<'upgradeAccountReview'> {
 }
 
 export const UpgradeReviewScene = (props: UpgradeReviewProps) => {
-  const { branding, route } = props
-  const dispatch = useDispatch()
+  const { route } = props
   const { onComplete, onLogEvent = (event, values?) => {} } = useImports()
 
   const handleNext = useHandler(() => {
     onLogEvent(`Backup_Review_Done`)
 
     if (onComplete != null) onComplete()
-
-    dispatch(checkAndRequestNotifications(branding)).catch(error =>
-      console.log(error)
-    )
   })
 
   return <AccountReviewComponent {...route.params} onNext={handleNext} />

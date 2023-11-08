@@ -4,6 +4,7 @@ import { Alert, Linking, ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
+import { completeLogin } from '../../../actions/LoginCompleteActions'
 import { loadTouchState } from '../../../actions/TouchActions'
 import { getAppConfig } from '../../../common/appConfig'
 import { lstrings } from '../../../common/locales/strings'
@@ -184,8 +185,6 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
     accountOptions,
     experimentConfig,
 
-    onLogin,
-
     onLogEvent = (event, values?) => {}
   } = imports
   const dispatch = useDispatch()
@@ -245,13 +244,7 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
       await setTouchOtp(account, dispatch)
 
       if (lightAccount) {
-        if (onLogin == null) {
-          console.error(
-            'NewAccountTosScene: onLogin required for light accounts'
-          )
-          return
-        }
-        onLogin(account)
+        dispatch(completeLogin(account))
       } else {
         dispatch({
           type: 'NAVIGATE',

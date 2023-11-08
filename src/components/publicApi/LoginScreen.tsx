@@ -130,6 +130,7 @@ export function LoginScreen(props: Props): JSX.Element {
     <ReduxStore
       imports={{
         accountOptions: props.accountOptions,
+        branding,
         context,
         initialUserInfo,
         initialRoute: props.initialRoute,

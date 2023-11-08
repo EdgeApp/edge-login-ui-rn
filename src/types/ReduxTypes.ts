@@ -10,6 +10,7 @@ import * as ReactRedux from 'react-redux'
 import { InitialRouteName } from '../components/publicApi/types'
 import { RootState } from '../reducers/RootReducer'
 import { TrackingEventName, TrackingValues } from '../util/analytics'
+import { Branding } from './Branding'
 import { Action } from './ReduxActions'
 
 export type { Action, RootState }
@@ -67,6 +68,7 @@ export type OnLogEvent = (
 
 export interface Imports {
   readonly accountOptions: EdgeAccountOptions
+  readonly branding?: Branding
   readonly context: EdgeContext
   readonly initialUserInfo?: EdgeUserInfo
   readonly initialRoute?: InitialRouteName

@@ -28,7 +28,6 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import { launchPasswordRecovery, login } from '../../actions/LoginAction'
-import { checkAndRequestNotifications } from '../../actions/LoginInitActions'
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
@@ -72,7 +71,6 @@ export const PasswordLoginScene = (props: Props) => {
   const { username, createAccountType = 'full' } = route.params
   const {
     context,
-    customPermissionsFunction,
     experimentConfig,
     onComplete,
     onLogEvent = (event, values?) => {}
@@ -197,11 +195,6 @@ export const PasswordLoginScene = (props: Props) => {
 
     try {
       Keyboard.dismiss()
-      if (customPermissionsFunction != null) {
-        customPermissionsFunction()
-      } else {
-        await dispatch(checkAndRequestNotifications(branding))
-      }
       await dispatch(login(otpAttempt, { challengeId }))
       onLogEvent('Pasword_Login')
     } catch (error: unknown) {
