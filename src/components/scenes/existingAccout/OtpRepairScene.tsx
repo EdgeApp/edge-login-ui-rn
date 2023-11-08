@@ -5,6 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import { completeLogin } from '../../../actions/LoginCompleteActions'
 import { lstrings } from '../../../common/locales/strings'
+import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
@@ -25,39 +26,41 @@ export interface OtpRepairParams {
   otpError: OtpError
 }
 
-interface OwnProps extends SceneProps<'otpRepair'> {
+interface Props extends SceneProps<'otpRepair'> {
   branding: Branding
 }
-interface StateProps {
-  account: EdgeAccount
-  otpError: OtpError
-  otpResetDate?: Date
-}
-interface DispatchProps {
-  onBack: () => void
-  handleQrModal: () => void
-  requestOtpReset: () => Promise<void>
-  saveOtpError: (account: EdgeAccount, otpError: OtpError) => void
-}
-type Props = OwnProps & StateProps & DispatchProps
 
-class OtpRepairSceneComponent extends React.Component<Props> {
-  handleBackupModal = () => {
-    const { account, onBack, saveOtpError } = this.props
+export function OtpRepairScene(props: Props): JSX.Element {
+  const { branding, route } = props
+  const { account, otpError } = route.params
+  const { resetToken } = otpError
+  const { accountOptions, context, onComplete = () => {} } = useImports()
+  const dispatch = useDispatch()
 
-    const handleSubmit = async (otpKey: string): Promise<boolean | string> => {
+  const [otpResetDate, setOtpResetDate] = React.useState(otpError.resetDate)
+
+  //
+  // Handlers
+  //
+
+  const handleBackupModal = useHandler(() => {
+    async function handleSubmit(otpKey: string): Promise<boolean | string> {
       try {
         if (account.repairOtp == null) {
           throw new Error('Wrong edge-core-js version')
         }
         await account.repairOtp(otpKey)
-        onBack()
+        onComplete()
         return true
       } catch (error) {
         // Translate known errors:
         const otpError = asMaybeOtpError(error)
         if (otpError != null) {
-          saveOtpError(account, otpError)
+          dispatch({
+            type: 'NAVIGATE',
+            data: { name: 'otpRepair', params: { account, otpError } }
+          })
+          setOtpResetDate(otpError.resetDate)
           return lstrings.backup_key_incorrect
         }
         if (
@@ -70,104 +73,21 @@ class OtpRepairSceneComponent extends React.Component<Props> {
         return false
       }
     }
-
     Airship.show(bridge => (
       <TextInputModal
         bridge={bridge}
-        onSubmit={handleSubmit}
-        title={lstrings.otp_backup_code_modal_title}
-        message={lstrings.otp_instructions}
-        inputLabel={lstrings.backup_key_label}
-        submitLabel={lstrings.submit}
         autoCapitalize="characters"
+        inputLabel={lstrings.backup_key_label}
+        message={lstrings.otp_instructions}
         returnKeyType="done"
+        submitLabel={lstrings.submit}
+        title={lstrings.otp_backup_code_modal_title}
+        onSubmit={handleSubmit}
       />
-    ))
-  }
+    )).catch(error => showError(error))
+  })
 
-  render() {
-    const { handleQrModal, otpError, otpResetDate } = this.props
-    const isIp = otpError.reason === 'ip'
-
-    // Find the automatic login date:
-    let date = otpResetDate
-    if (otpError.voucherActivates != null) date = otpError.voucherActivates
-
-    return (
-      <ThemedScene
-        onBack={this.props.onBack}
-        title={lstrings.otp_header_repair}
-      >
-        <IconHeaderRow
-          renderIcon={theme => (
-            <Warning>
-              <FontAwesome name="exclamation-triangle" size={theme.rem(2.5)} />
-            </Warning>
-          )}
-        >
-          <MessageText>
-            <Warning>
-              {isIp
-                ? sprintf(
-                    lstrings.otp_repair_header_ip_branded,
-                    this.props.branding.appName
-                  )
-                : sprintf(
-                    lstrings.otp_repair_header_2fa_branded,
-                    this.props.branding.appName
-                  )}
-            </Warning>
-          </MessageText>
-        </IconHeaderRow>
-
-        <DividerWithText label={lstrings.to_fix} />
-        <MessageText>{lstrings.otp_scene_approve}</MessageText>
-        <DividerWithText />
-        <LinkRow label={lstrings.otp_scene_qr} onPress={handleQrModal} />
-        {isIp ? null : (
-          <>
-            <DividerWithText />
-            <LinkRow
-              label={lstrings.otp_backup_code_modal_title}
-              onPress={this.handleBackupModal}
-            />
-          </>
-        )}
-        {date == null ? null : (
-          <>
-            <DividerWithText />
-            <MessageText>
-              {sprintf(lstrings.otp_scene_wait, toLocalTime(date))}
-            </MessageText>
-          </>
-        )}
-        {otpError.resetToken == null || date != null ? null : (
-          <>
-            <DividerWithText />
-            <LinkRow
-              label={lstrings.disable_otp_button_two}
-              onPress={() => {
-                showResetModal(this.props.requestOtpReset).catch(error =>
-                  showError(error)
-                )
-              }}
-            />
-          </>
-        )}
-      </ThemedScene>
-    )
-  }
-}
-
-export function OtpRepairScene(props: OwnProps) {
-  const { branding, route } = props
-  const { account, otpError } = route.params
-  const { accountOptions, context, onComplete = () => {} } = useImports()
-  const dispatch = useDispatch()
-
-  const [otpResetDate, setOtpResetDate] = React.useState(otpError.resetDate)
-
-  function handleQrModal(): void {
+  const handleQrModal = useHandler(() => {
     Airship.show<EdgeAccount | undefined>(bridge => (
       <QrCodeModal
         bridge={bridge}
@@ -179,40 +99,82 @@ export function OtpRepairScene(props: OwnProps) {
         if (account != null) await dispatch(completeLogin(account))
       })
       .catch(error => showError(error))
-  }
+  })
 
-  async function requestOtpReset() {
-    const { resetToken } = otpError
-    if (resetToken == null) {
-      throw new Error('No OTP reset token')
+  const handleResetModal = useHandler(() => {
+    async function handleSubmit(): Promise<void> {
+      if (resetToken == null) {
+        throw new Error('No OTP reset token')
+      }
+      if (account.username == null) {
+        throw new Error('No username')
+      }
+
+      const date = await context.requestOtpReset(account.username, resetToken)
+      setOtpResetDate(date)
     }
-    if (account.username == null) {
-      throw new Error('No username')
-    }
+    showResetModal(handleSubmit).catch(error => showError(error))
+  })
 
-    const date = await context.requestOtpReset(account.username, resetToken)
-    setOtpResetDate(date)
-  }
+  //
+  // Render
+  //
 
-  function saveOtpError(account: EdgeAccount, otpError: OtpError) {
-    setOtpResetDate(otpError.resetDate)
-    dispatch({
-      type: 'NAVIGATE',
-      data: { name: 'otpRepair', params: { account, otpError } }
-    })
-  }
+  const isIp = otpError.reason === 'ip'
+
+  // Find the automatic login date:
+  const date = otpError.voucherActivates ?? otpResetDate
 
   return (
-    <OtpRepairSceneComponent
-      account={account}
-      branding={branding}
-      handleQrModal={handleQrModal}
-      otpError={otpError}
-      otpResetDate={otpResetDate}
-      requestOtpReset={requestOtpReset}
-      route={route}
-      saveOtpError={saveOtpError}
-      onBack={onComplete}
-    />
+    <ThemedScene onBack={onComplete} title={lstrings.otp_header_repair}>
+      <IconHeaderRow
+        renderIcon={theme => (
+          <Warning>
+            <FontAwesome name="exclamation-triangle" size={theme.rem(2.5)} />
+          </Warning>
+        )}
+      >
+        <MessageText>
+          <Warning>
+            {isIp
+              ? sprintf(lstrings.otp_repair_header_ip_branded, branding.appName)
+              : sprintf(
+                  lstrings.otp_repair_header_2fa_branded,
+                  branding.appName
+                )}
+          </Warning>
+        </MessageText>
+      </IconHeaderRow>
+      <DividerWithText label={lstrings.to_fix} />
+      <MessageText>{lstrings.otp_scene_approve}</MessageText>
+      <DividerWithText />
+      <LinkRow label={lstrings.otp_scene_qr} onPress={handleQrModal} />
+      {isIp ? null : (
+        <>
+          <DividerWithText />
+          <LinkRow
+            label={lstrings.otp_backup_code_modal_title}
+            onPress={handleBackupModal}
+          />
+        </>
+      )}
+      {date == null ? null : (
+        <>
+          <DividerWithText />
+          <MessageText>
+            {sprintf(lstrings.otp_scene_wait, toLocalTime(date))}
+          </MessageText>
+        </>
+      )}
+      {resetToken == null || date != null ? null : (
+        <>
+          <DividerWithText />
+          <LinkRow
+            label={lstrings.disable_otp_button_two}
+            onPress={handleResetModal}
+          />
+        </>
+      )}
+    </ThemedScene>
   )
 }
