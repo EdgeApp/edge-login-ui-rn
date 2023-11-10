@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+# Unreleased
+
+- fixed: Always show the notifications permission modal after all login/sign-up methods.
+
 ## 2.17.1 (2023-11-06)
 
 - fixed: Correctly request permissions on Android 13 or higher.

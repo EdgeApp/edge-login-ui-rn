@@ -222,7 +222,7 @@ const checkSecurityMessages = () => async (
 //
 // 0 = false, 1 = true
 // nr = notifications and app refresh request message
-// r = notifications request message
+// n = notifications request message
 // r = app refresh request only message
 //
 // | Notif Enabled |  Notif Block | App Refresh Enabled || Message |

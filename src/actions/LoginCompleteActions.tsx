@@ -15,6 +15,7 @@ import {
 } from '../keychain'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
 import { hasSecurityAlerts } from '../util/hasSecurityAlerts'
+import { checkAndRequestNotifications } from './LoginInitActions'
 
 /**
  * The user has just logged in, so figure out what do to next.
@@ -86,6 +87,14 @@ export const submitLogin = (account: EdgeAccount) => async (
   }
 
   if (onLogin != null) onLogin(account, touchIdInformation)
+
+  if (imports.customPermissionsFunction != null) {
+    imports.customPermissionsFunction()
+  } else {
+    await dispatch(
+      checkAndRequestNotifications(imports.branding ?? {})
+    ).catch(error => console.log(error))
+  }
 
   // Hide all modals and scenes:
   Airship.clear()
