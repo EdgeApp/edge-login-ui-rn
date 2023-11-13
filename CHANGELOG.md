@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.17.2 (2023-11-13)
+
 - fixed: Always show the notifications permission modal after all login/sign-up methods.
 
 ## 2.17.1 (2023-11-06)
