@@ -1,6 +1,6 @@
 # edge-login-ui-rn
 
-# Unreleased
+## Unreleased
 
 - fixed: Always show the notifications permission modal after all login/sign-up methods.
 
