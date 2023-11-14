@@ -75,7 +75,7 @@ export function Router(props: Props) {
       case 'landing':
         return <LandingScene branding={props.branding} route={route} />
       case 'loading':
-        return <LoadingScene branding={props.branding} route={route} />
+        return <LoadingScene route={route} />
       case 'otpError':
         return <OtpErrorScene route={route} />
       case 'otpRepair':

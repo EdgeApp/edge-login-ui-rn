@@ -2,7 +2,8 @@ import {
   asMaybeChallengeError,
   asMaybeOtpError,
   asMaybePasswordError,
-  asMaybeUsernameError
+  asMaybeUsernameError,
+  EdgeAccount
 } from 'edge-core-js'
 import * as React from 'react'
 import {
@@ -27,7 +28,8 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
-import { launchPasswordRecovery, login } from '../../actions/LoginAction'
+import { launchPasswordRecovery } from '../../actions/LoginAction'
+import { completeLogin } from '../../actions/LoginCompleteActions'
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
@@ -37,13 +39,13 @@ import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { base58 } from '../../util/base58'
 import { getCreateAccountTextString } from '../../util/experiments'
-import { LoginAttempt } from '../../util/loginAttempt'
+import { attemptLogin, LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ChallengeModal } from '../modals/ChallengeModal'
 import { GradientFadeOut } from '../modals/GradientFadeout'
-import { showQrCodeModal } from '../modals/QrCodeModal'
+import { QrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { CreateAccountType } from '../publicApi/types'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -70,6 +72,7 @@ export const PasswordLoginScene = (props: Props) => {
   const { branding, route } = props
   const { username, createAccountType = 'full' } = route.params
   const {
+    accountOptions,
     context,
     experimentConfig,
     onComplete,
@@ -195,8 +198,12 @@ export const PasswordLoginScene = (props: Props) => {
 
     try {
       Keyboard.dismiss()
-      await dispatch(login(otpAttempt, { challengeId }))
+      const account = await attemptLogin(context, otpAttempt, {
+        ...accountOptions,
+        challengeId
+      })
       onLogEvent('Pasword_Login')
+      await dispatch(completeLogin(account))
     } catch (error: unknown) {
       const otpError = asMaybeOtpError(error)
       if (otpError != null) {
@@ -353,7 +360,17 @@ export const PasswordLoginScene = (props: Props) => {
 
   const handleQrModal = useHandler(() => {
     Keyboard.dismiss()
-    dispatch(showQrCodeModal())
+    Airship.show<EdgeAccount | undefined>(bridge => (
+      <QrCodeModal
+        bridge={bridge}
+        accountOptions={accountOptions}
+        context={context}
+      />
+    ))
+      .then(async account => {
+        if (account != null) await dispatch(completeLogin(account))
+      })
+      .catch(error => showError(error))
   })
 
   const handleBack = useHandler(() => {

@@ -4,8 +4,6 @@ export const FONTS = {
 }
 
 /** @deprecated */
-export const ACCENT_MINT = '#66EDA8'
-/** @deprecated */
 export const GRAY_4 = '#F4F5F6'
 /** @deprecated */
 export const WHITE = '#FFFFFF'

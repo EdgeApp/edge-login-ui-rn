@@ -4,110 +4,105 @@ import { cacheStyles } from 'react-native-patina'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { lstrings } from '../../common/locales/strings'
-import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { Theme, useTheme } from '../services/ThemeContext'
 import { PinButton } from '../themed/PinButton'
 
 type Key = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'back'
 
-interface OwnProps {
+interface Props {
   disabled?: boolean
   onPress: (key: Key) => void
 }
 
-type Props = OwnProps & ThemeProps
+export function PinKeypad(props: Props): JSX.Element {
+  const { disabled, onPress } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-class PinKeypadComponent extends React.PureComponent<Props> {
-  render() {
-    const { disabled, onPress, theme } = this.props
-    const styles = getStyles(theme)
-
-    return (
-      <View style={styles.keypadContainer}>
-        <View style={styles.keypadInner}>
-          <View style={styles.keypadRow}>
-            <View style={styles.keypadBox}>
-              <PinButton
-                label={lstrings.keypad_one}
-                onPress={() => onPress('1')}
-              />
-            </View>
-            <View style={styles.keypadBox}>
-              <PinButton
-                label={lstrings.keypad_two}
-                onPress={() => onPress('2')}
-              />
-            </View>
-            <View style={styles.keypadBox}>
-              <PinButton
-                label={lstrings.keypad_three}
-                onPress={() => onPress('3')}
-              />
-            </View>
+  return (
+    <View style={styles.keypadContainer}>
+      <View style={styles.keypadInner}>
+        <View style={styles.keypadRow}>
+          <View style={styles.keypadBox}>
+            <PinButton
+              label={lstrings.keypad_one}
+              onPress={() => onPress('1')}
+            />
           </View>
-          <View style={styles.keypadRow}>
-            <View style={styles.keypadBox}>
-              <PinButton
-                label={lstrings.keypad_four}
-                onPress={() => onPress('4')}
-              />
-            </View>
-            <View style={styles.keypadBox}>
-              <PinButton
-                label={lstrings.keypad_five}
-                onPress={() => onPress('5')}
-              />
-            </View>
-            <View style={styles.keypadBox}>
-              <PinButton
-                label={lstrings.keypad_six}
-                onPress={() => onPress('6')}
-              />
-            </View>
+          <View style={styles.keypadBox}>
+            <PinButton
+              label={lstrings.keypad_two}
+              onPress={() => onPress('2')}
+            />
           </View>
-          <View style={styles.keypadRow}>
-            <View style={styles.keypadBox}>
-              <PinButton
-                label={lstrings.keypad_seven}
-                onPress={() => onPress('7')}
-              />
-            </View>
-            <View style={styles.keypadBox}>
-              <PinButton
-                label={lstrings.keypad_eight}
-                onPress={() => onPress('8')}
-              />
-            </View>
-            <View style={styles.keypadBox}>
-              <PinButton
-                label={lstrings.keypad_nine}
-                onPress={() => onPress('9')}
-              />
-            </View>
-          </View>
-          <View style={styles.keypadRow}>
-            <View style={styles.keypadColumnBlank} />
-            <View style={styles.keypadBox}>
-              <PinButton
-                label={lstrings.keypad_zero}
-                onPress={() => onPress('0')}
-              />
-            </View>
-            <TouchableWithoutFeedback
-              onPress={() => onPress('back')}
-              disabled={disabled}
-            >
-              <View style={styles.keypadColumnBack}>
-                <MaterialIcon name="backspace" style={styles.keypadKeysBack} />
-              </View>
-            </TouchableWithoutFeedback>
+          <View style={styles.keypadBox}>
+            <PinButton
+              label={lstrings.keypad_three}
+              onPress={() => onPress('3')}
+            />
           </View>
         </View>
+        <View style={styles.keypadRow}>
+          <View style={styles.keypadBox}>
+            <PinButton
+              label={lstrings.keypad_four}
+              onPress={() => onPress('4')}
+            />
+          </View>
+          <View style={styles.keypadBox}>
+            <PinButton
+              label={lstrings.keypad_five}
+              onPress={() => onPress('5')}
+            />
+          </View>
+          <View style={styles.keypadBox}>
+            <PinButton
+              label={lstrings.keypad_six}
+              onPress={() => onPress('6')}
+            />
+          </View>
+        </View>
+        <View style={styles.keypadRow}>
+          <View style={styles.keypadBox}>
+            <PinButton
+              label={lstrings.keypad_seven}
+              onPress={() => onPress('7')}
+            />
+          </View>
+          <View style={styles.keypadBox}>
+            <PinButton
+              label={lstrings.keypad_eight}
+              onPress={() => onPress('8')}
+            />
+          </View>
+          <View style={styles.keypadBox}>
+            <PinButton
+              label={lstrings.keypad_nine}
+              onPress={() => onPress('9')}
+            />
+          </View>
+        </View>
+        <View style={styles.keypadRow}>
+          <View style={styles.keypadColumnBlank} />
+          <View style={styles.keypadBox}>
+            <PinButton
+              label={lstrings.keypad_zero}
+              onPress={() => onPress('0')}
+            />
+          </View>
+          <TouchableWithoutFeedback
+            onPress={() => onPress('back')}
+            disabled={disabled}
+          >
+            <View style={styles.keypadColumnBack}>
+              <MaterialIcon name="backspace" style={styles.keypadKeysBack} />
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
       </View>
-    )
-  }
+    </View>
+  )
 }
-
-export const PinKeypad = withTheme(PinKeypadComponent)
 
 const getStyles = cacheStyles((theme: Theme) => ({
   keypadContainer: {

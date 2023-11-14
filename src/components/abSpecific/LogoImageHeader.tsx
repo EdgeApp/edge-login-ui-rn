@@ -1,71 +1,61 @@
 import * as React from 'react'
 import { Image, TouchableWithoutFeedback, View } from 'react-native'
+import { cacheStyles } from 'react-native-patina'
 
 import * as Assets from '../../assets/'
 import { lstrings } from '../../common/locales/strings'
+import { useHandler } from '../../hooks/useHandler'
 import { Branding } from '../../types/Branding'
-import { scale } from '../../util/scaling'
+import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   branding: Branding
 }
 
-interface State {
-  taps: number
-}
+export function LogoImageHeader(props: Props): JSX.Element {
+  const { branding } = props
+  const { primaryLogo = Assets.LOGO_BIG, primaryLogoCallback } = branding
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-export class LogoImageHeader extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      taps: 0
-    }
-  }
-
-  handlePress = () => {
-    const callback = this.props.branding.primaryLogoCallback
-    if (callback != null) {
-      const taps = this.state.taps + 1
-      this.setState({ taps })
-      if (taps > 4) {
-        callback()
-        this.setState({ taps: 0 })
+  const taps = React.useRef(0)
+  const handlePress = useHandler(() => {
+    if (primaryLogoCallback != null) {
+      taps.current++
+      if (taps.current > 4) {
+        primaryLogoCallback()
+        taps.current = 0
       }
-      if (taps === 1) {
-        setTimeout(() => this.setState({ taps: 0 }), 2000)
+      if (taps.current === 1) {
+        setTimeout(() => (taps.current = 0), 2000)
       }
     }
-  }
+  })
 
-  render() {
-    const src = this.props.branding.primaryLogo || Assets.LOGO_BIG
-    return (
-      <TouchableWithoutFeedback onPress={this.handlePress}>
-        <View style={styles.container}>
-          <Image
-            accessibilityHint={lstrings.app_logo_hint}
-            source={src}
-            style={styles.image}
-            resizeMode="contain"
-          />
-        </View>
-      </TouchableWithoutFeedback>
-    )
-  }
+  return (
+    <TouchableWithoutFeedback onPress={handlePress}>
+      <View style={styles.container}>
+        <Image
+          accessibilityHint={lstrings.app_logo_hint}
+          source={primaryLogo}
+          style={styles.image}
+          resizeMode="contain"
+        />
+      </View>
+    </TouchableWithoutFeedback>
+  )
 }
 
-const styles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    position: 'relative',
-    width: '100%',
-    paddingBottom: scale(24),
+    alignItems: 'center',
     justifyContent: 'space-around',
-    alignItems: 'center'
+    paddingBottom: theme.rem(1.5),
+    width: '100%'
   },
   image: {
-    position: 'relative',
-    height: scale(44),
+    height: theme.rem(2.75),
     overflow: 'visible',
     resizeMode: 'contain'
   }
-} as const
+}))

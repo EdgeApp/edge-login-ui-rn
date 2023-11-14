@@ -31,7 +31,7 @@ import { getLoginKey } from '../../keychain'
 import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
-import { FourDigit } from '../abSpecific/FourDigitComponent'
+import { FourDigitDisplay } from '../abSpecific/FourDigitDisplay'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { PinKeypad } from '../abSpecific/PinKeypad'
 import { UserListItem } from '../abSpecific/UserListItem'
@@ -339,7 +339,7 @@ export function PinLoginScene(props: Props) {
         {userInfo == null || !userInfo.pinLoginEnabled ? (
           <View style={styles.spacer} />
         ) : (
-          <FourDigit
+          <FourDigitDisplay
             error={errorMessage}
             pin={pin}
             spinner={hasWait || pin.length === 4 || touchBusy}
