@@ -1,4 +1,9 @@
-import { asMaybeOtpError, EdgeAccount, OtpError } from 'edge-core-js'
+import {
+  asMaybeChallengeError,
+  asMaybeOtpError,
+  EdgeAccount,
+  OtpError
+} from 'edge-core-js'
 import * as React from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
@@ -12,6 +17,7 @@ import { SceneProps } from '../../types/routerTypes'
 import { attemptLogin, LoginAttempt } from '../../util/loginAttempt'
 import { makePeriodicTask } from '../../util/periodicTask'
 import { toLocalTime } from '../../util/utils'
+import { ChallengeModal } from '../modals/ChallengeModal'
 import { showResetModal } from '../modals/OtpResetModal'
 import { QrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -115,12 +121,30 @@ export function OtpErrorScene(props: Props) {
           setOtpResetDate(otpError.resetDate)
           return lstrings.backup_key_incorrect
         }
+
         if (
           error instanceof Error &&
           error.message === 'Unexpected end of data'
         ) {
           return lstrings.backup_key_incorrect
         }
+
+        const challengeError = asMaybeChallengeError?.(error)
+        if (challengeError != null) {
+          const result = await Airship.show<boolean | undefined>(bridge => (
+            <ChallengeModal bridge={bridge} challengeError={challengeError} />
+          ))
+          if (result !== true) return lstrings.failed_captcha_error
+
+          const account = await attemptLogin(context, otpAttempt, {
+            ...accountOptions,
+            otpKey,
+            challengeId: challengeError.challengeId
+          })
+          dispatch(completeLogin(account))
+          return true
+        }
+
         showError(error)
         return false
       }
