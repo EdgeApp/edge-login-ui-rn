@@ -2,7 +2,10 @@
 
 ## Unreleased
 
+## 2.17.3 (2023-11-14)
+
 - fixed: Do not perform a double-login when using the QR modal on the OTP error scene.
+- fixed: Handle CAPTCHA errors in the OTP backup-code modal.
 
 ## 2.17.2 (2023-11-13)
 
