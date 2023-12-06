@@ -38,7 +38,6 @@ import { Branding } from '../../types/Branding'
 import { useDispatch, useSelector } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { base58 } from '../../util/base58'
-import { getCreateAccountTextString } from '../../util/experiments'
 import { attemptLogin, LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
@@ -74,7 +73,6 @@ export const PasswordLoginScene = (props: Props) => {
   const {
     accountOptions,
     context,
-    experimentConfig,
     onComplete,
     onLogEvent = (event, values?) => {}
   } = useImports()
@@ -107,10 +105,6 @@ export const PasswordLoginScene = (props: Props) => {
   const mDropContainerStyle = React.useMemo(() => {
     return { top: dropdownY, ...styles.dropContainer }
   }, [styles, dropdownY])
-  const createAccText = React.useMemo(
-    () => getCreateAccountTextString(experimentConfig),
-    [experimentConfig]
-  )
 
   const sAnimationMult = useSharedValue(0)
   const sScrollY = useSharedValue(0)
@@ -536,7 +530,7 @@ export const PasswordLoginScene = (props: Props) => {
           type="textOnly"
           testID="createAccountButton"
           onPress={handleCreateAccount}
-          label={createAccText}
+          label={lstrings.get_started}
         />
         <TouchableOpacity onPress={handleQrModal}>
           <AntDesignIcon
