@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.18.0 (2023-12-06)
+
 - changed: 'Create Account' button text always set to "Get Started"
 
 ## 2.17.3 (2023-11-14)
