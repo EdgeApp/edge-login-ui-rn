@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: 'Create Account' button text always set to "Get Started"
+
 ## 2.17.3 (2023-11-14)
 
 - fixed: Do not perform a double-login when using the QR modal on the OTP error scene.
