@@ -2,9 +2,10 @@ import * as React from 'react'
 import { Keyboard, ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { submitLogin } from '../../actions/LoginCompleteActions'
+import { completeLogin, submitLogin } from '../../actions/LoginCompleteActions'
 import { maybeRouteComplete } from '../../actions/LoginInitActions'
 import { lstrings } from '../../common/locales/strings'
+import { useCreateAccountHandler } from '../../hooks/useCreateAccount'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useImports } from '../../hooks/useImports'
 import { useScrollToEnd } from '../../hooks/useScrollToEnd'
@@ -186,12 +187,38 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
           })
     )
   })
-  const handleSubmit = useHandler((newPin: string) => {
+
+  const handleCreateAccount = useCreateAccountHandler()
+
+  const handleSubmit = useHandler(async (newPin: string) => {
     onLogEvent('Signup_PIN_Valid')
-    dispatch({
-      type: 'NAVIGATE',
-      data: { name: 'newAccountTos', params: { ...route.params, pin: newPin } }
-    })
+
+    if (lightAccount) {
+      let error
+      try {
+        const account = await handleCreateAccount(route.params)
+        dispatch(completeLogin(account))
+      } catch (e: unknown) {
+        error = String(e)
+        showError(error)
+        dispatch({
+          type: 'NAVIGATE',
+          data: {
+            name: 'newAccountPin',
+            params: route.params
+          }
+        })
+      }
+      onLogEvent('Signup_Create_Light_Account', { error })
+    } else {
+      dispatch({
+        type: 'NAVIGATE',
+        data: {
+          name: 'newAccountTos',
+          params: { ...route.params, pin: newPin }
+        }
+      })
+    }
   })
 
   return (
