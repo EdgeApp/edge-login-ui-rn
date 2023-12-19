@@ -1,27 +1,22 @@
-import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, Linking, ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
-import { completeLogin } from '../../../actions/LoginCompleteActions'
-import { loadTouchState } from '../../../actions/TouchActions'
 import { getAppConfig } from '../../../common/appConfig'
 import { lstrings } from '../../../common/locales/strings'
-import * as Constants from '../../../constants/index'
+import { useCreateAccountHandler } from '../../../hooks/useCreateAccount'
 import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
 import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
-import { enableTouchId } from '../../../keychain'
 import { Branding } from '../../../types/Branding'
-import { Dispatch, useDispatch } from '../../../types/ReduxTypes'
+import { useDispatch } from '../../../types/ReduxTypes'
 import {
   AccountParams,
   CreateFlowParams,
   SceneProps
 } from '../../../types/routerTypes'
-import { ChallengeModal } from '../../modals/ChallengeModal'
-import { Airship, showError } from '../../services/AirshipInstance'
+import { showChallengeModal, showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { Checkbox } from '../../themed/Checkbox'
 import { EdgeText } from '../../themed/EdgeText'
@@ -158,35 +153,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const setTouchOtp = async (account: EdgeAccount, dispatch: Dispatch) => {
-  await enableTouchId(account).catch(e => {
-    console.log(e) // Fail quietly
-  })
-  await account.dataStore.setItem(
-    Constants.OTP_REMINDER_STORE_NAME,
-    Constants.OTP_REMINDER_KEY_NAME_CREATED_AT,
-    Date.now().toString()
-  )
-  dispatch(loadTouchState())
-}
-
 /**
- * Terms of Service scene for new regular or light accounts
+ * Terms of Service scene for new full accounts
  */
 interface NewAccountTosProps extends SceneProps<'newAccountTos'> {
   branding: Branding
 }
 export const NewAccountTosScene = (props: NewAccountTosProps) => {
   const { route, branding } = props
-  const imports = useImports()
-  const {
-    context,
-
-    accountOptions,
-    experimentConfig,
-
-    onLogEvent = (event, values?) => {}
-  } = imports
   const dispatch = useDispatch()
 
   const handleBack = useHandler((): void => {
@@ -196,16 +170,14 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
     })
   })
 
+  const { experimentConfig, onLogEvent = () => {} } = useImports()
+  const handleCreateAccount = useCreateAccountHandler()
+
   const handleNext = useHandler(async () => {
-    const { username, password, pin } = route.params
-
-    const lightAccount = experimentConfig.createAccountType === 'light'
-
     if (experimentConfig.signupCaptcha === 'withCaptcha') {
       onLogEvent('Signup_Captcha_Shown')
-      const result = await Airship.show<boolean | undefined>(bridge => {
-        return <ChallengeModal bridge={bridge} />
-      })
+      const result = await showChallengeModal()
+
       // User closed the modal
       if (result == null) {
         onLogEvent('Signup_Captcha_Quit')
@@ -221,49 +193,27 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
 
     let error
     try {
+      const account = await handleCreateAccount(route.params)
       dispatch({
         type: 'NAVIGATE',
         data: {
-          name: 'newAccountWait',
+          name: 'newAccountReview',
           params: {
-            title: lstrings.great_job,
-            message: lstrings.hang_tight + '\n' + lstrings.secure_account
+            ...route.params,
+            account
           }
         }
       })
-
-      const account = await context.createAccount({
-        ...accountOptions,
-        username,
-        password,
-        pin
-      })
-      account.watch('loggedIn', loggedIn => {
-        if (!loggedIn) dispatch({ type: 'RESET_APP' })
-      })
-      await setTouchOtp(account, dispatch)
-
-      if (lightAccount) {
-        dispatch(completeLogin(account))
-      } else {
-        dispatch({
-          type: 'NAVIGATE',
-          data: {
-            name: 'newAccountReview',
-            params: {
-              ...route.params,
-              account
-            }
-          }
-        })
-      }
-    } catch (e: any) {
-      showError(e)
+    } catch (e: unknown) {
+      error = String(e)
+      showError(error)
       dispatch({
         type: 'NAVIGATE',
-        data: { name: 'newAccountTos', params: route.params }
+        data: {
+          name: 'newAccountTos',
+          params: route.params
+        }
       })
-      error = String(e)
     }
 
     onLogEvent('Signup_Terms_Agree_and_Create_User', {
