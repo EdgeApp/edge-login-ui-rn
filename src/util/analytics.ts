@@ -26,7 +26,8 @@ export type TrackingEventName =
   | 'Signup_Username_Available'
   | 'Signup_Password_Valid'
   | 'Signup_PIN_Valid'
-  | 'Signup_Terms_Agree_and_Create_User' // Also tracks errors in account creation
+  | 'Signup_Terms_Agree_and_Create_User' // Full accounts only. Also tracks errors in account creation
+  | 'Signup_Create_Light_Account' // Light accounts only. Also tracks errors in account creation
   | 'Signup_Review_Done'
 
   // To be deprecated
