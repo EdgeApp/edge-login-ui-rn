@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.19.0 (2023-12-21)
+
 - removed: Terms of Service scene from light account creation flow
 - added: New 'Signup_Create_Light_Account' analytics event specific to light account creation success
 
