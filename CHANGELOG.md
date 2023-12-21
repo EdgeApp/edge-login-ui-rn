@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- removed: Terms of Service scene from light account creation flow
+- added: New 'Signup_Create_Light_Account' analytics event specific to light account creation success
+
 ## 2.18.0 (2023-12-06)
 
 - changed: 'Create Account' button text always set to "Get Started"

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { AirshipToast, makeAirship } from 'react-native-airship'
 
 import { AlertDropdown } from '../common/AlertDropdown'
+import { ChallengeModal } from '../modals/ChallengeModal'
 
 export const Airship = makeAirship()
 
@@ -34,4 +35,10 @@ export function showWarning(message: string): void {
  */
 export function showToast(message: string): void {
   Airship.show(bridge => <AirshipToast bridge={bridge} message={message} />)
+}
+
+export const showChallengeModal = async () => {
+  Airship.show<boolean | undefined>(bridge => {
+    return <ChallengeModal bridge={bridge} />
+  })
 }
