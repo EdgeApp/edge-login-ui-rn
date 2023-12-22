@@ -15,6 +15,7 @@ import {
   CreateFlowParams,
   SceneProps
 } from '../../../types/routerTypes'
+import { EdgeAnim } from '../../common/EdgeAnim'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
@@ -153,37 +154,42 @@ export const ChangeUsernameComponent = (props: Props) => {
           contentContainerStyle={styles.mainScrollView}
           keyboardShouldPersistTaps="handled"
         >
-          <EdgeText style={styles.description} numberOfLines={2}>
-            {sprintf(
-              lstrings.username_desc,
-              branding.appName || lstrings.app_name_default
-            )}
-          </EdgeText>
-
-          <OutlinedTextInput
-            autoCorrect={false}
-            autoFocus
-            label={lstrings.username}
-            onChangeText={handleChangeText}
-            onSubmitEditing={handleNext}
-            returnKeyType="go"
-            marginRem={1}
-            value={username ?? ''}
-            clearIcon={!isFetchingAvailability}
-            showSpinner={isFetchingAvailability}
-            editableOnSpinner
-            error={errorText}
-            valid={availableText}
-            searchIcon={false}
-          />
-          <MainButton
-            alignSelf="center"
-            label={lstrings.next_label}
-            type="secondary"
-            marginRem={[1.5, 0.5]}
-            disabled={isNextDisabled}
-            onPress={handleNext}
-          />
+          <EdgeAnim enter={{ type: 'fadeInUp', distance: 50 }}>
+            <EdgeText style={styles.description} numberOfLines={2}>
+              {sprintf(
+                lstrings.username_desc,
+                branding.appName || lstrings.app_name_default
+              )}
+            </EdgeText>
+          </EdgeAnim>
+          <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
+            <OutlinedTextInput
+              autoCorrect={false}
+              autoFocus
+              label={lstrings.username}
+              onChangeText={handleChangeText}
+              onSubmitEditing={handleNext}
+              returnKeyType="go"
+              marginRem={1}
+              value={username ?? ''}
+              clearIcon={!isFetchingAvailability}
+              showSpinner={isFetchingAvailability}
+              editableOnSpinner
+              error={errorText}
+              valid={availableText}
+              searchIcon={false}
+            />
+          </EdgeAnim>
+          <EdgeAnim enter={{ type: 'fadeInDown', distance: 50 }}>
+            <MainButton
+              alignSelf="center"
+              label={lstrings.next_label}
+              type="secondary"
+              marginRem={[1.5, 0.5]}
+              disabled={isNextDisabled}
+              onPress={handleNext}
+            />
+          </EdgeAnim>
         </KeyboardAwareScrollView>
       </View>
     </ThemedScene>

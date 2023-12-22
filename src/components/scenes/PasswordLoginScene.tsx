@@ -41,6 +41,7 @@ import { base58 } from '../../util/base58'
 import { attemptLogin, LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ChallengeModal } from '../modals/ChallengeModal'
 import { GradientFadeOut } from '../modals/GradientFadeout'
@@ -520,12 +521,17 @@ export const PasswordLoginScene = (props: Props) => {
 
     return (
       <View style={styles.buttonsBox}>
-        <MainButton
-          type="textOnly"
-          onPress={handleForgotPassword}
-          label={lstrings.forgot_password}
-        />
-        <View style={styles.loginButtonBox}>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 20 }}>
+          <MainButton
+            type="textOnly"
+            onPress={handleForgotPassword}
+            label={lstrings.forgot_password}
+          />
+        </EdgeAnim>
+        <EdgeAnim
+          style={styles.loginButtonBox}
+          enter={{ type: 'fadeInDown', distance: 40 }}
+        >
           <MainButton
             label={lstrings.login_button}
             testID="loginButton"
@@ -539,20 +545,25 @@ export const PasswordLoginScene = (props: Props) => {
             spinner={spinner}
             onPress={handleSubmit}
           />
-        </View>
-        <MainButton
-          type="textOnly"
-          testID="createAccountButton"
-          onPress={handleCreateAccount}
-          label={lstrings.get_started}
-        />
-        <TouchableOpacity onPress={handleQrModal}>
-          <AntDesignIcon
-            name="qrcode"
-            color={theme.icon}
-            size={theme.rem(1.75)}
+        </EdgeAnim>
+
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>
+          <MainButton
+            type="textOnly"
+            testID="createAccountButton"
+            onPress={handleCreateAccount}
+            label={lstrings.get_started}
           />
-        </TouchableOpacity>
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+          <TouchableOpacity onPress={handleQrModal}>
+            <AntDesignIcon
+              name="qrcode"
+              color={theme.icon}
+              size={theme.rem(1.75)}
+            />
+          </TouchableOpacity>
+        </EdgeAnim>
       </View>
     )
   }
@@ -566,12 +577,18 @@ export const PasswordLoginScene = (props: Props) => {
         onLayout={handleScrollViewLayout}
       >
         <View onLayout={handleContentLayout}>
-          <LogoImageHeader branding={branding} />
+          <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
+            <LogoImageHeader branding={branding} />
+          </EdgeAnim>
 
           <View style={styles.inputContainer}>
-            {renderUsername()}
+            <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
+              {renderUsername()}
+            </EdgeAnim>
             {renderDropdownList()}
-            {renderPassword()}
+            <EdgeAnim enter={{ type: 'fadeInUp', distance: 20 }}>
+              {renderPassword()}
+            </EdgeAnim>
             {renderButtons()}
           </View>
         </View>

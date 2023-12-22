@@ -3,6 +3,7 @@ import { Image, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { SceneProps } from '../../types/routerTypes'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ThemedScene } from '../themed/ThemedScene'
@@ -23,9 +24,13 @@ export const WaitScene = (props: SceneProps<'newAccountWait'>) => {
   return (
     <ThemedScene>
       <View style={styles.content}>
-        <EdgeText style={styles.title}>{title}</EdgeText>
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 120 }}>
+          <EdgeText style={styles.title}>{title}</EdgeText>
+        </EdgeAnim>
         <EdgeText style={styles.message}>{message}</EdgeText>
-        <Image source={loader} style={styles.loaderImage} />
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>
+          <Image source={loader} style={styles.loaderImage} />
+        </EdgeAnim>
       </View>
     </ThemedScene>
   )

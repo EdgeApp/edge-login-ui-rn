@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
+import { ScrollView } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { completeLogin } from '../../../actions/LoginCompleteActions'
@@ -13,6 +13,7 @@ import {
   CreateFlowParams,
   SceneProps
 } from '../../../types/routerTypes'
+import { EdgeAnim } from '../../common/EdgeAnim'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { AccountInfo } from '../../themed/AccountInfo'
 import { EdgeText } from '../../themed/EdgeText'
@@ -33,30 +34,39 @@ const AccountReviewComponent = (props: Props) => {
   return (
     <ThemedScene title={lstrings.review}>
       <ScrollView contentContainerStyle={styles.content}>
-        <EdgeText style={styles.description} numberOfLines={2}>
-          {lstrings.tap_to_review_button}
-        </EdgeText>
-        <FormError
-          marginRem={[0, 0, 2]}
-          title={lstrings.alert_dropdown_warning}
-          numberOfLines={2}
-          isWarning
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
+          <EdgeText style={styles.description} numberOfLines={2}>
+            {lstrings.tap_to_review_button}
+          </EdgeText>
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
+          <FormError
+            marginRem={[0, 0, 2]}
+            title={lstrings.alert_dropdown_warning}
+            numberOfLines={2}
+            isWarning
+          >
+            {lstrings.warning_message}
+          </FormError>
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+          <AccountInfo
+            marginRem={[0, 2.5]}
+            username={username}
+            password={password}
+            pin={pin}
+          />
+        </EdgeAnim>
+        <EdgeAnim
+          style={styles.actions}
+          enter={{ type: 'fadeInDown', distance: 60 }}
         >
-          {lstrings.warning_message}
-        </FormError>
-        <AccountInfo
-          marginRem={[0, 2.5]}
-          username={username}
-          password={password}
-          pin={pin}
-        />
-        <View style={styles.actions}>
           <MainButton
             label={lstrings.create}
             type="secondary"
             onPress={onNext}
           />
-        </View>
+        </EdgeAnim>
       </ScrollView>
     </ThemedScene>
   )

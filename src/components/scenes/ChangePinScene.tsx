@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Keyboard, ScrollView, View } from 'react-native'
+import { Keyboard, ScrollView } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { completeLogin, submitLogin } from '../../actions/LoginCompleteActions'
@@ -11,12 +11,12 @@ import { useImports } from '../../hooks/useImports'
 import { useScrollToEnd } from '../../hooks/useScrollToEnd'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { DigitInput, MAX_PIN_LENGTH } from '../themed/DigitInput'
 import { EdgeText } from '../themed/EdgeText'
-import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
 
@@ -63,19 +63,26 @@ const ChangePinSceneComponent = ({
         style={styles.content}
         keyboardShouldPersistTaps="handled"
       >
-        <EdgeText style={styles.description} numberOfLines={0}>
-          {body}
-        </EdgeText>
-        <DigitInput pin={pin} onChangePin={handleChangePin} />
-        <View style={styles.actions}>
-          <Fade visible={isValidPin}>
-            <MainButton
-              label={mainButtonLabel}
-              type="secondary"
-              onPress={handlePress}
-            />
-          </Fade>
-        </View>
+        <EdgeAnim enter={{ type: 'fadeInUp' }}>
+          <EdgeText style={styles.description} numberOfLines={0}>
+            {body}
+          </EdgeText>
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown' }}>
+          <DigitInput pin={pin} onChangePin={handleChangePin} />
+        </EdgeAnim>
+        <EdgeAnim
+          style={styles.actions}
+          visible={isValidPin}
+          enter={{ type: 'fadeInDown' }}
+          exit={{ type: 'fadeOutDown' }}
+        >
+          <MainButton
+            label={mainButtonLabel}
+            type="secondary"
+            onPress={handlePress}
+          />
+        </EdgeAnim>
       </ScrollView>
     </ThemedScene>
   )

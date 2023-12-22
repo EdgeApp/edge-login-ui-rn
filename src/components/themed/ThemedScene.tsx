@@ -121,11 +121,14 @@ export function ThemedScene(props: Props) {
             )}
           </View>
         )}
-        {title == null ? null : <Text style={styles.titleText}>{title}</Text>}
+        {title == null ? null : (
+          <View>
+            <Text style={styles.titleText}>{title}</Text>
+          </View>
+        )}
         {!hasHeader || noUnderline ? null : (
           <DividerLine marginRem={[1, 1, 0]} />
         )}
-
         <View style={containerStyle}>{children}</View>
       </SafeAreaView>
     </>

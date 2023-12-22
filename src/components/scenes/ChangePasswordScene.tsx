@@ -12,12 +12,12 @@ import {
   CreateFlowParams,
   SceneProps
 } from '../../types/routerTypes'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { WarningCard } from '../common/WarningCard'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { Fade } from '../themed/Fade'
 import { FormError } from '../themed/FormError'
 import { MainButton } from '../themed/MainButton'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
@@ -106,66 +106,86 @@ const ChangePasswordSceneComponent = ({
     return (
       <>
         {passwordEval != null ? (
-          <PasswordStatus
+        <PasswordStatus
             marginRem={[0.5, 0.5, 1.25]}
             passwordEval={passwordEval}
           />
         ) : (
-          <EdgeText style={styles.description} numberOfLines={4}>
-            {lstrings.password_desc}
-          </EdgeText>
+          <EdgeAnim
+            enter={{ type: 'fadeInUp', distance: 50 }}
+            exit={{ type: 'fadeOutDown' }}
+          >
+            <EdgeText style={styles.description} numberOfLines={4}>
+              {lstrings.password_desc}
+            </EdgeText>
+          </EdgeAnim>
         )}
-        <OutlinedTextInput
-          value={password}
-          secureTextEntry
-          returnKeyType="next"
-          label={lstrings.password}
-          autoFocus={focusFirst}
-          onChangeText={handleValidatePassword}
-          onSubmitEditing={handleFocusSwitch}
-          clearIcon
-          searchIcon={false}
-          marginRem={[0, 0.75, 1.25]}
-          maxLength={100}
-        />
-        <OutlinedTextInput
-          value={confirmPassword}
-          secureTextEntry
-          returnKeyType="go"
-          label={lstrings.confirm_password}
-          autoFocus={focusSecond}
-          onChangeText={handleChangeConfirmPassword}
-          onSubmitEditing={handlePress}
-          clearIcon
-          searchIcon={false}
-          marginRem={[0, 0.75, 1.25]}
-          maxLength={100}
-        />
-        <FormError marginRem={[0, 0.75]} invisible={!isShowError}>
-          {confirmPasswordErrorMessage}
-        </FormError>
-        <View style={styles.actions}>
-          <Fade visible={!isShowError} hidden>
-            {spinning ? (
-              <MainButton
-                alignSelf="center"
-                disabled
-                marginRem={0.5}
-                type="secondary"
-                spinner
-              />
-            ) : (
-              <MainButton
-                alignSelf="center"
-                label={mainButtonLabel}
-                disabled={!isRequirementsMet || confirmPassword === ''}
-                marginRem={0.5}
-                onPress={handlePress}
-                type="secondary"
-              />
-            )}
-          </Fade>
-        </View>
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
+          <OutlinedTextInput
+            value={password}
+            secureTextEntry
+            returnKeyType="next"
+            label={lstrings.password}
+            autoFocus={focusFirst}
+            onChangeText={handleValidatePassword}
+            onSubmitEditing={handleFocusSwitch}
+            clearIcon
+            searchIcon={false}
+            marginRem={[0, 0.75, 1.25]}
+            maxLength={100}
+          />
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
+          <OutlinedTextInput
+            value={confirmPassword}
+            secureTextEntry
+            returnKeyType="go"
+            label={lstrings.confirm_password}
+            autoFocus={focusSecond}
+            onChangeText={handleChangeConfirmPassword}
+            onSubmitEditing={handlePress}
+            clearIcon
+            searchIcon={false}
+            marginRem={[0, 0.75, 1.25]}
+            maxLength={100}
+          />
+        </EdgeAnim>
+        {isShowError ? (
+          <EdgeAnim
+            style={styles.actions}
+            enter={{ type: 'fadeInUp', distance: 50 }}
+            exit={{ type: 'fadeOutUp', distance: 50 }}
+          >
+            <FormError marginRem={[0, 0.75]}>
+              {confirmPasswordErrorMessage}
+            </FormError>
+          </EdgeAnim>
+        ) : null}
+        <EdgeAnim
+          style={styles.actions}
+          enter={{ type: 'fadeInDown', distance: 50 }}
+          exit={{ type: 'fadeOutDown', distance: 50 }}
+          visible={!isShowError}
+        >
+          {spinning ? (
+            <MainButton
+              alignSelf="center"
+              disabled
+              marginRem={0.5}
+              type="secondary"
+              spinner
+            />
+          ) : (
+            <MainButton
+              alignSelf="center"
+              label={mainButtonLabel}
+              disabled={!isRequirementsMet || confirmPassword === ''}
+              marginRem={0.5}
+              onPress={handlePress}
+              type="secondary"
+            />
+          )}
+        </EdgeAnim>
       </>
     )
   }
