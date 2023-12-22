@@ -81,17 +81,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flex: 1,
     marginHorizontal: theme.rem(0.5),
-    marginTop: theme.rem(1.5)
+    marginTop: theme.rem(1)
   },
   description: {
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.875),
-    marginBottom: theme.rem(3.25)
+    marginBottom: theme.rem(2)
   },
   actions: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: theme.rem(5),
+    marginTop: theme.rem(2),
     minHeight: theme.rem(3 + 15) // 15 is a hack to avoid the keyboard
   }
 }))
