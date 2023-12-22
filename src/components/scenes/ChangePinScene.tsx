@@ -58,7 +58,11 @@ const ChangePinSceneComponent = ({
 
   return (
     <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
-      <ScrollView ref={scrollViewRef} style={styles.content}>
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.content}
+        keyboardShouldPersistTaps="handled"
+      >
         <EdgeText style={styles.description} numberOfLines={0}>
           {body}
         </EdgeText>
