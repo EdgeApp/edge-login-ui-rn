@@ -93,6 +93,7 @@ export const PasswordLoginScene = (props: Props) => {
     string | undefined
   >(undefined)
   const [password, setPassword] = React.useState('')
+  const [spinner, setSpinner] = React.useState<boolean>(false)
   const [showUsernameList, setShowUsernameList] = React.useState(false)
   const [dropdownY, setDropdownY] = React.useState(0)
   const [usernameItemHeight, setUsernameItemHeight] = React.useState(0)
@@ -185,6 +186,13 @@ export const PasswordLoginScene = (props: Props) => {
   const handlePasswordChange = useHandler((password: string) => {
     setPasswordErrorMessage(undefined)
     setPassword(password)
+  })
+
+  const handleSubmitPassword = useHandler(() => {
+    setSpinner(true)
+    handleSubmit()
+      .catch(e => console.error(e))
+      .finally(() => setSpinner(false))
   })
 
   const handleSubmit = useHandler(async (challengeId?: string) => {
@@ -315,6 +323,10 @@ export const PasswordLoginScene = (props: Props) => {
     })
   })
 
+  const handleSubmitUsername = useHandler(() => {
+    if (passwordInputRef.current != null) passwordInputRef.current.focus()
+  })
+
   const handleSubmitRecoveryKey = useHandler(
     async (recoveryKey: string): Promise<boolean | string> => {
       if (base58.parseUnsafe(recoveryKey)?.length !== 32)
@@ -425,6 +437,7 @@ export const PasswordLoginScene = (props: Props) => {
             testID="usernameFormField"
             value={username}
             onChangeText={handleChangeUsername}
+            onSubmitEditing={handleSubmitUsername}
           />
         </View>
         {hasSavedUsers ? (
@@ -496,7 +509,7 @@ export const PasswordLoginScene = (props: Props) => {
           testID="passwordFormField"
           value={password}
           onChangeText={handlePasswordChange}
-          onSubmitEditing={handleSubmit}
+          onSubmitEditing={handleSubmitPassword}
         />
       </View>
     )
@@ -523,6 +536,7 @@ export const PasswordLoginScene = (props: Props) => {
               usernameErrorMessage != null ||
               passwordErrorMessage != null
             }
+            spinner={spinner}
             onPress={handleSubmit}
           />
         </View>
