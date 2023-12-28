@@ -2,8 +2,8 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
-import { Theme, useTheme } from '../services/ThemeContext.js'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   // The gap around the line. Takes 0-4 numbers (top, right, bottom, left),

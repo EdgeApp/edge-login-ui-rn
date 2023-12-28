@@ -4,7 +4,7 @@ import { Keyboard, KeyboardAvoidingView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { lstrings } from '../../common/locales/strings'
-import { useHandler } from '../../hooks/useHandler.js'
+import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
 import { useDispatch } from '../../types/ReduxTypes'
 import {

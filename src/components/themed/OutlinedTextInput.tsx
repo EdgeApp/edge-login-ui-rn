@@ -30,7 +30,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { Theme, useTheme } from '../services/ThemeContext.js'
+import { Theme, useTheme } from '../services/ThemeContext'
 
 // The ratio of the maxLength at which the remaining character count is shown
 const MAX_LENGTH_WARNING_THRESHOLD = 0.8
