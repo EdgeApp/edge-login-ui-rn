@@ -32,14 +32,11 @@ const FormErrorComponent = ({
   const definitiveTitle = title || children
   const description = definitiveTitle && !title ? '' : children
 
+  if (invisible) return null
+
   return (
     <View
-      style={[
-        styles.container,
-        spacings,
-        isWarning && styles.warningContainer,
-        { opacity: invisible ? 0 : 1 }
-      ]}
+      style={[styles.container, spacings, isWarning && styles.warningContainer]}
     >
       <View style={styles.top}>
         <SimpleLineIcons

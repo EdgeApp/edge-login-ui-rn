@@ -1,22 +1,22 @@
 import * as React from 'react'
-import { Keyboard, ScrollView, View } from 'react-native'
+import { Keyboard, ScrollView } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { completeLogin, submitLogin } from '../../actions/LoginCompleteActions'
 import { maybeRouteComplete } from '../../actions/LoginInitActions'
 import { lstrings } from '../../common/locales/strings'
 import { useCreateAccountHandler } from '../../hooks/useCreateAccount'
-import { useHandler } from '../../hooks/useHandler.js'
+import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
 import { useScrollToEnd } from '../../hooks/useScrollToEnd'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { DigitInput, MAX_PIN_LENGTH } from '../themed/DigitInput'
 import { EdgeText } from '../themed/EdgeText'
-import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
 
@@ -58,20 +58,31 @@ const ChangePinSceneComponent = ({
 
   return (
     <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
-      <ScrollView ref={scrollViewRef} style={styles.content}>
-        <EdgeText style={styles.description} numberOfLines={0}>
-          {body}
-        </EdgeText>
-        <DigitInput pin={pin} onChangePin={handleChangePin} />
-        <View style={styles.actions}>
-          <Fade visible={isValidPin}>
-            <MainButton
-              label={mainButtonLabel}
-              type="secondary"
-              onPress={handlePress}
-            />
-          </Fade>
-        </View>
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.content}
+        keyboardShouldPersistTaps="handled"
+      >
+        <EdgeAnim enter={{ type: 'fadeInUp' }}>
+          <EdgeText style={styles.description} numberOfLines={0}>
+            {body}
+          </EdgeText>
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown' }}>
+          <DigitInput pin={pin} onChangePin={handleChangePin} />
+        </EdgeAnim>
+        <EdgeAnim
+          style={styles.actions}
+          visible={isValidPin}
+          enter={{ type: 'fadeInDown' }}
+          exit={{ type: 'fadeOutDown' }}
+        >
+          <MainButton
+            label={mainButtonLabel}
+            type="secondary"
+            onPress={handlePress}
+          />
+        </EdgeAnim>
       </ScrollView>
     </ThemedScene>
   )
@@ -81,17 +92,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flex: 1,
     marginHorizontal: theme.rem(0.5),
-    marginTop: theme.rem(1.5)
+    marginTop: theme.rem(1)
   },
   description: {
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.875),
-    marginBottom: theme.rem(3.25)
+    marginBottom: theme.rem(2)
   },
   actions: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: theme.rem(5),
+    marginTop: theme.rem(2),
     minHeight: theme.rem(3 + 15) // 15 is a hack to avoid the keyboard
   }
 }))

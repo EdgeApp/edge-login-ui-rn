@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Alert, Linking, ScrollView, View } from 'react-native'
+import { Alert, Linking, ScrollView } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
@@ -16,11 +16,11 @@ import {
   CreateFlowParams,
   SceneProps
 } from '../../../types/routerTypes'
+import { EdgeAnim } from '../../common/EdgeAnim'
 import { showChallengeModal, showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { Checkbox } from '../../themed/Checkbox'
 import { EdgeText } from '../../themed/EdgeText'
-import { Fade } from '../../themed/Fade'
 import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
@@ -79,42 +79,53 @@ const TosComponent = (props: Props) => {
   return (
     <ThemedScene onBack={onBack} title={lstrings.account_confirmation}>
       <ScrollView ref={scrollViewRef} contentContainerStyle={styles.content}>
-        <EdgeText
-          style={styles.subtitle}
-        >{`${lstrings.review}: ${lstrings.read_understod_2}`}</EdgeText>
+        <EdgeAnim enter={{ type: 'fadeInRight', distance: 50 }}>
+          <EdgeText
+            style={styles.subtitle}
+          >{`${lstrings.review}: ${lstrings.read_understod_2}`}</EdgeText>
+        </EdgeAnim>
         {terms.map((term, index) => (
-          <Checkbox
+          <EdgeAnim
             key={index}
-            textStyle={styles.term}
-            value={termValues[index]}
-            onChange={(value: boolean) => handleStatusChange(index, value)}
-            marginRem={[0, 0, 1.33, 0]}
+            enter={{ type: 'fadeInRight', distance: 50 * (index + 2) }}
           >
-            {term}
-          </Checkbox>
+            <Checkbox
+              textStyle={styles.term}
+              value={termValues[index]}
+              onChange={(value: boolean) => handleStatusChange(index, value)}
+              marginRem={[0, 0, 1.33, 0]}
+            >
+              {term}
+            </Checkbox>
+          </EdgeAnim>
         ))}
-        <EdgeText
-          style={styles.agreeText}
-          numberOfLines={2}
-          onPress={async () =>
-            await Linking.openURL(getAppConfig().termsOfServiceSite)
-          }
-        >
-          {lstrings.read_understod_1}
-          <EdgeText style={styles.agreeTextLink}>
-            {lstrings.read_understod_2}
+        <EdgeAnim enter={{ type: 'fadeInDown' }}>
+          <EdgeText
+            style={styles.agreeText}
+            numberOfLines={2}
+            onPress={async () =>
+              await Linking.openURL(getAppConfig().termsOfServiceSite)
+            }
+          >
+            {lstrings.read_understod_1}
+            <EdgeText style={styles.agreeTextLink}>
+              {lstrings.read_understod_2}
+            </EdgeText>
           </EdgeText>
-        </EdgeText>
-        <View style={styles.actions}>
-          <Fade visible={showNext}>
-            <MainButton
-              label={lstrings.confirm}
-              paddingRem={0.7}
-              type={buttonType}
-              onPress={handleNextPress}
-            />
-          </Fade>
-        </View>
+        </EdgeAnim>
+        <EdgeAnim
+          enter={{ type: 'fadeInDown' }}
+          exit={{ type: 'fadeOutDown' }}
+          style={styles.actions}
+          visible={showNext}
+        >
+          <MainButton
+            label={lstrings.confirm}
+            paddingRem={0.7}
+            type={buttonType}
+            onPress={handleNextPress}
+          />
+        </EdgeAnim>
       </ScrollView>
     </ThemedScene>
   )

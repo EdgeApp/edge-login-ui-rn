@@ -35,6 +35,7 @@ import { FourDigitDisplay } from '../abSpecific/FourDigitDisplay'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { PinKeypad } from '../abSpecific/PinKeypad'
 import { UserListItem } from '../abSpecific/UserListItem'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -314,28 +315,30 @@ export function PinLoginScene(props: Props) {
 
     return (
       <View style={styles.innerView}>
-        <TouchableOpacity
-          testID="usernameDropdownButton"
-          style={styles.usernameShadow}
-          onPress={isSingleSavedUser ? undefined : handleShowDrop}
-          activeOpacity={isSingleSavedUser ? 1 : undefined}
-        >
-          <LinearGradient
-            colors={theme.pinUsernameButton}
-            start={theme.pinUsernameButtonColorStart}
-            end={theme.pinUsernameButtonColorEnd}
-            style={[styles.linearGradient, styles.usernameButton]}
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
+          <TouchableOpacity
+            testID="usernameDropdownButton"
+            style={styles.usernameShadow}
+            onPress={isSingleSavedUser ? undefined : handleShowDrop}
+            activeOpacity={isSingleSavedUser ? 1 : undefined}
           >
-            <Text
-              adjustsFontSizeToFit
-              minimumFontScale={0.75}
-              numberOfLines={1}
-              style={styles.usernameText}
+            <LinearGradient
+              colors={theme.pinUsernameButton}
+              start={theme.pinUsernameButtonColorStart}
+              end={theme.pinUsernameButtonColorEnd}
+              style={[styles.linearGradient, styles.usernameButton]}
             >
-              {usernameLabel}
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
+              <Text
+                adjustsFontSizeToFit
+                minimumFontScale={0.75}
+                numberOfLines={1}
+                style={styles.usernameText}
+              >
+                {usernameLabel}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </EdgeAnim>
         {userInfo == null || !userInfo.pinLoginEnabled ? (
           <View style={styles.spacer} />
         ) : (
@@ -345,8 +348,12 @@ export function PinLoginScene(props: Props) {
             spinner={hasWait || pin.length === 4 || touchBusy}
           />
         )}
-        {renderTouchImage()}
-        <Text style={styles.touchImageText}>{renderTouchImageText()}</Text>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 20 }}>
+          {renderTouchImage()}
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+          <Text style={styles.touchImageText}>{renderTouchImageText()}</Text>
+        </EdgeAnim>
       </View>
     )
   }
@@ -417,16 +424,20 @@ export function PinLoginScene(props: Props) {
       <View style={styles.featureBoxContainer}>
         <TouchableWithoutFeedback accessible={false} onPress={handleHideDrop}>
           <View style={styles.featureBox}>
-            <LogoImageHeader branding={branding} />
+            <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
+              <LogoImageHeader branding={branding} />
+            </EdgeAnim>
             <View style={styles.featureBoxBody}>{renderBottomHalf()}</View>
           </View>
         </TouchableWithoutFeedback>
         <View style={styles.spacer_full} />
         {userInfo == null || !userInfo.pinLoginEnabled ? null : (
-          <PinKeypad
-            disabled={hasWait || pin.length === 4}
-            onPress={handlePress}
-          />
+          <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+            <PinKeypad
+              disabled={hasWait || pin.length === 4}
+              onPress={handlePress}
+            />
+          </EdgeAnim>
         )}
         <SafeAreaView edges={['bottom']} />
       </View>

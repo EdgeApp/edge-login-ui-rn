@@ -7,6 +7,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { lstrings } from '../../common/locales/strings'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { IconSignal } from './IconSignal'
@@ -39,7 +40,8 @@ export const PasswordStatus = (props: Props) => {
   ]
 
   return (
-    <View
+    <EdgeAnim
+      enter={{ type: 'fadeInUp', distance: 100 }}
       style={[styles.container, passed && styles.passedContainer, spacings]}
     >
       <View style={styles.top}>
@@ -68,7 +70,7 @@ export const PasswordStatus = (props: Props) => {
           </EdgeText>
         </View>
       ))}
-    </View>
+    </EdgeAnim>
   )
 }
 
