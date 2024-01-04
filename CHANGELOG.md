@@ -1,6 +1,11 @@
 # edge-login-ui-rn
 
-## Unreleased
+## 2.20.0 (2024-01-04)
+
+- added: Enter/exit/layout animations
+- fixed: Excessive margins
+- fixed: Password login scene transitions
+- fixed: Choose PIN scene so Next button is immediately tappable (keyboardShouldPersistTaps)
 
 ## 2.19.0 (2023-12-21)
 
