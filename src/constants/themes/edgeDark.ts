@@ -11,6 +11,7 @@ const palette = {
   edgeNavy: '#0D2145',
   edgeBlue: '#0E4B75',
   edgeMint: '#66EDA8',
+  darkAqua: '#1b2f3b',
   blueGray: '#A4C7DF',
   gray: '#87939E',
   lightGray: '#D9E3ED',
@@ -137,6 +138,25 @@ export const edgeDark: Theme = {
   outlineTextInputBorderColorFocused: palette.edgeMint,
   outlineTextInputLabelColor: palette.blueGray,
   outlineTextInputLabelColorFocused: palette.edgeMint,
+
+  // Simple Text Input
+  textInputTextColor: palette.white,
+  textInputTextColorDisabled: palette.gray,
+  textInputTextColorFocused: palette.white,
+  textInputBackgroundColor: palette.darkAqua,
+  textInputBackgroundColorDisabled: palette.darkAqua,
+  textInputBackgroundColorFocused: palette.darkAqua,
+  textInputBorderColor: `${palette.edgeMint}00`,
+  textInputBorderColorDisabled: palette.gray,
+  textInputBorderColorFocused: palette.edgeMint,
+  textInputBorderRadius: 100,
+  textInputBorderWidth: 1,
+  textInputIconColor: palette.gray,
+  textInputIconColorDisabled: palette.gray,
+  textInputIconColorFocused: palette.edgeMint,
+  textInputPlaceholderColor: palette.gray,
+  textInputPlaceholderColorDisabled: palette.gray,
+  textInputPlaceholderColorFocused: palette.edgeMint,
 
   // Dropdown colors:
   dropdownWarning: palette.accentOrange,
