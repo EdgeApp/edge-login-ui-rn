@@ -12,9 +12,10 @@ import {
 import { AirshipBridge } from 'react-native-airship'
 
 import { useFilter } from '../../hooks/useFilter'
+import { AnimatedIconComponent, SearchIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
 import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
+import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props<T> {
@@ -24,9 +25,9 @@ interface Props<T> {
   message?: string
   hideSearch?: boolean // Defaults to 'false'
   initialValue?: string // Defaults to ''
-  // OutlinedTextInput properties:
-  searchIcon?: boolean // Defaults to 'true'
-  label?: string // Defaults to ''
+  // SimpleTextInput properties:
+  iconComponent?: AnimatedIconComponent | null // Defaults to `SearchIconAnimated`
+  placeholder?: string
   autoCorrect?: boolean // Defaults to 'false'
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'words'
   returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'search'
@@ -43,7 +44,7 @@ interface Props<T> {
   onSubmitEditing?: (text: string) => void
   secureTextEntry?: boolean // Defaults to 'false'
   autoFocus?: boolean // Defaults to 'false'
-  blurOnClear?: boolean // Defaults to 'true'
+  blurOnClear?: boolean // Defaults to 'false'
   // List Props
   rowsData?: T[] // Defaults to []
   fullScreen?: boolean
@@ -70,7 +71,19 @@ export function ListModal<T>({
   closeArrow = true,
   onSubmitEditing,
   onViewableItemsChanged,
-  ...textProps
+  // SimpleTextInput props:
+  iconComponent = SearchIconAnimated,
+  placeholder,
+  autoCorrect = false,
+  autoCapitalize = 'words',
+  returnKeyType = 'search',
+  keyboardType,
+  blurOnSubmit,
+  inputAccessoryViewID,
+  maxLength,
+  secureTextEntry,
+  autoFocus,
+  blurOnClear = false
 }: Props<T>) {
   const theme = useTheme()
   const [text, setText] = React.useState<string>(initialValue)
@@ -99,20 +112,27 @@ export function ListModal<T>({
       {title == null ? null : <ModalTitle>{title}</ModalTitle>}
       {message == null ? null : <ModalMessage>{message}</ModalMessage>}
       {hideSearch ? null : (
-        <OutlinedTextInput
+        <SimpleTextInput
+          vertical={1}
+          horizontal={0.5}
           // Our props:
-          searchIcon
-          blurOnClear
-          autoCorrect={false}
-          autoCapitalize="words"
-          returnKeyType="done"
-          marginRem={[1, 0.5]}
           testID={title}
           onChangeText={handleChangeText}
           onSubmitEditing={handleSubmitEditing}
           value={text}
           // Outlined Text input props:
-          {...textProps}
+          iconComponent={iconComponent}
+          placeholder={placeholder}
+          autoCorrect={autoCorrect}
+          autoCapitalize={autoCapitalize}
+          returnKeyType={returnKeyType}
+          keyboardType={keyboardType}
+          blurOnSubmit={blurOnSubmit}
+          inputAccessoryViewID={inputAccessoryViewID}
+          maxLength={maxLength}
+          secureTextEntry={secureTextEntry}
+          autoFocus={autoFocus}
+          blurOnClear={blurOnClear}
         />
       )}
       <FlatList
