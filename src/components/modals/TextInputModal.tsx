@@ -7,11 +7,11 @@ import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../common/locales/strings'
 import { showError } from '../services/AirshipInstance'
-import { Alert } from '../themed/Alert'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
+import { AlertCardUi4 } from '../ui4/AlertUi4'
 
 interface Props {
   // Resolves to the entered string, or void if cancelled.
@@ -112,12 +112,11 @@ export function TextInputModal(props: Props) {
         <>{message}</>
       )}
       {warningMessage != null ? (
-        <Alert
+        <AlertCardUi4
           type="warning"
           title={lstrings.warning}
           marginRem={0.5}
-          message={warningMessage}
-          numberOfLines={0}
+          body={warningMessage}
         />
       ) : null}
       <FilledTextInput

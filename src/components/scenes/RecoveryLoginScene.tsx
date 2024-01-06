@@ -170,7 +170,7 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
           disabled={
             answers.length < questions.length || answers.some(a => a == null)
           }
-          type="secondary"
+          type="primary"
         />
       </View>
     )

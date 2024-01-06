@@ -187,7 +187,7 @@ export const ChangeUsernameComponent = (props: Props) => {
             <MainButton
               alignSelf="center"
               label={lstrings.next_label}
-              type="secondary"
+              type="primary"
               marginRem={[1.5, 0.5]}
               disabled={isNextDisabled}
               onPress={handleNext}

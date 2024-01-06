@@ -57,7 +57,7 @@ export const LandingScene = (props: Props) => {
               <MainButton
                 testID="createAccountButton"
                 label={lstrings.get_started}
-                type="secondary"
+                type="primary"
                 onPress={handleCreate}
               />
             </View>
@@ -66,7 +66,7 @@ export const LandingScene = (props: Props) => {
                 testID="alreadyHaveAccountButton"
                 onPress={handlePassword}
                 label={lstrings.landing_already_have_account}
-                type="textOnly"
+                type="primary"
               />
             </View>
           </View>

@@ -518,15 +518,15 @@ export const PasswordLoginScene = (props: Props) => {
   }
 
   const renderButtons = () => {
-    const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
-
+    // TODO: Update and use ButtonsViewUi4 after UI specs are made
     return (
       <View style={styles.buttonsBox}>
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 20 }}>
           <MainButton
-            type="textOnly"
+            type="escape"
             onPress={handleForgotPassword}
             label={lstrings.forgot_password}
+            marginRem={0}
           />
         </EdgeAnim>
         <EdgeAnim
@@ -536,7 +536,7 @@ export const PasswordLoginScene = (props: Props) => {
           <MainButton
             label={lstrings.login_button}
             testID="loginButton"
-            type={buttonType}
+            type="primary"
             disabled={
               username.length === 0 ||
               password.length === 0 ||
@@ -544,15 +544,17 @@ export const PasswordLoginScene = (props: Props) => {
               passwordErrorMessage != null
             }
             spinner={spinner}
+            marginRem={0.25}
             onPress={handleSubmit}
           />
         </EdgeAnim>
 
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>
           <MainButton
-            type="textOnly"
+            type="secondary"
             testID="createAccountButton"
             onPress={handleCreateAccount}
+            marginRem={[0.25, 0, 1, 0]}
             label={lstrings.get_started}
           />
         </EdgeAnim>

@@ -15,10 +15,10 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
-import { FormError } from '../themed/FormError'
 import { MainButton } from '../themed/MainButton'
 import { PasswordStatus } from '../themed/PasswordStatus'
 import { ThemedScene } from '../themed/ThemedScene'
+import { AlertCardUi4 } from '../ui4/AlertUi4'
 
 export interface ChangePasswordParams {
   account: EdgeAccount
@@ -168,9 +168,7 @@ const ChangePasswordSceneComponent = ({
             enter={{ type: 'fadeInUp', distance: 50 }}
             exit={{ type: 'fadeOutUp', distance: 50 }}
           >
-            <FormError marginRem={[0, 0.75]}>
-              {confirmPasswordErrorMessage}
-            </FormError>
+            <AlertCardUi4 type="error" title={confirmPasswordErrorMessage} />
           </EdgeAnim>
         ) : null}
         <EdgeAnim
@@ -184,7 +182,7 @@ const ChangePasswordSceneComponent = ({
               alignSelf="center"
               disabled
               marginRem={0.5}
-              type="secondary"
+              type="primary"
               spinner
             />
           ) : (
@@ -194,7 +192,7 @@ const ChangePasswordSceneComponent = ({
               disabled={!isRequirementsMet || confirmPassword === ''}
               marginRem={0.5}
               onPress={handlePress}
-              type="secondary"
+              type="primary"
             />
           )}
         </EdgeAnim>
