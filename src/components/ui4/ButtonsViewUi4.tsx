@@ -15,6 +15,7 @@ export interface ButtonInfo {
   label: string
   onPress: () => void | Promise<void>
   disabled?: boolean
+  spinner?: boolean
   testID?: string
 }
 
@@ -68,7 +69,7 @@ export const ButtonsViewUi4 = React.memo(
 
     const renderButton = (type: ButtonTypeUi4, buttonProps?: ButtonInfo) => {
       if (buttonProps == null) return null
-      const { label, onPress, disabled, testID } = buttonProps
+      const { label, onPress, disabled, spinner, testID } = buttonProps
 
       return (
         <ButtonUi4
@@ -77,6 +78,7 @@ export const ButtonsViewUi4 = React.memo(
           onPress={onPress}
           type={type}
           disabled={disabled}
+          spinner={spinner}
           testID={testID}
         />
       )

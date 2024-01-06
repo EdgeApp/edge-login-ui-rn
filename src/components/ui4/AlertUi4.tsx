@@ -60,9 +60,7 @@ export function AlertCardUi4(props: Props) {
   return (
     <CardUi4
       gradientBackground={
-        type === 'error'
-          ? theme.cardGradientError
-          : theme.cardGradientWarning
+        type === 'error' ? theme.cardGradientError : theme.cardGradientWarning
       }
       marginRem={marginRem}
       onPress={onPress}
