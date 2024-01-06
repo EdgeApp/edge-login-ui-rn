@@ -71,7 +71,6 @@ declare export class LoginScreen
       // Branding stuff:
       appId?: string,
       appName?: string,
-      backgroundImage?: any,
       fontDescription?: { regularFontFamily: string },
       landingScreenText?: string,
       parentButton?: ParentButton,

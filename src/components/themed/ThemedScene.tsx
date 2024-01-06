@@ -1,13 +1,5 @@
 import * as React from 'react'
-import {
-  ImageBackground,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
@@ -61,77 +53,60 @@ export function ThemedScene(props: Props) {
   }
 
   return (
-    <>
-      {branding.backgroundImage ? (
-        <ImageBackground
-          source={branding.backgroundImage}
-          style={StyleSheet.absoluteFill}
-        />
-      ) : (
-        <LinearGradient
-          style={StyleSheet.absoluteFill}
-          start={theme.backgroundGradientStart}
-          end={theme.backgroundGradientEnd}
-          colors={theme.backgroundGradientColors}
-        />
-      )}
-      <SafeAreaView style={{ flex: 1 }}>
-        {!hasHeader ? null : (
-          <View style={styles.headerButtons}>
-            {onBack == null ? null : (
-              <TouchableOpacity
-                accessible={false}
-                style={styles.leftButton}
-                onPress={onBack}
-              >
-                <FontAwesome5
-                  accessible
-                  testID="headerLeftButton"
-                  name="chevron-left"
-                  size={theme.rem(1)}
-                  style={styles.buttonIcon}
-                />
-                {backButtonText == null ? null : (
-                  <Text accessible style={styles.buttonText}>
-                    {backButtonText}
-                  </Text>
-                )}
-              </TouchableOpacity>
-            )}
-            {onSkip == null ? null : (
-              <TouchableOpacity
+    <SafeAreaView style={{ flex: 1 }}>
+      {!hasHeader ? null : (
+        <View style={styles.headerButtons}>
+          {onBack == null ? null : (
+            <TouchableOpacity
+              accessible={false}
+              style={styles.leftButton}
+              onPress={onBack}
+            >
+              <FontAwesome5
                 accessible
-                testID="headerRightButton"
-                style={styles.rightButton}
-                onPress={onSkip}
-              >
-                <Text style={styles.buttonText}>{lstrings.skip}</Text>
-              </TouchableOpacity>
-            )}
-            {parentButton == null || parentButton.text == null ? null : (
-              <TouchableOpacity
-                accessible
-                style={styles.rightButton}
-                onPress={handleParentButtonPress}
-              >
-                <Text style={parentButton.style || styles.buttonText}>
-                  {parentButton.text}
+                testID="headerLeftButton"
+                name="chevron-left"
+                size={theme.rem(1)}
+                style={styles.buttonIcon}
+              />
+              {backButtonText == null ? null : (
+                <Text accessible style={styles.buttonText}>
+                  {backButtonText}
                 </Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        )}
-        {title == null ? null : (
-          <View>
-            <Text style={styles.titleText}>{title}</Text>
-          </View>
-        )}
-        {!hasHeader || noUnderline ? null : (
-          <DividerLine marginRem={[1, 1, 0]} />
-        )}
-        <View style={containerStyle}>{children}</View>
-      </SafeAreaView>
-    </>
+              )}
+            </TouchableOpacity>
+          )}
+          {onSkip == null ? null : (
+            <TouchableOpacity
+              accessible
+              testID="headerRightButton"
+              style={styles.rightButton}
+              onPress={onSkip}
+            >
+              <Text style={styles.buttonText}>{lstrings.skip}</Text>
+            </TouchableOpacity>
+          )}
+          {parentButton == null || parentButton.text == null ? null : (
+            <TouchableOpacity
+              accessible
+              style={styles.rightButton}
+              onPress={handleParentButtonPress}
+            >
+              <Text style={parentButton.style || styles.buttonText}>
+                {parentButton.text}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
+      {title == null ? null : (
+        <View>
+          <Text style={styles.titleText}>{title}</Text>
+        </View>
+      )}
+      {!hasHeader || noUnderline ? null : <DividerLine marginRem={[1, 1, 0]} />}
+      <View style={containerStyle}>{children}</View>
+    </SafeAreaView>
   )
 }
 

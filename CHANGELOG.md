@@ -1,5 +1,9 @@
 # edge-login-ui-rn
 
+## Unreleased
+
+- removed: No longer render scene backgrounds. The app background shows through now.
+
 ## 2.20.0 (2024-01-04)
 
 - added: Enter/exit/layout animations

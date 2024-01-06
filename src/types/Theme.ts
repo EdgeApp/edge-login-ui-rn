@@ -89,11 +89,6 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
   iconDeactivated: asOptional(asString),
   iconTappable: asOptional(asString),
 
-  // Background colors:
-  backgroundGradientColors: asOptional(asArray(asString)),
-  backgroundGradientStart: asOptional(asObject({ x: asNumber, y: asNumber })),
-  backgroundGradientEnd: asOptional(asObject({ x: asNumber, y: asNumber })),
-
   // Modal:
   modal: asOptional(asString),
   modalBlurType: asOptional(asValue('light', 'dark')),
@@ -241,11 +236,6 @@ export interface Theme {
   icon: string
   iconDeactivated: string
   iconTappable: string
-
-  // Background:
-  backgroundGradientColors: string[]
-  backgroundGradientStart: { x: number; y: number }
-  backgroundGradientEnd: { x: number; y: number }
 
   // Modal:
   modal: string

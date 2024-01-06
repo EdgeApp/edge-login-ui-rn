@@ -51,11 +51,6 @@ export const edgeDark: Theme = {
   iconDeactivated: palette.whiteOp75,
   iconTappable: palette.edgeMint,
 
-  // background
-  backgroundGradientColors: [palette.edgeNavy, palette.darkBlue],
-  backgroundGradientStart: { x: 0, y: 0 },
-  backgroundGradientEnd: { x: 1, y: 1 },
-
   // modal
   modal: palette.edgeNavy,
   modalBlurType: 'light',
