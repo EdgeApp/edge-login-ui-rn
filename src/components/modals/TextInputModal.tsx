@@ -8,9 +8,9 @@ import { AirshipBridge } from 'react-native-airship'
 import { lstrings } from '../../common/locales/strings'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
@@ -120,19 +120,21 @@ export function TextInputModal(props: Props) {
           numberOfLines={0}
         />
       ) : null}
-      <OutlinedTextInput
+      <FilledTextInput
+        top={1}
+        horizontal={0.5}
+        bottom={1.5}
         // Text input props:
         autoCapitalize={autoCapitalize}
         autoFocus={autoFocus}
         autoCorrect={autoCorrect}
         keyboardType={keyboardType}
-        label={inputLabel}
+        placeholder={inputLabel}
         returnKeyType={returnKeyType}
         secureTextEntry={secureTextEntry}
         multiline={multiline}
         // Our props:
         error={errorMessage}
-        marginRem={[1, 0.5, 1.5, 0.5]}
         onChangeText={handleChangeText}
         onSubmitEditing={handleSubmit}
         value={text}
