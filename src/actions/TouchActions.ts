@@ -10,13 +10,16 @@ import { readKeychainFile } from '../util/keychainFile'
 export const loadTouchState = () => async (
   dispatch: Dispatch
 ): Promise<TouchState> => {
-  const [file, supported, type] = await Promise.all([
+  // HACK: yarn prepare breaks for some reason when specifying the type of
+  // 'values' after ButtonsModal and ChallengeModal were updated to UI4
+  const values: any = await Promise.all([
     readKeychainFile(),
     supportsTouchId().catch(() => false),
     getSupportedBiometryType()
   ])
+  const [file, supported, type] = values
 
-  const touchState = { file, supported, type }
+  const touchState: TouchState = { file, supported, type }
   dispatch({ type: 'SET_TOUCH', data: touchState })
   return touchState
 }
