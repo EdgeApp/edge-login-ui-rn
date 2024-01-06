@@ -47,7 +47,6 @@ interface Props<T> {
   blurOnClear?: boolean // Defaults to 'false'
   // List Props
   rowsData?: T[] // Defaults to []
-  fullScreen?: boolean
   rowComponent?: (props: T) => React.ReactElement
   rowDataFilter?: (filterText: string, data: T, index: number) => boolean
   onViewableItemsChanged?: (info: {
@@ -65,7 +64,6 @@ export function ListModal<T>({
   hideSearch = false,
   initialValue = '',
   rowsData = [],
-  fullScreen = true,
   rowComponent,
   rowDataFilter,
   closeArrow = true,
