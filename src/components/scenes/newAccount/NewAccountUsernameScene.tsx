@@ -18,8 +18,8 @@ import {
 import { EdgeAnim } from '../../common/EdgeAnim'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
+import { FilledTextInput } from '../../themed/FilledTextInput'
 import { MainButton } from '../../themed/MainButton'
-import { OutlinedTextInput } from '../../themed/OutlinedTextInput'
 import { ThemedScene } from '../../themed/ThemedScene'
 
 const AVAILABILITY_CHECK_DELAY_MS = 400
@@ -163,21 +163,19 @@ export const ChangeUsernameComponent = (props: Props) => {
             </EdgeText>
           </EdgeAnim>
           <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
-            <OutlinedTextInput
+            <FilledTextInput
+              around={1}
               autoCorrect={false}
               autoFocus
-              label={lstrings.username}
+              placeholder={lstrings.username}
               onChangeText={handleChangeText}
               onSubmitEditing={handleNext}
               returnKeyType="go"
-              marginRem={1}
               value={username ?? ''}
               clearIcon={!isFetchingAvailability}
               showSpinner={isFetchingAvailability}
-              editableOnSpinner
               error={errorText}
               valid={availableText}
-              searchIcon={false}
             />
           </EdgeAnim>
           <EdgeAnim enter={{ type: 'fadeInDown', distance: 50 }}>
