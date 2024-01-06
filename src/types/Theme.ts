@@ -14,6 +14,19 @@ const asFunction: Cleaner<() => any> = raw => {
   throw new TypeError()
 }
 
+const asGradientCoords = asObject({
+  x: asNumber,
+  y: asNumber
+})
+type GradientCoords = ReturnType<typeof asGradientCoords>
+
+const asThemeGradientParams = asObject({
+  colors: asArray(asString),
+  start: asGradientCoords,
+  end: asGradientCoords
+})
+type ThemeGradientParams = ReturnType<typeof asThemeGradientParams>
+
 const asThemeShadowParams = asObject({
   shadowColor: asString,
   shadowOffset: asObject({
@@ -35,12 +48,6 @@ const asTextShadowParams = asObject({
   textShadowRadius: asNumber
 })
 type TextShadowParams = ReturnType<typeof asTextShadowParams>
-
-const asGradientCoords = asObject({
-  x: asNumber,
-  y: asNumber
-})
-type GradientCoords = ReturnType<typeof asGradientCoords>
 
 export const themeNoShadow: ThemeShadowParams = {
   shadowColor: '#000000',
@@ -91,10 +98,13 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
 
   // Modal:
   modal: asOptional(asString),
-  modalBlurType: asOptional(asValue('light', 'dark')),
+  modalCloseIcon: asOptional(asString),
   modalBorderColor: asOptional(asString),
   modalBorderWidth: asOptional(asNumber),
   modalBorderRadiusRem: asOptional(asNumber),
+  modalBackground: asOptional(asString),
+  modalSceneOverlayColor: asOptional(asString),
+  modalDragbarColor: asOptional(asString),
 
   // Text colors:
   primaryText: asOptional(asString),
@@ -237,12 +247,15 @@ export interface Theme {
   iconDeactivated: string
   iconTappable: string
 
-  // Modal:
+  // Modal
   modal: string
-  modalBlurType: 'light' | 'dark'
+  modalCloseIcon: string
   modalBorderColor: string
   modalBorderWidth: number
   modalBorderRadiusRem: number
+  modalBackground: string
+  modalSceneOverlayColor: string
+  modalDragbarColor: string
 
   // Text colors:
   primaryText: string
@@ -370,4 +383,10 @@ export interface Theme {
   fontFaceMedium: string
   fontFaceBold: string
   fontFaceSymbols: string
+
+  // UI4
+  cardBaseColor: string
+  cardGradientWarning: ThemeGradientParams
+  cardGradientError: ThemeGradientParams
+  cardOverlayDisabled: string
 }
