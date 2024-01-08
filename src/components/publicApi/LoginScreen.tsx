@@ -30,7 +30,6 @@ interface Props {
   // Branding stuff:
   appId?: string
   appName?: string
-  backgroundImage?: any
   fontDescription?: {
     regularFontFamily: string
     headingFontFamily?: string
@@ -116,7 +115,6 @@ export function LoginScreen(props: Props): JSX.Element {
   const branding: Branding = {
     appId: props.appId,
     appName: props.appName,
-    backgroundImage: props.backgroundImage,
     landingSceneText: props.landingScreenText,
     parentButton: props.parentButton,
     primaryLogo: props.primaryLogo,
