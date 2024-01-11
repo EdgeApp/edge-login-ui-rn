@@ -1,9 +1,10 @@
-import { makeThemeContext } from 'react-native-patina'
+import { cacheStyles, makeThemeContext } from 'react-native-patina'
 
 import { edgeDark } from '../../constants/themes/edgeDark'
 import { Theme } from '../../types/Theme'
 
 export type { Theme }
+export { cacheStyles }
 
 /**
  * Utility for declaring `withTheme` components.

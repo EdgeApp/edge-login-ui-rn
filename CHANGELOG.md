@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Replaced OutlinedTextInput with FilledTextInput and SimpleTextInput
+
 ## 3.0.0 (2024-01-09)
 
 - removed: No longer render scene backgrounds. The app background shows through now and therefore parent app needs to provide background.

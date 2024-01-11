@@ -18,9 +18,9 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { FormError } from '../themed/FormError'
 import { MainButton } from '../themed/MainButton'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { PasswordStatus } from '../themed/PasswordStatus'
 import { ThemedScene } from '../themed/ThemedScene'
 
@@ -106,7 +106,7 @@ const ChangePasswordSceneComponent = ({
     return (
       <>
         {passwordEval != null ? (
-        <PasswordStatus
+          <PasswordStatus
             marginRem={[0.5, 0.5, 1.25]}
             passwordEval={passwordEval}
           />
@@ -121,32 +121,32 @@ const ChangePasswordSceneComponent = ({
           </EdgeAnim>
         )}
         <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
-          <OutlinedTextInput
+          <FilledTextInput
+            horizontal={0.75}
+            bottom={1.25}
             value={password}
             secureTextEntry
             returnKeyType="next"
-            label={lstrings.password}
+            placeholder={lstrings.password}
             autoFocus={focusFirst}
             onChangeText={handleValidatePassword}
             onSubmitEditing={handleFocusSwitch}
             clearIcon
-            searchIcon={false}
-            marginRem={[0, 0.75, 1.25]}
             maxLength={100}
           />
         </EdgeAnim>
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
-          <OutlinedTextInput
+          <FilledTextInput
+            horizontal={0.75}
+            bottom={1.25}
             value={confirmPassword}
             secureTextEntry
             returnKeyType="go"
-            label={lstrings.confirm_password}
+            placeholder={lstrings.confirm_password}
             autoFocus={focusSecond}
             onChangeText={handleChangeConfirmPassword}
             onSubmitEditing={handlePress}
             clearIcon
-            searchIcon={false}
-            marginRem={[0, 0.75, 1.25]}
             maxLength={100}
           />
         </EdgeAnim>

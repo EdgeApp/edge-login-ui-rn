@@ -50,11 +50,8 @@ import { TextInputModal } from '../modals/TextInputModal'
 import { CreateAccountType } from '../publicApi/types'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
+import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import {
-  OutlinedTextInput,
-  OutlinedTextInputRef
-} from '../themed/OutlinedTextInput'
 import { ThemedScene } from '../themed/ThemedScene'
 
 const MAX_DISPLAYED_LOCAL_USERS = 5
@@ -96,17 +93,21 @@ export const PasswordLoginScene = (props: Props) => {
   const [password, setPassword] = React.useState('')
   const [spinner, setSpinner] = React.useState<boolean>(false)
   const [showUsernameList, setShowUsernameList] = React.useState(false)
-  const [dropdownY, setDropdownY] = React.useState(0)
+  const [inputHeight, setInputHeight] = React.useState(0)
   const [usernameItemHeight, setUsernameItemHeight] = React.useState(0)
   const [isScrollEnabled, setIsScrollEnabled] = React.useState(true)
   const [scrollViewHeight, setScrollViewHeight] = React.useState(0)
   const [contentHeight, setContentHeight] = React.useState(0)
 
-  const passwordInputRef = React.useRef<OutlinedTextInputRef>(null)
+  const passwordInputRef = React.useRef<FilledTextInputRef>(null)
 
   const mDropContainerStyle = React.useMemo(() => {
-    return { top: dropdownY, ...styles.dropContainer }
-  }, [styles, dropdownY])
+    return { top: inputHeight }
+  }, [inputHeight])
+
+  const dropdownButtonPositionStyle = React.useMemo(() => {
+    return { top: inputHeight / 2 }
+  }, [inputHeight])
 
   const sAnimationMult = useSharedValue(0)
   const sScrollY = useSharedValue(0)
@@ -174,7 +175,7 @@ export const PasswordLoginScene = (props: Props) => {
   }
 
   const handleUsernameLayout = useHandler((event: LayoutChangeEvent) => {
-    setDropdownY(event.nativeEvent.layout.y + theme.rem(3.5))
+    setInputHeight(event.nativeEvent.layout.height)
   })
 
   const handleDropdownItemLayout = useHandler((event: LayoutChangeEvent) => {
@@ -425,15 +426,14 @@ export const PasswordLoginScene = (props: Props) => {
 
   const renderUsername = () => {
     return (
-      <View style={styles.usernameWrapper}>
-        <View style={styles.inputField} onLayout={handleUsernameLayout}>
-          <OutlinedTextInput
+      <View style={styles.inputWrapper}>
+        <View onLayout={handleUsernameLayout}>
+          <FilledTextInput
             autoCorrect={false}
             autoFocus
             clearIcon={!hasSavedUsers}
             error={usernameErrorMessage}
-            label={lstrings.username}
-            marginRem={[0.5, 1, 0.5, 1]}
+            placeholder={lstrings.username}
             returnKeyType="next"
             testID="usernameFormField"
             value={username}
@@ -444,7 +444,7 @@ export const PasswordLoginScene = (props: Props) => {
         {hasSavedUsers ? (
           <TouchableOpacity
             testID="userDropdownIcon"
-            style={styles.dropdownButton}
+            style={[styles.dropdownButton, dropdownButtonPositionStyle]}
             onPress={handleToggleUsernameList}
           >
             {showUsernameList ? (
@@ -468,7 +468,9 @@ export const PasswordLoginScene = (props: Props) => {
 
   const renderDropdownList = () => {
     return (
-      <Animated.View style={[mDropContainerStyle, aDropContainerStyle]}>
+      <Animated.View
+        style={[styles.dropContainer, mDropContainerStyle, aDropContainerStyle]}
+      >
         <Animated.ScrollView
           keyboardShouldPersistTaps="always"
           scrollEventThrottle={1}
@@ -497,14 +499,13 @@ export const PasswordLoginScene = (props: Props) => {
 
   const renderPassword = () => {
     return (
-      <View style={styles.inputField}>
-        <OutlinedTextInput
+      <View style={styles.inputWrapper}>
+        <FilledTextInput
           ref={passwordInputRef}
           autoCorrect={false}
           autoFocus={false}
           error={passwordErrorMessage}
-          label={lstrings.password}
-          marginRem={[0.5, 1, 0.5, 1]}
+          placeholder={lstrings.password}
           returnKeyType="done"
           secureTextEntry
           testID="passwordFormField"
@@ -597,52 +598,61 @@ export const PasswordLoginScene = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles((theme: Theme) => ({
-  dropContainer: {
-    backgroundColor: theme.modal,
-    borderRadius: theme.rem(0.5),
-    zIndex: 1,
-    borderColor: theme.iconTappable,
-    borderWidth: theme.thinLineWidth,
-    overflow: 'hidden',
-    position: 'absolute',
-    marginHorizontal: theme.rem(1),
-    flex: 1
-  },
-  container: {
-    flex: 1,
-    paddingTop: theme.rem(2),
-    paddingHorizontal: theme.rem(0.5)
-  },
-  inputContainer: {
-    marginHorizontal: theme.rem(0.5),
-    marginTop: theme.rem(2)
-  },
-  loginButtonBox: {
-    marginVertical: theme.rem(0.25),
-    width: '70%'
-  },
-  buttonsBox: {
-    alignItems: 'center'
-  },
-  usernameWrapper: {
-    flexDirection: 'row'
-  },
-  inputField: {
-    flex: 1,
-    marginBottom: theme.rem(1)
-  },
-  // TODO: Integrate dropdown into OutlinedTextInput
-  dropdownButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    right: theme.rem(1.25),
-    width: theme.rem(2.5),
-    height: theme.rem(2),
-    bottom: theme.rem(1.85)
-  },
-  iconColor: {
-    color: theme.iconTappable
+const getStyles = cacheStyles((theme: Theme) => {
+  const spaceAroundInputs = theme.rem(1)
+
+  return {
+    dropContainer: {
+      backgroundColor: theme.modal,
+      borderRadius: theme.rem(0.5),
+      borderColor: theme.iconTappable,
+      borderWidth: theme.thinLineWidth,
+      overflow: 'hidden',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      margin: theme.rem(1),
+      // Give it 0.5 rem between its top and the input's bottom
+      marginTop: spaceAroundInputs + theme.rem(0.5),
+      zIndex: 1
+    },
+    container: {
+      flex: 1,
+      paddingTop: theme.rem(2),
+      paddingHorizontal: theme.rem(0.5)
+    },
+    inputContainer: {
+      marginHorizontal: theme.rem(0.5),
+      marginTop: theme.rem(2)
+    },
+    loginButtonBox: {
+      marginVertical: theme.rem(0.25),
+      width: '70%'
+    },
+    buttonsBox: {
+      alignItems: 'center'
+    },
+    inputWrapper: {
+      position: 'relative',
+      justifyContent: 'flex-start',
+      padding: spaceAroundInputs
+    },
+    // TODO: Integrate dropdown into FilledTextInput
+    dropdownButton: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      width: theme.rem(2),
+      height: theme.rem(2),
+      // Include spaceAroundInputs and subtract half its heigh
+      marginTop: spaceAroundInputs - theme.rem(1),
+      marginRight: spaceAroundInputs + theme.rem(0.5)
+    },
+    iconColor: {
+      color: theme.iconTappable
+    }
   }
-}))
+})
