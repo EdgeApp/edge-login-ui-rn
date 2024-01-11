@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.1.0 (2024-01-11)
+
 - changed: Replaced OutlinedTextInput with FilledTextInput and SimpleTextInput
 
 ## 3.0.0 (2024-01-09)
