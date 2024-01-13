@@ -24,7 +24,7 @@ interface Props extends SceneProps<'newAccountWelcome'> {
 export const NewAccountWelcomeScene = (props: Props) => {
   const { branding } = props
   const dispatch = useDispatch()
-  const { onLogEvent = (event, values?) => {} } = useImports()
+  const { onLogEvent = () => {} } = useImports()
   const theme = useTheme()
   const styles = getStyles(theme)
 

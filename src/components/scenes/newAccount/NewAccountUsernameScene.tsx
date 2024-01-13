@@ -234,7 +234,7 @@ interface NewAccountUsernameProps extends SceneProps<'newAccountUsername'> {
 export const NewAccountUsernameScene = (props: NewAccountUsernameProps) => {
   const { branding, route } = props
   const dispatch = useDispatch()
-  const { onLogEvent = (event, values?) => {} } = useImports()
+  const { onLogEvent = () => {} } = useImports()
 
   const handleBack = useHandler(() => {
     dispatch(
@@ -275,10 +275,7 @@ interface UpgradeUsernameProps extends SceneProps<'upgradeUsername'> {
 export const UpgradeUsernameScene = (props: UpgradeUsernameProps) => {
   const { branding, route } = props
   const dispatch = useDispatch()
-  const {
-    onComplete = () => {},
-    onLogEvent = (event, values?) => {}
-  } = useImports()
+  const { onComplete = () => {}, onLogEvent = () => {} } = useImports()
 
   const handleNext = useHandler(async (newUsername: string) => {
     const currentPin = await route.params.account.getPin()

@@ -20,7 +20,7 @@ interface Props extends SceneProps<'landing'> {
 
 export const LandingScene = (props: Props) => {
   const dispatch = useDispatch()
-  const { initialUserInfo, onLogEvent = (event, values?) => {} } = useImports()
+  const { initialUserInfo, onLogEvent = () => {} } = useImports()
 
   const handleCreate = useHandler(() => {
     onLogEvent('Signup_Create_Account')

@@ -99,7 +99,7 @@ interface NewAccountReviewProps extends SceneProps<'newAccountReview'> {
 
 export const NewAccountReviewScene = (props: NewAccountReviewProps) => {
   const { route } = props
-  const { onLogEvent = (event, values?) => {} } = useImports()
+  const { onLogEvent = () => {} } = useImports()
   const dispatch = useDispatch()
 
   const handleNext = useHandler(() => {
@@ -119,7 +119,7 @@ interface UpgradeReviewProps extends SceneProps<'upgradeAccountReview'> {
 
 export const UpgradeReviewScene = (props: UpgradeReviewProps) => {
   const { route } = props
-  const { onComplete, onLogEvent = (event, values?) => {} } = useImports()
+  const { onComplete, onLogEvent = () => {} } = useImports()
 
   const handleNext = useHandler(() => {
     onLogEvent(`Backup_Review_Done`)

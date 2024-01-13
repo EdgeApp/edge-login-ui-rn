@@ -302,7 +302,7 @@ export const NewAccountPasswordScene = (
   props: SceneProps<'newAccountPassword'>
 ) => {
   const { route } = props
-  const { onLogEvent = (event, values?) => {} } = useImports()
+  const { onLogEvent = () => {} } = useImports()
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {
@@ -336,7 +336,7 @@ export const NewAccountPasswordScene = (
 // The scene for light account users to create a password for the upgrade/backup
 export const UpgradePasswordScene = (props: SceneProps<'upgradePassword'>) => {
   const { route } = props
-  const { onLogEvent = (event, values?) => {} } = useImports()
+  const { onLogEvent = () => {} } = useImports()
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {

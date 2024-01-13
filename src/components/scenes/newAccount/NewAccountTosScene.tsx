@@ -247,7 +247,7 @@ interface UpgradeTosProps extends SceneProps<'upgradeTos'> {
 }
 export const UpgradeTosScene = (props: UpgradeTosProps) => {
   const { route, branding } = props
-  const { onLogEvent = (event, values?) => {} } = useImports()
+  const { onLogEvent = () => {} } = useImports()
   const dispatch = useDispatch()
 
   const handleBack = useHandler((): void => {

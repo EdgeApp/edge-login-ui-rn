@@ -57,11 +57,7 @@ interface ErrorInfo {
 export function PinLoginScene(props: Props) {
   const { branding, route } = props
   const { loginId } = route.params
-  const {
-    accountOptions,
-    context,
-    onLogEvent = (event, values?) => {}
-  } = useImports()
+  const { accountOptions, context, onLogEvent = () => {} } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
