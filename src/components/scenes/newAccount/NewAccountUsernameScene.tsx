@@ -288,10 +288,7 @@ export const UpgradeUsernameScene = (props: UpgradeUsernameProps) => {
       type: 'NAVIGATE',
       data: {
         name: 'upgradePassword',
-        params: {
-          ...route.params,
-          username: newUsername
-        }
+        params: { ...route.params, username: newUsername }
       }
     })
   })

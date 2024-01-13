@@ -354,7 +354,7 @@ export const UpgradePasswordScene = (props: SceneProps<'upgradePassword'>) => {
   const handleBack = useHandler(() => {
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'upgradeUsername', params: { ...route.params } }
+      data: { name: 'upgradeUsername', params: route.params }
     })
   })
 

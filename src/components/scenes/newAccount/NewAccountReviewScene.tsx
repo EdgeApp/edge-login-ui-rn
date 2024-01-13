@@ -107,12 +107,13 @@ export const NewAccountReviewScene = (
   props: SceneProps<'newAccountReview'>
 ) => {
   const { route } = props
+  const { account } = route.params
   const { onLogEvent = () => {} } = useImports()
   const dispatch = useDispatch()
 
   const handleNext = useHandler(() => {
     onLogEvent(`Signup_Review_Done`)
-    dispatch(completeLogin(route.params.account))
+    dispatch(completeLogin(account))
   })
 
   return <AccountReviewComponent {...route.params} onNext={handleNext} />

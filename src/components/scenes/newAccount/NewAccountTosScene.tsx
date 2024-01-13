@@ -163,6 +163,7 @@ interface NewAccountTosProps extends SceneProps<'newAccountTos'> {
 }
 export const NewAccountTosScene = (props: NewAccountTosProps) => {
   const { route, branding } = props
+  const { password, pin, username } = route.params
   const dispatch = useDispatch()
 
   const handleBack = useHandler((): void => {
@@ -206,17 +207,13 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
         }
       })
 
-      const { username, password, pin } = route.params
       const account = await handleCreateAccount({ username, password, pin })
 
       dispatch({
         type: 'NAVIGATE',
         data: {
           name: 'newAccountReview',
-          params: {
-            ...route.params,
-            account
-          }
+          params: { ...route.params, account }
         }
       })
     } catch (error: unknown) {
@@ -254,6 +251,7 @@ interface UpgradeTosProps extends SceneProps<'upgradeTos'> {
 }
 export const UpgradeTosScene = (props: UpgradeTosProps) => {
   const { route, branding } = props
+  const { account, password, username } = route.params
   const { onLogEvent = () => {} } = useImports()
   const dispatch = useDispatch()
 
@@ -265,8 +263,6 @@ export const UpgradeTosScene = (props: UpgradeTosProps) => {
   })
 
   const handleNext = useHandler(async () => {
-    const { account, username, password } = route.params
-
     let errorText
     try {
       await account.changeUsername({
