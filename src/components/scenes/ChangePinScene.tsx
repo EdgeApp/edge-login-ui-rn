@@ -205,7 +205,7 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
     onLogEvent('Signup_PIN_Valid')
 
     if (lightAccount) {
-      let error
+      let errorText
       try {
         dispatch({
           type: 'NAVIGATE',
@@ -220,9 +220,9 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
         const { username, password, pin } = route.params
         const account = await handleCreateAccount({ username, password, pin })
         dispatch(completeLogin(account))
-      } catch (e: unknown) {
-        error = String(e)
+      } catch (error: unknown) {
         showError(error)
+        errorText = String(error)
         dispatch({
           type: 'NAVIGATE',
           data: {
@@ -231,7 +231,7 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
           }
         })
       }
-      onLogEvent('Signup_Create_Light_Account', { error })
+      onLogEvent('Signup_Create_Light_Account', { error: errorText })
     } else {
       dispatch({
         type: 'NAVIGATE',

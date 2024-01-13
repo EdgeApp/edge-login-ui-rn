@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Alert, Linking, ScrollView } from 'react-native'
+import { Linking, ScrollView } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
@@ -35,7 +35,6 @@ interface Props {
 
 const TosComponent = (props: Props) => {
   const { branding, hidePasswordTerms, onBack, onNext } = props
-  const dispatch = useDispatch()
   const theme = useTheme()
 
   const styles = getStyles(theme)
@@ -59,21 +58,6 @@ const TosComponent = (props: Props) => {
     const newTermValues = [...termValues]
     newTermValues[index] = value
     setTermValues(newTermValues)
-  })
-
-  const handleNextPress = useHandler(() => {
-    onNext().catch((e: any) => {
-      console.error(e)
-      Alert.alert(
-        lstrings.create_account_error_title,
-        lstrings.create_account_error_message + '\n' + e.message,
-        [{ text: lstrings.ok }]
-      )
-      dispatch({
-        type: 'NAVIGATE',
-        data: { name: 'newAccountUsername', params: {} }
-      })
-    })
   })
 
   return (
@@ -123,7 +107,7 @@ const TosComponent = (props: Props) => {
             label={lstrings.confirm}
             paddingRem={0.7}
             type={buttonType}
-            onPress={handleNextPress}
+            onPress={onNext}
           />
         </EdgeAnim>
       </ScrollView>
@@ -202,7 +186,7 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
       onLogEvent('Signup_Captcha_Passed')
     }
 
-    let error
+    let errorText
     try {
       dispatch({
         type: 'NAVIGATE',
@@ -228,9 +212,9 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
           }
         }
       })
-    } catch (e: unknown) {
-      error = String(e)
+    } catch (error: unknown) {
       showError(error)
+      errorText = String(error)
       dispatch({
         type: 'NAVIGATE',
         data: {
@@ -241,7 +225,7 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
     }
 
     onLogEvent('Signup_Terms_Agree_and_Create_User', {
-      error
+      error: errorText
     })
   })
 
@@ -276,7 +260,7 @@ export const UpgradeTosScene = (props: UpgradeTosProps) => {
   const handleNext = useHandler(async () => {
     const { account, username, password } = route.params
 
-    let error
+    let errorText
     try {
       if (username == null || password == null)
         throw new Error(
@@ -296,11 +280,12 @@ export const UpgradeTosScene = (props: UpgradeTosProps) => {
           }
         }
       })
-    } catch (e: any) {
-      error = String(e)
+    } catch (error: unknown) {
+      showError(error)
+      errorText = String(error)
     }
 
-    onLogEvent('Backup_Terms_Agree_and_Create_User', { error })
+    onLogEvent('Backup_Terms_Agree_and_Create_User', { error: errorText })
   })
 
   return (
