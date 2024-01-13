@@ -174,6 +174,7 @@ export const ResecurePinScene = (props: SceneProps<'resecurePin'>) => {
 // The scene for new users to set their PIN
 export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
   const { route } = props
+  const { username, password } = route.params
   const dispatch = useDispatch()
   const { experimentConfig, onLogEvent = () => {} } = useImports()
 
@@ -217,8 +218,11 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
             }
           }
         })
-        const { username, password, pin } = route.params
-        const account = await handleCreateAccount({ username, password, pin })
+        const account = await handleCreateAccount({
+          password,
+          pin: newPin,
+          username
+        })
         dispatch(completeLogin(account))
       } catch (error: unknown) {
         showError(error)
