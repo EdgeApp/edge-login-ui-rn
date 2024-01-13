@@ -19,6 +19,10 @@ import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 import { MessageText, Warning } from '../../themed/ThemedText'
 
+export interface SecurityAlertParams {
+  account: EdgeAccount
+}
+
 interface OwnProps extends SceneProps<'securityAlert'> {}
 interface StateProps {
   account: EdgeAccount

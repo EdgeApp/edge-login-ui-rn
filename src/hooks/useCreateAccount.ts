@@ -15,7 +15,7 @@ export const useCreateAccountHandler = () => {
     async (createAccountParams: {
       username?: string
       password?: string
-      pin?: string | undefined
+      pin: string
     }) => {
       const { username, password, pin } = createAccountParams
 

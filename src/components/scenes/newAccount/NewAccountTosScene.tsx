@@ -1,3 +1,4 @@
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, ScrollView } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -11,11 +12,7 @@ import { useImports } from '../../../hooks/useImports'
 import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
 import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
-import {
-  AccountParams,
-  CreateFlowParams,
-  SceneProps
-} from '../../../types/routerTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { EdgeAnim } from '../../common/EdgeAnim'
 import { showChallengeModal, showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
@@ -24,7 +21,17 @@ import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-export interface AccountTosParams extends AccountParams, CreateFlowParams {}
+export interface UpgradeTosParams {
+  account: EdgeAccount
+  password: string
+  username: string
+}
+
+export interface NewAccountTosParams {
+  password?: string
+  pin: string
+  username?: string
+}
 
 interface Props {
   branding: Branding
@@ -262,22 +269,17 @@ export const UpgradeTosScene = (props: UpgradeTosProps) => {
 
     let errorText
     try {
-      if (username == null || password == null)
-        throw new Error(
-          'Failed to update account, missing username or password'
-        )
       await account.changeUsername({
         username,
         password
       })
+      const pin = await account.getPin()
 
       dispatch({
         type: 'NAVIGATE',
         data: {
           name: 'upgradeAccountReview',
-          params: {
-            ...route.params
-          }
+          params: { ...route.params, pin }
         }
       })
     } catch (error: unknown) {

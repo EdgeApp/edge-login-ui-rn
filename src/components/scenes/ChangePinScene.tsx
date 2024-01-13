@@ -1,3 +1,4 @@
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Keyboard, ScrollView } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -19,6 +20,20 @@ import { DigitInput, MAX_PIN_LENGTH } from '../themed/DigitInput'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
+
+export interface ChangePinParams {
+  account: EdgeAccount
+}
+
+export interface NewAccountPinParams {
+  password?: string
+  pin?: string
+  username?: string
+}
+
+export interface ResecurePinParams {
+  account: EdgeAccount
+}
 
 interface Props {
   body?: string

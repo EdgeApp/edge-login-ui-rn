@@ -1,3 +1,4 @@
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -6,13 +7,8 @@ import { completeLogin } from '../../../actions/LoginCompleteActions'
 import { lstrings } from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
-import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
-import {
-  AccountParams,
-  CreateFlowParams,
-  SceneProps
-} from '../../../types/routerTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { EdgeAnim } from '../../common/EdgeAnim'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { AccountInfo } from '../../themed/AccountInfo'
@@ -21,9 +17,23 @@ import { FormError } from '../../themed/FormError'
 import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-export interface AccountReviewParams extends AccountParams, CreateFlowParams {}
+export interface NewAccountReviewParams {
+  account: EdgeAccount
+  password?: string
+  pin: string
+  username?: string
+}
 
-interface Props extends CreateFlowParams {
+export interface UpgradeAccountReviewParams {
+  password: string
+  pin?: string
+  username: string
+}
+
+interface Props {
+  password?: string
+  pin?: string
+  username?: string
   onNext: () => void
 }
 const AccountReviewComponent = (props: Props) => {
@@ -93,11 +103,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 /**
  * The review scene for new accounts.
  */
-interface NewAccountReviewProps extends SceneProps<'newAccountReview'> {
-  branding: Branding
-}
-
-export const NewAccountReviewScene = (props: NewAccountReviewProps) => {
+export const NewAccountReviewScene = (
+  props: SceneProps<'newAccountReview'>
+) => {
   const { route } = props
   const { onLogEvent = () => {} } = useImports()
   const dispatch = useDispatch()
@@ -113,11 +121,9 @@ export const NewAccountReviewScene = (props: NewAccountReviewProps) => {
 /**
  * The review scene for upgrading (light) accounts.
  */
-interface UpgradeReviewProps extends SceneProps<'upgradeAccountReview'> {
-  branding: Branding
-}
-
-export const UpgradeReviewScene = (props: UpgradeReviewProps) => {
+export const UpgradeReviewScene = (
+  props: SceneProps<'upgradeAccountReview'>
+) => {
   const { route } = props
   const { onComplete, onLogEvent = () => {} } = useImports()
 

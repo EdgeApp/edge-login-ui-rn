@@ -10,7 +10,7 @@ import { ThemedScene } from '../themed/ThemedScene'
 
 const loader = require('../../assets/safeLoader.gif')
 
-export interface WaitParams {
+export interface NewAccountWaitParams {
   title: string
   message: string
 }
