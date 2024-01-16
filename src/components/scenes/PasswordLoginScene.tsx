@@ -72,7 +72,7 @@ export const PasswordLoginScene = (props: Props) => {
     accountOptions,
     context,
     onComplete,
-    onLogEvent = (event, values?) => {}
+    onLogEvent = () => {}
   } = useImports()
 
   const dispatch = useDispatch()

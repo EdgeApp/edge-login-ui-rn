@@ -1,3 +1,4 @@
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -10,11 +11,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
-import {
-  AccountParams,
-  CreateFlowParams,
-  SceneProps
-} from '../../../types/routerTypes'
+import { SceneProps } from '../../../types/routerTypes'
 import { EdgeAnim } from '../../common/EdgeAnim'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -22,13 +19,21 @@ import { FilledTextInput } from '../../themed/FilledTextInput'
 import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
+export interface NewAccountUsernameParams {
+  password?: string
+  pin?: string
+  username?: string
+}
+
+export interface UpgradeUsernameParams {
+  account: EdgeAccount
+  password?: string
+  username?: string
+}
+
 const AVAILABILITY_CHECK_DELAY_MS = 400
 
 type Timeout = ReturnType<typeof setTimeout>
-
-export interface AccountUsernameParams
-  extends AccountParams,
-    CreateFlowParams {}
 
 interface Props {
   branding: Branding
@@ -234,7 +239,7 @@ interface NewAccountUsernameProps extends SceneProps<'newAccountUsername'> {
 export const NewAccountUsernameScene = (props: NewAccountUsernameProps) => {
   const { branding, route } = props
   const dispatch = useDispatch()
-  const { onLogEvent = (event, values?) => {} } = useImports()
+  const { onLogEvent = () => {} } = useImports()
 
   const handleBack = useHandler(() => {
     dispatch(
@@ -275,23 +280,15 @@ interface UpgradeUsernameProps extends SceneProps<'upgradeUsername'> {
 export const UpgradeUsernameScene = (props: UpgradeUsernameProps) => {
   const { branding, route } = props
   const dispatch = useDispatch()
-  const {
-    onComplete = () => {},
-    onLogEvent = (event, values?) => {}
-  } = useImports()
+  const { onComplete = () => {}, onLogEvent = () => {} } = useImports()
 
   const handleNext = useHandler(async (newUsername: string) => {
-    const currentPin = await route.params.account.getPin()
     onLogEvent(`Backup_Username_Available`)
     dispatch({
       type: 'NAVIGATE',
       data: {
         name: 'upgradePassword',
-        params: {
-          ...route.params,
-          username: newUsername,
-          pin: currentPin
-        }
+        params: { ...route.params, username: newUsername }
       }
     })
   })

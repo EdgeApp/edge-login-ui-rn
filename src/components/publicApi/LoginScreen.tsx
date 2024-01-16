@@ -95,7 +95,7 @@ export function LoginScreen(props: Props): JSX.Element {
     regularFontFamily,
     headingFontFamily = regularFontFamily
   } = fontDescription
-  const { onComplete, onLogEvent = (event, values?) => {} } = props
+  const { onComplete, onLogEvent = () => {} } = props
 
   // Look up the requested user:
   const initialUserInfo =

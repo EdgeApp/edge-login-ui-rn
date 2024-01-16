@@ -1,4 +1,4 @@
-import { EdgePasswordRules } from 'edge-core-js'
+import { EdgeAccount, EdgePasswordRules } from 'edge-core-js'
 import * as React from 'react'
 import { Keyboard, KeyboardAvoidingView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -7,11 +7,7 @@ import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
 import { useDispatch } from '../../types/ReduxTypes'
-import {
-  AccountParams,
-  CreateFlowParams,
-  SceneProps
-} from '../../types/routerTypes'
+import { SceneProps } from '../../types/routerTypes'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { WarningCard } from '../common/WarningCard'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -24,9 +20,25 @@ import { MainButton } from '../themed/MainButton'
 import { PasswordStatus } from '../themed/PasswordStatus'
 import { ThemedScene } from '../themed/ThemedScene'
 
-export interface AccountPasswordParams
-  extends AccountParams,
-    CreateFlowParams {}
+export interface ChangePasswordParams {
+  account: EdgeAccount
+}
+
+export interface NewAccountPasswordParams {
+  password?: string
+  pin?: string
+  username?: string
+}
+
+export interface ResecurePasswordParams {
+  account: EdgeAccount
+}
+
+export interface UpgradePasswordParams {
+  account: EdgeAccount
+  password?: string
+  username: string
+}
 
 interface Props {
   initPassword?: string | undefined
@@ -302,7 +314,7 @@ export const NewAccountPasswordScene = (
   props: SceneProps<'newAccountPassword'>
 ) => {
   const { route } = props
-  const { onLogEvent = (event, values?) => {} } = useImports()
+  const { onLogEvent = () => {} } = useImports()
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {
@@ -336,13 +348,13 @@ export const NewAccountPasswordScene = (
 // The scene for light account users to create a password for the upgrade/backup
 export const UpgradePasswordScene = (props: SceneProps<'upgradePassword'>) => {
   const { route } = props
-  const { onLogEvent = (event, values?) => {} } = useImports()
+  const { onLogEvent = () => {} } = useImports()
   const dispatch = useDispatch()
 
   const handleBack = useHandler(() => {
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'upgradeUsername', params: { ...route.params } }
+      data: { name: 'upgradeUsername', params: route.params }
     })
   })
 

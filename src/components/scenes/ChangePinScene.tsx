@@ -1,3 +1,4 @@
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Keyboard, ScrollView } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -19,6 +20,20 @@ import { DigitInput, MAX_PIN_LENGTH } from '../themed/DigitInput'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
+
+export interface ChangePinParams {
+  account: EdgeAccount
+}
+
+export interface NewAccountPinParams {
+  password?: string
+  pin?: string
+  username?: string
+}
+
+export interface ResecurePinParams {
+  account: EdgeAccount
+}
 
 interface Props {
   body?: string
@@ -174,8 +189,9 @@ export const ResecurePinScene = (props: SceneProps<'resecurePin'>) => {
 // The scene for new users to set their PIN
 export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
   const { route } = props
+  const { username, password } = route.params
   const dispatch = useDispatch()
-  const { experimentConfig, onLogEvent = (event, values?) => {} } = useImports()
+  const { experimentConfig, onLogEvent = () => {} } = useImports()
 
   const lightAccount = experimentConfig.createAccountType === 'light'
 
@@ -205,7 +221,7 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
     onLogEvent('Signup_PIN_Valid')
 
     if (lightAccount) {
-      let error
+      let errorText
       try {
         dispatch({
           type: 'NAVIGATE',
@@ -217,12 +233,15 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
             }
           }
         })
-        const { username, password, pin } = route.params
-        const account = await handleCreateAccount({ username, password, pin })
+        const account = await handleCreateAccount({
+          password,
+          pin: newPin,
+          username
+        })
         dispatch(completeLogin(account))
-      } catch (e: unknown) {
-        error = String(e)
+      } catch (error: unknown) {
         showError(error)
+        errorText = String(error)
         dispatch({
           type: 'NAVIGATE',
           data: {
@@ -231,7 +250,7 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
           }
         })
       }
-      onLogEvent('Signup_Create_Light_Account', { error })
+      onLogEvent('Signup_Create_Light_Account', { error: errorText })
     } else {
       dispatch({
         type: 'NAVIGATE',

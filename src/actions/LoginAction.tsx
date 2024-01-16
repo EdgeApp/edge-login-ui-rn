@@ -15,7 +15,7 @@ export const launchPasswordRecovery = (recoveryKey: string) => async (
   getState: GetState,
   imports: Imports
 ) => {
-  const { context, onLogEvent = (event, values?) => {} } = imports
+  const { context, onLogEvent = () => {} } = imports
 
   async function handleSubmit(username: string): Promise<boolean | string> {
     try {

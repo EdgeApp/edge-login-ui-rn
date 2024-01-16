@@ -1,48 +1,53 @@
-import { EdgeAccount } from 'edge-core-js'
-
-import { AccountPasswordParams } from '../components/scenes/ChangePasswordScene'
+import {
+  ChangePasswordParams,
+  NewAccountPasswordParams,
+  ResecurePasswordParams,
+  UpgradePasswordParams
+} from '../components/scenes/ChangePasswordScene'
+import {
+  ChangePinParams,
+  NewAccountPinParams,
+  ResecurePinParams
+} from '../components/scenes/ChangePinScene'
 import { ChangeRecoveryParams } from '../components/scenes/existingAccout/ChangeRecoveryScene'
 import { OtpRepairParams } from '../components/scenes/existingAccout/OtpRepairScene'
-import { AccountReviewParams } from '../components/scenes/newAccount/NewAccountReviewScene'
-import { AccountTosParams } from '../components/scenes/newAccount/NewAccountTosScene'
-import { AccountUsernameParams } from '../components/scenes/newAccount/NewAccountUsernameScene'
+import { SecurityAlertParams } from '../components/scenes/existingAccout/SecurityAlertsScene'
+import {
+  NewAccountReviewParams,
+  UpgradeAccountReviewParams
+} from '../components/scenes/newAccount/NewAccountReviewScene'
+import {
+  NewAccountTosParams,
+  UpgradeTosParams
+} from '../components/scenes/newAccount/NewAccountTosScene'
+import {
+  NewAccountUsernameParams,
+  UpgradeUsernameParams
+} from '../components/scenes/newAccount/NewAccountUsernameScene'
 import { OtpErrorParams } from '../components/scenes/OtpErrorScene'
 import { PasswordLoginParams } from '../components/scenes/PasswordLoginScene'
 import { PinLoginParams } from '../components/scenes/PinLoginScene'
 import { RecoveryLoginParams } from '../components/scenes/RecoveryLoginScene'
-import { WaitParams } from '../components/scenes/WaitScene'
-
-export interface AccountParams {
-  account: EdgeAccount
-}
-
-/**
- * Data passed between scenes for the create account flows.
- */
-export interface CreateFlowParams {
-  username?: string
-  password?: string
-  pin?: string
-}
+import { NewAccountWaitParams } from '../components/scenes/WaitScene'
 
 /**
  * Defines the acceptable route parameters for each scene key.
  */
 export interface LoginParamList {
-  changePassword: AccountParams
-  changePin: AccountParams
+  changePassword: ChangePasswordParams
+  changePin: ChangePinParams
   changeRecovery: ChangeRecoveryParams
   newAccountWelcome: {}
-  newAccountUsername: CreateFlowParams
-  newAccountPassword: CreateFlowParams
-  newAccountPin: CreateFlowParams
-  newAccountTos: CreateFlowParams
-  newAccountWait: WaitParams
-  newAccountReview: AccountReviewParams
-  upgradeUsername: AccountUsernameParams
-  upgradePassword: AccountPasswordParams
-  upgradeTos: AccountTosParams
-  upgradeAccountReview: AccountReviewParams
+  newAccountUsername: NewAccountUsernameParams
+  newAccountPassword: NewAccountPasswordParams
+  newAccountPin: NewAccountPinParams
+  newAccountTos: NewAccountTosParams
+  newAccountWait: NewAccountWaitParams
+  newAccountReview: NewAccountReviewParams
+  upgradeUsername: UpgradeUsernameParams
+  upgradePassword: UpgradePasswordParams
+  upgradeTos: UpgradeTosParams
+  upgradeAccountReview: UpgradeAccountReviewParams
   landing: {}
   loading: {}
   otpError: OtpErrorParams
@@ -50,9 +55,9 @@ export interface LoginParamList {
   passwordLogin: PasswordLoginParams
   pinLogin: PinLoginParams
   recoveryLogin: RecoveryLoginParams
-  resecurePassword: AccountParams
-  resecurePin: AccountParams
-  securityAlert: AccountParams
+  resecurePassword: ResecurePasswordParams
+  resecurePin: ResecurePinParams
+  securityAlert: SecurityAlertParams
 }
 
 /**

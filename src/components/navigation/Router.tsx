@@ -71,7 +71,7 @@ export function Router(props: Props) {
       case 'newAccountWait':
         return <WaitScene route={route} />
       case 'newAccountReview':
-        return <NewAccountReviewScene branding={props.branding} route={route} />
+        return <NewAccountReviewScene route={route} />
       case 'landing':
         return <LandingScene branding={props.branding} route={route} />
       case 'loading':
@@ -93,7 +93,7 @@ export function Router(props: Props) {
       case 'securityAlert':
         return <SecurityAlertsScene route={route} />
       case 'upgradeAccountReview':
-        return <UpgradeReviewScene branding={props.branding} route={route} />
+        return <UpgradeReviewScene route={route} />
       case 'upgradePassword':
         return <UpgradePasswordScene route={route} />
       case 'upgradeTos':
