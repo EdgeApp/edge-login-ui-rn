@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.1.1 (2024-01-16)
+
 - fixed: Correctly save the PIN when creating a light account.
 
 ## 3.1.0 (2024-01-11)
