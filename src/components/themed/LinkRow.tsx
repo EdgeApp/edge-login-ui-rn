@@ -59,12 +59,12 @@ const getStyles = cacheStyles((theme: Theme) => {
       flexDirection: 'row'
     },
     icon: {
-      color: theme.primaryButton[0],
+      color: theme.iconTappable,
       fontSize: theme.rem(1),
       marginLeft: theme.rem(1)
     },
     text: {
-      color: theme.primaryButton[0],
+      color: theme.linkText,
       flex: 1,
       fontFamily: theme.fontFamily,
       fontSize: theme.rem(1)
