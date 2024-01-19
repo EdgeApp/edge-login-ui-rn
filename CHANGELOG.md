@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.1.2 (2024-01-19)
+
 - fixed: Copy text-input visual improvements from edge-react-gui.
 
 ## 3.1.1 (2024-01-16)
