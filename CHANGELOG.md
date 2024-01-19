@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Copy text-input visual improvements from edge-react-gui.
+
 ## 3.1.1 (2024-01-16)
 
 - fixed: Correctly save the PIN when creating a light account.
