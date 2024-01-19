@@ -205,6 +205,14 @@ export const SimpleTextInput = React.forwardRef<
 
   const scale = useDerivedValue(() => scaleProp?.value ?? 1)
 
+  const hasValueAnimation = useDerivedValue(
+    () =>
+      hasValue
+        ? withTiming(1, { duration: baseDuration })
+        : withTiming(0, { duration: baseDuration }),
+    [hasValue]
+  )
+
   const interpolateIconColor = useAnimatedColorInterpolateFn(
     theme.textInputIconColor,
     theme.textInputIconColorFocused,
@@ -235,6 +243,7 @@ export const SimpleTextInput = React.forwardRef<
             <PlaceholderText
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
+              hasValueAnimation={hasValueAnimation}
               scale={scale}
             >
               {placeholder}
@@ -319,7 +328,7 @@ const Container = styled(Animated.View)<{
       borderColor: interpolateOutlineColor(focusAnimation, disableAnimation),
       opacity: interpolate(scale.value, [1, 0.5], [1, 0]),
       marginHorizontal: interpolate(scale.value, [1, 0], [0, 2 * rem]),
-      paddingVertical: scale.value * 0.8 * rem
+      paddingVertical: scale.value * 0.75 * rem
     }))
   ]
 })
@@ -346,41 +355,45 @@ const InnerContainer = styled(View)({
 const PlaceholderText = styled(Animated.Text)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
+  hasValueAnimation: SharedValue<number>
   scale: SharedValue<number>
-}>(theme => ({ disableAnimation, focusAnimation, scale }) => {
-  const rem = theme.rem(1)
-  const interpolatePlaceholderTextColor = useAnimatedColorInterpolateFn(
-    theme.textInputPlaceholderColor,
-    theme.textInputPlaceholderColorFocused,
-    theme.textInputPlaceholderColorDisabled
-  )
+}>(
+  theme => ({ disableAnimation, focusAnimation, hasValueAnimation, scale }) => {
+    const rem = theme.rem(1)
+    const interpolatePlaceholderTextColor = useAnimatedColorInterpolateFn(
+      theme.textInputPlaceholderColor,
+      theme.textInputPlaceholderColorFocused,
+      theme.textInputPlaceholderColorDisabled
+    )
 
-  return [
-    {
-      position: 'absolute',
-      top: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingHorizontal: theme.rem(0.5),
-      paddingVertical: 0,
-      margin: 0
-    },
-    {
-      fontFamily: theme.fontFaceDefault,
-      fontSize: theme.rem(1),
-      includeFontPadding: false
-    },
-    useAnimatedStyle(() => {
-      return {
-        color: interpolatePlaceholderTextColor(
-          focusAnimation,
-          disableAnimation
-        ),
-        fontSize: scale.value * rem
-      }
-    })
-  ]
-})
+    return [
+      {
+        position: 'absolute',
+        top: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: theme.rem(0.5),
+        paddingVertical: 0,
+        margin: 0
+      },
+      {
+        fontFamily: theme.fontFaceDefault,
+        fontSize: theme.rem(1),
+        includeFontPadding: false
+      },
+      useAnimatedStyle(() => {
+        return {
+          opacity: interpolate(hasValueAnimation.value, [0, 1], [1, 0]),
+          color: interpolatePlaceholderTextColor(
+            focusAnimation,
+            disableAnimation
+          ),
+          fontSize: scale.value * rem
+        }
+      })
+    ]
+  }
+)
 
 const InputField = styledWithRef(AnimatedTextInput)<{
   disableAnimation: SharedValue<number>
@@ -396,7 +409,6 @@ const InputField = styledWithRef(AnimatedTextInput)<{
 
   return [
     {
-      color: theme.textInputBackgroundColor,
       flexGrow: 1,
       flexShrink: 1,
       fontFamily: theme.fontFaceDefault,
