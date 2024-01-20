@@ -42,7 +42,7 @@ interface Props {
 
   // Extra bottom margins for scenes to allow scrolling up further into an
   // easier tap area of the screen
-  sceneMargin?: boolean
+  parentType?: 'scene' | 'modal'
 }
 
 /**
@@ -57,7 +57,7 @@ export const ButtonsViewUi4 = React.memo(
     secondary2,
     tertiary,
     layout = 'column',
-    sceneMargin
+    parentType
   }: Props) => {
     const numButtons = [primary, secondary, secondary2, tertiary].filter(
       key => key != null
@@ -85,7 +85,7 @@ export const ButtonsViewUi4 = React.memo(
       <StyledButtonContainer
         absolute={absolute}
         layout={layout}
-        sceneMargin={sceneMargin}
+        parentType={parentType}
       >
         {renderButton('primary', primary)}
         {primary != null && secondary != null ? spacing : null}
@@ -102,9 +102,9 @@ export const ButtonsViewUi4 = React.memo(
 const StyledButtonContainer = styled(View)<{
   absolute: boolean
   layout: 'row' | 'column' | 'solo'
-  sceneMargin?: boolean
+  parentType?: 'scene' | 'modal'
 }>(theme => props => {
-  const { absolute, layout, sceneMargin } = props
+  const { absolute, layout, parentType } = props
 
   const marginSize = theme.rem(0.5)
 
@@ -150,12 +150,21 @@ const StyledButtonContainer = styled(View)<{
         }
       : {}
 
-  const sceneMarginStyle: ViewStyle = sceneMargin
-    ? {
-        marginBottom: theme.rem(3),
-        marginTop: theme.rem(1)
-      }
-    : {}
+  const sceneMarginStyle: ViewStyle =
+    parentType === 'scene'
+      ? {
+          marginBottom: theme.rem(3),
+          marginTop: theme.rem(1)
+        }
+      : {}
+
+  const modalMarginStyle: ViewStyle =
+    parentType === 'modal'
+      ? {
+          marginBottom: theme.rem(1),
+          marginTop: theme.rem(2)
+        }
+      : {}
 
   return {
     ...baseStyle,
@@ -163,6 +172,7 @@ const StyledButtonContainer = styled(View)<{
     ...soloStyle,
     ...rowStyle,
     ...columnStyle,
-    ...sceneMarginStyle
+    ...sceneMarginStyle,
+    ...modalMarginStyle
   }
 })
