@@ -14,7 +14,7 @@ import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ModalScrollArea, ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
   bridge: AirshipBridge<string | undefined>
@@ -83,10 +83,10 @@ export const SecurityAlertsModal = (props: Props) => {
   }
 
   return (
-    <ThemedModal bridge={bridge} warning onCancel={handleCancel}>
+    <ModalUi4 bridge={bridge} warning onCancel={handleCancel}>
       <ModalTitle>{lstrings.security_is_our_priority_modal_title}</ModalTitle>
       <ModalScrollArea>{renderList()}</ModalScrollArea>
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 

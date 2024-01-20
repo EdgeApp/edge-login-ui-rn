@@ -10,8 +10,8 @@ import { showError } from '../services/AirshipInstance'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
 import { AlertCardUi4 } from '../ui4/AlertUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
   // Resolves to the entered string, or void if cancelled.
@@ -100,7 +100,7 @@ export function TextInputModal(props: Props) {
   }
 
   return (
-    <ThemedModal
+    <ModalUi4
       warning={warning}
       bridge={bridge}
       onCancel={() => bridge.resolve(undefined)}
@@ -160,6 +160,6 @@ export function TextInputModal(props: Props) {
           type="secondary"
         />
       )}
-    </ThemedModal>
+    </ModalUi4>
   )
 }

@@ -3,9 +3,9 @@ import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../common/locales/strings'
 import { Checkbox } from '../themed/Checkbox'
-import { MainButton } from '../themed/MainButton'
-import { ThemedModal } from '../themed/ThemedModal'
-import { MessageText, TitleText } from '../themed/ThemedText'
+import { ModalMessage } from '../themed/ModalParts'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
   bridge: AirshipBridge<Required<PermissionsModalChoices> | undefined>
@@ -47,10 +47,15 @@ export function RequestPermissionsModal(props: Props) {
   }
 
   return (
-    <ThemedModal bridge={bridge} paddingRem={1} warning onCancel={handleCancel}>
-      <TitleText>{lstrings.security_is_our_priority_modal_title}</TitleText>
-      <MessageText>{message}</MessageText>
+    <ModalUi4
+      bridge={bridge}
+      title={lstrings.security_is_our_priority_modal_title}
+      warning
+      onCancel={handleCancel}
+    >
+      <ModalMessage>{message}</ModalMessage>
       <Checkbox
+        marginRem={[1, 0, 0.5, 0.5]}
         onChange={() => handlePress('optInPriceChanges')}
         value={selection.optInPriceChanges}
         textStyle={{}}
@@ -64,18 +69,17 @@ export function RequestPermissionsModal(props: Props) {
       >
         {lstrings.notifications_opt_in_marketing}
       </Checkbox>
-      <MainButton
-        label={lstrings.enable}
-        marginRem={0.5}
-        type="primary"
-        onPress={() => handlePress('enable', true)}
+      <ButtonsViewUi4
+        primary={{
+          label: lstrings.enable,
+          onPress: () => handlePress('enable', true)
+        }}
+        tertiary={{
+          label: lstrings.cancel,
+          onPress: () => handlePress('enable', false)
+        }}
+        parentType="modal"
       />
-      <MainButton
-        label={lstrings.cancel}
-        marginRem={0.5}
-        type="escape"
-        onPress={() => handlePress('enable', false)}
-      />
-    </ThemedModal>
+    </ModalUi4>
   )
 }

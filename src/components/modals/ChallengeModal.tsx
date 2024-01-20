@@ -8,8 +8,7 @@ import { WebView, WebViewNavigation } from 'react-native-webview'
 
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
-import { ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
   bridge: AirshipBridge<boolean | undefined>
@@ -39,8 +38,11 @@ export const ChallengeModal = (props: Props) => {
   const webviewStyle = { backgroundColor: '#00000000' }
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle>{lstrings.complete_captcha_title}</ModalTitle>
+    <ModalUi4
+      bridge={bridge}
+      title={lstrings.complete_captcha_title}
+      onCancel={handleCancel}
+    >
       <WebView
         source={
           challengeError == null
@@ -50,7 +52,7 @@ export const ChallengeModal = (props: Props) => {
         style={webviewStyle}
         onShouldStartLoadWithRequest={handleLoading}
       />
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 
