@@ -76,14 +76,12 @@ export const PasswordStatus = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    borderWidth: 0.25,
-    borderRadius: theme.rem(0.25),
-    borderColor: theme.warningText,
+    // HACK: Unable to get this component to cooperate with CardUi4's flex: 1...
+    // Just copying over relevant CardUi4 styles for now
+    backgroundColor: theme.cardBaseColor,
+    borderRadius: theme.rem(1),
     padding: theme.rem(1),
     justifyContent: 'flex-start'
-  },
-  containerPassed: {
-    borderColor: theme.positiveText
   },
   top: {
     flexDirection: 'row',
@@ -92,9 +90,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   message: {
     flexShrink: 1,
-    color: theme.warningText,
     fontFamily: theme.fontFaceBold,
-    fontSize: theme.rem(0.75),
     marginLeft: theme.rem(1)
   },
   passwordConditionRow: {
@@ -103,7 +99,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   passwordConditionText: {
     flexShrink: 1,
-    color: theme.warningText,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.75),
     marginBottom: theme.rem(0.15)

@@ -1,6 +1,6 @@
 import { EdgeAccount, EdgePasswordRules } from 'edge-core-js'
 import * as React from 'react'
-import { Keyboard, KeyboardAvoidingView, View } from 'react-native'
+import { Keyboard, KeyboardAvoidingView } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { lstrings } from '../../common/locales/strings'
@@ -134,7 +134,7 @@ const ChangePasswordSceneComponent = ({
         )}
         <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
           <FilledTextInput
-            horizontal={0.75}
+            horizontal={1.25}
             bottom={1.25}
             value={password}
             secureTextEntry
@@ -149,7 +149,7 @@ const ChangePasswordSceneComponent = ({
         </EdgeAnim>
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
           <FilledTextInput
-            horizontal={0.75}
+            horizontal={1.25}
             bottom={1.25}
             value={confirmPassword}
             secureTextEntry
@@ -211,7 +211,7 @@ const ChangePasswordSceneComponent = ({
           {renderInterior()}
         </KeyboardAvoidingView>
       ) : (
-        <View style={styles.container}>{renderInterior()}</View>
+        renderInterior()
       )}
     </ThemedScene>
   )
@@ -227,7 +227,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.875),
     marginBottom: theme.rem(2),
-    marginTop: theme.rem(1)
+    marginTop: theme.rem(1),
+    marginHorizontal: theme.rem(0.5)
   },
   actions: {
     flexDirection: 'row',
