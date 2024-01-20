@@ -1,10 +1,16 @@
-// copied EdgeText component from 'edge-react-gui'
+/**
+ * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
+ */
 
 import * as React from 'react'
-import { Text, TextProps, TextStyle } from 'react-native'
-import { cacheStyles } from 'react-native-patina'
+import { Platform, Text, TextProps, TextStyle } from 'react-native'
 
-import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import {
+  cacheStyles,
+  Theme,
+  ThemeProps,
+  withTheme
+} from '../services/ThemeContext'
 
 interface OwnProps {
   children: React.ReactNode
@@ -12,10 +18,11 @@ interface OwnProps {
   numberOfLines?: number
   style?: TextStyle
   disableFontScaling?: boolean
+  minimumFontScale?: number
 }
 
-class EdgeTextComponent extends React.PureComponent<
-  OwnProps & TextProps & ThemeProps
+export class EdgeTextComponent extends React.PureComponent<
+  OwnProps & ThemeProps & TextProps
 > {
   render() {
     const {
@@ -25,17 +32,15 @@ class EdgeTextComponent extends React.PureComponent<
       disableFontScaling = false,
       ...props
     } = this.props
-    const { text } = getStyles(theme)
-    let numberOfLines =
-      typeof this.props.numberOfLines === 'number'
-        ? this.props.numberOfLines
-        : 1
+    const { text, androidAdjust } = getStyles(theme)
+    let { numberOfLines = 1 } = this.props
     if (typeof children === 'string' && children.includes('\n')) {
       numberOfLines = numberOfLines + (children.match(/\n/g) || []).length
     }
+
     return (
       <Text
-        style={[text, style]}
+        style={[text, style, Platform.OS === 'android' ? androidAdjust : null]}
         numberOfLines={numberOfLines}
         adjustsFontSizeToFit={!disableFontScaling}
         minimumFontScale={0.65}
@@ -51,7 +56,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   text: {
     color: theme.primaryText,
     fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1)
+    fontSize: theme.rem(1),
+    includeFontPadding: false
+  },
+  androidAdjust: {
+    top: -1
   }
 }))
 
