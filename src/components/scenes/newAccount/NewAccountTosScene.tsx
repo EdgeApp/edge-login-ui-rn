@@ -18,8 +18,8 @@ import { showChallengeModal, showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { Checkbox } from '../../themed/Checkbox'
 import { EdgeText } from '../../themed/EdgeText'
-import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
+import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
 
 export interface UpgradeTosParams {
   account: EdgeAccount
@@ -51,7 +51,6 @@ const TosComponent = (props: Props) => {
   )
   const showNext = !termValues.includes(false)
   const scrollViewRef = useScrollToEnd(showNext)
-  const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
 
   const { appName = lstrings.app_name_default } = branding
   const terms: string[] = [
@@ -110,11 +109,12 @@ const TosComponent = (props: Props) => {
           style={styles.actions}
           visible={showNext}
         >
-          <MainButton
-            label={lstrings.confirm}
-            paddingRem={0.7}
-            type={buttonType}
-            onPress={onNext}
+          <ButtonsViewUi4
+            primary={{
+              label: lstrings.confirm,
+              onPress: onNext
+            }}
+            parentType="scene"
           />
         </EdgeAnim>
       </ScrollView>

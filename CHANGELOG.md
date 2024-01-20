@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- added: react-native-haptic-feedback
+- changed: Update buttons, modals, and cards to their edge-react-gui UI4 counterparts
+- changed: "Get Started" -> "Create Account" on the Password Login Scene
+- fixed: New password scene showing blank error message
+
 ## 3.1.2 (2024-01-19)
 
 - fixed: Copy text-input visual improvements from edge-react-gui.
