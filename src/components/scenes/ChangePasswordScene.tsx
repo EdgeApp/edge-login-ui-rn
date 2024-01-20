@@ -80,6 +80,7 @@ const ChangePasswordSceneComponent = ({
   const handlePress = useHandler(async () => {
     if (!isRequirementsMet) return
     if (password !== confirmPassword) {
+      setConfirmPasswordErrorMessage(lstrings.password_mismatch_error)
       setIsShowError(true)
       return
     }
@@ -168,7 +169,11 @@ const ChangePasswordSceneComponent = ({
             enter={{ type: 'fadeInUp', distance: 50 }}
             exit={{ type: 'fadeOutUp', distance: 50 }}
           >
-            <AlertCardUi4 type="error" title={confirmPasswordErrorMessage} />
+            <AlertCardUi4
+              marginRem={[0.75, 1.25]}
+              type="error"
+              title={confirmPasswordErrorMessage}
+            />
           </EdgeAnim>
         ) : null}
         <EdgeAnim
