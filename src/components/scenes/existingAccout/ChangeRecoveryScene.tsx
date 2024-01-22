@@ -334,7 +334,7 @@ export const ChangeRecoveryScene = (props: Props) => {
           label={lstrings.recovery_change_button}
           marginRem={1}
           onPress={changeRecovery}
-          type="secondary"
+          type="primary"
         />
         <TouchableOpacity onPress={deleteRecovery}>
           <View style={styles.disableButtonContainer}>
@@ -363,7 +363,7 @@ export const ChangeRecoveryScene = (props: Props) => {
           marginRem={[0.5, 0]}
           onPress={saveRecoveryViaShare}
           disabled={!confirmButtonsEnabled}
-          type="secondary"
+          type="primary"
         />
         <MainButton
           alignSelf="stretch"

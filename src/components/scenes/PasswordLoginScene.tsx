@@ -51,8 +51,8 @@ import { CreateAccountType } from '../publicApi/types'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
-import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 const MAX_DISPLAYED_LOCAL_USERS = 5
 
@@ -191,13 +191,13 @@ export const PasswordLoginScene = (props: Props) => {
   })
 
   const handleSubmitPassword = useHandler(() => {
-    setSpinner(true)
     handleSubmit()
       .catch(e => console.error(e))
       .finally(() => setSpinner(false))
   })
 
   const handleSubmit = useHandler(async (challengeId?: string) => {
+    setSpinner(true)
     const otpAttempt: LoginAttempt = { type: 'password', username, password }
 
     try {
@@ -518,48 +518,37 @@ export const PasswordLoginScene = (props: Props) => {
   }
 
   const renderButtons = () => {
-    const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
-
     return (
       <View style={styles.buttonsBox}>
-        <EdgeAnim enter={{ type: 'fadeInDown', distance: 20 }}>
-          <MainButton
-            type="textOnly"
-            onPress={handleForgotPassword}
-            label={lstrings.forgot_password}
-          />
-        </EdgeAnim>
-        <EdgeAnim
-          style={styles.loginButtonBox}
-          enter={{ type: 'fadeInDown', distance: 40 }}
-        >
-          <MainButton
-            label={lstrings.login_button}
-            testID="loginButton"
-            type={buttonType}
-            disabled={
-              username.length === 0 ||
-              password.length === 0 ||
-              usernameErrorMessage != null ||
-              passwordErrorMessage != null
-            }
-            spinner={spinner}
-            onPress={handleSubmit}
-          />
-        </EdgeAnim>
-
-        <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>
-          <MainButton
-            type="textOnly"
-            testID="createAccountButton"
-            onPress={handleCreateAccount}
-            label={lstrings.get_started}
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+          <ButtonsViewUi4
+            primary={{
+              label: lstrings.login_button,
+              onPress: handleSubmit,
+              disabled:
+                username.length === 0 ||
+                password.length === 0 ||
+                usernameErrorMessage != null ||
+                passwordErrorMessage != null,
+              spinner
+            }}
+            secondary={{
+              label: lstrings.landing_create_account_button,
+              onPress: handleCreateAccount,
+              disabled: username.length === 0 || spinner
+            }}
+            tertiary={{
+              label: lstrings.forgot_password,
+              onPress: handleForgotPassword,
+              disabled: username.length === 0 || spinner
+            }}
           />
         </EdgeAnim>
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
           <TouchableOpacity onPress={handleQrModal}>
             <AntDesignIcon
               name="qrcode"
+              style={styles.qrIcon}
               color={theme.icon}
               size={theme.rem(1.75)}
             />
@@ -631,7 +620,8 @@ const getStyles = cacheStyles((theme: Theme) => {
       width: '70%'
     },
     buttonsBox: {
-      alignItems: 'center'
+      alignItems: 'center',
+      marginTop: theme.rem(1)
     },
     inputWrapper: {
       position: 'relative',
@@ -653,6 +643,9 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     iconColor: {
       color: theme.iconTappable
+    },
+    qrIcon: {
+      marginTop: theme.rem(1)
     }
   }
 })

@@ -94,7 +94,7 @@ const ChangePinSceneComponent = ({
         >
           <MainButton
             label={mainButtonLabel}
-            type="secondary"
+            type="primary"
             onPress={handlePress}
           />
         </EdgeAnim>

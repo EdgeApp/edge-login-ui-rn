@@ -32,6 +32,7 @@ The login UI depends on some extra external native libraries, which you will hav
   - We use AntDesign, Entypo, MaterialIcons, FontAwesome, FontAwesome5, and SimpleLineIcons.
 - react-native-webview v13
 - rn-id-blurview v1
+- react-native-haptic-feedback v1 (optional)
 
 To initialize the Edge core library, your application needs to mount the `MakeEdgeContext` component and keep it around for the lifetime of the app. The `MakeEdgeContext` component will create and manage an `EdgeContext` object.
 

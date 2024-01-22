@@ -1,8 +1,15 @@
 /**
- * IMPORTANT: Changes in this file MUST be duplicated in edge-react-gui!
+ * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
  */
+
 import * as React from 'react'
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import {
+  Platform,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -27,13 +34,13 @@ export function ModalTitle(props: ModalTitleProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
+  const androidAdjust = Platform.OS === 'android' ? styles.androidAdjust : null
+  const centerStyle = center ? styles.titleCenter : null
 
   return (
     <View style={styles.titleContainer}>
       {icon ? <View style={styles.titleIconContainer}>{icon}</View> : null}
-      <Text
-        style={[styles.titleText, center ? styles.titleCenter : null, padding]}
-      >
+      <Text style={[styles.titleText, centerStyle, padding, androidAdjust]}>
         {children}
       </Text>
     </View>
@@ -49,11 +56,11 @@ export function ModalMessage(props: {
   const theme = useTheme()
   const styles = getStyles(theme)
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
+  const warningStyle = isWarning ? styles.warningText : null
+  const androidAdjust = Platform.OS === 'android' ? styles.androidAdjust : null
 
   return (
-    <Text
-      style={[styles.messageText, padding, isWarning && styles.warningText]}
-    >
+    <Text style={[styles.messageText, padding, warningStyle, androidAdjust]}>
       {children}
     </Text>
   )
@@ -115,6 +122,9 @@ export const ModalFooterFade = () => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  androidAdjust: {
+    top: -1
+  },
   closeContainer: {
     alignItems: 'center',
     padding: theme.rem(1),
@@ -129,7 +139,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   titleContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    margin: theme.rem(0.5)
+    marginHorizontal: theme.rem(0.5)
   },
   titleIconContainer: {
     marginRight: theme.rem(0.5)
@@ -137,11 +147,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   titleText: {
     color: theme.primaryText,
     fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(1.2),
-    marginVertical: theme.rem(0.5)
+    fontSize: theme.rem(1.2)
   },
   titleCenter: {
-    textAlign: 'center'
+    textAlign: 'center',
+    flexGrow: 1
   },
   warningText: {
     color: theme.warningText

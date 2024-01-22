@@ -185,9 +185,8 @@ export const ChangeUsernameComponent = (props: Props) => {
           </EdgeAnim>
           <EdgeAnim enter={{ type: 'fadeInDown', distance: 50 }}>
             <MainButton
-              alignSelf="center"
               label={lstrings.next_label}
-              type="secondary"
+              type="primary"
               marginRem={[1.5, 0.5]}
               disabled={isNextDisabled}
               onPress={handleNext}

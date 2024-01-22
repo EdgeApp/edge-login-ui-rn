@@ -10,8 +10,8 @@ import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { scale } from '../../util/scaling'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
-import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 interface Props extends SceneProps<'landing'> {
   branding: Branding
@@ -53,24 +53,22 @@ export const LandingScene = (props: Props) => {
                 </Text>
               </View>
             </View>
-            <View style={styles.createButtonBox}>
-              <MainButton
-                testID="createAccountButton"
-                label={lstrings.get_started}
-                type="secondary"
-                onPress={handleCreate}
-              />
-            </View>
-            <View style={styles.loginButtonBox}>
-              <MainButton
-                testID="alreadyHaveAccountButton"
-                onPress={handlePassword}
-                label={lstrings.landing_already_have_account}
-                type="textOnly"
-              />
-            </View>
           </View>
         </View>
+
+        <ButtonsViewUi4
+          primary={{
+            label: lstrings.get_started,
+            testID: 'createAccountButton',
+            onPress: handleCreate
+          }}
+          tertiary={{
+            label: lstrings.landing_already_have_account,
+            testID: 'alreadyHaveAccountButton',
+            onPress: handlePassword
+          }}
+          parentType="scene"
+        />
       </View>
     </ThemedScene>
   )
@@ -83,10 +81,9 @@ const styles = {
     height: '100%'
   },
   inner: {
-    position: 'relative',
-    flex: 1,
-    width: '100%',
-    height: '100%'
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexGrow: 1
   },
   featureBox: {
     position: 'relative',
@@ -106,15 +103,6 @@ const styles = {
     // height: scale(186), 306- 125 - remaining space.
     width: '100%',
     justifyContent: 'flex-end'
-  },
-  createButtonBox: {
-    alignSelf: 'center',
-    width: '70%'
-  },
-  loginButtonBox: {
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    marginTop: scale(28)
   },
   tagText: {
     width: '80%',

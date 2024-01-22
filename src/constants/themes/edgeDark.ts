@@ -30,7 +30,21 @@ const palette = {
   transparent: 'transparent',
 
   // Fonts
-  SFUITextRegular: 'SF-UI-Text-Regular'
+  SFUITextRegular: 'SF-UI-Text-Regular',
+
+  // UI4 palette
+  whiteOp37: 'rgba(255, 255, 255, .37)',
+  darkGreyOp30: 'hsla(0, 0%, 53%, 0.3)',
+  blackOp65: 'rgba(0, 0, 0, .65)',
+
+  // Background:
+  backgroundBlack: '#1a1a1a',
+
+  // Gradients
+  warningOuter: 'rgba(119, 43, 15, 0.44)',
+  warningInner: 'rgba(130, 91, 33, 0.44)',
+  errorOuter: 'rgba(148, 71, 46, 0.44)',
+  errorInner: 'rgba(150, 44, 49, 0.44)'
 }
 
 export const edgeDark: Theme = {
@@ -52,12 +66,15 @@ export const edgeDark: Theme = {
   iconDeactivated: palette.whiteOp75,
   iconTappable: palette.edgeMint,
 
-  // modal
-  modal: palette.edgeNavy,
-  modalBlurType: 'light',
+  // Modal
+  modal: palette.backgroundBlack,
+  modalCloseIcon: palette.edgeMint,
   modalBorderColor: palette.transparent,
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
+  modalBackground: palette.whiteOp37,
+  modalSceneOverlayColor: palette.black,
+  modalDragbarColor: palette.darkGreyOp30,
 
   // text
   primaryText: palette.white,
@@ -184,5 +201,29 @@ export const edgeDark: Theme = {
   fontFaceMedium: 'System',
   fontFaceBold: 'System',
   fontFaceSymbols:
-    Platform.OS === 'android' ? palette.SFUITextRegular : 'System'
+    Platform.OS === 'android' ? palette.SFUITextRegular : 'System',
+
+  // UI4
+  cardBaseColor: palette.whiteOp10,
+  cardGradientWarning: {
+    colors: [
+      palette.warningOuter,
+      palette.warningInner,
+      palette.warningInner,
+      palette.warningOuter
+    ],
+    end: { x: 0.9, y: 0 },
+    start: { x: 0, y: 0.9 }
+  },
+  cardGradientError: {
+    colors: [
+      palette.errorOuter,
+      palette.errorInner,
+      palette.errorInner,
+      palette.errorOuter
+    ],
+    end: { x: 0.9, y: 0 },
+    start: { x: 0, y: 0.9 }
+  },
+  cardOverlayDisabled: palette.blackOp65
 }

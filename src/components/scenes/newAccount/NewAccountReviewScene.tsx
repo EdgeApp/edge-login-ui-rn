@@ -71,11 +71,7 @@ const AccountReviewComponent = (props: Props) => {
           style={styles.actions}
           enter={{ type: 'fadeInDown', distance: 60 }}
         >
-          <MainButton
-            label={lstrings.create}
-            type="secondary"
-            onPress={onNext}
-          />
+          <MainButton label={lstrings.create} type="primary" onPress={onNext} />
         </EdgeAnim>
       </ScrollView>
     </ThemedScene>

@@ -1,6 +1,6 @@
 import { EdgeAccount, EdgePasswordRules } from 'edge-core-js'
 import * as React from 'react'
-import { Keyboard, KeyboardAvoidingView, View } from 'react-native'
+import { Keyboard, KeyboardAvoidingView } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { lstrings } from '../../common/locales/strings'
@@ -15,10 +15,10 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
-import { FormError } from '../themed/FormError'
 import { MainButton } from '../themed/MainButton'
 import { PasswordStatus } from '../themed/PasswordStatus'
 import { ThemedScene } from '../themed/ThemedScene'
+import { AlertCardUi4 } from '../ui4/AlertUi4'
 
 export interface ChangePasswordParams {
   account: EdgeAccount
@@ -80,6 +80,7 @@ const ChangePasswordSceneComponent = ({
   const handlePress = useHandler(async () => {
     if (!isRequirementsMet) return
     if (password !== confirmPassword) {
+      setConfirmPasswordErrorMessage(lstrings.password_mismatch_error)
       setIsShowError(true)
       return
     }
@@ -134,7 +135,7 @@ const ChangePasswordSceneComponent = ({
         )}
         <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
           <FilledTextInput
-            horizontal={0.75}
+            horizontal={1.25}
             bottom={1.25}
             value={password}
             secureTextEntry
@@ -149,7 +150,7 @@ const ChangePasswordSceneComponent = ({
         </EdgeAnim>
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
           <FilledTextInput
-            horizontal={0.75}
+            horizontal={1.25}
             bottom={1.25}
             value={confirmPassword}
             secureTextEntry
@@ -168,9 +169,11 @@ const ChangePasswordSceneComponent = ({
             enter={{ type: 'fadeInUp', distance: 50 }}
             exit={{ type: 'fadeOutUp', distance: 50 }}
           >
-            <FormError marginRem={[0, 0.75]}>
-              {confirmPasswordErrorMessage}
-            </FormError>
+            <AlertCardUi4
+              marginRem={[0.75, 1.25]}
+              type="error"
+              title={confirmPasswordErrorMessage}
+            />
           </EdgeAnim>
         ) : null}
         <EdgeAnim
@@ -184,7 +187,7 @@ const ChangePasswordSceneComponent = ({
               alignSelf="center"
               disabled
               marginRem={0.5}
-              type="secondary"
+              type="primary"
               spinner
             />
           ) : (
@@ -194,7 +197,7 @@ const ChangePasswordSceneComponent = ({
               disabled={!isRequirementsMet || confirmPassword === ''}
               marginRem={0.5}
               onPress={handlePress}
-              type="secondary"
+              type="primary"
             />
           )}
         </EdgeAnim>
@@ -213,7 +216,7 @@ const ChangePasswordSceneComponent = ({
           {renderInterior()}
         </KeyboardAvoidingView>
       ) : (
-        <View style={styles.container}>{renderInterior()}</View>
+        renderInterior()
       )}
     </ThemedScene>
   )
@@ -229,7 +232,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.875),
     marginBottom: theme.rem(2),
-    marginTop: theme.rem(1)
+    marginTop: theme.rem(1),
+    marginHorizontal: theme.rem(0.5)
   },
   actions: {
     flexDirection: 'row',

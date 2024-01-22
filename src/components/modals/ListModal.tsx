@@ -1,33 +1,24 @@
-/**
- * IMPORTANT: Changes in this file MUST be duplicated in edge-react-gui!
- */
 import * as React from 'react'
-import {
-  FlatList,
-  Keyboard,
-  ListRenderItem,
-  ViewStyle,
-  ViewToken
-} from 'react-native'
+import { Keyboard, ListRenderItem, ViewStyle, ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { useFilter } from '../../hooks/useFilter'
-import { AnimatedIconComponent, SearchIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
-import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { SimpleTextInput } from '../themed/SimpleTextInput'
-import { ThemedModal } from '../themed/ThemedModal'
+import { FilledTextInput } from '../themed/FilledTextInput'
+import { ModalFooter, ModalMessage } from '../themed/ModalParts'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props<T> {
   bridge: AirshipBridge<any>
   // Header Props
   title?: string
   message?: string
-  hideSearch?: boolean // Defaults to 'false'
+  textInput?: boolean // Defaults to 'true'
   initialValue?: string // Defaults to ''
-  // SimpleTextInput properties:
-  iconComponent?: AnimatedIconComponent | null // Defaults to `SearchIconAnimated`
-  placeholder?: string
+  // FilledTextInput properties:
+  searchIcon?: boolean // Defaults to 'true'
+  label?: string // Defaults to ''
   autoCorrect?: boolean // Defaults to 'false'
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'words'
   returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'search'
@@ -44,44 +35,31 @@ interface Props<T> {
   onSubmitEditing?: (text: string) => void
   secureTextEntry?: boolean // Defaults to 'false'
   autoFocus?: boolean // Defaults to 'false'
-  blurOnClear?: boolean // Defaults to 'false'
   // List Props
   rowsData?: T[] // Defaults to []
+  fullScreen?: boolean
   rowComponent?: (props: T) => React.ReactElement
   rowDataFilter?: (filterText: string, data: T, index: number) => boolean
   onViewableItemsChanged?: (info: {
     viewableItems: ViewToken[]
     changed: ViewToken[]
   }) => void
-  // Footer Props
-  closeArrow?: boolean // Defaults to 'true'
 }
 
 export function ListModal<T>({
   bridge,
   title,
   message,
-  hideSearch = false,
+  textInput = true,
   initialValue = '',
   rowsData = [],
+  fullScreen = true,
   rowComponent,
   rowDataFilter,
-  closeArrow = true,
   onSubmitEditing,
   onViewableItemsChanged,
-  // SimpleTextInput props:
-  iconComponent = SearchIconAnimated,
-  placeholder,
-  autoCorrect = false,
-  autoCapitalize = 'words',
-  returnKeyType = 'search',
-  keyboardType,
-  blurOnSubmit,
-  inputAccessoryViewID,
-  maxLength,
-  secureTextEntry,
-  autoFocus,
-  blurOnClear = false
+  label: placeholder,
+  ...textProps
 }: Props<T>) {
   const theme = useTheme()
   const [text, setText] = React.useState<string>(initialValue)
@@ -102,46 +80,37 @@ export function ListModal<T>({
   }, [theme])
 
   return (
-    <ThemedModal
-      bridge={bridge}
-      closeButton={closeArrow}
-      onCancel={handleCancel}
-    >
-      {title == null ? null : <ModalTitle>{title}</ModalTitle>}
+    <ModalUi4 title={title} bridge={bridge} onCancel={handleCancel}>
       {message == null ? null : <ModalMessage>{message}</ModalMessage>}
-      {hideSearch ? null : (
-        <SimpleTextInput
+      {!textInput ? null : (
+        <FilledTextInput
           vertical={1}
           horizontal={0.5}
           // Our props:
+          searchIcon
+          blurOnClear={false}
+          autoCorrect={false}
+          autoCapitalize="words"
+          returnKeyType="done"
           testID={title}
           onChangeText={handleChangeText}
           onSubmitEditing={handleSubmitEditing}
           value={text}
-          // Outlined Text input props:
-          iconComponent={iconComponent}
           placeholder={placeholder}
-          autoCorrect={autoCorrect}
-          autoCapitalize={autoCapitalize}
-          returnKeyType={returnKeyType}
-          keyboardType={keyboardType}
-          blurOnSubmit={blurOnSubmit}
-          inputAccessoryViewID={inputAccessoryViewID}
-          maxLength={maxLength}
-          secureTextEntry={secureTextEntry}
-          autoFocus={autoFocus}
-          blurOnClear={blurOnClear}
+          // Outlined Text input props:
+          {...textProps}
         />
       )}
       <FlatList
         contentContainerStyle={scrollPadding}
         data={filteredRows}
+        // estimatedItemSize={theme.rem(5)}
         keyboardShouldPersistTaps="handled"
         keyExtractor={(_, i) => `${i}`}
         renderItem={renderItem}
         onScroll={() => Keyboard.dismiss()}
         onViewableItemsChanged={onViewableItemsChanged}
       />
-    </ThemedModal>
+    </ModalUi4>
   )
 }
