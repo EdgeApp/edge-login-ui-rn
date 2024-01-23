@@ -535,12 +535,12 @@ export const PasswordLoginScene = (props: Props) => {
             secondary={{
               label: lstrings.landing_create_account_button,
               onPress: handleCreateAccount,
-              disabled: username.length === 0 || spinner
+              disabled: spinner
             }}
             tertiary={{
               label: lstrings.forgot_password,
               onPress: handleForgotPassword,
-              disabled: username.length === 0 || spinner
+              disabled: spinner
             }}
           />
         </EdgeAnim>
