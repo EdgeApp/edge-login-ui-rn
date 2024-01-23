@@ -8,6 +8,7 @@ import { LOGO_BIG } from '../../../assets'
 import { lstrings } from '../../../common/locales/strings'
 import * as Constants from '../../../constants/index'
 import { useImports } from '../../../hooks/useImports'
+import { useLocalUsers } from '../../../hooks/useLocalUsers'
 import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
@@ -24,9 +25,12 @@ interface Props extends SceneProps<'newAccountWelcome'> {
 export const NewAccountWelcomeScene = (props: Props) => {
   const { branding } = props
   const dispatch = useDispatch()
-  const { onLogEvent = () => {} } = useImports()
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  const { experimentConfig, onLogEvent = () => {} } = useImports()
+  const localUsers = useLocalUsers()
+  const hasSavedUsers = localUsers.length > 0
 
   const appName = branding.appName || lstrings.app_name_default
   const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
@@ -36,7 +40,13 @@ export const NewAccountWelcomeScene = (props: Props) => {
     onLogEvent(`Signup_Welcome_Next`)
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'newAccountUsername', params: {} }
+      data: {
+        name:
+          hasSavedUsers || experimentConfig.createAccountType === 'full'
+            ? 'newAccountUsername'
+            : 'newAccountPin',
+        params: {}
+      }
     })
   }
 
