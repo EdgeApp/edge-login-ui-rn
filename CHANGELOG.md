@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: TOS Scene Margins
+
 ## 3.2.0 (2024-01-22)
 
 - added: react-native-haptic-feedback

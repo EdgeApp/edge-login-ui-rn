@@ -67,7 +67,11 @@ const TosComponent = (props: Props) => {
   })
 
   return (
-    <ThemedScene onBack={onBack} title={lstrings.account_confirmation}>
+    <ThemedScene
+      onBack={onBack}
+      title={lstrings.account_confirmation}
+      paddingRem={[0.5, 0.5, 0]}
+    >
       <ScrollView ref={scrollViewRef} contentContainerStyle={styles.content}>
         <EdgeAnim enter={{ type: 'fadeInRight', distance: 50 }}>
           <EdgeText
@@ -106,7 +110,6 @@ const TosComponent = (props: Props) => {
         <EdgeAnim
           enter={{ type: 'fadeInDown' }}
           exit={{ type: 'fadeOutDown' }}
-          style={styles.actions}
           visible={showNext}
         >
           <ButtonsViewUi4
@@ -125,7 +128,8 @@ const TosComponent = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     marginHorizontal: theme.rem(0.5),
-    marginTop: theme.rem(0.5)
+    flexGrow: 1,
+    flexShrink: 0
   },
   subtitle: {
     fontFamily: theme.fontFaceBold,
@@ -146,12 +150,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   agreeTextLink: {
     fontSize: theme.rem(0.875),
     color: theme.linkText
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: theme.rem(2.75),
-    minHeight: theme.rem(6)
   }
 }))
 
