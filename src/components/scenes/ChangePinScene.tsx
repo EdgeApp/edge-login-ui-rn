@@ -191,9 +191,9 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
   const { route } = props
   const { username, password } = route.params
   const dispatch = useDispatch()
-  const { experimentConfig, onLogEvent = () => {} } = useImports()
+  const { onLogEvent = () => {} } = useImports()
 
-  const lightAccount = experimentConfig.createAccountType === 'light'
+  const lightAccount = username == null
 
   const handleBack = useHandler(() => {
     dispatch(

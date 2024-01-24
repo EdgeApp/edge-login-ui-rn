@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -26,7 +26,11 @@ export function LinkRow(props: Props) {
     marginRem,
     onPress,
     renderIcon = (theme: Theme) => (
-      <AntDesignIcon name="right" size={theme.rem(1)} />
+      <FontAwesome5
+        name="chevron-right"
+        color={theme.iconTappable}
+        size={theme.rem(1)}
+      />
     )
   } = props
   const theme = useTheme()
@@ -64,7 +68,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       marginLeft: theme.rem(1)
     },
     text: {
-      color: theme.linkText,
+      color: theme.primaryText,
       flex: 1,
       fontFamily: theme.fontFamily,
       fontSize: theme.rem(1)
