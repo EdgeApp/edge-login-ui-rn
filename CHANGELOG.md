@@ -2,7 +2,13 @@
 
 ## Unreleased
 
+## 3.2.1 (2024-01-24)
+
+- fixed: Tight spacing within FilledTextInput
 - fixed: TOS Scene Margins
+- fixed: Light vs full account creation routing from LandingScene
+- fixed: Disabled button logic in Password Login Scene
+- fixed: Colors and cheverons in OtpError/2FA Scene
 
 ## 3.2.0 (2024-01-22)
 
