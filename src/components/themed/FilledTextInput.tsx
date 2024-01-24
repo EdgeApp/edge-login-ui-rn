@@ -1,3 +1,7 @@
+/**
+ * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
+ */
+
 import * as React from 'react'
 import { useMemo } from 'react'
 import {
@@ -242,8 +246,9 @@ export const FilledTextInput = React.forwardRef<
     [hasIcon, hasValue]
   )
   const rightIconSize = useDerivedValue(
-    () => (hasValue ? themeRem : focusAnimation.value * themeRem),
-    [hasValue]
+    () =>
+      clearIcon ? (hasValue ? themeRem : focusAnimation.value * themeRem) : 0,
+    [clearIcon, hasValue]
   )
 
   const scale = useDerivedValue(() => scaleProp?.value ?? 1)
@@ -361,17 +366,15 @@ export const FilledTextInput = React.forwardRef<
             </TouchableWithoutFeedback>
           ) : null}
 
-          {clearIcon ? (
-            <TouchableOpacity
-              accessible
-              onPress={handleClearPress}
-              testID={`${testID}.clearIcon`}
-            >
-              <SideContainer scale={rightIconSize}>
-                <CloseIconAnimated color={iconColor} size={rightIconSize} />
-              </SideContainer>
-            </TouchableOpacity>
-          ) : null}
+          <TouchableOpacity
+            accessible
+            onPress={handleClearPress}
+            testID={`${testID}.clearIcon`}
+          >
+            <SideContainer scale={rightIconSize}>
+              <CloseIconAnimated color={iconColor} size={rightIconSize} />
+            </SideContainer>
+          </TouchableOpacity>
         </Container>
       </TouchableWithoutFeedback>
       {valid != null || error != null || charactersLeft !== '' ? (
