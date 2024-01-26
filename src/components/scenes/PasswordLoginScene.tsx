@@ -191,13 +191,15 @@ export const PasswordLoginScene = (props: Props) => {
   })
 
   const handleSubmitPassword = useHandler(() => {
-    handleSubmit()
+    setSpinner(true)
+    handleSubmitInner()
       .catch(e => console.error(e))
       .finally(() => setSpinner(false))
   })
 
-  const handleSubmit = useHandler(async (challengeId?: string) => {
-    setSpinner(true)
+  // Use `handleSubmitPassword` instead of this one.
+  // We have this separated out to handle the CAPTCHA modal recursion.
+  const handleSubmitInner = async (challengeId?: string) => {
     const otpAttempt: LoginAttempt = { type: 'password', username, password }
 
     try {
@@ -238,7 +240,7 @@ export const PasswordLoginScene = (props: Props) => {
         if (result == null) return // User closed the modal
         if (result) {
           // Try again with the passed challenge ID included
-          await handleSubmit(challengeError.challengeId)
+          await handleSubmitInner(challengeError.challengeId)
         } else {
           setPasswordErrorMessage(lstrings.failed_captcha_error)
         }
@@ -250,7 +252,7 @@ export const PasswordLoginScene = (props: Props) => {
         error instanceof Error ? error.message : undefined
       )
     }
-  })
+  }
 
   const handleDelete = useHandler((userInfo: LoginUserInfo) => {
     Keyboard.dismiss()
@@ -524,7 +526,7 @@ export const PasswordLoginScene = (props: Props) => {
           <ButtonsViewUi4
             primary={{
               label: lstrings.login_button,
-              onPress: handleSubmit,
+              onPress: handleSubmitPassword,
               disabled:
                 username.length === 0 ||
                 password.length === 0 ||
