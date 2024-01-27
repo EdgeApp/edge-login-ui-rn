@@ -1,9 +1,14 @@
 /**
- * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and edge-login-ui-rn!
  */
 
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, ViewStyle } from 'react-native'
+import {
+  ActivityIndicator,
+  TouchableOpacity,
+  View,
+  ViewStyle
+} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
@@ -118,14 +123,24 @@ export function ButtonUi4(props: Props) {
 
   const { spinnerColor, textStyle, gradientProps } = buttonProps[type]
 
-  const dynamicGradientStyles = {
-    alignSelf,
-    opacity: disabled ? 0.3 : pending ? 0.7 : 1
-  }
-
   // Show a spinner if waiting on the onPress promise OR if the spinner prop is
   // manually enabled.
   const hideContent = pending || spinner
+
+  const dynamicGradientStyles = React.useMemo(
+    () => ({
+      alignSelf,
+      opacity: disabled ? 0.3 : hideContent ? 0.7 : 1
+    }),
+    [alignSelf, disabled, hideContent]
+  )
+
+  // Hide the content by setting its opacity to 0 instead of removing it. This
+  // will allow the button to remain constant in size.
+  const contentOpacityStyle = React.useMemo(
+    () => ({ opacity: hideContent ? 0 : 1 }),
+    [hideContent]
+  )
 
   const maybeText =
     label == null ? null : (
@@ -134,12 +149,23 @@ export function ButtonUi4(props: Props) {
       </EdgeText>
     )
 
-  const containerStyle: ViewStyle[] = [styles.containerCommon]
-  if (layout === 'column') containerStyle.push(styles.containerColumn)
-  if (layout === 'row') containerStyle.push(styles.containerRow)
-  if (layout === 'solo') containerStyle.push(styles.containerSolo)
+  const containerStyle = React.useMemo(() => {
+    const retStyle: ViewStyle[] = [styles.containerCommon]
+    if (layout === 'column') retStyle.push(styles.containerColumn)
+    if (layout === 'row') retStyle.push(styles.containerRow)
+    if (layout === 'solo') retStyle.push(styles.containerSolo)
 
-  if (type === 'tertiary') containerStyle.push(styles.containerTertiary)
+    if (type === 'tertiary') retStyle.push(styles.containerTertiary)
+    return retStyle
+  }, [
+    layout,
+    styles.containerColumn,
+    styles.containerCommon,
+    styles.containerRow,
+    styles.containerSolo,
+    styles.containerTertiary,
+    type
+  ])
 
   const customMargin =
     marginRem == null
@@ -149,16 +175,14 @@ export function ButtonUi4(props: Props) {
     paddingRem == null
       ? undefined
       : sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
-  const finalContainerCommon = [
-    styles.containerCommon,
-    containerStyle,
-    customMargin,
-    customPadding
-  ]
+  const finalContainerCommon = React.useMemo(
+    () => [styles.containerCommon, containerStyle, customMargin, customPadding],
+    [containerStyle, customMargin, customPadding, styles.containerCommon]
+  )
 
   return (
     <TouchableOpacity
-      disabled={disabled || pending}
+      disabled={disabled || pending || spinner}
       style={finalContainerCommon}
       onPress={handlePress}
       testID={testID}
@@ -172,8 +196,10 @@ export function ButtonUi4(props: Props) {
           ...finalContainerCommon
         ]}
       >
-        {hideContent ? null : children}
-        {hideContent ? null : maybeText}
+        <View style={contentOpacityStyle}>
+          {children}
+          {maybeText}
+        </View>
         {!hideContent ? null : (
           <ActivityIndicator
             color={spinnerColor}
@@ -190,7 +216,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     // Common styles:
     spinnerCommon: {
       height: theme.rem(2),
-      marginLeft: theme.rem(0.5)
+      position: 'absolute'
     },
     containerCommon: {
       borderRadius: theme.rem(theme.buttonBorderRadiusRem),
@@ -226,7 +252,8 @@ const getStyles = cacheStyles((theme: Theme) => {
       // Reduce the bounds of a tertiary button so it doesn't appear to be too
       // far from other buttons
       alignSelf: 'center',
-      padding: 0,
+      paddingHorizontal: 0,
+      paddingVertical: 0,
       height: undefined
     },
     primaryText: {
