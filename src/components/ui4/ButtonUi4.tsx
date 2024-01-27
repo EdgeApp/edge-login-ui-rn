@@ -127,14 +127,20 @@ export function ButtonUi4(props: Props) {
   // manually enabled.
   const hideContent = pending || spinner
 
-  const dynamicGradientStyles = {
-    alignSelf,
-    opacity: disabled ? 0.3 : hideContent ? 0.7 : 1
-  }
+  const dynamicGradientStyles = React.useMemo(
+    () => ({
+      alignSelf,
+      opacity: disabled ? 0.3 : hideContent ? 0.7 : 1
+    }),
+    [alignSelf, disabled, hideContent]
+  )
 
   // Hide the content by setting its opacity to 0 instead of removing it. This
   // will allow the button to remain constant in size.
-  const contentOpacity = hideContent ? 0 : 1
+  const contentOpacityStyle = React.useMemo(
+    () => ({ opacity: hideContent ? 0 : 1 }),
+    [hideContent]
+  )
 
   const maybeText =
     label == null ? null : (
@@ -143,12 +149,23 @@ export function ButtonUi4(props: Props) {
       </EdgeText>
     )
 
-  const containerStyle: ViewStyle[] = [styles.containerCommon]
-  if (layout === 'column') containerStyle.push(styles.containerColumn)
-  if (layout === 'row') containerStyle.push(styles.containerRow)
-  if (layout === 'solo') containerStyle.push(styles.containerSolo)
+  const containerStyle = React.useMemo(() => {
+    const retStyle: ViewStyle[] = [styles.containerCommon]
+    if (layout === 'column') retStyle.push(styles.containerColumn)
+    if (layout === 'row') retStyle.push(styles.containerRow)
+    if (layout === 'solo') retStyle.push(styles.containerSolo)
 
-  if (type === 'tertiary') containerStyle.push(styles.containerTertiary)
+    if (type === 'tertiary') retStyle.push(styles.containerTertiary)
+    return retStyle
+  }, [
+    layout,
+    styles.containerColumn,
+    styles.containerCommon,
+    styles.containerRow,
+    styles.containerSolo,
+    styles.containerTertiary,
+    type
+  ])
 
   const customMargin =
     marginRem == null
@@ -158,12 +175,10 @@ export function ButtonUi4(props: Props) {
     paddingRem == null
       ? undefined
       : sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
-  const finalContainerCommon = [
-    styles.containerCommon,
-    containerStyle,
-    customMargin,
-    customPadding
-  ]
+  const finalContainerCommon = React.useMemo(
+    () => [styles.containerCommon, containerStyle, customMargin, customPadding],
+    [containerStyle, customMargin, customPadding, styles.containerCommon]
+  )
 
   return (
     <TouchableOpacity
@@ -181,7 +196,7 @@ export function ButtonUi4(props: Props) {
           ...finalContainerCommon
         ]}
       >
-        <View style={{ opacity: contentOpacity }}>
+        <View style={contentOpacityStyle}>
           {children}
           {maybeText}
         </View>
