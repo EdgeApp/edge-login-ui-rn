@@ -118,11 +118,6 @@ export function ButtonUi4(props: Props) {
 
   const { spinnerColor, textStyle, gradientProps } = buttonProps[type]
 
-  const dynamicGradientStyles = {
-    alignSelf,
-    opacity: disabled ? 0.3 : pending ? 0.7 : 1
-  }
-
   // Show a spinner if waiting on the onPress promise OR if the spinner prop is
   // manually enabled.
   const hideContent = pending || spinner
@@ -158,7 +153,7 @@ export function ButtonUi4(props: Props) {
 
   return (
     <TouchableOpacity
-      disabled={disabled || pending}
+      disabled={disabled || pending || spinner}
       style={finalContainerCommon}
       onPress={handlePress}
       testID={testID}
