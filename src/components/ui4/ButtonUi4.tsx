@@ -1,9 +1,14 @@
 /**
- * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and edge-login-ui-rn!
  */
 
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, ViewStyle } from 'react-native'
+import {
+  ActivityIndicator,
+  TouchableOpacity,
+  View,
+  ViewStyle
+} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
@@ -127,6 +132,10 @@ export function ButtonUi4(props: Props) {
   // manually enabled.
   const hideContent = pending || spinner
 
+  // Hide the content by setting its opacity to 0 instead of removing it. This
+  // will allow the button to remain constant in size.
+  const contentOpacity = hideContent ? 0 : 1
+
   const maybeText =
     label == null ? null : (
       <EdgeText numberOfLines={1} disableFontScaling style={textStyle}>
@@ -172,8 +181,10 @@ export function ButtonUi4(props: Props) {
           ...finalContainerCommon
         ]}
       >
-        {hideContent ? null : children}
-        {hideContent ? null : maybeText}
+        <View style={{ opacity: contentOpacity }}>
+          {children}
+          {maybeText}
+        </View>
         {!hideContent ? null : (
           <ActivityIndicator
             color={spinnerColor}
@@ -190,7 +201,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     // Common styles:
     spinnerCommon: {
       height: theme.rem(2),
-      marginLeft: theme.rem(0.5)
+      position: 'absolute'
     },
     containerCommon: {
       borderRadius: theme.rem(theme.buttonBorderRadiusRem),
