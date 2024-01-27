@@ -221,7 +221,8 @@ const getStyles = cacheStyles((theme: Theme) => {
       // Reduce the bounds of a tertiary button so it doesn't appear to be too
       // far from other buttons
       alignSelf: 'center',
-      padding: 0,
+      paddingHorizontal: 0,
+      paddingVertical: 0,
       height: undefined
     },
     primaryText: {
