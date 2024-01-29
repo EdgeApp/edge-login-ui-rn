@@ -2,7 +2,11 @@
 
 ## Unreleased
 
+## 3.2.2 (2024-01-29)
+
 - fixed: Do not spin forever when entering an invalid password.
+- fixed: Recovery question modal showing a search box
+- fixed: Button margins on ChangeRecoveryScene
 
 ## 3.2.1 (2024-01-24)
 
