@@ -20,7 +20,7 @@ export function QuestionListModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  function renderRow(item: string): React.ReactNode {
+  function renderRow(item: string): JSX.Element {
     const radio = {
       icon: `ios-radio-button-${selected === item ? 'on' : 'off'}`,
       color: theme.iconTappable
@@ -48,10 +48,9 @@ export function QuestionListModal(props: Props) {
     <ListModal
       bridge={bridge}
       title={title}
-      hideSearch
+      textInput={false}
       rowsData={items}
-      // @ts-expect-error
-      rowComponent={renderRow}
+      rowComponent={(item: string) => renderRow(item)}
       fullScreen={false}
     />
   )

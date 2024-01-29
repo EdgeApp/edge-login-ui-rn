@@ -326,13 +326,15 @@ export const ChangeRecoveryScene = (props: Props) => {
       <WarningCard title={lstrings.answer_case_sensitive} marginRem={1} />
     ) : null
   }
+
+  // TODO: Need to rework buttons for UI4
   const renderModifyButtons = () => {
     return (
       <View style={styles.buttonsContainer}>
         <MainButton
           alignSelf="center"
+          marginRem={0}
           label={lstrings.recovery_change_button}
-          marginRem={1}
           onPress={changeRecovery}
           type="primary"
         />
@@ -350,25 +352,25 @@ export const ChangeRecoveryScene = (props: Props) => {
     return (
       <View style={styles.buttonsContainer}>
         <MainButton
-          alignSelf="stretch"
+          alignSelf="center"
           label={lstrings.confirm_email}
-          marginRem={[1, 0, 0.5, 0]}
+          marginRem={0.25}
           onPress={saveRecoveryViaEmail}
           disabled={!confirmButtonsEnabled}
           type="primary"
         />
         <MainButton
-          alignSelf="stretch"
+          alignSelf="center"
           label={lstrings.confirm_share}
-          marginRem={[0.5, 0]}
+          marginRem={0.25}
           onPress={saveRecoveryViaShare}
           disabled={!confirmButtonsEnabled}
           type="primary"
         />
         <MainButton
-          alignSelf="stretch"
+          alignSelf="center"
           label={lstrings.cancel}
-          paddingRem={[1, 0]}
+          marginRem={[0.25, 0, 1]}
           onPress={onComplete}
           type="escape"
         />
@@ -409,7 +411,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   disableButtonContainer: {
     alignSelf: 'center',
-    paddingVertical: theme.rem(1)
+    marginVertical: theme.rem(1)
   },
   disableButton: {
     color: theme.dangerText,
