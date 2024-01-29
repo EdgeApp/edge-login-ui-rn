@@ -201,8 +201,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   return {
     // Common styles:
     spinnerCommon: {
-      height: theme.rem(2),
-      marginLeft: theme.rem(0.5)
+      height: theme.rem(2)
     },
     containerCommon: {
       borderRadius: theme.rem(theme.buttonBorderRadiusRem),

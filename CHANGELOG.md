@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Button spinner position not centered
+
 ## 3.2.2 (2024-01-29)
 
 - fixed: Do not spin forever when entering an invalid password.
