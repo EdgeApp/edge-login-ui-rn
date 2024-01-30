@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.2.3 (2024-01-30)
+
 - fixed: Button spinner position not centered
 
 ## 3.2.2 (2024-01-29)
