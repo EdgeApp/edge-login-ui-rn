@@ -132,7 +132,11 @@ export function ButtonUi4(props: Props) {
 
   const maybeText =
     label == null ? null : (
-      <EdgeText numberOfLines={1} disableFontScaling style={textStyle}>
+      <EdgeText
+        numberOfLines={1}
+        disableFontScaling
+        style={[textStyle, children == null ? null : styles.leftMarginedText]}
+      >
         {label}
       </EdgeText>
     )
@@ -255,6 +259,9 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontFamily: theme.escapeButtonFont,
       fontSize: theme.rem(theme.escapeButtonFontSizeRem),
       color: theme.escapeButtonText
+    },
+    leftMarginedText: {
+      marginLeft: theme.rem(0.5)
     }
   }
 })
