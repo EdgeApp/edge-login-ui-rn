@@ -118,28 +118,46 @@ export function ButtonUi4(props: Props) {
 
   const { spinnerColor, textStyle, gradientProps } = buttonProps[type]
 
-  const dynamicGradientStyles = {
-    alignSelf,
-    opacity: disabled ? 0.3 : pending ? 0.7 : 1
-  }
-
   // Show a spinner if waiting on the onPress promise OR if the spinner prop is
   // manually enabled.
   const hideContent = pending || spinner
 
+  const dynamicGradientStyles = React.useMemo(
+    () => ({
+      alignSelf,
+      opacity: disabled ? 0.3 : hideContent ? 0.7 : 1
+    }),
+    [alignSelf, disabled, hideContent]
+  )
+
   const maybeText =
     label == null ? null : (
-      <EdgeText numberOfLines={1} disableFontScaling style={textStyle}>
+      <EdgeText
+        numberOfLines={1}
+        disableFontScaling
+        style={[textStyle, children == null ? null : styles.leftMarginedText]}
+      >
         {label}
       </EdgeText>
     )
 
-  const containerStyle: ViewStyle[] = [styles.containerCommon]
-  if (layout === 'column') containerStyle.push(styles.containerColumn)
-  if (layout === 'row') containerStyle.push(styles.containerRow)
-  if (layout === 'solo') containerStyle.push(styles.containerSolo)
+  const containerStyle = React.useMemo(() => {
+    const retStyle: ViewStyle[] = [styles.containerCommon]
+    if (layout === 'column') retStyle.push(styles.containerColumn)
+    if (layout === 'row') retStyle.push(styles.containerRow)
+    if (layout === 'solo') retStyle.push(styles.containerSolo)
 
-  if (type === 'tertiary') containerStyle.push(styles.containerTertiary)
+    if (type === 'tertiary') retStyle.push(styles.containerTertiary)
+    return retStyle
+  }, [
+    layout,
+    styles.containerColumn,
+    styles.containerCommon,
+    styles.containerRow,
+    styles.containerSolo,
+    styles.containerTertiary,
+    type
+  ])
 
   const customMargin =
     marginRem == null
@@ -149,16 +167,14 @@ export function ButtonUi4(props: Props) {
     paddingRem == null
       ? undefined
       : sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
-  const finalContainerCommon = [
-    styles.containerCommon,
-    containerStyle,
-    customMargin,
-    customPadding
-  ]
+  const finalContainerCommon = React.useMemo(
+    () => [styles.containerCommon, containerStyle, customMargin, customPadding],
+    [containerStyle, customMargin, customPadding, styles.containerCommon]
+  )
 
   return (
     <TouchableOpacity
-      disabled={disabled || pending}
+      disabled={disabled || pending || spinner}
       style={finalContainerCommon}
       onPress={handlePress}
       testID={testID}
@@ -189,8 +205,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   return {
     // Common styles:
     spinnerCommon: {
-      height: theme.rem(2),
-      marginLeft: theme.rem(0.5)
+      height: theme.rem(2)
     },
     containerCommon: {
       borderRadius: theme.rem(theme.buttonBorderRadiusRem),
@@ -226,7 +241,8 @@ const getStyles = cacheStyles((theme: Theme) => {
       // Reduce the bounds of a tertiary button so it doesn't appear to be too
       // far from other buttons
       alignSelf: 'center',
-      padding: 0,
+      paddingHorizontal: 0,
+      paddingVertical: 0,
       height: undefined
     },
     primaryText: {
@@ -243,6 +259,9 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontFamily: theme.escapeButtonFont,
       fontSize: theme.rem(theme.escapeButtonFontSizeRem),
       color: theme.escapeButtonText
+    },
+    leftMarginedText: {
+      marginLeft: theme.rem(0.5)
     }
   }
 })
