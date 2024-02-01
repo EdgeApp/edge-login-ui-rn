@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Allow button font scaling
+
 ## 3.2.3 (2024-01-30)
 
 - fixed: Button spinner position not centered
