@@ -134,7 +134,6 @@ export function ButtonUi4(props: Props) {
     label == null ? null : (
       <EdgeText
         numberOfLines={1}
-        disableFontScaling
         style={[textStyle, children == null ? null : styles.leftMarginedText]}
       >
         {label}
