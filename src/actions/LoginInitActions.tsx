@@ -257,7 +257,7 @@ export const checkAndRequestNotifications = (branding: Branding) => async (
   getState: GetState,
   imports: Imports
 ) => {
-  const { onNotificationPermit } = imports
+  const { onNotificationPermit, onLogEvent = () => {} } = imports
   const notificationPermission = await checkNotifications()
   const notificationStatus = notificationPermission.status
   const notifEnabled =
@@ -357,6 +357,9 @@ export const checkAndRequestNotifications = (branding: Branding) => async (
     ) {
       openSettings().catch(error => console.log(error))
     }
+    onLogEvent('Permission_Modal_Notification_Enable')
+  } else {
+    onLogEvent('Permission_Modal_Notification_Dismiss')
   }
 
   if (onNotificationPermit != null) onNotificationPermit(newPermissionsInfo)

@@ -4,6 +4,11 @@ export type TrackingEventName =
   | 'Password_Login_Forgot_Password'
   | 'Pasword_Login'
 
+  // Permissions Modal Events (only the response to the modal, not the actual
+  // resulting notification permission status)
+  | 'Permission_Modal_Notification_Enable'
+  | 'Permission_Modal_Notification_Dismiss'
+
   // Pin Login Scene Events
   | 'Pin_Login'
 
