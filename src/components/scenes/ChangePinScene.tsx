@@ -117,8 +117,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   actions: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: theme.rem(2),
-    minHeight: theme.rem(3 + 15) // 15 is a hack to avoid the keyboard
+    marginTop: theme.rem(2)
   }
 }))
 

@@ -170,6 +170,7 @@ export const ChangeUsernameComponent = (props: Props) => {
           <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
             <FilledTextInput
               around={1}
+              autoCapitalize="none"
               autoCorrect={false}
               autoFocus
               placeholder={lstrings.username}
@@ -187,7 +188,7 @@ export const ChangeUsernameComponent = (props: Props) => {
             <MainButton
               label={lstrings.next_label}
               type="primary"
-              marginRem={[1.5, 0.5]}
+              marginRem={[0.5, 0]}
               disabled={isNextDisabled}
               onPress={handleNext}
             />
