@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: 'Permission_Notification' analytics events
+
 ## 3.2.5 (2024-02-04)
 
 - fixed: Spacing of Next button on NewAccountUsername and ChangePin scenes
