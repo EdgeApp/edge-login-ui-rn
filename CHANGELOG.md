@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.3.0 (2024-02-05)
+
 - added: 'Permission_Notification' analytics events
 
 ## 3.2.5 (2024-02-04)
