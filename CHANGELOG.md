@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 3.2.5 (2024-02-04)
+
+- fixed: Spacing of Next button on NewAccountUsername and ChangePin scenes
+- fixed: Disable auto-capitalization on NewAccountUsername
+
 ## 3.2.4 (2024-02-02)
 
 - fixed: Allow button font scaling
