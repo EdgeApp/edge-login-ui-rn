@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Captcha modal did not allow flow to complete.
+
 ## 3.3.0 (2024-02-05)
 
 - added: 'Permission_Notification' analytics events

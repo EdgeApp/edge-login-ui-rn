@@ -38,7 +38,7 @@ export function showToast(message: string): void {
 }
 
 export const showChallengeModal = async () => {
-  Airship.show<boolean | undefined>(bridge => {
-    return <ChallengeModal bridge={bridge} />
-  })
+  return await Airship.show<boolean | undefined>(bridge => (
+    <ChallengeModal bridge={bridge} />
+  ))
 }
