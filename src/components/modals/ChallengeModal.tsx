@@ -40,10 +40,12 @@ export const ChallengeModal = (props: Props) => {
   return (
     <ModalUi4
       bridge={bridge}
+      noSwiping
       title={lstrings.complete_captcha_title}
       onCancel={handleCancel}
     >
       <WebView
+        javaScriptEnabled
         source={
           challengeError == null
             ? { html: abTestDummyPage }
