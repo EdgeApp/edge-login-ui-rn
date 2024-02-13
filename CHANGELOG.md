@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.3.1 (2024-02-12)
+
 - fixed: Make FilledTextInputs take up constant vertical space
 - fixed: Captcha modal did not allow flow to complete.
 
