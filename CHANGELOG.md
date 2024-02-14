@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.3.2 (2024-02-13)
+
+- fixed: CAPTCHA image was not draggable on Android.
+
 ## 3.3.1 (2024-02-12)
 
 - fixed: Make FilledTextInputs take up constant vertical space
