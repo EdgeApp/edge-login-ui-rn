@@ -41,6 +41,9 @@ export interface ModalPropsUi4<T = unknown> {
 
   children?: React.ReactNode
 
+  // Disable the swipe-to-close gesture:
+  noSwiping?: boolean
+
   // Include a scroll area:
   scroll?: boolean
 
@@ -64,6 +67,7 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
     bridge,
     title,
     children,
+    noSwiping = false,
     scroll = false,
     warning = false,
     onCancel
@@ -123,6 +127,7 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
   }, [handleCancel])
 
   const gesture = Gesture.Pan()
+    .enabled(!noSwiping)
     .onUpdate(e => {
       offset.value = e.translationY
     })
