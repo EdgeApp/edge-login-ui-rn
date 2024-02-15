@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Solve additional CAPTCHA-modal glitches on Android.
+
 ## 3.3.3 (2024-02-15)
 
 - fixed: Header button height increase to give more room from the screen's top edge

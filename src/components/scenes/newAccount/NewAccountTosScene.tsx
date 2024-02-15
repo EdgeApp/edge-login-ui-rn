@@ -14,7 +14,8 @@ import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
 import { EdgeAnim } from '../../common/EdgeAnim'
-import { showChallengeModal, showError } from '../../services/AirshipInstance'
+import { ChallengeModal } from '../../modals/ChallengeModal'
+import { Airship, showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { Checkbox } from '../../themed/Checkbox'
 import { EdgeText } from '../../themed/EdgeText'
@@ -177,7 +178,9 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
   const handleNext = useHandler(async () => {
     if (experimentConfig.signupCaptcha === 'withCaptcha') {
       onLogEvent('Signup_Captcha_Shown')
-      const result = await showChallengeModal()
+      const result = await Airship.show<boolean | undefined>(bridge => (
+        <ChallengeModal bridge={bridge} />
+      ))
 
       // User closed the modal
       if (result == null) {
