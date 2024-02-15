@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.3.3 (2024-02-15)
+
 - fixed: Header button height increase to give more room from the screen's top edge
 
 ## 3.3.2 (2024-02-13)
