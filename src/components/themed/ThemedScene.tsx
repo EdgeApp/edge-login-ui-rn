@@ -110,47 +110,51 @@ export function ThemedScene(props: Props) {
   )
 }
 
-const getStyles = cacheStyles((theme: Theme) => ({
-  headerButtons: {
-    flexDirection: 'row',
-    height: theme.rem(3)
-  },
-  leftButton: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingHorizontal: theme.rem(1),
-    minWidth: theme.rem(3),
-    minHeight: theme.rem(3),
-    position: 'absolute',
-    left: 0,
-    top: theme.rem(-1)
-  },
-  rightButton: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingHorizontal: theme.rem(1),
-    minWidth: theme.rem(3),
-    minHeight: theme.rem(3),
-    position: 'absolute',
-    right: 0,
-    top: theme.rem(-1)
-  },
-  buttonIcon: {
-    color: theme.primaryText,
-    paddingRight: theme.rem(0.5),
-    height: theme.rem(1)
-  },
-  buttonText: {
-    color: theme.primaryText,
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1)
-  },
-  titleText: {
-    color: theme.primaryText,
-    fontSize: theme.rem(1.25),
-    fontFamily: theme.fontFaceBold,
-    marginHorizontal: theme.rem(1)
+const getStyles = cacheStyles((theme: Theme) => {
+  const buttonHeight = theme.rem(4.5)
+
+  return {
+    headerButtons: {
+      flexDirection: 'row',
+      height: buttonHeight
+    },
+    leftButton: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      paddingHorizontal: theme.rem(1),
+      minWidth: theme.rem(3),
+      minHeight: buttonHeight,
+      position: 'absolute',
+      left: 0,
+      top: theme.rem(-1)
+    },
+    rightButton: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      paddingHorizontal: theme.rem(1),
+      minWidth: theme.rem(3),
+      minHeight: buttonHeight,
+      position: 'absolute',
+      right: 0,
+      top: theme.rem(-1)
+    },
+    buttonIcon: {
+      color: theme.primaryText,
+      paddingRight: theme.rem(0.5),
+      height: theme.rem(1)
+    },
+    buttonText: {
+      color: theme.primaryText,
+      fontFamily: theme.fontFaceDefault,
+      fontSize: theme.rem(1)
+    },
+    titleText: {
+      color: theme.primaryText,
+      fontSize: theme.rem(1.25),
+      fontFamily: theme.fontFaceBold,
+      marginHorizontal: theme.rem(1)
+    }
   }
-}))
+})
