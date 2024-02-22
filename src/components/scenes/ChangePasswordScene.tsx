@@ -1,6 +1,7 @@
 import { EdgeAccount, EdgePasswordRules } from 'edge-core-js'
 import * as React from 'react'
-import { Keyboard, KeyboardAvoidingView } from 'react-native'
+import { Keyboard } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { cacheStyles } from 'react-native-patina'
 
 import { lstrings } from '../../common/locales/strings'
@@ -14,7 +15,7 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { FilledTextInput } from '../themed/FilledTextInput'
+import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { PasswordStatus } from '../themed/PasswordStatus'
 import { ThemedScene } from '../themed/ThemedScene'
@@ -61,8 +62,6 @@ const ChangePasswordSceneComponent = ({
   const styles = getStyles(theme)
   const imports = useImports()
 
-  const [focusFirst, setFocusFirst] = React.useState(true)
-  const [focusSecond, setFocusSecond] = React.useState(false)
   const [spinning, setSpinning] = React.useState(false)
   const [isShowError, setIsShowError] = React.useState(false)
   const [passwordEval, setPasswordEval] = React.useState<
@@ -76,6 +75,8 @@ const ChangePasswordSceneComponent = ({
     confirmPasswordErrorMessage,
     setConfirmPasswordErrorMessage
   ] = React.useState('')
+
+  const secondTextInputRef = React.useRef<FilledTextInputRef>(null)
 
   const handlePress = useHandler(async () => {
     if (!isRequirementsMet) return
@@ -96,8 +97,7 @@ const ChangePasswordSceneComponent = ({
   })
 
   const handleFocusSwitch = () => {
-    setFocusFirst(false)
-    setFocusSecond(true)
+    secondTextInputRef.current?.focus()
   }
 
   const handleValidatePassword = (password: string) => {
@@ -141,7 +141,7 @@ const ChangePasswordSceneComponent = ({
             secureTextEntry
             returnKeyType="next"
             placeholder={lstrings.password}
-            autoFocus={focusFirst}
+            autoFocus
             onChangeText={handleValidatePassword}
             onSubmitEditing={handleFocusSwitch}
             clearIcon
@@ -150,13 +150,13 @@ const ChangePasswordSceneComponent = ({
         </EdgeAnim>
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
           <FilledTextInput
+            ref={secondTextInputRef}
             horizontal={1.25}
             bottom={1.25}
             value={confirmPassword}
             secureTextEntry
             returnKeyType="go"
             placeholder={lstrings.confirm_password}
-            autoFocus={focusSecond}
             onChangeText={handleChangeConfirmPassword}
             onSubmitEditing={handlePress}
             clearIcon
@@ -207,17 +207,12 @@ const ChangePasswordSceneComponent = ({
 
   return (
     <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
-      {focusSecond ? (
-        <KeyboardAvoidingView
-          style={styles.container}
-          behavior="position"
-          keyboardVerticalOffset={-150}
-        >
-          {renderInterior()}
-        </KeyboardAvoidingView>
-      ) : (
-        renderInterior()
-      )}
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+      >
+        {renderInterior()}
+      </KeyboardAwareScrollView>
     </ThemedScene>
   )
 }
