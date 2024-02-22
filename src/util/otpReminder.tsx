@@ -9,80 +9,42 @@ import { Airship } from '../components/services/AirshipInstance'
 
 const OTP_REMINDER_MILLISECONDS = 7 * 24 * 60 * 60 * 1000
 const OTP_REMINDER_STORE_NAME = 'app.edge.login'
-const OTP_REMINDER_KEY_NAME_CREATED_AT = 'createdAt'
 const OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED = 'lastOtpCheck'
 const OTP_REMINDER_KEY_NAME_DONT_ASK = 'OtpDontAsk'
 
 /**
- * Set up a the 2fa reminder date for a new account.
- */
-export const initializeOtpReminder = async (account: EdgeAccount) => {
-  await account.dataStore.setItem(
-    OTP_REMINDER_STORE_NAME,
-    OTP_REMINDER_KEY_NAME_CREATED_AT,
-    Date.now().toString()
-  )
-}
-
-/**
  * Check and show the 2fa reminder on login.
  */
-export async function showOtpReminder(account: EdgeAccount) {
-  const { otpKey, dataStore, username } = account
+export async function showOtpReminder(account: EdgeAccount): Promise<void> {
+  const { otpKey, dataStore, username, created } = account
   if (username == null) return
+  if (otpKey != null) return
 
-  const pluginList = await dataStore.listStoreIds()
-  const storeName = pluginList.includes(OTP_REMINDER_STORE_NAME)
-    ? OTP_REMINDER_STORE_NAME
-    : null
-  const itemList = storeName
-    ? await dataStore.listItemIds(OTP_REMINDER_STORE_NAME)
-    : null
-  const createdAtString =
-    itemList && itemList.includes(OTP_REMINDER_KEY_NAME_CREATED_AT)
-      ? await dataStore.getItem(
-          OTP_REMINDER_STORE_NAME,
-          OTP_REMINDER_KEY_NAME_CREATED_AT
-        )
-      : null
-  const createdAt = createdAtString ? parseInt(createdAtString) : null
-  const reminderCreatedAtDate = createdAt
-    ? createdAt + OTP_REMINDER_MILLISECONDS
-    : null
-  const lastOtpCheckString =
-    itemList && itemList.includes(OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED)
-      ? await dataStore.getItem(
-          OTP_REMINDER_STORE_NAME,
-          OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED
-        )
-      : null
-  const lastOtpCheck = lastOtpCheckString ? parseInt(lastOtpCheckString) : null
-  const reminderLastOtpCheckDate = lastOtpCheck
-    ? lastOtpCheck + OTP_REMINDER_MILLISECONDS
-    : null
-  const dontAsk =
-    itemList && itemList.includes(OTP_REMINDER_KEY_NAME_DONT_ASK)
-      ? await dataStore.getItem(
-          OTP_REMINDER_STORE_NAME,
-          OTP_REMINDER_KEY_NAME_DONT_ASK
-        )
-      : null
+  const [dontAsk, lastOtpCheckString]: [
+    string | null,
+    string | null
+  ] = (await Promise.all([
+    dataStore
+      .getItem(OTP_REMINDER_STORE_NAME, OTP_REMINDER_KEY_NAME_DONT_ASK)
+      .catch(() => null),
+    dataStore
+      .getItem(OTP_REMINDER_STORE_NAME, OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED)
+      .catch(() => null)
+  ])) as any
 
-  const enableOtp = async (account: EdgeAccount) => {
-    await account.enableOtp()
-    return await Airship.show(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={lstrings.otp_authentication_header}
-        message={sprintf(lstrings.otp_authentication_message, account.otpKey)}
-        buttons={{ ok: { label: lstrings.ok } }}
-      />
-    ))
-  }
+  if (dontAsk) return
+  const lastOtpCheck =
+    lastOtpCheckString != null ? parseInt(lastOtpCheckString) : null
 
-  const createOtpCheckModal = async () => {
+  // Show the modal if we have never shown it before,
+  // and the account is old enough:
+  if (
+    lastOtpCheck == null &&
+    (created == null ||
+      Date.now() > created.valueOf() + OTP_REMINDER_MILLISECONDS)
+  ) {
     Keyboard.dismiss()
-    const result = await Airship.show(bridge => (
+    const result = await Airship.show<'yes' | 'no' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={lstrings.otp_reset_modal_header}
@@ -93,12 +55,27 @@ export async function showOtpReminder(account: EdgeAccount) {
         }}
       />
     ))
-    return result === 'yes'
+    if (result === 'yes') {
+      await enableOtp(account)
+    } else {
+      await account.dataStore.setItem(
+        OTP_REMINDER_STORE_NAME,
+        OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED,
+        Date.now().toString()
+      )
+    }
   }
 
-  const createOtpCheckModalDontAsk = async () => {
+  // Show a modal with the "Don't ask again" button if we have waited
+  // long enough since the last time we showed a 2fa reminder modal:
+  if (
+    lastOtpCheck != null &&
+    Date.now() > lastOtpCheck + OTP_REMINDER_MILLISECONDS
+  ) {
     Keyboard.dismiss()
-    return await Airship.show(bridge => (
+    const result = await Airship.show<
+      'enable' | 'cancel' | 'dontAsk' | undefined
+    >(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={lstrings.otp_reset_modal_header}
@@ -113,89 +90,32 @@ export async function showOtpReminder(account: EdgeAccount) {
         }}
       />
     ))
-  }
-
-  if (otpKey) {
-    return true
-  }
-
-  if (dontAsk) {
-    return true
-  }
-
-  if (!storeName) {
-    const resolve = await createOtpCheckModal()
-    if (resolve) {
+    if (result === 'enable') {
       await enableOtp(account)
-      await account.dataStore.setItem(
-        OTP_REMINDER_STORE_NAME,
-        OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED,
-        Date.now().toString()
-      )
-      return true
-    }
-    await account.dataStore.setItem(
-      OTP_REMINDER_STORE_NAME,
-      OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED,
-      Date.now().toString()
-    )
-    return false
-  }
-
-  if (
-    lastOtpCheckString &&
-    lastOtpCheck &&
-    reminderLastOtpCheckDate &&
-    Date.now() > reminderLastOtpCheckDate
-  ) {
-    const resolve = await createOtpCheckModalDontAsk()
-    if (resolve === 'enable') {
-      await enableOtp(account)
-      return true
-    }
-    if (resolve === 'dontAsk') {
+    } else if (result === 'dontAsk') {
       await account.dataStore.setItem(
         OTP_REMINDER_STORE_NAME,
         OTP_REMINDER_KEY_NAME_DONT_ASK,
         'true'
       )
-      return false
-    }
-    await account.dataStore.setItem(
-      OTP_REMINDER_STORE_NAME,
-      OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED,
-      Date.now().toString()
-    )
-    return false
-  }
-
-  if (lastOtpCheckString) {
-    return true
-  }
-
-  if (
-    createdAtString &&
-    createdAt &&
-    reminderCreatedAtDate &&
-    Date.now() > reminderCreatedAtDate
-  ) {
-    const resolve = await createOtpCheckModal()
-    if (resolve) {
-      await enableOtp(account)
+    } else {
       await account.dataStore.setItem(
         OTP_REMINDER_STORE_NAME,
         OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED,
         Date.now().toString()
       )
-      return true
     }
-    await account.dataStore.setItem(
-      OTP_REMINDER_STORE_NAME,
-      OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED,
-      Date.now().toString()
-    )
-    return false
   }
+}
 
-  return true
+const enableOtp = async (account: EdgeAccount) => {
+  await account.enableOtp()
+  return await Airship.show(bridge => (
+    <ButtonsModal
+      bridge={bridge}
+      title={lstrings.otp_authentication_header}
+      message={sprintf(lstrings.otp_authentication_message, account.otpKey)}
+      buttons={{ ok: { label: lstrings.ok } }}
+    />
+  ))
 }

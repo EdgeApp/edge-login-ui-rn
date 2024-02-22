@@ -1,7 +1,6 @@
 import { loadTouchState } from '../actions/TouchActions'
 import { enableTouchId } from '../keychain'
 import { useDispatch } from '../types/ReduxTypes'
-import { initializeOtpReminder } from '../util/otpReminder'
 import { useHandler } from './useHandler'
 import { useImports } from './useImports'
 
@@ -29,7 +28,6 @@ export const useCreateAccountHandler = () => {
       await enableTouchId(account).catch(e => {
         console.log(e) // Fail quietly
       })
-      await initializeOtpReminder(account)
       dispatch(loadTouchState())
 
       return account
