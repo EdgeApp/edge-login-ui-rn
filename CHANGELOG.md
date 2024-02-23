@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fixed: Adjust header button styling to fix spacing regressions on some scenes
 - fixed: Solve additional CAPTCHA-modal glitches on Android.
 
 ## 3.3.3 (2024-02-15)

@@ -461,10 +461,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.modal
   },
   featureBoxContainer: {
-    width: '100%',
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    paddingTop: theme.rem(2),
+    width: '100%'
   },
   featureBox: {
     width: '100%',

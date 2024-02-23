@@ -111,12 +111,15 @@ export function ThemedScene(props: Props) {
 }
 
 const getStyles = cacheStyles((theme: Theme) => {
-  const buttonHeight = theme.rem(4.5)
+  // Roughly the same as the height as the GUI.
+  // The GUI uses react-navigation's getDefaultHeaderHeight to get the
+  // platform-specific height.
+  const buttonHeight = theme.rem(2.5)
 
   return {
     headerButtons: {
       flexDirection: 'row',
-      height: buttonHeight
+      justifyContent: 'space-between'
     },
     leftButton: {
       alignItems: 'center',
@@ -124,10 +127,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       justifyContent: 'center',
       paddingHorizontal: theme.rem(1),
       minWidth: theme.rem(3),
-      minHeight: buttonHeight,
-      position: 'absolute',
-      left: 0,
-      top: theme.rem(-1)
+      minHeight: buttonHeight
     },
     rightButton: {
       alignItems: 'center',
@@ -135,10 +135,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       justifyContent: 'center',
       paddingHorizontal: theme.rem(1),
       minWidth: theme.rem(3),
-      minHeight: buttonHeight,
-      position: 'absolute',
-      right: 0,
-      top: theme.rem(-1)
+      minHeight: buttonHeight
     },
     buttonIcon: {
       color: theme.primaryText,
