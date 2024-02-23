@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- changed: Sync ButtonsViewUi4 with edge-react-gui
 - fixed: Adjust header button styling to fix spacing regressions on some scenes
 - fixed: Solve additional CAPTCHA-modal glitches on Android.
 
