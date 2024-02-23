@@ -1,15 +1,20 @@
 /**
- * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+ * edge-login-ui-rn!
  */
 
 import * as React from 'react'
 import { View, ViewStyle } from 'react-native'
 
+import { EdgeAnim } from '../common/EdgeAnim'
+import { maybeComponent } from '../hoc/maybeComponent'
 import { styled } from '../hoc/styled'
 import { Space } from '../layout/Space'
 import { ButtonTypeUi4, ButtonUi4 } from './ButtonUi4'
 
 const INTER_BUTTON_SPACING_REM = 1
+const ANIM_DURATION = 1000
+const ANIM_DISTANCE_INCREMENT = 20
 
 export interface ButtonInfo {
   label: string
@@ -17,17 +22,14 @@ export interface ButtonInfo {
   disabled?: boolean
   spinner?: boolean
   testID?: string
+
+  animDistanceStart?: number
 }
 
 interface Props {
   // Specifies whether the component should be positioned absolutely.
   // Default value is false.
   absolute?: boolean
-
-  // If specified, fades visibility according to the value of fade.
-  // The component is always visible if fade is unset.
-  fade?: boolean
-
   // ButtonInfos
   primary?: ButtonInfo
   secondary?: ButtonInfo
@@ -41,9 +43,11 @@ interface Props {
     | 'column' // Buttons stacked on top of each other vertically, taking up as much space as the widest button.
     | 'solo' // A single centered button whose size is determined by label length (default for single-button props)
 
-  // Extra bottom margins for scenes to allow scrolling up further into an
-  // easier tap area of the screen
+  // What kind of component this ButtonsView lives on. Affects margins.
   parentType?: 'scene' | 'modal'
+
+  // 'distance' prop of the first button
+  animDistanceStart?: number
 }
 
 /**
@@ -52,57 +56,106 @@ interface Props {
 export const ButtonsViewUi4 = React.memo(
   ({
     absolute = false,
-    fade,
     primary,
     secondary,
     secondary2,
     tertiary,
     layout = 'column',
-    parentType
+    parentType,
+    animDistanceStart
   }: Props) => {
-    const numButtons = [primary, secondary, secondary2, tertiary].filter(
+    const buttonInfos = [primary, secondary, secondary2, tertiary].filter(
       key => key != null
-    ).length
-    if (numButtons === 1) layout = 'solo'
+    )
+    if (buttonInfos.length === 1) layout = 'solo'
 
     const spacing = <Space around={INTER_BUTTON_SPACING_REM / 2} />
 
-    const renderButton = (type: ButtonTypeUi4, buttonProps?: ButtonInfo) => {
+    const renderButton = (
+      type: ButtonTypeUi4,
+      buttonProps?: ButtonInfo,
+      index: number = 0
+    ) => {
       if (buttonProps == null) return null
       const { label, onPress, disabled, spinner, testID } = buttonProps
 
+      const distance =
+        animDistanceStart != null
+          ? animDistanceStart + index * ANIM_DISTANCE_INCREMENT
+          : undefined
+      // TODO: Sync EdgeAnim w/ GUI
+      // const disableAnimation = Platform.OS === 'android'
+
       return (
-        <ButtonUi4
-          layout={layout}
-          label={label}
-          onPress={onPress}
-          type={type}
-          disabled={disabled}
-          spinner={spinner}
-          testID={testID}
-        />
+        <MaybeEdgeAnim
+          when={animDistanceStart != null}
+          // disableAnimation={disableAnimation} // TODO
+          enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance }}
+        >
+          <ButtonUi4
+            layout={layout}
+            label={label}
+            onPress={onPress}
+            type={type}
+            disabled={disabled}
+            spinner={spinner}
+            testID={testID}
+          />
+        </MaybeEdgeAnim>
       )
     }
+
+    const hasPrimary = primary != null
+    const hasSecondary = secondary != null
+    const hasSecondary2 = secondary2 != null
+    const hasTertiary = tertiary != null
+
     return (
       <StyledButtonContainer
         absolute={absolute}
         layout={layout}
         parentType={parentType}
       >
-        {renderButton('primary', primary)}
-        {primary != null && secondary != null ? spacing : null}
-        {renderButton('secondary', secondary2)}
-        {secondary != null && secondary2 != null ? spacing : null}
-        {renderButton('secondary', secondary)}
-        {tertiary != null ? spacing : null}
-        {renderButton('tertiary', tertiary)}
+        {hasPrimary && (
+          <>
+            {renderButton('primary', primary, 0)}
+            {(hasSecondary || hasSecondary2 || hasTertiary) && spacing}
+          </>
+        )}
+        {hasSecondary && (
+          <>
+            {renderButton('secondary', secondary, hasPrimary ? 1 : 0)}
+            {(hasSecondary2 || hasTertiary) && spacing}
+          </>
+        )}
+        {hasSecondary2 && (
+          <>
+            {renderButton(
+              'secondary',
+              secondary2,
+              (hasPrimary ? 1 : 0) + (hasSecondary ? 1 : 0)
+            )}
+            {hasTertiary && spacing}
+          </>
+        )}
+        {hasTertiary && (
+          <>
+            {renderButton(
+              'tertiary',
+              tertiary,
+              (hasPrimary ? 1 : 0) +
+                (hasSecondary ? 1 : 0) +
+                (hasSecondary2 ? 1 : 0)
+            )}
+          </>
+        )}
       </StyledButtonContainer>
     )
   }
 )
 
 const StyledButtonContainer = styled(View)<{
-  absolute: boolean
+  absolute?: boolean
   layout: 'row' | 'column' | 'solo'
   parentType?: 'scene' | 'modal'
 }>(theme => props => {
@@ -129,14 +182,16 @@ const StyledButtonContainer = styled(View)<{
           justifyContent: 'center',
           marginHorizontal: theme.rem(0.5),
           alignItems: 'center',
-          flex: 1
+          flexGrow: 1,
+          flexShrink: 1
         }
       : {}
 
   const rowStyle: ViewStyle =
     layout === 'row'
       ? {
-          flex: 1,
+          flexGrow: 1,
+          flexShrink: 1,
           flexDirection: 'row-reverse',
           justifyContent: 'center'
         }
@@ -178,3 +233,5 @@ const StyledButtonContainer = styled(View)<{
     ...modalMarginStyle
   }
 })
+
+const MaybeEdgeAnim = maybeComponent(EdgeAnim)
