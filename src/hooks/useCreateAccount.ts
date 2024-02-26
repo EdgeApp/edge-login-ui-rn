@@ -1,9 +1,6 @@
-import { EdgeAccount } from 'edge-core-js'
-
 import { loadTouchState } from '../actions/TouchActions'
-import * as Constants from '../constants/index'
 import { enableTouchId } from '../keychain'
-import { Dispatch, useDispatch } from '../types/ReduxTypes'
+import { useDispatch } from '../types/ReduxTypes'
 import { useHandler } from './useHandler'
 import { useImports } from './useImports'
 
@@ -28,23 +25,14 @@ export const useCreateAccountHandler = () => {
       account.watch('loggedIn', loggedIn => {
         if (!loggedIn) dispatch({ type: 'RESET_APP' })
       })
-      await setTouchOtp(account, dispatch)
+      await enableTouchId(account).catch(e => {
+        console.log(e) // Fail quietly
+      })
+      dispatch(loadTouchState())
 
       return account
     }
   )
 
   return handleCreateAccount
-}
-
-const setTouchOtp = async (account: EdgeAccount, dispatch: Dispatch) => {
-  await enableTouchId(account).catch(e => {
-    console.log(e) // Fail quietly
-  })
-  await account.dataStore.setItem(
-    Constants.OTP_REMINDER_STORE_NAME,
-    Constants.OTP_REMINDER_KEY_NAME_CREATED_AT,
-    Date.now().toString()
-  )
-  dispatch(loadTouchState())
 }
