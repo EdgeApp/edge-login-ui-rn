@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.4.1 (2024-02-25)
+
+- fixed: Login performance by optimizing OTP reminder logic
+
 ## 3.4.0 (2024-02-23)
 
 - changed: Sync ButtonsViewUi4 with edge-react-gui
