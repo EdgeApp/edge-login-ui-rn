@@ -19,84 +19,114 @@ import {
 } from './publicTypes'
 
 interface Props {
+  // ---------------------------------------------------------------------
+  // Login functionality
+  // ---------------------------------------------------------------------
+
   context: EdgeContext
+
+  /**
+   * Options passed to the core login methods.
+   */
+  accountOptions: EdgeAccountOptions
 
   /**
    * The user to select, if present on the device.
    * Get this from `EdgeContext.localUsers`
    */
   initialLoginId?: string
+
+  /**
+   * Which scene to begin with.
+   */
   initialRoute?: InitialRouteName
 
-  // Branding stuff:
+  /**
+   * Pass a recoveryKey from the user's email to trigger recovery login.
+   */
+  recoveryLogin?: string
+
+  /**
+   * Do not show the OTP reminder during login.
+   */
+  skipOtpReminder?: boolean
+
+  /**
+   * Do not show the security alerts screen during login.
+   */
+  skipSecurityAlerts?: boolean
+
+  // ---------------------------------------------------------------------
+  // Branding & customization
+  // ---------------------------------------------------------------------
+
   appId?: string
   appName?: string
-  fontDescription?: {
-    regularFontFamily: string
-    headingFontFamily?: string
-  }
   landingScreenText?: string
   parentButton?: ParentButton
   primaryLogo?: any
   primaryLogoCallback?: () => void
 
-  // Options passed to the core login methods:
-  accountOptions: EdgeAccountOptions
-
-  /**
-   * Application config options
-   */
+  /** Contains the terms of service URL */
   appConfig?: AppConfig
 
-  /**
-   * Called when the user navigates back passed the initialRoute if it was set.
-   */
-  onComplete?: OnComplete
-  // Called when the login completes:
-  onLogin: OnLogin
-  // Called when the user makes a choice from RequestPermissionsModal:
-  onNotificationPermit?: OnNotificationPermit
-  // Passed from the GUI for analytics reporting
-  onLogEvent?: OnLogEvent
-
-  // The recoveryKey from the user's email, to trigger recovery login:
-  recoveryLogin?: string
-
-  // Behavior and appearance management flags, for A/B testing.
+  /**  Behavior and appearance management flags, for A/B testing. */
   experimentConfig?: ExperimentConfig
 
-  // Do not show the security alerts screen during login,
-  // since the app plans to show the `SecurityAlertsScreen` itself
-  // based on `hasSecurityAlerts` and `watchSecurityAlerts`:
-  skipSecurityAlerts?: boolean
+  // ---------------------------------------------------------------------
+  // Callbacks
+  // ---------------------------------------------------------------------
 
-  // Do not show the OTP reminder during login
-  skipOtpReminder?: boolean
+  /**
+   * Called when the user navigates back past the initialRoute if it was set.
+   */
+  onComplete?: OnComplete
 
-  // Call that overwrites the internal checkAndRequestNotifications function. Executed on Login initialization:
+  /**
+   * Called when the login completes.
+   */
+  onLogin: OnLogin
+
+  /**
+   * Records events for analytics.
+   */
+  onLogEvent?: OnLogEvent
+
+  /**
+   * Called when the user makes a choice from RequestPermissionsModal.
+   */
+  onNotificationPermit?: OnNotificationPermit
+
+  // ---------------------------------------------------------------------
+  // Deprecated
+  // ---------------------------------------------------------------------
+
+  /**
+   * Called at login.
+   *
+   * @deprecated Pass `fastLogin` instead, and then perform
+   * your custom permissions logic after receiving `onLogin`.
+   */
   customPermissionsFunction?: () => void
 
   /**
+   * @deprecated Use the LoginUiProvider component for theming.
+   */
+  fontDescription?: {
+    regularFontFamily: string
+    headingFontFamily?: string
+  }
+
+  /**
    * The username to select, if present on the device.
+   *
    * @deprecated Use initialLoginId instead.
    */
   username?: string
 }
 
 export function LoginScreen(props: Props): JSX.Element {
-  const {
-    appConfig,
-    context,
-    fontDescription = { regularFontFamily: 'System' },
-    initialLoginId,
-    skipOtpReminder,
-    username
-  } = props
-  const {
-    regularFontFamily,
-    headingFontFamily = regularFontFamily
-  } = fontDescription
-  const { onComplete, onLogEvent = () => {} } = props
+  const { context, fontDescription, initialLoginId, username } = props
 
   // Look up the requested user:
   const initialUserInfo =
@@ -107,12 +137,16 @@ export function LoginScreen(props: Props): JSX.Element {
       : undefined
 
   // Update theme fonts if they are different:
-  React.useEffect(() => changeFont(regularFontFamily, headingFontFamily), [
-    regularFontFamily,
-    headingFontFamily
-  ])
+  React.useEffect(() => {
+    if (fontDescription == null) return
+    const {
+      regularFontFamily,
+      headingFontFamily = regularFontFamily
+    } = fontDescription
+    changeFont(regularFontFamily, headingFontFamily)
+  }, [fontDescription])
 
-  setAppConfig(appConfig)
+  setAppConfig(props.appConfig)
   const branding: Branding = {
     appId: props.appId,
     appName: props.appName,
@@ -133,12 +167,12 @@ export function LoginScreen(props: Props): JSX.Element {
         context,
         initialUserInfo,
         initialRoute: props.initialRoute,
-        onComplete,
+        onComplete: props.onComplete,
         onLogin: props.onLogin,
-        onLogEvent,
+        onLogEvent: props.onLogEvent,
         onNotificationPermit: props.onNotificationPermit,
         recoveryKey: props.recoveryLogin,
-        skipOtpReminder,
+        skipOtpReminder: props.skipOtpReminder,
         skipSecurityAlerts: props.skipSecurityAlerts,
         experimentConfig,
         customPermissionsFunction: props.customPermissionsFunction
