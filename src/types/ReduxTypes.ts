@@ -1,4 +1,4 @@
-import { asBoolean, asJSON, asObject, asOptional, asValue } from 'cleaners'
+import { asObject, asOptional, asValue } from 'cleaners'
 import {
   EdgeAccount,
   EdgeAccountOptions,
@@ -23,15 +23,6 @@ export interface NotificationOptIns {
   ignoreMarketing: boolean
   ignorePriceChanges: boolean
 }
-export const asNotificationPermissionsInfo = asJSON(
-  asObject<NotificationPermissionsInfo>({
-    isNotificationBlocked: asBoolean,
-    notificationOptIns: asObject({
-      ignoreMarketing: asBoolean,
-      ignorePriceChanges: asBoolean
-    })
-  })
-)
 
 export interface TouchIdInfo {
   isTouchSupported: boolean

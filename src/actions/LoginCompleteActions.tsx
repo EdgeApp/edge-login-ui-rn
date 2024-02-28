@@ -12,8 +12,8 @@ import {
 } from '../keychain'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
 import { hasSecurityAlerts } from '../util/hasSecurityAlerts'
+import { checkAndRequestNotifications } from '../util/notificationPermissionReminder'
 import { showOtpReminder } from '../util/otpReminder'
-import { checkAndRequestNotifications } from './LoginInitActions'
 
 /**
  * The user has just logged in, so figure out what do to next.
