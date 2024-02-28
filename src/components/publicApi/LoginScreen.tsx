@@ -31,6 +31,26 @@ interface Props {
   accountOptions: EdgeAccountOptions
 
   /**
+   * Skip all post-login preparation steps.
+   *
+   * The goal is to display the main application as quickly as possible.
+   * Then, once the app is ready, several steps can happen in the background:
+   *
+   * - `prepareTouchId` to ensure the account can log in with biometrics.
+   * - `showNotificationPermissionReminder` to request permissions,
+   *   (or the app can provide its own reminder).
+   * - `showOtpReminder` to encourage the user to set up 2fa,
+   *   (or the app can provide its own reminder).
+   * - `watchSecurityAlerts` to check for incoming login requests,
+   *   followed by showing the `SecurityAlertsScreen` if detected.
+   *
+   * If you do not pass the `fastLogin` flag, edge-login-ui-rn itself
+   * will perform these steps, which can delay login by several seconds
+   * on slower phones.
+   */
+  fastLogin?: boolean
+
+  /**
    * The user to select, if present on the device.
    * Get this from `EdgeContext.localUsers`
    */
@@ -45,16 +65,6 @@ interface Props {
    * Pass a recoveryKey from the user's email to trigger recovery login.
    */
   recoveryLogin?: string
-
-  /**
-   * Do not show the OTP reminder during login.
-   */
-  skipOtpReminder?: boolean
-
-  /**
-   * Do not show the security alerts screen during login.
-   */
-  skipSecurityAlerts?: boolean
 
   // ---------------------------------------------------------------------
   // Branding & customization
@@ -92,11 +102,6 @@ interface Props {
    */
   onLogEvent?: OnLogEvent
 
-  /**
-   * Called when the user makes a choice from RequestPermissionsModal.
-   */
-  onNotificationPermit?: OnNotificationPermit
-
   // ---------------------------------------------------------------------
   // Deprecated
   // ---------------------------------------------------------------------
@@ -118,6 +123,27 @@ interface Props {
   }
 
   /**
+   * Called when the user makes a choice from RequestPermissionsModal.
+   *
+   * @deprecated Use `fastLogin` mode instead.
+   */
+  onNotificationPermit?: OnNotificationPermit
+
+  /**
+   * Do not show the OTP reminder during login.
+   *
+   * @deprecated Pass `fastLogin` instead
+   */
+  skipOtpReminder?: boolean
+
+  /**
+   * Do not show the security alerts screen during login.
+   *
+   * @deprecated Pass `fastLogin` instead.
+   */
+  skipSecurityAlerts?: boolean
+
+  /**
    * The username to select, if present on the device.
    *
    * @deprecated Use initialLoginId instead.
@@ -126,7 +152,13 @@ interface Props {
 }
 
 export function LoginScreen(props: Props): JSX.Element {
-  const { context, fontDescription, initialLoginId, username } = props
+  const {
+    context,
+    fastLogin = false,
+    fontDescription,
+    initialLoginId,
+    username
+  } = props
 
   // Look up the requested user:
   const initialUserInfo =
@@ -165,6 +197,7 @@ export function LoginScreen(props: Props): JSX.Element {
         accountOptions: props.accountOptions,
         branding,
         context,
+        fastLogin: props.fastLogin,
         initialUserInfo,
         initialRoute: props.initialRoute,
         onComplete: props.onComplete,
@@ -172,8 +205,8 @@ export function LoginScreen(props: Props): JSX.Element {
         onLogEvent: props.onLogEvent,
         onNotificationPermit: props.onNotificationPermit,
         recoveryKey: props.recoveryLogin,
-        skipOtpReminder: props.skipOtpReminder,
-        skipSecurityAlerts: props.skipSecurityAlerts,
+        skipOtpReminder: fastLogin || props.skipOtpReminder,
+        skipSecurityAlerts: fastLogin || props.skipSecurityAlerts,
         experimentConfig,
         customPermissionsFunction: props.customPermissionsFunction
       }}

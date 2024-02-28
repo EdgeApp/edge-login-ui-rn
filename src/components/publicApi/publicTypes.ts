@@ -50,6 +50,10 @@ export interface NotificationPermissionReminderOptions {
   readonly onNotificationPermit?: OnNotificationPermit
 }
 
+/**
+ * @deprecated This will not be provided in `fastLogin` mode.
+ * Use `getSupportedBiometryType` and `touchIdEnabled` to learn these values.
+ */
 export interface TouchIdInfo {
   isTouchSupported: boolean
   isTouchEnabled: boolean
@@ -116,7 +120,15 @@ export interface TrackingValues {
 
 export type OnComplete = () => void
 
-export type OnLogin = (account: EdgeAccount, touchIdInfo?: TouchIdInfo) => void
+export type OnLogin = (
+  account: EdgeAccount,
+
+  /**
+   * @deprecated This will not be provided in `fastLogin` mode
+   * Use `getSupportedBiometryType` and `touchIdEnabled` to learn these values.
+   */
+  touchIdInfo?: TouchIdInfo
+) => void
 
 export type OnNotificationPermit = (
   settings: NotificationPermissionsInfo

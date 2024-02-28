@@ -63,28 +63,37 @@ export const submitLogin = (account: EdgeAccount) => async (
   getState: GetState,
   imports: Imports
 ) => {
-  const { branding, onLogEvent, onLogin, onNotificationPermit } = imports
+  const {
+    branding,
+    fastLogin = false,
+    onLogEvent,
+    onLogin,
+    onNotificationPermit
+  } = imports
 
   account.watch('loggedIn', loggedIn => {
     if (!loggedIn) dispatch({ type: 'RESET_APP' })
   })
 
-  await refreshTouchId(account).catch(e => {
-    console.log(e) // Fail quietly
-  })
-
-  const isTouchSupported = (await getSupportedBiometryType()) !== false
-  const touchEnabled = await isTouchEnabled(account)
-  const touchIdInformation = {
-    isTouchSupported,
-    isTouchEnabled: touchEnabled
+  if (!fastLogin) {
+    await refreshTouchId(account).catch(e => {
+      console.log(e) // Fail quietly
+    })
   }
 
-  if (onLogin != null) onLogin(account, touchIdInformation)
+  if (onLogin != null) {
+    const touchIdInformation = fastLogin
+      ? undefined
+      : {
+          isTouchSupported: (await getSupportedBiometryType()) !== false,
+          isTouchEnabled: await isTouchEnabled(account)
+        }
+    onLogin(account, touchIdInformation)
+  }
 
   if (imports.customPermissionsFunction != null) {
     imports.customPermissionsFunction()
-  } else {
+  } else if (!fastLogin) {
     await showNotificationPermissionReminder({
       onLogEvent,
       onNotificationPermit,
