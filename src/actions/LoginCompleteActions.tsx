@@ -5,10 +5,9 @@ import { lstrings } from '../common/locales/strings'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship } from '../components/services/AirshipInstance'
 import {
-  enableTouchId,
   getSupportedBiometryType,
-  isTouchDisabled,
-  isTouchEnabled
+  isTouchEnabled,
+  refreshTouchId
 } from '../keychain'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
 import { hasSecurityAlerts } from '../util/hasSecurityAlerts'
@@ -70,12 +69,9 @@ export const submitLogin = (account: EdgeAccount) => async (
     if (!loggedIn) dispatch({ type: 'RESET_APP' })
   })
 
-  const touchDisabled = await isTouchDisabled(account)
-  if (!touchDisabled) {
-    await enableTouchId(account).catch(e => {
-      console.log(e) // Fail quietly
-    })
-  }
+  await refreshTouchId(account).catch(e => {
+    console.log(e) // Fail quietly
+  })
 
   const isTouchSupported = (await getSupportedBiometryType()) !== false
   const touchEnabled = await isTouchEnabled(account)

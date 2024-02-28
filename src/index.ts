@@ -23,6 +23,7 @@ export type {
 // Post-login steps
 // ---------------------------------------------------------------------
 
+export { refreshTouchId } from './keychain'
 export { showNotificationPermissionReminder } from './util/notificationPermissionReminder'
 export { showOtpReminder } from './util/otpReminder'
 export {
