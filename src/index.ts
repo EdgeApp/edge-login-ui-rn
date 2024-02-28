@@ -22,6 +22,7 @@ export type {
 // Post-login steps
 // ---------------------------------------------------------------------
 
+export { showOtpReminder } from './util/otpReminder'
 export {
   hasSecurityAlerts,
   watchSecurityAlerts
