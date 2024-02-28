@@ -15,7 +15,7 @@ import {
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
 import { changeFont } from '../services/ThemeContext'
-import { AppConfig, InitialRouteName } from './types'
+import { AppConfig, InitialRouteName } from './publicTypes'
 
 interface Props {
   context: EdgeContext

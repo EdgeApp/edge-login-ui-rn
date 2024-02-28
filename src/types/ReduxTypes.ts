@@ -7,7 +7,7 @@ import {
 } from 'edge-core-js'
 import * as ReactRedux from 'react-redux'
 
-import { InitialRouteName } from '../components/publicApi/types'
+import { InitialRouteName } from '../components/publicApi/publicTypes'
 import { RootState } from '../reducers/RootReducer'
 import { TrackingEventName, TrackingValues } from '../util/analytics'
 import { Branding } from './Branding'

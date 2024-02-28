@@ -1,4 +1,4 @@
-import { AppConfig } from '../components/publicApi/types'
+import { AppConfig } from '../components/publicApi/publicTypes'
 
 let exportConfig: AppConfig = {
   termsOfServiceSite: 'https://edge.app/terms-of-service/'

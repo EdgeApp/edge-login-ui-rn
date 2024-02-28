@@ -16,7 +16,7 @@ export type {
   AppConfig,
   CreateAccountType,
   InitialRouteName
-} from './components/publicApi/types'
+} from './components/publicApi/publicTypes'
 
 // ---------------------------------------------------------------------
 // Post-login steps
