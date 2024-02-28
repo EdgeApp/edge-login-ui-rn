@@ -12,7 +12,7 @@ import {
 } from '../keychain'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
 import { hasSecurityAlerts } from '../util/hasSecurityAlerts'
-import { checkAndRequestNotifications } from '../util/notificationPermissionReminder'
+import { showNotificationPermissionReminder } from '../util/notificationPermissionReminder'
 import { showOtpReminder } from '../util/otpReminder'
 
 /**
@@ -64,7 +64,7 @@ export const submitLogin = (account: EdgeAccount) => async (
   getState: GetState,
   imports: Imports
 ) => {
-  const { onLogin } = imports
+  const { branding, onLogEvent, onLogin, onNotificationPermit } = imports
 
   account.watch('loggedIn', loggedIn => {
     if (!loggedIn) dispatch({ type: 'RESET_APP' })
@@ -89,9 +89,11 @@ export const submitLogin = (account: EdgeAccount) => async (
   if (imports.customPermissionsFunction != null) {
     imports.customPermissionsFunction()
   } else {
-    await dispatch(
-      checkAndRequestNotifications(imports.branding ?? {})
-    ).catch(error => console.log(error))
+    await showNotificationPermissionReminder({
+      onLogEvent,
+      onNotificationPermit,
+      appName: branding?.appName
+    }).catch(error => console.log(error))
   }
 
   // Hide all modals and scenes:

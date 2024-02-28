@@ -15,13 +15,15 @@ export { SecurityAlertsScreen } from './components/publicApi/SecurityAlertsScree
 export type {
   AppConfig,
   CreateAccountType,
-  InitialRouteName
+  InitialRouteName,
+  NotificationPermissionReminderOptions
 } from './components/publicApi/publicTypes'
 
 // ---------------------------------------------------------------------
 // Post-login steps
 // ---------------------------------------------------------------------
 
+export { showNotificationPermissionReminder } from './util/notificationPermissionReminder'
 export { showOtpReminder } from './util/otpReminder'
 export {
   hasSecurityAlerts,

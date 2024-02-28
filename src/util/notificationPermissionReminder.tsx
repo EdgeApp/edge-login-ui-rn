@@ -15,10 +15,11 @@ import {
   PermissionsModalChoices,
   RequestPermissionsModal
 } from '../components/modals/RequestPermissionsModal'
-import { NotificationPermissionsInfo } from '../components/publicApi/publicTypes'
+import {
+  NotificationPermissionReminderOptions,
+  NotificationPermissionsInfo
+} from '../components/publicApi/publicTypes'
 import { Airship } from '../components/services/AirshipInstance'
-import { Branding } from '../types/Branding'
-import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
 
 const { AbcCoreJsUi } = NativeModules
 const disklet = makeReactNativeDisklet()
@@ -58,12 +59,17 @@ logicMap[1][0][1] = undefined
 logicMap[1][1][0] = lstrings.refresh_permission_branded_s
 logicMap[1][1][1] = undefined
 
-export const checkAndRequestNotifications = (branding: Branding) => async (
-  dispatch: Dispatch,
-  getState: GetState,
-  imports: Imports
-) => {
-  const { onNotificationPermit, onLogEvent = () => {} } = imports
+/**
+ * Asks the users for notification permissions, if needed.
+ */
+export const showNotificationPermissionReminder = async (
+  opts: NotificationPermissionReminderOptions
+): Promise<void> => {
+  const {
+    appName = lstrings.app_name_default,
+    onLogEvent = () => {},
+    onNotificationPermit
+  } = opts
   const notificationPermission = await checkNotifications()
   const notificationStatus = notificationPermission.status
   const notifEnabled =
@@ -95,7 +101,7 @@ export const checkAndRequestNotifications = (branding: Branding) => async (
       ? sprintf(
           logicMap[notifEnabled][isNotificationBlockedBit][refreshEnabled] ??
             '',
-          branding.appName ?? lstrings.app_name_default
+          appName
         )
       : undefined
 

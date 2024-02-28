@@ -44,6 +44,12 @@ export interface NotificationPermissionsInfo {
   notificationOptIns: NotificationOptIns
 }
 
+export interface NotificationPermissionReminderOptions {
+  readonly appName?: string
+  readonly onLogEvent?: OnLogEvent
+  readonly onNotificationPermit?: OnNotificationPermit
+}
+
 export interface TouchIdInfo {
   isTouchSupported: boolean
   isTouchEnabled: boolean
