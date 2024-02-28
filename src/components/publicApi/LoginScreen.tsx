@@ -4,18 +4,19 @@ import * as React from 'react'
 import { initializeLogin } from '../../actions/LoginInitActions'
 import { setAppConfig } from '../../common/appConfig'
 import { Branding, ParentButton } from '../../types/Branding'
+import { Router } from '../navigation/Router'
+import { ReduxStore } from '../services/ReduxStore'
+import { changeFont } from '../services/ThemeContext'
 import {
+  AppConfig,
   asExperimentConfig,
   ExperimentConfig,
+  InitialRouteName,
   OnComplete,
   OnLogEvent,
   OnLogin,
   OnNotificationPermit
-} from '../../types/ReduxTypes'
-import { Router } from '../navigation/Router'
-import { ReduxStore } from '../services/ReduxStore'
-import { changeFont } from '../services/ThemeContext'
-import { AppConfig, InitialRouteName } from './publicTypes'
+} from './publicTypes'
 
 interface Props {
   context: EdgeContext

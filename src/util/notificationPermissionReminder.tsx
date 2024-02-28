@@ -15,14 +15,10 @@ import {
   PermissionsModalChoices,
   RequestPermissionsModal
 } from '../components/modals/RequestPermissionsModal'
+import { NotificationPermissionsInfo } from '../components/publicApi/publicTypes'
 import { Airship } from '../components/services/AirshipInstance'
 import { Branding } from '../types/Branding'
-import {
-  Dispatch,
-  GetState,
-  Imports,
-  NotificationPermissionsInfo
-} from '../types/ReduxTypes'
+import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
 
 const { AbcCoreJsUi } = NativeModules
 const disklet = makeReactNativeDisklet()
