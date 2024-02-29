@@ -121,10 +121,7 @@ function routeInitialization(state: RootState, imports: Imports): Action {
         type: 'NAVIGATE',
         data: { name: 'landing', params: {} }
       }
-    } else if (
-      startupUser.pinLoginEnabled ||
-      (startupUser.touchLoginEnabled && touch.type !== false)
-    ) {
+    } else if (startupUser.pinLoginEnabled || startupUser.touchLoginEnabled) {
       return {
         type: 'NAVIGATE',
         data: {

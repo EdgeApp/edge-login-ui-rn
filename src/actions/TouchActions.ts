@@ -1,4 +1,4 @@
-import { getSupportedBiometryType, supportsTouchId } from '../keychain'
+import { getSupportedBiometryType } from '../keychain'
 import { TouchState } from '../reducers/TouchReducer'
 import { Dispatch } from '../types/ReduxTypes'
 import { readKeychainFile } from '../util/keychainFile'
@@ -14,12 +14,11 @@ export const loadTouchState = () => async (
   // 'values' after ButtonsModal and ChallengeModal were updated to UI4
   const values: any = await Promise.all([
     readKeychainFile(),
-    supportsTouchId().catch(() => false),
     getSupportedBiometryType()
   ])
-  const [file, supported, type] = values
+  const [touchFile, biometryType] = values
 
-  const touchState: TouchState = { file, supported, type }
+  const touchState: TouchState = { touchFile, biometryType }
   dispatch({ type: 'SET_TOUCH', data: touchState })
   return touchState
 }

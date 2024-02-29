@@ -6,9 +6,9 @@ import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship } from '../components/services/AirshipInstance'
 import {
   enableTouchId,
+  getSupportedBiometryType,
   isTouchDisabled,
-  isTouchEnabled,
-  supportsTouchId
+  isTouchEnabled
 } from '../keychain'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
 import { hasSecurityAlerts } from '../util/hasSecurityAlerts'
@@ -77,7 +77,7 @@ export const submitLogin = (account: EdgeAccount) => async (
     })
   }
 
-  const isTouchSupported = await supportsTouchId()
+  const isTouchSupported = (await getSupportedBiometryType()) !== false
   const touchEnabled = await isTouchEnabled(account)
   const touchIdInformation = {
     isTouchSupported,

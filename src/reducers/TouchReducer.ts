@@ -3,15 +3,13 @@ import { Action } from '../types/ReduxActions'
 import { KeychainInfo } from '../util/keychainFile'
 
 export interface TouchState {
-  readonly file: KeychainInfo[]
-  readonly supported: boolean
-  readonly type: BiometryType
+  readonly touchFile: KeychainInfo[]
+  readonly biometryType: BiometryType
 }
 
 const initialState: TouchState = {
-  file: [],
-  supported: false,
-  type: false
+  touchFile: [],
+  biometryType: false
 }
 
 export const touch = (
