@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.5.0 (2024-03-01)
+
 - added: A `fastLogin` prop to the `LoginScreen`. This replaces `customPermissionsFunction`, `skipOtpReminder`, and `skipSecurityAlerts`. It also disables the `TouchIdInfo` parameter to `onLogin`.
 - added: A `refreshTouchId` function that should be called post-login to ensure biometric logins are correctly enabled.
 - added: A `showNotificationPermissionReminder` function that should be called post-login to request notification permissions.
