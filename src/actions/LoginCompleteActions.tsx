@@ -5,15 +5,14 @@ import { lstrings } from '../common/locales/strings'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship } from '../components/services/AirshipInstance'
 import {
-  enableTouchId,
-  isTouchDisabled,
+  getSupportedBiometryType,
   isTouchEnabled,
-  supportsTouchId
+  refreshTouchId
 } from '../keychain'
 import { Dispatch, GetState, Imports } from '../types/ReduxTypes'
 import { hasSecurityAlerts } from '../util/hasSecurityAlerts'
+import { showNotificationPermissionReminder } from '../util/notificationPermissionReminder'
 import { showOtpReminder } from '../util/otpReminder'
-import { checkAndRequestNotifications } from './LoginInitActions'
 
 /**
  * The user has just logged in, so figure out what do to next.
@@ -64,34 +63,42 @@ export const submitLogin = (account: EdgeAccount) => async (
   getState: GetState,
   imports: Imports
 ) => {
-  const { onLogin } = imports
+  const {
+    branding,
+    fastLogin = false,
+    onLogEvent,
+    onLogin,
+    onNotificationPermit
+  } = imports
 
   account.watch('loggedIn', loggedIn => {
     if (!loggedIn) dispatch({ type: 'RESET_APP' })
   })
 
-  const touchDisabled = await isTouchDisabled(account)
-  if (!touchDisabled) {
-    await enableTouchId(account).catch(e => {
+  if (!fastLogin) {
+    await refreshTouchId(account).catch(e => {
       console.log(e) // Fail quietly
     })
   }
 
-  const isTouchSupported = await supportsTouchId()
-  const touchEnabled = await isTouchEnabled(account)
-  const touchIdInformation = {
-    isTouchSupported,
-    isTouchEnabled: touchEnabled
+  if (onLogin != null) {
+    const touchIdInformation = fastLogin
+      ? undefined
+      : {
+          isTouchSupported: (await getSupportedBiometryType()) !== false,
+          isTouchEnabled: await isTouchEnabled(account)
+        }
+    onLogin(account, touchIdInformation)
   }
-
-  if (onLogin != null) onLogin(account, touchIdInformation)
 
   if (imports.customPermissionsFunction != null) {
     imports.customPermissionsFunction()
-  } else {
-    await dispatch(
-      checkAndRequestNotifications(imports.branding ?? {})
-    ).catch(error => console.log(error))
+  } else if (!fastLogin) {
+    await showNotificationPermissionReminder({
+      onLogEvent,
+      onNotificationPermit,
+      appName: branding?.appName
+    }).catch(error => console.log(error))
   }
 
   // Hide all modals and scenes:

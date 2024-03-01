@@ -13,7 +13,7 @@ const OTP_REMINDER_KEY_NAME_LAST_OTP_CHECKED = 'lastOtpCheck'
 const OTP_REMINDER_KEY_NAME_DONT_ASK = 'OtpDontAsk'
 
 /**
- * Check and show the 2fa reminder on login.
+ * Check and show the 2fa reminder on login, if necessary.
  */
 export async function showOtpReminder(account: EdgeAccount): Promise<void> {
   const { otpKey, dataStore, username, created } = account

@@ -75,17 +75,15 @@ export function PinLoginScene(props: Props) {
   const hasWait = errorInfo != null && errorInfo.wait > 0
 
   // Pin login state:
-  const touch = useSelector(state => state.touch.type)
+  const biometryType = useSelector(state => state.touch.biometryType)
   const isTouchIdDisabled = hasWait || pin.length === 4 || touchBusy
 
   // User list:
   const localUsers = useLocalUsers()
   const dropdownItems = React.useMemo(
     () =>
-      localUsers.filter(
-        user => user.pinLoginEnabled || (touch && user.touchLoginEnabled)
-      ),
-    [touch, localUsers]
+      localUsers.filter(user => user.pinLoginEnabled || user.touchLoginEnabled),
+    [localUsers]
   )
 
   // Active user:
@@ -101,7 +99,7 @@ export function PinLoginScene(props: Props) {
 
   // Runs once at start:
   React.useEffect(() => {
-    if (userInfo != null && touch !== 'FaceID') {
+    if (userInfo != null && biometryType !== 'FaceID') {
       handleTouchLogin(userInfo).catch(showError)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -370,7 +368,7 @@ export function PinLoginScene(props: Props) {
   const renderTouchImage = () => {
     if (userInfo == null || !userInfo.touchLoginEnabled) return null
 
-    if (touch === 'FaceID') {
+    if (biometryType === 'FaceID') {
       return (
         <TouchableOpacity onPress={handleTouchId} disabled={isTouchIdDisabled}>
           <SvgXml
@@ -382,7 +380,7 @@ export function PinLoginScene(props: Props) {
         </TouchableOpacity>
       )
     }
-    if (touch === 'TouchID') {
+    if (biometryType === 'TouchID') {
       return (
         <TouchableOpacity onPress={handleTouchId} disabled={isTouchIdDisabled}>
           <MaterialCommunityIcons
@@ -398,13 +396,13 @@ export function PinLoginScene(props: Props) {
 
   const renderTouchImageText = () => {
     if (userInfo == null || !userInfo.touchLoginEnabled) return ''
-    if (touch === 'FaceID') {
+    if (biometryType === 'FaceID') {
       return lstrings.use_faceId
     }
-    if (touch === 'TouchID' && Platform.OS === 'ios') {
+    if (biometryType === 'TouchID' && Platform.OS === 'ios') {
       return lstrings.use_touchId
     }
-    if (touch === 'TouchID' && Platform.OS !== 'ios') {
+    if (biometryType === 'TouchID' && Platform.OS !== 'ios') {
       return lstrings.use_fingerprint
     }
     return ''

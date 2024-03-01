@@ -35,7 +35,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
 import { LoginUserInfo, useLocalUsers } from '../../hooks/useLocalUsers'
 import { Branding } from '../../types/Branding'
-import { useDispatch, useSelector } from '../../types/ReduxTypes'
+import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { base58 } from '../../util/base58'
 import { attemptLogin, LoginAttempt } from '../../util/loginAttempt'
@@ -47,7 +47,7 @@ import { ChallengeModal } from '../modals/ChallengeModal'
 import { GradientFadeOut } from '../modals/GradientFadeout'
 import { QrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { CreateAccountType } from '../publicApi/types'
+import { CreateAccountType } from '../publicApi/publicTypes'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
@@ -81,8 +81,6 @@ export const PasswordLoginScene = (props: Props) => {
 
   const localUsers = useLocalUsers()
   const hasSavedUsers = localUsers.length > 0
-
-  const touch = useSelector(state => state.touch.type)
 
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState<
     string | undefined
@@ -305,7 +303,7 @@ export const PasswordLoginScene = (props: Props) => {
       )
       if (
         details != null &&
-        (details.pinLoginEnabled || (details.touchLoginEnabled && touch))
+        (details.pinLoginEnabled || details.touchLoginEnabled)
       ) {
         dispatch({
           type: 'NAVIGATE',

@@ -14,11 +14,11 @@ export interface LoginUserInfo extends EdgeUserInfo {
 export function useLocalUsers(): LoginUserInfo[] {
   const { context } = useImports()
   const localUsers = useWatch(context, 'localUsers')
-  const touch = useSelector(state => state.touch)
+  const touchState = useSelector(state => state.touch)
 
   return React.useMemo(
-    () => arrangeUsers(localUsers).map(info => upgradeUser(info, touch)),
-    [localUsers, touch]
+    () => arrangeUsers(localUsers).map(info => upgradeUser(info, touchState)),
+    [localUsers, touchState]
   )
 }
 
@@ -59,7 +59,7 @@ export function upgradeUser(
     ...userInfo,
     touchLoginEnabled:
       keyLoginEnabled &&
-      touch.supported &&
-      typeof getKeychainStatus(touch.file, userInfo) === 'string'
+      touch.biometryType !== false &&
+      typeof getKeychainStatus(touch.touchFile, userInfo) === 'string'
   }
 }

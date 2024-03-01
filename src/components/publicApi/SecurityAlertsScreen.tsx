@@ -2,9 +2,9 @@ import { EdgeAccount, EdgeContext } from 'edge-core-js'
 import * as React from 'react'
 
 import { useClearOnUnmount } from '../../hooks/useClearOnUnmount'
-import { asExperimentConfig, OnLogEvent } from '../../types/ReduxTypes'
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
+import { asExperimentConfig, OnLogEvent } from './publicTypes'
 
 interface Props {
   account: EdgeAccount

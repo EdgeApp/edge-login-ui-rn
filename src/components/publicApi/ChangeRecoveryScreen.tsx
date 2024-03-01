@@ -4,9 +4,9 @@ import * as React from 'react'
 import { initializeChangeRecovery } from '../../actions/PasswordRecoveryActions'
 import { useClearOnUnmount } from '../../hooks/useClearOnUnmount'
 import { Branding } from '../../types/Branding'
-import { asExperimentConfig, OnLogEvent } from '../../types/ReduxTypes'
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
+import { asExperimentConfig, OnLogEvent } from './publicTypes'
 
 interface Props {
   account: EdgeAccount

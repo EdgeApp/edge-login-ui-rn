@@ -51,29 +51,32 @@ interface NativeMethods {
 
 const nativeMethods: NativeMethods = NativeModules.AbcCoreJsUi
 
+/**
+ * Should be called at login to ensure biometric login is properly enabled.
+ * @param account The account that has just logged in.
+ */
+export async function refreshTouchId(account: EdgeAccount): Promise<void> {
+  const supported = await supportsTouchId()
+  const file = await readKeychainFile()
+  const status = getKeychainStatus(file, account)
+
+  if (supported && status !== false) {
+    const loginKey = await account.getLoginKey()
+    const location =
+      typeof status === 'string' ? status : account.rootLoginId + '_loginId'
+    await nativeMethods.setKeychainString(loginKey, location)
+
+    // Update the file:
+    await saveKeychainStatus(file, account, location)
+  }
+}
+
 export async function isTouchEnabled(account: EdgeAccount): Promise<boolean> {
   const supported = await supportsTouchId()
   const file = await readKeychainFile()
   const status = getKeychainStatus(file, account)
 
   return supported && typeof status === 'string'
-}
-
-export async function isTouchDisabled(account: EdgeAccount): Promise<boolean> {
-  const supported = await supportsTouchId()
-  const file = await readKeychainFile()
-  const status = getKeychainStatus(file, account)
-
-  return !supported || status === false
-}
-
-export async function supportsTouchId(): Promise<boolean> {
-  if (nativeMethods == null) {
-    console.warn('Native edge-login-ui-rn methods are missing')
-    return false
-  }
-  const out = await nativeMethods.supportsTouchId()
-  return !!out
 }
 
 export async function enableTouchId(account: EdgeAccount): Promise<void> {
@@ -109,6 +112,8 @@ export async function disableTouchId(account: EdgeAccount): Promise<void> {
 
 export async function getSupportedBiometryType(): Promise<BiometryType> {
   try {
+    const supported = await supportsTouchId()
+    if (!supported) return false
     const biometryType = await nativeMethods.getSupportedBiometryType()
     switch (biometryType) {
       // Keep these as-is:
@@ -171,4 +176,13 @@ export async function getLoginKey(
       console.log(error) // showError?
     }
   }
+}
+
+async function supportsTouchId(): Promise<boolean> {
+  if (nativeMethods == null) {
+    console.warn('Native edge-login-ui-rn methods are missing')
+    return false
+  }
+  const out = await nativeMethods.supportsTouchId()
+  return !!out
 }

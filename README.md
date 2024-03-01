@@ -115,6 +115,14 @@ async function getAppPrivateKey (account) {
 }
 ```
 
+The edge-login-ui-rn library does a bunch of account initialization before it calls `onLogin`. If you don't want this work to delay showing your application, consider passing the `fastLogin` flag to skip these steps. If you do pass the `fastLogin` flag, you will need to finish the initialization work yourself, once you app is displayed:
+
+- Call `refreshTouchId(account)` to ensure that biometric logins will work correctly.
+- Call `showNotificationPermissionReminder` to request notification permissions. We need these for our IP validation and 2FA features to be secure.
+- Optionally call `showOtpReminder` to remind the user to turn on 2-factor authentication.
+- Call `hasSecurityAlerts` to see if there are pending login requests from other devices. If so, you will want to display the `SecurityAlertsScreen` to handle those.
+- Optionally call `watchSecurityAlerts` to watch for incoming login requests, and respond by showing the `SecurityAlertsScreen`.
+
 ### Adding core plugins
 
 If you want full wallet functionality, with balances, transactions, and so forth, you need to add one or more currency plugins to your app. To do this, first use NPM to install one of our plugin libraries, such as [edge-currency-accountbased](https://github.com/EdgeApp/edge-currency-accountbased) for Ethereum.

@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- added: A `fastLogin` prop to the `LoginScreen`. This replaces `customPermissionsFunction`, `skipOtpReminder`, and `skipSecurityAlerts`. It also disables the `TouchIdInfo` parameter to `onLogin`.
+- added: A `refreshTouchId` function that should be called post-login to ensure biometric logins are correctly enabled.
+- added: A `showNotificationPermissionReminder` function that should be called post-login to request notification permissions.
+- added: A `showOtpReminder` function that could optionally be called post-login to advertise our 2FA feature.
+- deprecated: The `customPermissionsFunction` prop to `LoginScreen`.
+- deprecated: The `fontDescription` prop to `LoginScreen`.
+- deprecated: The `onNotificationPermit` prop to `LoginScreen`.
+- deprecated: The `skipOtpReminder` prop to `LoginScreen`.
+- deprecated: The `skipSecurityAlerts` prop to `LoginScreen`.
+
 ## 3.4.1 (2024-02-25)
 
 - fixed: Login performance by optimizing OTP reminder logic
