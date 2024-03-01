@@ -1,13 +1,12 @@
 import { EdgeAccount, EdgeUserInfo } from 'edge-core-js'
 import { NativeModules, Platform } from 'react-native'
 
+import { BiometryType } from './components/publicApi/publicTypes'
 import {
   getKeychainStatus,
   readKeychainFile,
   saveKeychainStatus
 } from './util/keychainFile'
-
-export type BiometryType = 'FaceID' | 'TouchID' | false
 
 interface NativeMethods {
   supportsTouchId: () => Promise<boolean>
