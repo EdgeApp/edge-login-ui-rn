@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Export missing type definitions.
+
 ## 3.5.0 (2024-03-01)
 
 - added: A `fastLogin` prop to the `LoginScreen`. This replaces `customPermissionsFunction`, `skipOtpReminder`, and `skipSecurityAlerts`. It also disables the `TouchIdInfo` parameter to `onLogin`.

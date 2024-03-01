@@ -1,4 +1,4 @@
-import { BiometryType } from '../keychain'
+import { BiometryType } from '../components/publicApi/publicTypes'
 import { Action } from '../types/ReduxActions'
 import { KeychainInfo } from '../util/keychainFile'
 

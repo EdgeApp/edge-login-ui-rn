@@ -1,6 +1,8 @@
 import { asObject, asOptional, asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
+export type BiometryType = 'FaceID' | 'TouchID' | false
+
 export type InitialRouteName =
   | 'login'
   | 'login-password'

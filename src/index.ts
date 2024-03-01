@@ -14,9 +14,13 @@ export { OtpRepairScreen } from './components/publicApi/OtpRepairScreen'
 export { SecurityAlertsScreen } from './components/publicApi/SecurityAlertsScreen'
 export type {
   AppConfig,
+  BiometryType,
   CreateAccountType,
   InitialRouteName,
-  NotificationPermissionReminderOptions
+  NotificationPermissionReminderOptions,
+  NotificationPermissionsInfo,
+  TrackingEventName,
+  TrackingValues
 } from './components/publicApi/publicTypes'
 
 // ---------------------------------------------------------------------
