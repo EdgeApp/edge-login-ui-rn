@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.6.0 (2024-03-12)
+
 - changed: Sync ButtonUi4, FilledTextInput, and Touchable components with edge-react-gui
 - fixed: Export missing type definitions.
 
