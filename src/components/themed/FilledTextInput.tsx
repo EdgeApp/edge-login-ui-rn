@@ -11,7 +11,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View
 } from 'react-native'
 import Animated, {
@@ -28,6 +27,7 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import {
   AnimatedIconComponent,
@@ -84,7 +84,8 @@ export interface FilledTextInputProps extends SpaceProps {
     | 'decimal-pad'
     | 'numeric'
     | 'email-address'
-    | 'phone-pad' // Defaults to 'default'
+    | 'phone-pad'
+    | 'visible-password' // Defaults to 'default'
   maxLength?: number
   onSubmitEditing?: () => void
   returnKeyType?: FilledTextInputReturnKeyType // Defaults to 'done'
@@ -152,7 +153,9 @@ export const FilledTextInput = React.forwardRef<
     blurOnSubmit,
     disabled = false,
     inputAccessoryViewID,
+    keyboardType,
     maxLength,
+    returnKeyType,
     secureTextEntry,
     testID,
     textsizeRem,
@@ -274,9 +277,18 @@ export const FilledTextInput = React.forwardRef<
 
   const InputComponent = numeric ? StyledNumericInput : StyledAnimatedTextInput
 
+  // HACK: Some Android devices/versions, mostly Samsung, have a bug where the
+  // text input always blurs immediately after focusing.
+  const hackKeyboardType =
+    isAndroid &&
+    !hidePassword &&
+    (keyboardType == null || keyboardType === 'default')
+      ? 'visible-password'
+      : keyboardType
+
   return (
     <View style={spaceStyle}>
-      <TouchableWithoutFeedback
+      <EdgeTouchableWithoutFeedback
         accessible={false}
         testID={testID}
         onPress={() => focus()}
@@ -319,9 +331,10 @@ export const FilledTextInput = React.forwardRef<
             <InputComponent
               accessible
               animated
+              editable={!disabled}
               ref={inputRef}
-              keyboardType={props.keyboardType}
-              returnKeyType={props.returnKeyType}
+              keyboardType={hackKeyboardType}
+              returnKeyType={returnKeyType}
               accessibilityState={{ disabled }}
               autoFocus={autoFocus}
               disableAnimation={disableAnimation}
@@ -353,7 +366,8 @@ export const FilledTextInput = React.forwardRef<
 
           {showSpinner ? <ActivityIndicator /> : null}
           {secureTextEntry ? (
-            <TouchableWithoutFeedback
+            <TouchContainer
+              extendTappable="leftOnly"
               testID={`${testID}.eyeIcon`}
               onPress={handleHidePassword}
             >
@@ -364,10 +378,11 @@ export const FilledTextInput = React.forwardRef<
                   off={!hidePassword}
                 />
               </IconContainer>
-            </TouchableWithoutFeedback>
+            </TouchContainer>
           ) : null}
 
-          <TouchableOpacity
+          <TouchContainer
+            extendTappable={secureTextEntry ? 'rightOnly' : 'full'}
             accessible
             onPress={handleClearPress}
             testID={`${testID}.clearIcon`}
@@ -375,9 +390,9 @@ export const FilledTextInput = React.forwardRef<
             <SideContainer scale={rightIconSize}>
               <CloseIconAnimated color={iconColor} size={rightIconSize} />
             </SideContainer>
-          </TouchableOpacity>
+          </TouchContainer>
         </Container>
-      </TouchableWithoutFeedback>
+      </EdgeTouchableWithoutFeedback>
       {valid != null || error != null || charactersLeft !== '' ? (
         <MessagesContainer noLayoutFlow={charactersLeft === ''}>
           <Message danger={error != null}>{valid ?? error ?? null}</Message>
@@ -426,6 +441,39 @@ const Container = styled(Animated.View)<{
       paddingVertical: scale.value * rem
     }))
   ]
+})
+
+/**
+ * extendTappable: Which horizontal side of the icon do we want to increase
+ * tappable area? 'full' means both left and right sides.
+ */
+const TouchContainer = styled(TouchableOpacity)<{
+  extendTappable: 'leftOnly' | 'rightOnly' | 'full'
+}>(theme => ({ extendTappable }) => {
+  // Increase tappable area with padding, while net 0 with negative margin to
+  // visually appear as if 0 margins/padding
+  const tapArea =
+    extendTappable === 'leftOnly'
+      ? {
+          paddingLeft: theme.rem(1),
+          marginLeft: -theme.rem(1)
+        }
+      : extendTappable === 'rightOnly'
+      ? {
+          paddingRight: theme.rem(1),
+          marginRight: -theme.rem(1)
+        }
+      : // extendTappable === 'full'
+        {
+          marginHorizontal: -theme.rem(1),
+          paddingHorizontal: theme.rem(1)
+        }
+
+  return {
+    paddingVertical: theme.rem(1.25),
+    marginVertical: -theme.rem(1.25),
+    ...tapArea
+  }
 })
 
 const IconContainer = styled(View)(theme => ({
