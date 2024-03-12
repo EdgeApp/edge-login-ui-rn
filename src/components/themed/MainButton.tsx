@@ -12,10 +12,6 @@ interface Props {
   // and show a spinner until the promise resolves.
   onPress?: () => void | Promise<void>
 
-  // Whether to center the button or stretch to fill the screen.
-  // Defaults to 'auto', letting the parent component be in charge:
-  alignSelf?: 'auto' | 'stretch' | 'center'
-
   // True to dim the button & prevent interactions:
   disabled?: boolean
 
@@ -47,7 +43,6 @@ interface Props {
  */
 export function MainButton(props: Props) {
   const {
-    alignSelf = 'auto',
     children,
     disabled = false,
     label,
@@ -62,7 +57,6 @@ export function MainButton(props: Props) {
 
   return (
     <ButtonUi4
-      alignSelf={alignSelf}
       disabled={disabled}
       label={label}
       marginRem={marginRem}

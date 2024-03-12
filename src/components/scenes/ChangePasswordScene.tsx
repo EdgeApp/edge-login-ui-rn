@@ -183,16 +183,9 @@ const ChangePasswordSceneComponent = ({
           visible={!isShowError}
         >
           {spinning ? (
-            <MainButton
-              alignSelf="center"
-              disabled
-              marginRem={0.5}
-              type="primary"
-              spinner
-            />
+            <MainButton disabled marginRem={0.5} type="primary" spinner />
           ) : (
             <MainButton
-              alignSelf="center"
               label={mainButtonLabel}
               disabled={!isRequirementsMet || confirmPassword === ''}
               marginRem={0.5}
