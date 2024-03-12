@@ -332,7 +332,6 @@ export const ChangeRecoveryScene = (props: Props) => {
     return (
       <View style={styles.buttonsContainer}>
         <MainButton
-          alignSelf="center"
           marginRem={0}
           label={lstrings.recovery_change_button}
           onPress={changeRecovery}
@@ -352,7 +351,6 @@ export const ChangeRecoveryScene = (props: Props) => {
     return (
       <View style={styles.buttonsContainer}>
         <MainButton
-          alignSelf="center"
           label={lstrings.confirm_email}
           marginRem={0.25}
           onPress={saveRecoveryViaEmail}
@@ -360,7 +358,6 @@ export const ChangeRecoveryScene = (props: Props) => {
           type="primary"
         />
         <MainButton
-          alignSelf="center"
           label={lstrings.confirm_share}
           marginRem={0.25}
           onPress={saveRecoveryViaShare}
@@ -368,7 +365,6 @@ export const ChangeRecoveryScene = (props: Props) => {
           type="primary"
         />
         <MainButton
-          alignSelf="center"
           label={lstrings.cancel}
           marginRem={[0.25, 0, 1]}
           onPress={onComplete}

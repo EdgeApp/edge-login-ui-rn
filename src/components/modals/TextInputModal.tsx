@@ -144,16 +144,9 @@ export function TextInputModal(props: Props) {
         Platform.OS === 'android' ? <View style={{ flex: 2 }} /> : null
       }
       {spinning ? (
-        <MainButton
-          alignSelf="center"
-          disabled
-          marginRem={0.5}
-          type="secondary"
-          spinner
-        />
+        <MainButton disabled marginRem={0.5} type="secondary" spinner />
       ) : (
         <MainButton
-          alignSelf="center"
           label={submitLabel}
           marginRem={0.5}
           onPress={handleSubmit}

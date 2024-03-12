@@ -163,7 +163,6 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
     return (
       <View style={styles.buttonsContainer}>
         <MainButton
-          alignSelf="stretch"
           label={lstrings.submit}
           marginRem={[1, 0.5]}
           onPress={handleSubmit}
