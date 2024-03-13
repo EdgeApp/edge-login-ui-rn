@@ -169,9 +169,8 @@ export const showNotificationPermissionReminder = async (
     ) {
       openSettings().catch(error => console.log(error))
     }
+    // Only log enable, not deny/block due to our privacy policy.
     onLogEvent('Permission_Modal_Notification_Enable')
-  } else {
-    onLogEvent('Permission_Modal_Notification_Dismiss')
   }
 
   if (onNotificationPermit != null) onNotificationPermit(newPermissionsInfo)

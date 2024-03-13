@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- removed: 'Permission_Modal_Notification_Dismiss' analytics event
+
 ## 3.6.0 (2024-03-12)
 
 - changed: Sync ButtonUi4, FilledTextInput, and Touchable components with edge-react-gui
