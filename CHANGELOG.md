@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.6.1 (2024-03-13)
+
 - removed: 'Permission_Modal_Notification_Dismiss' analytics event
 
 ## 3.6.0 (2024-03-12)
