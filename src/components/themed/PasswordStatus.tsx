@@ -6,24 +6,19 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { lstrings } from '../../common/locales/strings'
-import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { IconSignal } from './IconSignal'
 
 interface Props {
-  marginRem?: number[] | number
-  passwordEval?: EdgePasswordRules
+  passwordEval: EdgePasswordRules
 }
 
 export const PasswordStatus = (props: Props) => {
-  const { marginRem, passwordEval } = props
+  const { passwordEval } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const spacings = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
-
-  if (passwordEval == null) return null
 
   const { passed, tooShort, noLowerCase, noUpperCase, noNumber } = passwordEval
   const list = [
@@ -42,7 +37,7 @@ export const PasswordStatus = (props: Props) => {
   return (
     <EdgeAnim
       enter={{ type: 'fadeInUp', distance: 100 }}
-      style={[styles.container, passed && styles.passedContainer, spacings]}
+      style={[styles.container, passed && styles.passedContainer]}
     >
       <View style={styles.top}>
         <IconSignal
@@ -76,12 +71,12 @@ export const PasswordStatus = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    // HACK: Unable to get this component to cooperate with CardUi4's flex: 1...
-    // Just copying over relevant CardUi4 styles for now
+    // TODO: Sync CardUi4 w/ GUI after finalizing design requirements for this component.
     backgroundColor: theme.cardBaseColor,
     borderRadius: theme.rem(1),
     padding: theme.rem(1),
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    margin: theme.rem(0.5)
   },
   top: {
     flexDirection: 'row',
@@ -91,7 +86,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   message: {
     flexShrink: 1,
     fontFamily: theme.fontFaceBold,
-    marginLeft: theme.rem(1)
+    marginLeft: theme.rem(0.5)
   },
   passwordConditionRow: {
     marginLeft: theme.rem(0.4),

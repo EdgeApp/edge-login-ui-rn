@@ -1,6 +1,7 @@
 import { EdgeAccount, EdgePasswordRules } from 'edge-core-js'
 import * as React from 'react'
-import { Keyboard, KeyboardAvoidingView } from 'react-native'
+import { Keyboard } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { cacheStyles } from 'react-native-patina'
 
 import { lstrings } from '../../common/locales/strings'
@@ -65,10 +66,16 @@ const ChangePasswordSceneComponent = ({
   const [focusSecond, setFocusSecond] = React.useState(false)
   const [spinning, setSpinning] = React.useState(false)
   const [isShowError, setIsShowError] = React.useState(false)
-  const [passwordEval, setPasswordEval] = React.useState<
-    EdgePasswordRules | undefined
-  >(undefined)
-  const isRequirementsMet = passwordEval?.passed ?? false
+  const [passwordEval, setPasswordEval] = React.useState<EdgePasswordRules>({
+    secondsToCrack: 0, // unused
+    passed: false,
+    tooShort: true,
+    noLowerCase: true,
+    noUpperCase: true,
+    noNumber: true
+  })
+
+  const isRequirementsMet = passwordEval.passed
 
   const [password, setPassword] = React.useState(initPassword ?? '')
   const [confirmPassword, setConfirmPassword] = React.useState('')
@@ -76,7 +83,6 @@ const ChangePasswordSceneComponent = ({
     confirmPasswordErrorMessage,
     setConfirmPasswordErrorMessage
   ] = React.useState('')
-
   const handlePress = useHandler(async () => {
     if (!isRequirementsMet) return
     if (password !== confirmPassword) {
@@ -118,25 +124,26 @@ const ChangePasswordSceneComponent = ({
   const renderInterior = () => {
     return (
       <>
-        {passwordEval != null ? (
-          <PasswordStatus
-            marginRem={[0.5, 0.5, 1.25]}
-            passwordEval={passwordEval}
-          />
-        ) : (
-          <EdgeAnim
-            enter={{ type: 'fadeInUp', distance: 50 }}
-            exit={{ type: 'fadeOutDown' }}
-          >
-            <EdgeText style={styles.description} numberOfLines={4}>
-              {lstrings.password_desc}
-            </EdgeText>
-          </EdgeAnim>
-        )}
+        <EdgeAnim
+          enter={{ type: 'fadeInUp', distance: 50 }}
+          exit={{ type: 'fadeOutDown' }}
+        >
+          <EdgeText style={styles.description} numberOfLines={4}>
+            {lstrings.password_desc}
+          </EdgeText>
+        </EdgeAnim>
+        <EdgeAnim
+          enter={{ type: 'fadeInUp', distance: 30 }}
+          exit={{ type: 'fadeOutDown' }}
+        >
+          <PasswordStatus passwordEval={passwordEval} />
+        </EdgeAnim>
+
         <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
           <FilledTextInput
-            horizontal={1.25}
-            bottom={1.25}
+            top={0.75}
+            horizontal={0.75}
+            bottom={0.25}
             value={password}
             secureTextEntry
             returnKeyType="next"
@@ -150,8 +157,8 @@ const ChangePasswordSceneComponent = ({
         </EdgeAnim>
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
           <FilledTextInput
-            horizontal={1.25}
-            bottom={1.25}
+            top={0.25}
+            horizontal={0.75}
             value={confirmPassword}
             secureTextEntry
             returnKeyType="go"
@@ -201,13 +208,9 @@ const ChangePasswordSceneComponent = ({
   return (
     <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
       {focusSecond ? (
-        <KeyboardAvoidingView
-          style={styles.container}
-          behavior="position"
-          keyboardVerticalOffset={-150}
-        >
+        <KeyboardAwareScrollView style={styles.container}>
           {renderInterior()}
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
       ) : (
         renderInterior()
       )}
@@ -217,16 +220,14 @@ const ChangePasswordSceneComponent = ({
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    flex: 1,
+    flexGrow: 1,
     marginHorizontal: theme.rem(0.5),
-    overflow: 'hidden'
+    marginTop: -theme.rem(0.5)
   },
   description: {
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.875),
-    marginBottom: theme.rem(2),
-    marginTop: theme.rem(1),
-    marginHorizontal: theme.rem(0.5)
+    margin: theme.rem(0.5)
   },
   actions: {
     flexDirection: 'row',
