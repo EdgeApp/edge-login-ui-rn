@@ -1,4 +1,3 @@
-import { EdgePasswordRules } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -11,60 +10,111 @@ import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { IconSignal } from './IconSignal'
 
+/**
+ * 'met' or 'unmet' while user is editing the password fields, 'error' if any
+ * requirements are still unmet upon submission.
+ *
+ * 'met': green, 'unmet': white, 'error': red
+ * */
+export type PasswordRequirementStatus = 'met' | 'unmet' | 'error'
+
+/** Conditions that must be met in order for the password to be accepted. */
+export interface PasswordRequirements {
+  minLengthMet: PasswordRequirementStatus
+  hasNumber: PasswordRequirementStatus
+  hasLowercase: PasswordRequirementStatus
+  hasUppercase: PasswordRequirementStatus
+
+  // Initially undefined and omitted from the list until the user starts on the
+  // pw confirmation text field
+  confirmationMatches?: PasswordRequirementStatus
+}
+
 interface Props {
-  passwordEval: EdgePasswordRules
+  passwordReqs: PasswordRequirements
 }
 
 export const PasswordStatus = (props: Props) => {
-  const { passwordEval } = props
+  const { passwordReqs } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { passed, tooShort, noLowerCase, noUpperCase, noNumber } = passwordEval
+  const {
+    minLengthMet,
+    hasNumber,
+    hasLowercase,
+    hasUppercase,
+    confirmationMatches
+  } = passwordReqs
+
   const list = [
-    { title: lstrings.must_ten_characters, value: !tooShort },
+    { title: lstrings.must_ten_characters, validationStatus: minLengthMet },
     {
       title: lstrings.must_one_lowercase,
-      value: !noLowerCase
+      validationStatus: hasLowercase
     },
     {
       title: lstrings.must_one_uppercase,
-      value: !noUpperCase
+      validationStatus: hasUppercase
     },
-    { title: lstrings.must_one_number, value: !noNumber }
+    { title: lstrings.must_one_number, validationStatus: hasNumber }
   ]
+
+  if (confirmationMatches != null)
+    list.push({
+      title: lstrings.password_must_match,
+      validationStatus: confirmationMatches
+    })
+
+  const passwordValid = !list.some(
+    ({ validationStatus }) =>
+      validationStatus === 'unmet' || validationStatus === 'error'
+  )
 
   return (
     <EdgeAnim
       enter={{ type: 'fadeInUp', distance: 100 }}
-      style={[styles.container, passed && styles.passedContainer]}
+      style={[styles.container, passwordValid && styles.passedContainer]}
     >
       <View style={styles.top}>
         <IconSignal
-          enabled={passed}
+          enabled={passwordValid}
           enabledIcon={props => <FontAwesome {...props} name="check-circle" />}
           disabledIcon={props => <SimpleLineIcons {...props} name="info" />}
         />
-        <EdgeText style={[styles.message, passed && styles.passed]}>
+        <EdgeText style={[styles.message, passwordValid && styles.passed]}>
           {lstrings.password_requirements}
         </EdgeText>
       </View>
-      {list.map(({ title, value }) => (
-        <View style={styles.passwordConditionRow} key={title}>
-          <EdgeText
-            style={[
-              styles.passwordConditionText,
-              styles.passwordConditionDot,
-              value && styles.passed
-            ]}
-          >{`\u2022`}</EdgeText>
-          <EdgeText
-            style={[styles.passwordConditionText, value && styles.passed]}
+      {list.map(({ title, validationStatus }) => {
+        const color =
+          validationStatus === 'met'
+            ? styles.passed
+            : validationStatus === 'error'
+            ? styles.error
+            : undefined
+
+        return (
+          <EdgeAnim
+            enter={{ type: 'fadeInDown', distance: 10 }}
+            style={styles.passwordConditionRow}
+            key={title}
           >
-            {title}
-          </EdgeText>
-        </View>
-      ))}
+            <View style={styles.passwordConditionRow}>
+              <EdgeText
+                style={[
+                  styles.passwordConditionText,
+                  styles.passwordConditionDot,
+                  color
+                ]}
+              >{`\u2022`}</EdgeText>
+              <EdgeText style={[styles.passwordConditionText, color]}>
+                {title}
+              </EdgeText>
+            </View>
+          </EdgeAnim>
+        )
+      })}
     </EdgeAnim>
   )
 }
@@ -77,6 +127,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     padding: theme.rem(1),
     justifyContent: 'flex-start',
     margin: theme.rem(0.5)
+  },
+  error: {
+    color: theme.dangerText
   },
   top: {
     flexDirection: 'row',

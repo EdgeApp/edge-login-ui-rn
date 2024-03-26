@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgePasswordRules } from 'edge-core-js'
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Keyboard } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -17,9 +17,8 @@ import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { PasswordStatus } from '../themed/PasswordStatus'
+import { PasswordRequirements, PasswordStatus } from '../themed/PasswordStatus'
 import { ThemedScene } from '../themed/ThemedScene'
-import { AlertCardUi4 } from '../ui4/AlertUi4'
 
 export interface ChangePasswordParams {
   account: EdgeAccount
@@ -60,34 +59,32 @@ const ChangePasswordSceneComponent = ({
 }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const imports = useImports()
 
   const [focusFirst, setFocusFirst] = React.useState(true)
   const [focusSecond, setFocusSecond] = React.useState(false)
   const [spinning, setSpinning] = React.useState(false)
-  const [isShowError, setIsShowError] = React.useState(false)
-  const [passwordEval, setPasswordEval] = React.useState<EdgePasswordRules>({
-    secondsToCrack: 0, // unused
-    passed: false,
-    tooShort: true,
-    noLowerCase: true,
-    noUpperCase: true,
-    noNumber: true
+  const [passwordReqs, setPasswordReqs] = React.useState<PasswordRequirements>({
+    minLengthMet: 'unmet',
+    hasNumber: 'unmet',
+    hasLowercase: 'unmet',
+    hasUppercase: 'unmet',
+    confirmationMatches: undefined
   })
-
-  const isRequirementsMet = passwordEval.passed
-
   const [password, setPassword] = React.useState(initPassword ?? '')
   const [confirmPassword, setConfirmPassword] = React.useState('')
-  const [
-    confirmPasswordErrorMessage,
-    setConfirmPasswordErrorMessage
-  ] = React.useState('')
-  const handlePress = useHandler(async () => {
-    if (!isRequirementsMet) return
+
+  // Omit confirmationMatches from next button availability
+  const isNextButtonDisabled = Object.entries(passwordReqs)
+    .filter(([key]) => key !== 'confirmationMatches') // Exclude confirmationMatches from the check
+    .some(([, value]) => value === 'unmet' || value === 'error')
+
+  const handleNext = useHandler(async () => {
     if (password !== confirmPassword) {
-      setConfirmPasswordErrorMessage(lstrings.password_mismatch_error)
-      setIsShowError(true)
+      setConfirmPassword('')
+      setPasswordReqs({
+        ...passwordReqs,
+        confirmationMatches: 'error'
+      })
       return
     }
 
@@ -108,17 +105,21 @@ const ChangePasswordSceneComponent = ({
 
   const handleValidatePassword = (password: string) => {
     setPassword(password)
-    setIsShowError(false)
-    setPasswordEval(imports.context.checkPasswordRules(password))
+
+    setPasswordReqs({
+      minLengthMet: password.length >= 10 ? 'met' : 'unmet',
+      hasNumber: /[0-9]/.test(password) ? 'met' : 'unmet',
+      hasLowercase: /[a-z]/.test(password) ? 'met' : 'unmet',
+      hasUppercase: /[A-Z]/.test(password) ? 'met' : 'unmet'
+    })
   }
 
   const handleChangeConfirmPassword = (confirmPassword: string) => {
     setConfirmPassword(confirmPassword)
-    setIsShowError(false)
-    if (confirmPassword !== password) {
-      setConfirmPasswordErrorMessage(lstrings.password_mismatch_error)
-      setIsShowError(true)
-    }
+    setPasswordReqs({
+      ...passwordReqs,
+      confirmationMatches: confirmPassword === password ? 'met' : 'unmet'
+    })
   }
 
   const renderInterior = () => {
@@ -136,7 +137,7 @@ const ChangePasswordSceneComponent = ({
           enter={{ type: 'fadeInUp', distance: 30 }}
           exit={{ type: 'fadeOutDown' }}
         >
-          <PasswordStatus passwordEval={passwordEval} />
+          <PasswordStatus passwordReqs={passwordReqs} />
         </EdgeAnim>
 
         <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
@@ -165,38 +166,24 @@ const ChangePasswordSceneComponent = ({
             placeholder={lstrings.confirm_password}
             autoFocus={focusSecond}
             onChangeText={handleChangeConfirmPassword}
-            onSubmitEditing={handlePress}
+            onSubmitEditing={handleNext}
             clearIcon
             maxLength={100}
           />
         </EdgeAnim>
-        {isShowError ? (
-          <EdgeAnim
-            style={styles.actions}
-            enter={{ type: 'fadeInUp', distance: 50 }}
-            exit={{ type: 'fadeOutUp', distance: 50 }}
-          >
-            <AlertCardUi4
-              marginRem={[0.75, 1.25]}
-              type="error"
-              title={confirmPasswordErrorMessage}
-            />
-          </EdgeAnim>
-        ) : null}
         <EdgeAnim
           style={styles.actions}
           enter={{ type: 'fadeInDown', distance: 50 }}
           exit={{ type: 'fadeOutDown', distance: 50 }}
-          visible={!isShowError}
         >
           {spinning ? (
             <MainButton disabled marginRem={0.5} type="primary" spinner />
           ) : (
             <MainButton
               label={mainButtonLabel}
-              disabled={!isRequirementsMet || confirmPassword === ''}
+              disabled={isNextButtonDisabled || confirmPassword === ''}
               marginRem={0.5}
-              onPress={handlePress}
+              onPress={handleNext}
               type="primary"
             />
           )}
