@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.7.0 (2024-03-27)
+
 - changed: Move "password match" check to the "Password Requirements" Card
 - fixed: Unable to highlight password input fields when content is toggled visible
 
