@@ -134,7 +134,7 @@
   "password_change_warning": "Alterar a sua senha não protege contas comprometidas que já foram acessadas. Se você acredita que a sua conta tem um ‘login’ desconhecido, transfira os fundos restantes para uma nova conta.\n\nNão envie fundos para a conta comprometida.",
   "password_changed": "Senha Alterada",
   "password_desc": "A sua senha é usada para criptografar a sua conta e fazer o seu login.",
-  "password_mismatch_error": "As senhas não coincidem",
+  "password_must_match": "Passwords must match",
   "password_recovery": "Recuperação de Senha",
   "password_requirements": "Requisitos de Senha",
   "password": "Senha",
