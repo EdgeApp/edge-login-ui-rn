@@ -281,6 +281,7 @@ export const FilledTextInput = React.forwardRef<
   // text input always blurs immediately after focusing.
   const hackKeyboardType =
     isAndroid &&
+    !secureTextEntry && // Don't apply this hack if we are intentionally doing a secure text entry
     !hidePassword &&
     (keyboardType == null || keyboardType === 'default')
       ? 'visible-password'

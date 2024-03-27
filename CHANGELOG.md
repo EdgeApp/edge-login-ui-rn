@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Unable to highlight password input fields when content is toggled visible
+
 ## 3.6.1 (2024-03-13)
 
 - removed: 'Permission_Modal_Notification_Dismiss' analytics event
