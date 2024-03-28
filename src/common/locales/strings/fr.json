@@ -134,7 +134,7 @@
   "password_change_warning": "Changing your password doesn't protect compromised accounts that have already been accessed. If you believe your account has an unknown login please move remaining funds to a new account. \n\nDo not send funds to the compromised account.",
   "password_changed": "Le mot de passe a été modifié",
   "password_desc": "Your password is used to encrypt your account and to log in.",
-  "password_mismatch_error": "Passwords don't match",
+  "password_must_match": "Passwords must match",
   "password_recovery": "Récupération du mot de passe",
   "password_requirements": "Password Requirements",
   "password": "Mot de passe",

@@ -134,7 +134,7 @@
   "password_change_warning": "パスワードを変更しても、すでに不正アクセスのあったアカウントの保護にはなりません。不明なログインがあったと思われる場合は、残りの資金を新しいアカウントに移動してください。\n\n不正アクセスされたアカウントには送金しないでください。",
   "password_changed": "パスワードが変更されました",
   "password_desc": "パスワードはアカウントの暗号化とログインに使用されます。",
-  "password_mismatch_error": "パスワードが一致しません",
+  "password_must_match": "Passwords must match",
   "password_recovery": "パスワード復元",
   "password_requirements": "パスワード要件",
   "password": "パスワード",

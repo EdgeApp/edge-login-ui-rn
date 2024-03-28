@@ -134,7 +134,7 @@
   "password_change_warning": "Cambiar tu contraseña no protege las cuentas comprometidas a las que ya se ha accedido. Si crees que tu cuenta ha tenido un inicio de sesión desconocido, por favor mueve los fondos restantes a una nueva cuenta. \n\nNo envíe fondos a la cuenta comprometida.",
   "password_changed": "Contraseña Cambiada",
   "password_desc": "Tu contraseña se utiliza para encriptar tu cuenta e iniciar sesión.",
-  "password_mismatch_error": "La contraseña no coincide",
+  "password_must_match": "Passwords must match",
   "password_recovery": "Recuperación de Contraseña",
   "password_requirements": "Requisitos de contraseña",
   "password": "Contraseña",
