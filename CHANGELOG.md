@@ -3,6 +3,7 @@
 ## Unreleased
 
 - changed: Move "password match" check to the "Password Requirements" Card
+- fixed: Show the `landingScreenText` when provided.
 - fixed: Unable to highlight password input fields when content is toggled visible
 
 ## 3.6.1 (2024-03-13)

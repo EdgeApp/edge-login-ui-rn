@@ -15,10 +15,10 @@ import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 interface Props extends SceneProps<'landing'> {
   branding: Branding
-  landingSceneText?: string
 }
 
 export const LandingScene = (props: Props) => {
+  const { branding } = props
   const dispatch = useDispatch()
   const { initialUserInfo, onLogEvent = () => {} } = useImports()
 
@@ -49,7 +49,7 @@ export const LandingScene = (props: Props) => {
             <View style={styles.featureBoxContent}>
               <View style={styles.featureBoxDescription}>
                 <Text style={styles.tagText}>
-                  {props.landingSceneText || lstrings.landing_tagline}
+                  {branding.landingSceneText ?? lstrings.landing_tagline}
                 </Text>
               </View>
             </View>
