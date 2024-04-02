@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Ability to set a blank string as the password if using the keyboard next button.
+
 ## 3.7.1 (2024-04-02)
 
 - fixed: Show the `landingScreenText` when provided.
