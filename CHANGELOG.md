@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.7.1 (2024-04-02)
+
+- fixed: Show the `landingScreenText` when provided.
+
 ## 3.7.0 (2024-03-27)
 
 - changed: Move "password match" check to the "Password Requirements" Card
