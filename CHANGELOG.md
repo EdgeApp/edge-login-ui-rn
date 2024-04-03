@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.7.2 (2024-04-03)
+
 - fixed: Ability to set a blank string as the password if using the keyboard next button.
 
 ## 3.7.1 (2024-04-02)
