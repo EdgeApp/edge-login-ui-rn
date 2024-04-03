@@ -17,7 +17,11 @@ import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { PasswordRequirements, PasswordStatus } from '../themed/PasswordStatus'
+import {
+  PasswordRequirements,
+  PasswordRequirementStatus,
+  PasswordStatus
+} from '../themed/PasswordStatus'
 import { ThemedScene } from '../themed/ThemedScene'
 
 export interface ChangePasswordParams {
@@ -79,23 +83,23 @@ const ChangePasswordSceneComponent = ({
     .some(([, value]) => value === 'unmet' || value === 'error')
 
   const handleNext = useHandler(async () => {
-    if (password !== confirmPassword) {
-      setConfirmPassword('')
-      setPasswordReqs({
-        ...passwordReqs,
-        confirmationMatches: 'error'
-      })
-      return
-    }
-
     setSpinning(true)
 
-    try {
-      await onSubmit(password)
-    } catch (e) {
-      showError(e)
-      setSpinning(false)
+    const newPasswordReqs = validatePassword(password, confirmPassword, 'error')
+    setPasswordReqs(newPasswordReqs)
+    if (
+      !Object.entries(newPasswordReqs).some(
+        ([, value]) => value === 'unmet' || value === 'error'
+      )
+    ) {
+      try {
+        await onSubmit(password)
+      } catch (e) {
+        showError(e)
+      }
     }
+
+    setSpinning(false)
   })
 
   const handleFocusSwitch = () => {
@@ -103,24 +107,9 @@ const ChangePasswordSceneComponent = ({
     setFocusSecond(true)
   }
 
-  const handleValidatePassword = (password: string) => {
-    setPassword(password)
-
-    setPasswordReqs({
-      minLengthMet: password.length >= 10 ? 'met' : 'unmet',
-      hasNumber: /[0-9]/.test(password) ? 'met' : 'unmet',
-      hasLowercase: /[a-z]/.test(password) ? 'met' : 'unmet',
-      hasUppercase: /[A-Z]/.test(password) ? 'met' : 'unmet'
-    })
-  }
-
-  const handleChangeConfirmPassword = (confirmPassword: string) => {
-    setConfirmPassword(confirmPassword)
-    setPasswordReqs({
-      ...passwordReqs,
-      confirmationMatches: confirmPassword === password ? 'met' : 'unmet'
-    })
-  }
+  React.useEffect(() => {
+    setPasswordReqs(validatePassword(password, confirmPassword, 'unmet'))
+  }, [password, confirmPassword])
 
   const renderInterior = () => {
     return (
@@ -150,7 +139,7 @@ const ChangePasswordSceneComponent = ({
             returnKeyType="next"
             placeholder={lstrings.password}
             autoFocus={focusFirst}
-            onChangeText={handleValidatePassword}
+            onChangeText={setPassword}
             onSubmitEditing={handleFocusSwitch}
             clearIcon
             maxLength={100}
@@ -162,10 +151,10 @@ const ChangePasswordSceneComponent = ({
             horizontal={0.75}
             value={confirmPassword}
             secureTextEntry
-            returnKeyType="go"
+            returnKeyType="done"
             placeholder={lstrings.confirm_password}
             autoFocus={focusSecond}
-            onChangeText={handleChangeConfirmPassword}
+            onChangeText={setConfirmPassword}
             onSubmitEditing={handleNext}
             clearIcon
             maxLength={100}
@@ -362,4 +351,23 @@ export const UpgradePasswordScene = (props: SceneProps<'upgradePassword'>) => {
       mainButtonLabel={lstrings.next_label}
     />
   )
+}
+
+const validatePassword = (
+  password: string,
+  confirmPassword: string,
+  failStatus: PasswordRequirementStatus
+): PasswordRequirements => {
+  return {
+    minLengthMet: password.length >= 10 ? 'met' : failStatus,
+    hasNumber: /[0-9]/.test(password) ? 'met' : failStatus,
+    hasLowercase: /[a-z]/.test(password) ? 'met' : failStatus,
+    hasUppercase: /[A-Z]/.test(password) ? 'met' : failStatus,
+    confirmationMatches:
+      confirmPassword === ''
+        ? undefined
+        : confirmPassword === password
+        ? 'met'
+        : failStatus
+  }
 }
