@@ -22,7 +22,7 @@ The login UI depends on some extra external native libraries, which you will hav
 - react-native-permissions v3
   - Activate the [notification permission for iOS](https://www.npmjs.com/package/react-native-permissions#iOS).
 - react-native-reanimated v3
-  - Follow the [extra installation steps](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/installation/).
+  - Follow the [extra installation steps](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started).
   - Setting up reanimated also involves setting up react-native-gesture-handler.
 - react-native-safe-area-context (4.5.0+)
 - react-native-share v5 (v7 also works)
