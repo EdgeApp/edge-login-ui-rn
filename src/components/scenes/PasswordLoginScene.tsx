@@ -430,7 +430,7 @@ export const PasswordLoginScene = (props: Props) => {
         <View onLayout={handleUsernameLayout}>
           <FilledTextInput
             autoCorrect={false}
-            autoFocus
+            autoFocus={false}
             clearIcon={!hasSavedUsers}
             error={usernameErrorMessage}
             placeholder={lstrings.username}
