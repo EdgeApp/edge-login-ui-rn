@@ -277,6 +277,8 @@ export const PasswordLoginScene = (props: Props) => {
           if (username == null) throw new Error('No username')
           await context.deleteLocalAccount(username)
         }
+
+        setShowUsernameList(false)
       })
       .catch(showError)
   })

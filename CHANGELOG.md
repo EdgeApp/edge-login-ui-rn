@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- changed: Remove text field autofocus in PasswordLoginScene
+- changed: Collapse username dropdown list upon forgetting account in PasswordLoginScene
+
 ## 3.7.2 (2024-04-03)
 
 - fixed: Ability to set a blank string as the password if using the keyboard next button.
