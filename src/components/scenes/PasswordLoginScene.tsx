@@ -277,6 +277,8 @@ export const PasswordLoginScene = (props: Props) => {
           if (username == null) throw new Error('No username')
           await context.deleteLocalAccount(username)
         }
+
+        setShowUsernameList(false)
       })
       .catch(showError)
   })
@@ -430,7 +432,7 @@ export const PasswordLoginScene = (props: Props) => {
         <View onLayout={handleUsernameLayout}>
           <FilledTextInput
             autoCorrect={false}
-            autoFocus
+            autoFocus={false}
             clearIcon={!hasSavedUsers}
             error={usernameErrorMessage}
             placeholder={lstrings.username}
