@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.8.0 (2024-04-22)
+
 - changed: Remove text field autofocus in PasswordLoginScene
 - changed: Collapse username dropdown list upon forgetting account in PasswordLoginScene
 
