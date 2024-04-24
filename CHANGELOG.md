@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Fix text field focus logic and scene scrollability in ChangePasswordScene
+
 ## 3.8.0 (2024-04-22)
 
 - changed: Remove text field autofocus in PasswordLoginScene
