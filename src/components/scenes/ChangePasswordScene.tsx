@@ -15,7 +15,7 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { FilledTextInput } from '../themed/FilledTextInput'
+import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import {
   PasswordRequirements,
@@ -63,9 +63,6 @@ const ChangePasswordSceneComponent = ({
 }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-
-  const [focusFirst, setFocusFirst] = React.useState(true)
-  const [focusSecond, setFocusSecond] = React.useState(false)
   const [spinning, setSpinning] = React.useState(false)
   const [passwordReqs, setPasswordReqs] = React.useState<PasswordRequirements>({
     minLengthMet: 'unmet',
@@ -76,6 +73,8 @@ const ChangePasswordSceneComponent = ({
   })
   const [password, setPassword] = React.useState(initPassword ?? '')
   const [confirmPassword, setConfirmPassword] = React.useState('')
+
+  const secondInputRef = React.useRef<FilledTextInputRef>(null)
 
   // Omit confirmationMatches from next button availability
   const isNextButtonDisabled = Object.entries(passwordReqs)
@@ -102,18 +101,17 @@ const ChangePasswordSceneComponent = ({
     setSpinning(false)
   })
 
-  const handleFocusSwitch = () => {
-    setFocusFirst(false)
-    setFocusSecond(true)
-  }
+  const handleSubmitPasswordField = useHandler(() => {
+    secondInputRef.current?.focus()
+  })
 
   React.useEffect(() => {
     setPasswordReqs(validatePassword(password, confirmPassword, 'unmet'))
   }, [password, confirmPassword])
 
-  const renderInterior = () => {
-    return (
-      <>
+  return (
+    <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
+      <KeyboardAwareScrollView style={styles.container}>
         <EdgeAnim
           enter={{ type: 'fadeInUp', distance: 50 }}
           exit={{ type: 'fadeOutDown' }}
@@ -131,6 +129,7 @@ const ChangePasswordSceneComponent = ({
 
         <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
           <FilledTextInput
+            autoFocus
             top={0.75}
             horizontal={0.75}
             bottom={0.25}
@@ -138,22 +137,21 @@ const ChangePasswordSceneComponent = ({
             secureTextEntry
             returnKeyType="next"
             placeholder={lstrings.password}
-            autoFocus={focusFirst}
             onChangeText={setPassword}
-            onSubmitEditing={handleFocusSwitch}
+            onSubmitEditing={handleSubmitPasswordField}
             clearIcon
             maxLength={100}
           />
         </EdgeAnim>
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
           <FilledTextInput
+            ref={secondInputRef}
             top={0.25}
             horizontal={0.75}
             value={confirmPassword}
             secureTextEntry
             returnKeyType="done"
             placeholder={lstrings.confirm_password}
-            autoFocus={focusSecond}
             onChangeText={setConfirmPassword}
             onSubmitEditing={handleNext}
             clearIcon
@@ -177,19 +175,7 @@ const ChangePasswordSceneComponent = ({
             />
           )}
         </EdgeAnim>
-      </>
-    )
-  }
-
-  return (
-    <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
-      {focusSecond ? (
-        <KeyboardAwareScrollView style={styles.container}>
-          {renderInterior()}
-        </KeyboardAwareScrollView>
-      ) : (
-        renderInterior()
-      )}
+      </KeyboardAwareScrollView>
     </ThemedScene>
   )
 }
