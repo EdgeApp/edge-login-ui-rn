@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.9.0 (2024-04-25)
+
 - changed: Fix text field focus logic and scene scrollability in ChangePasswordScene
 
 ## 3.8.0 (2024-04-22)
