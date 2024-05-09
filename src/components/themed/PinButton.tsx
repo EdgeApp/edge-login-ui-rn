@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Text, TouchableWithoutFeedback } from 'react-native'
+import { Text } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
@@ -10,6 +10,7 @@ import {
   sidesToMargin,
   sidesToPadding
 } from '../../util/sides'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -55,7 +56,7 @@ export function PinButton(props: Props) {
   }
 
   return (
-    <TouchableWithoutFeedback
+    <EdgeTouchableWithoutFeedback
       style={buttonShadow}
       testID={testID}
       onPress={handlePress}
@@ -78,7 +79,7 @@ export function PinButton(props: Props) {
         )}
         {pending ? null : children}
       </LinearGradient>
-    </TouchableWithoutFeedback>
+    </EdgeTouchableWithoutFeedback>
   )
 }
 

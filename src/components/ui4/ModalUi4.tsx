@@ -3,12 +3,7 @@
  */
 
 import * as React from 'react'
-import {
-  BackHandler,
-  Dimensions,
-  TouchableWithoutFeedback,
-  View
-} from 'react-native'
+import { BackHandler, Dimensions, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import {
   Gesture,
@@ -26,6 +21,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { BlurBackground } from './BlurBackground'
@@ -164,9 +160,9 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
 
   return (
     <>
-      <TouchableWithoutFeedback onPress={handleCancel}>
+      <EdgeTouchableWithoutFeedback onPress={handleCancel}>
         <Animated.View style={[styles.underlay, underlayStyle]} />
-      </TouchableWithoutFeedback>
+      </EdgeTouchableWithoutFeedback>
       <GestureDetector gesture={gesture}>
         <Animated.View style={[styles.modal, modalStyle, modalLayout]}>
           <BlurBackground />

@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { TextInput, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { PinDots } from './PinDots'
 
@@ -29,7 +30,7 @@ export const DigitInput = (props: Props) => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={handleRefocus}>
+    <EdgeTouchableWithoutFeedback onPress={handleRefocus}>
       <View style={[styles.container, spacings]}>
         <View style={styles.interactiveContainer}>
           <PinDots pinLength={pin.length} maxLength={maxPinLength} />
@@ -44,7 +45,7 @@ export const DigitInput = (props: Props) => {
           autoFocus
         />
       </View>
-    </TouchableWithoutFeedback>
+    </EdgeTouchableWithoutFeedback>
   )
 }
 

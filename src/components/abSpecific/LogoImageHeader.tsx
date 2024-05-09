@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { Image, TouchableWithoutFeedback, View } from 'react-native'
+import { Image, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import * as Assets from '../../assets/'
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { Branding } from '../../types/Branding'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -33,7 +34,7 @@ export function LogoImageHeader(props: Props): JSX.Element {
   })
 
   return (
-    <TouchableWithoutFeedback onPress={handlePress}>
+    <EdgeTouchableWithoutFeedback onPress={handlePress}>
       <View style={styles.container}>
         <Image
           accessibilityHint={lstrings.app_logo_hint}
@@ -42,7 +43,7 @@ export function LogoImageHeader(props: Props): JSX.Element {
           resizeMode="contain"
         />
       </View>
-    </TouchableWithoutFeedback>
+    </EdgeTouchableWithoutFeedback>
   )
 }
 
