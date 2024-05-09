@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { LayoutChangeEvent, TouchableOpacity } from 'react-native'
+import { LayoutChangeEvent } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { LoginUserInfo } from '../../hooks/useLocalUsers'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -31,7 +32,7 @@ export function UserListItem(props: Props) {
 
   const username = userInfo.username ?? lstrings.missing_username
   return (
-    <TouchableOpacity
+    <EdgeTouchableOpacity
       accessible={false}
       style={styles.container}
       onPress={handlePress}
@@ -40,7 +41,7 @@ export function UserListItem(props: Props) {
       <EdgeText accessible style={styles.text} numberOfLines={2}>
         {username}
       </EdgeText>
-      <TouchableOpacity
+      <EdgeTouchableOpacity
         style={styles.deleteButtonContainer}
         testID={`${username}.deleteIcon`}
         onPress={handleDelete}
@@ -50,8 +51,8 @@ export function UserListItem(props: Props) {
           name="close"
           size={theme.rem(1)}
         />
-      </TouchableOpacity>
-    </TouchableOpacity>
+      </EdgeTouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 

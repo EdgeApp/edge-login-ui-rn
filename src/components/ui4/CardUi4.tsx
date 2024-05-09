@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import LinearGradient, {
   LinearGradientProps
 } from 'react-native-linear-gradient'
@@ -18,6 +18,7 @@ import {
   sidesToMargin,
   sidesToPadding
 } from '../../util/sides'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { SectionView } from './SectionViewUi4'
@@ -126,13 +127,16 @@ export const CardUi4 = (props: Props) => {
 
   const maybeCloseButton =
     onClose == null ? null : (
-      <TouchableOpacity style={styles.cornerContainer} onPress={handleClose}>
+      <EdgeTouchableOpacity
+        style={styles.cornerContainer}
+        onPress={handleClose}
+      >
         <AntDesignIcon
           color={theme.primaryText}
           name="close"
           size={theme.rem(1.25)}
         />
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     )
 
   const maybeOverlay =
@@ -161,14 +165,14 @@ export const CardUi4 = (props: Props) => {
     )
 
   return isPressable ? (
-    <TouchableOpacity
+    <EdgeTouchableOpacity
       accessible={false}
       onPress={handlePress}
       onLongPress={handleLongPress}
       style={[styles.cardContainer, margin, padding]}
     >
       {allContent}
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   ) : (
     <View style={[styles.cardContainer, margin, padding]}>{allContent}</View>
   )

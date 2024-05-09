@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ListModal } from './ListModal'
@@ -26,7 +27,7 @@ export function QuestionListModal(props: Props) {
       color: theme.iconTappable
     }
     return (
-      <TouchableOpacity onPress={() => bridge.resolve(item)}>
+      <EdgeTouchableOpacity onPress={() => bridge.resolve(item)}>
         <View style={styles.row}>
           <View style={styles.textContainer}>
             <EdgeText style={styles.text} numberOfLines={0} disableFontScaling>
@@ -40,7 +41,7 @@ export function QuestionListModal(props: Props) {
             size={theme.rem(1.25)}
           />
         </View>
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     )
   }
 

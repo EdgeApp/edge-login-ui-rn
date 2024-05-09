@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Text } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -41,7 +42,7 @@ export function LinkRow(props: Props) {
     ...sidesToPadding(mapSides(fixSides(marginRem, 0.5), theme.rem))
   }
   return (
-    <TouchableOpacity
+    <EdgeTouchableOpacity
       accessible={false}
       style={[styles.container, spacingStyles]}
       onPress={onPress}
@@ -52,7 +53,7 @@ export function LinkRow(props: Props) {
         </Text>
       )}
       <Text style={styles.icon}>{renderIcon(theme)}</Text>
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 

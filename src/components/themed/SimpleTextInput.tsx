@@ -1,11 +1,6 @@
 import * as React from 'react'
 import { useMemo } from 'react'
-import {
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View
-} from 'react-native'
+import { TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
@@ -20,6 +15,7 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, CloseIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
@@ -278,7 +274,7 @@ export const SimpleTextInput = React.forwardRef<
           />
         </InnerContainer>
 
-        <TouchableOpacity
+        <EdgeTouchableOpacity
           accessible
           onPress={handleClearPress}
           testID={`${testID}.clearIcon`}
@@ -286,7 +282,7 @@ export const SimpleTextInput = React.forwardRef<
           <SideContainer size={rightIconSize}>
             <CloseIconAnimated color={iconColor} size={rightIconSize} />
           </SideContainer>
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       </Container>
     </TouchableWithoutFeedback>
   )

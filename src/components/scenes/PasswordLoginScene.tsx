@@ -6,12 +6,7 @@ import {
   EdgeAccount
 } from 'edge-core-js'
 import * as React from 'react'
-import {
-  Keyboard,
-  LayoutChangeEvent,
-  TouchableOpacity,
-  View
-} from 'react-native'
+import { Keyboard, LayoutChangeEvent, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { cacheStyles } from 'react-native-patina'
 import Animated, {
@@ -42,6 +37,7 @@ import { attemptLogin, LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
 import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ChallengeModal } from '../modals/ChallengeModal'
 import { GradientFadeOut } from '../modals/GradientFadeout'
@@ -444,7 +440,7 @@ export const PasswordLoginScene = (props: Props) => {
           />
         </View>
         {hasSavedUsers ? (
-          <TouchableOpacity
+          <EdgeTouchableOpacity
             testID="userDropdownIcon"
             style={[styles.dropdownButton, dropdownButtonPositionStyle]}
             onPress={handleToggleUsernameList}
@@ -462,7 +458,7 @@ export const PasswordLoginScene = (props: Props) => {
                 style={styles.iconColor}
               />
             )}
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         ) : null}
       </View>
     )
@@ -547,14 +543,14 @@ export const PasswordLoginScene = (props: Props) => {
           />
         </EdgeAnim>
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-          <TouchableOpacity onPress={handleQrModal}>
+          <EdgeTouchableOpacity onPress={handleQrModal}>
             <AntDesignIcon
               name="qrcode"
               style={styles.qrIcon}
               color={theme.icon}
               size={theme.rem(1.75)}
             />
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         </EdgeAnim>
       </View>
     )

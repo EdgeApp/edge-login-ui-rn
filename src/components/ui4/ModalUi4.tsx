@@ -6,7 +6,6 @@ import * as React from 'react'
 import {
   BackHandler,
   Dimensions,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
@@ -26,6 +25,7 @@ import Animated, {
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { BlurBackground } from './BlurBackground'
@@ -185,7 +185,7 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
                 title ?? undefined
               )}
               {onCancel == null ? null : (
-                <TouchableOpacity
+                <EdgeTouchableOpacity
                   style={
                     isCustomTitle
                       ? styles.closeIconContainerAbsolute
@@ -198,7 +198,7 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
                     color={theme.deactivatedText}
                     size={theme.rem(1.25)}
                   />
-                </TouchableOpacity>
+                </EdgeTouchableOpacity>
               )}
             </View>
           )}
