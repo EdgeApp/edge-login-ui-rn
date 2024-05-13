@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { EdgeTouchableWithoutFeedback } from './EdgeTouchableWithoutFeedback'
 
 const textHeights = {
   small: 2,
@@ -66,7 +67,7 @@ export class TileComponent extends React.PureComponent<Props> {
       )
     }
     return (
-      <TouchableWithoutFeedback
+      <EdgeTouchableWithoutFeedback
         onPress={onPress}
         disabled={type === 'static' || disabled}
       >
@@ -119,7 +120,7 @@ export class TileComponent extends React.PureComponent<Props> {
           </View>
           <View style={styles.divider} />
         </View>
-      </TouchableWithoutFeedback>
+      </EdgeTouchableWithoutFeedback>
     )
   }
 }

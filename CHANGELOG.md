@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Replace all instances of TouchableOpacity and TouchableWithoutFeedback with their improved Edge implementations
+
 ## 3.9.0 (2024-04-25)
 
 - changed: Fix text field focus logic and scene scrollability in ChangePasswordScene

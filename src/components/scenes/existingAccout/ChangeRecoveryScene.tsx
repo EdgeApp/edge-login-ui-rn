@@ -2,7 +2,7 @@ import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { useMemo, useState } from 'react'
 import { Keyboard, ScrollView, Text, View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import {} from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
@@ -17,6 +17,7 @@ import { useScrollToEnd } from '../../../hooks/useScrollToEnd'
 import { Branding } from '../../../types/Branding'
 import { SceneProps } from '../../../types/routerTypes'
 import { validateEmail } from '../../../util/utils'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { Tile } from '../../common/Tile'
 import { WarningCard } from '../../common/WarningCard'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -337,13 +338,13 @@ export const ChangeRecoveryScene = (props: Props) => {
           onPress={changeRecovery}
           type="primary"
         />
-        <TouchableOpacity onPress={deleteRecovery}>
+        <EdgeTouchableOpacity onPress={deleteRecovery}>
           <View style={styles.disableButtonContainer}>
             <Text numberOfLines={1} style={styles.disableButton}>
               {lstrings.recovery_disable_button}
             </Text>
           </View>
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       </View>
     )
   }

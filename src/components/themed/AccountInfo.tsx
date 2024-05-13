@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import Animated, {
   measure,
@@ -15,6 +15,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { lstrings } from '../../common/locales/strings'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
@@ -93,7 +94,7 @@ export const AccountInfo = (props: Props) => {
 
   return (
     <View style={spacings}>
-      <TouchableWithoutFeedback
+      <EdgeTouchableWithoutFeedback
         onPress={() => {
           if (height.value === 0) {
             onOpen()
@@ -123,7 +124,7 @@ export const AccountInfo = (props: Props) => {
             />
           </Animated.View>
         </Animated.View>
-      </TouchableWithoutFeedback>
+      </EdgeTouchableWithoutFeedback>
       <Animated.View style={[styles.info, infoStyle]}>
         {infoRows.map(({ label, value }: InfoRow, index: number) =>
           renderInfoRow(label, value)

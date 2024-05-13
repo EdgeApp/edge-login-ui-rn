@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { TextStyle, TouchableWithoutFeedback, View } from 'react-native'
+import { TextStyle, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
@@ -33,7 +34,7 @@ const CheckboxComponent = ({
   const spacings = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
 
   return (
-    <TouchableWithoutFeedback
+    <EdgeTouchableWithoutFeedback
       onPress={() => onChange(!value)}
       disabled={disabled}
     >
@@ -56,7 +57,7 @@ const CheckboxComponent = ({
           {children}
         </EdgeText>
       </View>
-    </TouchableWithoutFeedback>
+    </EdgeTouchableWithoutFeedback>
   )
 }
 

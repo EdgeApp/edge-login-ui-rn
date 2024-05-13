@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView, Text, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
@@ -7,6 +7,7 @@ import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { Branding } from '../../types/Branding'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 
@@ -57,7 +58,7 @@ export function ThemedScene(props: Props) {
       {!hasHeader ? null : (
         <View style={styles.headerButtons}>
           {onBack == null ? null : (
-            <TouchableOpacity
+            <EdgeTouchableOpacity
               accessible={false}
               style={styles.leftButton}
               onPress={onBack}
@@ -74,20 +75,20 @@ export function ThemedScene(props: Props) {
                   {backButtonText}
                 </Text>
               )}
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
           )}
           {onSkip == null ? null : (
-            <TouchableOpacity
+            <EdgeTouchableOpacity
               accessible
               testID="headerRightButton"
               style={styles.rightButton}
               onPress={onSkip}
             >
               <Text style={styles.buttonText}>{lstrings.skip}</Text>
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
           )}
           {parentButton == null || parentButton.text == null ? null : (
-            <TouchableOpacity
+            <EdgeTouchableOpacity
               accessible
               style={styles.rightButton}
               onPress={handleParentButtonPress}
@@ -95,7 +96,7 @@ export function ThemedScene(props: Props) {
               <Text style={parentButton.style || styles.buttonText}>
                 {parentButton.text}
               </Text>
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
           )}
         </View>
       )}

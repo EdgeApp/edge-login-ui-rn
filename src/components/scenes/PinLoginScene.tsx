@@ -6,15 +6,7 @@ import {
   NetworkError
 } from 'edge-core-js'
 import * as React from 'react'
-import {
-  FlatList,
-  Keyboard,
-  Platform,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View
-} from 'react-native'
+import { FlatList, Keyboard, Platform, Text, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -36,6 +28,8 @@ import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { PinKeypad } from '../abSpecific/PinKeypad'
 import { UserListItem } from '../abSpecific/UserListItem'
 import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -310,7 +304,7 @@ export function PinLoginScene(props: Props) {
     return (
       <View style={styles.innerView}>
         <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
-          <TouchableOpacity
+          <EdgeTouchableOpacity
             testID="usernameDropdownButton"
             style={styles.usernameShadow}
             onPress={isSingleSavedUser ? undefined : handleShowDrop}
@@ -331,7 +325,7 @@ export function PinLoginScene(props: Props) {
                 {usernameLabel}
               </Text>
             </LinearGradient>
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         </EdgeAnim>
         {userInfo == null || !userInfo.pinLoginEnabled ? (
           <View style={styles.spacer} />
@@ -370,25 +364,31 @@ export function PinLoginScene(props: Props) {
 
     if (biometryType === 'FaceID') {
       return (
-        <TouchableOpacity onPress={handleTouchId} disabled={isTouchIdDisabled}>
+        <EdgeTouchableOpacity
+          onPress={handleTouchId}
+          disabled={isTouchIdDisabled}
+        >
           <SvgXml
             xml={FaceIdXml}
             color={theme.iconTappable}
             width={theme.rem(3)}
             height={theme.rem(3)}
           />
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       )
     }
     if (biometryType === 'TouchID') {
       return (
-        <TouchableOpacity onPress={handleTouchId} disabled={isTouchIdDisabled}>
+        <EdgeTouchableOpacity
+          onPress={handleTouchId}
+          disabled={isTouchIdDisabled}
+        >
           <MaterialCommunityIcons
             name="fingerprint"
             size={theme.rem(3)}
             color={theme.iconTappable}
           />
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       )
     }
     return null
@@ -416,14 +416,17 @@ export function PinLoginScene(props: Props) {
       branding={branding}
     >
       <View style={styles.featureBoxContainer}>
-        <TouchableWithoutFeedback accessible={false} onPress={handleHideDrop}>
+        <EdgeTouchableWithoutFeedback
+          accessible={false}
+          onPress={handleHideDrop}
+        >
           <View style={styles.featureBox}>
             <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
               <LogoImageHeader branding={branding} />
             </EdgeAnim>
             <View style={styles.featureBoxBody}>{renderBottomHalf()}</View>
           </View>
-        </TouchableWithoutFeedback>
+        </EdgeTouchableWithoutFeedback>
         <View style={styles.spacer_full} />
         {userInfo == null || !userInfo.pinLoginEnabled ? null : (
           <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>

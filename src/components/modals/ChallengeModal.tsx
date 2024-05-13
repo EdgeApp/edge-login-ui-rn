@@ -1,17 +1,13 @@
 import type { ChallengeError } from 'edge-core-js'
 import * as React from 'react'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View
-} from 'react-native'
+import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { WebView, WebViewNavigation } from 'react-native-webview'
 
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -61,7 +57,7 @@ export const ChallengeModal = (props: Props) => {
         <EdgeText style={styles.titleText} numberOfLines={2}>
           {lstrings.complete_captcha_title}
         </EdgeText>
-        <TouchableOpacity
+        <EdgeTouchableOpacity
           style={styles.closeIconContainer}
           onPress={handleCancel}
         >
@@ -70,7 +66,7 @@ export const ChallengeModal = (props: Props) => {
             color={SERVER_TEXT_COLOR}
             size={theme.rem(1.25)}
           />
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       </View>
       <WebView
         javaScriptEnabled

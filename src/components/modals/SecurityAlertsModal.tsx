@@ -3,7 +3,7 @@
  */
 import { EdgeLoginMessage } from 'edge-core-js'
 import * as React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Text } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -12,6 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ModalScrollArea, ModalTitle } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
@@ -53,7 +54,7 @@ export const SecurityAlertsModal = (props: Props) => {
     const styles = getStyles(theme)
 
     return (
-      <TouchableOpacity
+      <EdgeTouchableOpacity
         key={(isReset ? 'reset:' : 'voucher:') + username}
         style={isFirst ? styles.row : styles.rowBorder}
         onPress={() => bridge.resolve(username)}
@@ -78,7 +79,7 @@ export const SecurityAlertsModal = (props: Props) => {
           size={theme.rem(1)}
           style={styles.rowIcon}
         />
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     )
   }
 
