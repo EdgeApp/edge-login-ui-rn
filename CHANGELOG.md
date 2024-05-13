@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.10.0 (2024-05-13)
+
 - changed: Replace all instances of TouchableOpacity and TouchableWithoutFeedback with their improved Edge implementations
 
 ## 3.9.0 (2024-04-25)
