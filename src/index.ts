@@ -17,6 +17,7 @@ export type {
   BiometryType,
   CreateAccountType,
   InitialRouteName,
+  PerfEvent,
   NotificationPermissionReminderOptions,
   NotificationPermissionsInfo,
   TrackingEventName,

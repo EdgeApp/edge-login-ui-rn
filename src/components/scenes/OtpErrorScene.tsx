@@ -39,7 +39,7 @@ export function OtpErrorScene(props: Props) {
   const { route } = props
   const { otpAttempt, otpError } = route.params
   const { resetToken, voucherId } = otpError
-  const { accountOptions, context } = useImports()
+  const { accountOptions, context, onPerfEvent } = useImports()
   const dispatch = useDispatch()
 
   const [otpResetDate, setOtpResetDate] = React.useState(otpError.resetDate)
@@ -65,7 +65,12 @@ export function OtpErrorScene(props: Props) {
         }
 
         showToast(lstrings.otp_scene_retrying)
-        const account = await attemptLogin(context, otpAttempt, accountOptions)
+        const account = await attemptLogin(
+          context,
+          otpAttempt,
+          accountOptions,
+          onPerfEvent
+        )
         dispatch(completeLogin(account))
       } catch (error) {
         const otpError = asMaybeOtpError(error)
@@ -84,7 +89,7 @@ export function OtpErrorScene(props: Props) {
 
     checkVoucher.start()
     return () => checkVoucher.stop()
-  }, [accountOptions, context, dispatch, otpAttempt, voucherId])
+  }, [accountOptions, context, dispatch, onPerfEvent, otpAttempt, voucherId])
 
   //
   // Handlers
@@ -104,10 +109,15 @@ export function OtpErrorScene(props: Props) {
     inModal.current = true
     async function handleSubmit(otpKey: string): Promise<boolean | string> {
       try {
-        const account = await attemptLogin(context, otpAttempt, {
-          ...accountOptions,
-          otpKey
-        })
+        const account = await attemptLogin(
+          context,
+          otpAttempt,
+          {
+            ...accountOptions,
+            otpKey
+          },
+          onPerfEvent
+        )
         dispatch(completeLogin(account))
         return true
       } catch (error) {
@@ -136,11 +146,16 @@ export function OtpErrorScene(props: Props) {
           ))
           if (result !== true) return lstrings.failed_captcha_error
 
-          const account = await attemptLogin(context, otpAttempt, {
-            ...accountOptions,
-            otpKey,
-            challengeId: challengeError.challengeId
-          })
+          const account = await attemptLogin(
+            context,
+            otpAttempt,
+            {
+              ...accountOptions,
+              otpKey,
+              challengeId: challengeError.challengeId
+            },
+            onPerfEvent
+          )
           dispatch(completeLogin(account))
           return true
         }

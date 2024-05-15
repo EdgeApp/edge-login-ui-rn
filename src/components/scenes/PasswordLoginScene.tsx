@@ -68,7 +68,8 @@ export const PasswordLoginScene = (props: Props) => {
     accountOptions,
     context,
     onComplete,
-    onLogEvent = () => {}
+    onLogEvent = () => {},
+    onPerfEvent
   } = useImports()
 
   const dispatch = useDispatch()
@@ -198,13 +199,21 @@ export const PasswordLoginScene = (props: Props) => {
 
     try {
       Keyboard.dismiss()
-      const account = await attemptLogin(context, otpAttempt, {
-        ...accountOptions,
-        challengeId
-      })
+      const account = await attemptLogin(
+        context,
+        otpAttempt,
+        {
+          ...accountOptions,
+          challengeId
+        },
+        onPerfEvent
+      )
+      onPerfEvent({ name: 'passwordLoginEnd' })
       onLogEvent('Pasword_Login')
       await dispatch(completeLogin(account))
     } catch (error: unknown) {
+      onPerfEvent({ name: 'passwordLoginEnd', error })
+
       const otpError = asMaybeOtpError(error)
       if (otpError != null) {
         dispatch({

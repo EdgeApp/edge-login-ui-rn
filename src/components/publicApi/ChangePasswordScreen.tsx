@@ -4,17 +4,24 @@ import * as React from 'react'
 import { useClearOnUnmount } from '../../hooks/useClearOnUnmount'
 import { Router } from '../navigation/Router'
 import { ReduxStore } from '../services/ReduxStore'
-import { asExperimentConfig, OnLogEvent } from './publicTypes'
+import { asExperimentConfig, OnLogEvent, OnPerfEvent } from './publicTypes'
 
 interface Props {
   account: EdgeAccount
   context: EdgeContext
   onComplete: () => void
   onLogEvent?: OnLogEvent
+  onPerfEvent?: OnPerfEvent
 }
 
 export function ChangePasswordScreen(props: Props): JSX.Element {
-  const { account, context, onComplete, onLogEvent } = props
+  const {
+    account,
+    context,
+    onComplete,
+    onLogEvent,
+    onPerfEvent = () => {}
+  } = props
   useClearOnUnmount()
 
   return (
@@ -24,6 +31,7 @@ export function ChangePasswordScreen(props: Props): JSX.Element {
         context,
         onComplete,
         onLogEvent,
+        onPerfEvent,
         experimentConfig: asExperimentConfig({})
       }}
       initialAction={{

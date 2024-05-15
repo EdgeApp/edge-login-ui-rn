@@ -6,7 +6,8 @@ import type {
   InitialRouteName,
   OnLogEvent,
   OnLogin,
-  OnNotificationPermit
+  OnNotificationPermit,
+  OnPerfEvent
 } from '../components/publicApi/publicTypes'
 import { RootState } from '../reducers/RootReducer'
 import { Branding } from './Branding'
@@ -24,6 +25,7 @@ export interface Imports {
   readonly onLogEvent?: OnLogEvent
   readonly onComplete?: () => void
   readonly onLogin?: OnLogin
+  readonly onPerfEvent: OnPerfEvent
   readonly onNotificationPermit?: OnNotificationPermit
   readonly recoveryKey?: string
   readonly skipOtpReminder?: boolean
