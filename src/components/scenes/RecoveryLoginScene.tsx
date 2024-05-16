@@ -32,7 +32,7 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
-  const { accountOptions, context } = useImports()
+  const { accountOptions, context, onPerfEvent } = useImports()
 
   const answerPrompt = lstrings.your_answer_label
   const showCaseSensitivityWarning = questions.some(
@@ -108,7 +108,12 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
       answers: okAnswers
     }
     try {
-      const account = await attemptLogin(context, attempt, accountOptions)
+      const account = await attemptLogin(
+        context,
+        attempt,
+        accountOptions,
+        onPerfEvent
+      )
       await dispatch(completeLogin(account))
     } catch (error: unknown) {
       const otpError = asMaybeOtpError(error)

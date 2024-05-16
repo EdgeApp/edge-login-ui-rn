@@ -51,7 +51,12 @@ interface ErrorInfo {
 export function PinLoginScene(props: Props) {
   const { branding, route } = props
   const { loginId } = route.params
-  const { accountOptions, context, onLogEvent = () => {} } = useImports()
+  const {
+    accountOptions,
+    context,
+    onLogEvent = () => {},
+    onPerfEvent
+  } = useImports()
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -176,12 +181,16 @@ export function PinLoginScene(props: Props) {
   ): Promise<void> => {
     try {
       const { loginId } = userInfo
+      onPerfEvent({ name: 'pinLoginBegin' })
       const account = await context.loginWithPIN(loginId, pin, {
         ...accountOptions,
         useLoginId: true
       })
+      onPerfEvent({ name: 'pinLoginEnd' })
       await dispatch(completeLogin(account))
     } catch (error: unknown) {
+      onPerfEvent({ name: 'pinLoginEnd', error })
+
       console.log('LOG IN WITH PIN ERROR ', error)
 
       const passwordError = asMaybePasswordError(error)

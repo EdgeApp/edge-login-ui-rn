@@ -36,6 +36,10 @@ export interface AppConfig {
   // website: string
 }
 
+//
+// Notification Permission
+//
+
 export interface NotificationOptIns {
   ignoreMarketing: boolean
   ignorePriceChanges: boolean
@@ -61,6 +65,10 @@ export interface TouchIdInfo {
   isTouchEnabled: boolean
 }
 
+//
+// Experiment Config
+//
+
 export interface ExperimentConfig {
   createAccountType: CreateAccountType
   signupCaptcha: 'withCaptcha' | 'withoutCaptcha'
@@ -73,6 +81,22 @@ export const asExperimentConfig = asObject<ExperimentConfig>({
     'withoutCaptcha'
   )
 })
+
+//
+// Performance Events
+//
+
+export type PerfEvent =
+  // Password Login Events
+  | { name: 'passwordLoginBegin' }
+  | { name: 'passwordLoginEnd'; error?: unknown }
+  // Pin Login Events
+  | { name: 'pinLoginBegin' }
+  | { name: 'pinLoginEnd'; error?: unknown }
+
+//
+// Tracking Event Types (aka Log Events)
+//
 
 export type TrackingEventName =
   // Password Login Scene Events
@@ -119,7 +143,16 @@ export interface TrackingValues {
   error?: unknown | string
 }
 
+//
+// Callbacks
+//
+
 export type OnComplete = () => void
+
+export type OnLogEvent = (
+  event: TrackingEventName,
+  values?: TrackingValues
+) => void
 
 export type OnLogin = (
   account: EdgeAccount,
@@ -135,7 +168,4 @@ export type OnNotificationPermit = (
   settings: NotificationPermissionsInfo
 ) => void
 
-export type OnLogEvent = (
-  event: TrackingEventName,
-  values?: TrackingValues
-) => void
+export type OnPerfEvent = (event: PerfEvent) => void

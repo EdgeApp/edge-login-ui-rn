@@ -1,5 +1,7 @@
 import { EdgeAccount, EdgeAccountOptions, EdgeContext } from 'edge-core-js'
 
+import { OnPerfEvent } from '../components/publicApi/publicTypes'
+
 export type LoginAttempt =
   | {
       type: 'password'
@@ -16,9 +18,11 @@ export type LoginAttempt =
 export async function attemptLogin(
   context: EdgeContext,
   attempt: LoginAttempt,
-  opts: EdgeAccountOptions
+  opts: EdgeAccountOptions,
+  onPerfEvent: OnPerfEvent
 ): Promise<EdgeAccount> {
   if (attempt.type === 'password') {
+    onPerfEvent({ name: 'passwordLoginBegin' })
     return await context.loginWithPassword(
       attempt.username,
       attempt.password,

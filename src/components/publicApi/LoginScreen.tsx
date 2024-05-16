@@ -15,7 +15,8 @@ import {
   OnComplete,
   OnLogEvent,
   OnLogin,
-  OnNotificationPermit
+  OnNotificationPermit,
+  OnPerfEvent
 } from './publicTypes'
 
 interface Props {
@@ -98,6 +99,11 @@ interface Props {
   onLogin: OnLogin
 
   /**
+   * Generic Login UI interaction events.
+   */
+  onPerfEvent?: OnPerfEvent
+
+  /**
    * Records events for analytics.
    */
   onLogEvent?: OnLogEvent
@@ -157,6 +163,7 @@ export function LoginScreen(props: Props): JSX.Element {
     fastLogin = false,
     fontDescription,
     initialLoginId,
+    onPerfEvent = () => {},
     username
   } = props
 
@@ -202,6 +209,7 @@ export function LoginScreen(props: Props): JSX.Element {
         initialRoute: props.initialRoute,
         onComplete: props.onComplete,
         onLogin: props.onLogin,
+        onPerfEvent: onPerfEvent,
         onLogEvent: props.onLogEvent,
         onNotificationPermit: props.onNotificationPermit,
         recoveryKey: props.recoveryLogin,
