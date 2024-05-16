@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.11.0 (2024-05-15)
+
 - added: Performance events API via `OnPerfEvent` callback.
 
 ## 3.10.0 (2024-05-13)
