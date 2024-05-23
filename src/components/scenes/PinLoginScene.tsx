@@ -144,11 +144,11 @@ export function PinLoginScene(props: Props) {
     })
   }
 
-  const handleDelete = (userInfo: LoginUserInfo) => {
+  const handleDelete = async (userInfo: LoginUserInfo) => {
     setShowUserList(false)
     Keyboard.dismiss()
 
-    Airship.show(bridge => (
+    const button = await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={lstrings.forget_account}
@@ -162,17 +162,15 @@ export function PinLoginScene(props: Props) {
         }}
       />
     ))
-      .then(async button => {
-        if (button !== 'ok') return
-        if (context.forgetAccount != null) {
-          await context.forgetAccount(userInfo.loginId)
-        } else {
-          const { username } = userInfo
-          if (username == null) throw new Error('No username')
-          await context.deleteLocalAccount(username)
-        }
-      })
-      .catch(showError)
+
+    if (button !== 'ok') return
+    if (context.forgetAccount != null) {
+      await context.forgetAccount(userInfo.loginId)
+    } else {
+      const { username } = userInfo
+      if (username == null) throw new Error('No username')
+      await context.deleteLocalAccount(username)
+    }
   }
 
   const handlePinLogin = async (
