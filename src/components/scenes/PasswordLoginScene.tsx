@@ -363,13 +363,10 @@ export const PasswordLoginScene = (props: Props) => {
     onLogEvent('Password_Login_Create_Account')
     dispatch({
       type: 'NAVIGATE',
-      data: {
-        name:
-          hasSavedUsers || createAccountType === 'full'
-            ? 'newAccountUsername'
-            : 'newAccountPin',
-        params: {}
-      }
+      data:
+        hasSavedUsers || createAccountType === 'full'
+          ? { name: 'newAccountUsername', params: {} }
+          : { name: 'newAccountPin', params: {} }
     })
   })
 
