@@ -78,11 +78,11 @@ export const ChangeRecoveryScene = (props: Props) => {
   const stringPredicate = (s: string | undefined | null): s is string =>
     typeof s === 'string'
 
-  const handleQuestion = (index: number) => () => {
+  const handleQuestion = (index: number) => async () => {
     const question = questions[index]
 
     const items = questionsList.map(extractQuestion).filter(stringPredicate)
-    Airship.show<string | undefined>(bridge => (
+    const questionText = await Airship.show<string | undefined>(bridge => (
       <QuestionListModal
         bridge={bridge}
         title={sprintf(lstrings.recovery_question, index + 1)}
@@ -93,18 +93,17 @@ export const ChangeRecoveryScene = (props: Props) => {
         )}
         selected={extractQuestion(question)}
       />
-    )).then((questionText: string | undefined) => {
-      if (questionText == null) return
-      const questionIndex = items.indexOf(questionText)
-      questions[index] = questionsList[questionIndex]
-      setQuestions([...questions])
+    ))
+    if (questionText == null) return
+    const questionIndex = items.indexOf(questionText)
+    questions[index] = questionsList[questionIndex]
+    setQuestions([...questions])
 
-      // Reset this Q/A pair's answer
-      if (answers[index] !== null) {
-        answers[index] = null
-        setAnswers([...answers])
-      }
-    })
+    // Reset this Q/A pair's answer
+    if (answers[index] !== null) {
+      answers[index] = null
+      setAnswers([...answers])
+    }
   }
   const handleAnswer = (index: number) => () => {
     const question = questions[index]
