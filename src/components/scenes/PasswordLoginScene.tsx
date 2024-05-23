@@ -351,10 +351,10 @@ export const PasswordLoginScene = (props: Props) => {
     }
   )
 
-  const handleForgotPassword = useHandler(() => {
+  const handleForgotPassword = useHandler(async () => {
     Keyboard.dismiss()
     onLogEvent('Password_Login_Forgot_Password')
-    Airship.show(bridge => (
+    await Airship.show(bridge => (
       <TextInputModal
         bridge={bridge}
         onSubmit={handleSubmitRecoveryKey}
