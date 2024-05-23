@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.11.1 (2024-05-23)
+
 - fixed: Adjust our ObjectiveC imports to work with React Native 0.74.
 
 ## 3.11.0 (2024-05-15)
