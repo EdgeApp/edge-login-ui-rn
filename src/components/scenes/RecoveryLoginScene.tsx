@@ -58,7 +58,7 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
     })
   }
 
-  const showTextInputModal = (index: number) => {
+  const showTextInputModal = async (index: number) => {
     let minLengthString = questions[index].split(':')[1]
     if (minLengthString == null || minLengthString.trim() === '')
       minLengthString = '0'
@@ -70,7 +70,8 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
         ? true
         : sprintf(lstrings.min_length_error, minLength)
     }
-    Airship.show<string | undefined>(bridge => (
+
+    const text = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         title={sprintf(lstrings.recovery_answer, index + 1)}
@@ -81,13 +82,13 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
         autoFocus
         onSubmit={validateAnswer}
       />
-    )).then(text => {
-      if (text == null) return
-      answers[index] = text
-      setAnswers([...answers])
-    })
+    ))
+
+    if (text == null) return
+    answers[index] = text
+    setAnswers([...answers])
   }
-  const handleAnswer = (index: number) => () => {
+  const handleAnswer = (index: number) => async () => {
     if (questions[index] == null) return
     if (questions[index].startsWith('date:')) {
       showDatePickerModal(index)
