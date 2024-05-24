@@ -111,7 +111,14 @@ const ChangePasswordSceneComponent = ({
 
   return (
     <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
-      <KeyboardAwareScrollView style={styles.container}>
+      <KeyboardAwareScrollView
+        style={styles.container}
+        keyboardOpeningTime={0}
+        enableResetScrollToCoords={false}
+        extraScrollHeight={theme.rem(3.5)}
+        enableAutomaticScroll
+        enableOnAndroid
+      >
         <EdgeAnim
           enter={{ type: 'fadeInUp', distance: 50 }}
           exit={{ type: 'fadeOutDown' }}
