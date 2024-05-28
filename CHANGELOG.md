@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.11.2 (2024-05-28)
+
 - fixed: Password confirmation field does not automatically focus
 
 ## 3.11.1 (2024-05-23)
