@@ -10,6 +10,7 @@ import { PinDots } from './PinDots'
 export const MAX_PIN_LENGTH = 4
 
 interface Props {
+  testID?: string
   pin: string
   maxPinLength?: number
   marginRem?: number[] | number
@@ -17,7 +18,13 @@ interface Props {
 }
 
 export const DigitInput = (props: Props) => {
-  const { pin, maxPinLength = MAX_PIN_LENGTH, marginRem, onChangePin } = props
+  const {
+    testID,
+    pin,
+    maxPinLength = MAX_PIN_LENGTH,
+    marginRem,
+    onChangePin
+  } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -30,7 +37,7 @@ export const DigitInput = (props: Props) => {
   }
 
   return (
-    <EdgeTouchableWithoutFeedback onPress={handleRefocus}>
+    <EdgeTouchableWithoutFeedback testID={testID} onPress={handleRefocus}>
       <View style={[styles.container, spacings]}>
         <View style={styles.interactiveContainer}>
           <PinDots pinLength={pin.length} maxLength={maxPinLength} />
