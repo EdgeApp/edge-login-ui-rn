@@ -24,10 +24,7 @@ export interface PasswordRequirements {
   hasNumber: PasswordRequirementStatus
   hasLowercase: PasswordRequirementStatus
   hasUppercase: PasswordRequirementStatus
-
-  // Initially undefined and omitted from the list until the user starts on the
-  // pw confirmation text field
-  confirmationMatches?: PasswordRequirementStatus
+  confirmationMatches: PasswordRequirementStatus
 }
 
 interface Props {
@@ -57,14 +54,12 @@ export const PasswordStatus = (props: Props) => {
       title: lstrings.must_one_uppercase,
       validationStatus: hasUppercase
     },
-    { title: lstrings.must_one_number, validationStatus: hasNumber }
-  ]
-
-  if (confirmationMatches != null)
-    list.push({
+    { title: lstrings.must_one_number, validationStatus: hasNumber },
+    {
       title: lstrings.password_must_match,
       validationStatus: confirmationMatches
-    })
+    }
+  ]
 
   const passwordValid = !list.some(
     ({ validationStatus }) =>
@@ -121,7 +116,6 @@ export const PasswordStatus = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    // TODO: Sync CardUi4 w/ GUI after finalizing design requirements for this component.
     backgroundColor: theme.cardBaseColor,
     borderRadius: theme.rem(1),
     padding: theme.rem(1),
