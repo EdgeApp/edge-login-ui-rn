@@ -69,7 +69,7 @@ const ChangePasswordSceneComponent = ({
     hasNumber: 'unmet',
     hasLowercase: 'unmet',
     hasUppercase: 'unmet',
-    confirmationMatches: undefined
+    confirmationMatches: 'unmet'
   })
   const [password, setPassword] = React.useState(initPassword ?? '')
   const [confirmPassword, setConfirmPassword] = React.useState('')
@@ -357,9 +357,7 @@ const validatePassword = (
     hasLowercase: /[a-z]/.test(password) ? 'met' : failStatus,
     hasUppercase: /[A-Z]/.test(password) ? 'met' : failStatus,
     confirmationMatches:
-      confirmPassword === ''
-        ? undefined
-        : confirmPassword === password
+      confirmPassword !== '' && confirmPassword === password
         ? 'met'
         : failStatus
   }
