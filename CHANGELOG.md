@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.11.3 (2024-05-31)
+
 - changed: Always show the password match requirement status
 - fixed: Erratic scrolling during text input focus on ChangePasswordScene
 - fixed: Possible to show multiple modals when rapidly pressing certain buttons
