@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Possible to show multiple modals when rapidly pressing certain buttons
+
 ## 3.11.2 (2024-05-28)
 
 - fixed: Password confirmation field does not automatically focus

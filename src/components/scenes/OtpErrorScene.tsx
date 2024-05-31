@@ -180,23 +180,20 @@ export function OtpErrorScene(props: Props) {
       .finally(() => (inModal.current = false))
   })
 
-  const handleQrModal = useHandler(() => {
+  const handleQrModal = useHandler(async () => {
     inModal.current = true
-    Airship.show<EdgeAccount | undefined>(bridge => (
+    const account = await Airship.show<EdgeAccount | undefined>(bridge => (
       <QrCodeModal
         bridge={bridge}
         accountOptions={accountOptions}
         context={context}
       />
     ))
-      .then(async account => {
-        if (account != null) await dispatch(completeLogin(account))
-      })
-      .catch(error => showError(error))
-      .finally(() => (inModal.current = false))
+    if (account != null) await dispatch(completeLogin(account))
+    inModal.current = false
   })
 
-  const handleResetModal = useHandler(() => {
+  const handleResetModal = useHandler(async () => {
     inModal.current = true
     async function handleSubmit(): Promise<void> {
       if (resetToken == null) {
@@ -208,9 +205,8 @@ export function OtpErrorScene(props: Props) {
       )
       setOtpResetDate(date)
     }
-    showResetModal(handleSubmit)
-      .catch(error => showError(error))
-      .finally(() => (inModal.current = false))
+    await showResetModal(handleSubmit)
+    inModal.current = false
   })
 
   //

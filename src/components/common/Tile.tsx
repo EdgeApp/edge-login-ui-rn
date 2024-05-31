@@ -18,7 +18,7 @@ interface OwnProps {
   body?: string
   children?: React.ReactNode
   error?: boolean
-  onPress?: () => void
+  onPress?: () => void | Promise<void>
   title: string
   type: 'editable' | 'questionable' | 'loading' | 'static' | 'touchable'
   contentPadding?: boolean

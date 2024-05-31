@@ -43,7 +43,7 @@ export function OtpRepairScene(props: Props): JSX.Element {
   // Handlers
   //
 
-  const handleBackupModal = useHandler(() => {
+  const handleBackupModal = useHandler(async () => {
     async function handleSubmit(otpKey: string): Promise<boolean | string> {
       try {
         if (account.repairOtp == null) {
@@ -75,7 +75,7 @@ export function OtpRepairScene(props: Props): JSX.Element {
         return false
       }
     }
-    Airship.show(bridge => (
+    await Airship.show(bridge => (
       <TextInputModal
         bridge={bridge}
         autoCapitalize="characters"
@@ -86,24 +86,22 @@ export function OtpRepairScene(props: Props): JSX.Element {
         title={lstrings.otp_backup_code_modal_title}
         onSubmit={handleSubmit}
       />
-    )).catch(error => showError(error))
+    ))
   })
 
-  const handleQrModal = useHandler(() => {
-    Airship.show<EdgeAccount | undefined>(bridge => (
+  const handleQrModal = useHandler(async () => {
+    const account = await Airship.show<EdgeAccount | undefined>(bridge => (
       <QrCodeModal
         bridge={bridge}
         accountOptions={accountOptions}
         context={context}
       />
     ))
-      .then(async account => {
-        if (account != null) await dispatch(completeLogin(account))
-      })
-      .catch(error => showError(error))
+
+    if (account != null) await dispatch(completeLogin(account))
   })
 
-  const handleResetModal = useHandler(() => {
+  const handleResetModal = useHandler(async () => {
     async function handleSubmit(): Promise<void> {
       if (resetToken == null) {
         throw new Error('No OTP reset token')
@@ -115,7 +113,7 @@ export function OtpRepairScene(props: Props): JSX.Element {
       const date = await context.requestOtpReset(account.username, resetToken)
       setOtpResetDate(date)
     }
-    showResetModal(handleSubmit).catch(error => showError(error))
+    await showResetModal(handleSubmit)
   })
 
   //
