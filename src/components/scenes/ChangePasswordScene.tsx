@@ -1,6 +1,6 @@
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Keyboard } from 'react-native'
+import { Keyboard, Platform } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { cacheStyles } from 'react-native-patina'
 
@@ -114,8 +114,26 @@ const ChangePasswordSceneComponent = ({
       <KeyboardAwareScrollView
         style={styles.container}
         keyboardOpeningTime={0}
+        keyboardShouldPersistTaps="handled"
         enableResetScrollToCoords={false}
-        extraScrollHeight={theme.rem(3.5)}
+        /**
+         * HACK: In iOS:
+         * - extraScrollHeight is ONLY respected when tapping to
+         * focus a field.
+         * - Pressing next does not apply the extraScrollHeight.
+         * - Refuses to respect extraScrollHeight while typing, and
+         * ALWAYS resets the focus position to make the text field sit just
+         * above the keyboard.
+         *
+         * The negative extraScrollHeight at least makes it so that the focus
+         * scroll position doesn't move in iOS, regardless of state.
+         *
+         * Android correctly uses this prop to ensure the "next" button is
+         * always visible above the keyboard, screen size permitting.
+         */
+        extraScrollHeight={
+          Platform.OS === 'ios' ? -theme.rem(1.75) : theme.rem(6)
+        }
         enableAutomaticScroll
         enableOnAndroid
       >
