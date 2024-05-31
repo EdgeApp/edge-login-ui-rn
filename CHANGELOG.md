@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: Strip URL components from recovery tokens.
+
 ## 3.11.3 (2024-05-31)
 
 - changed: Always show the password match requirement status
