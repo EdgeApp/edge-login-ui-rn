@@ -338,6 +338,12 @@ export const PasswordLoginScene = (props: Props) => {
 
   const handleSubmitRecoveryKey = useHandler(
     async (recoveryKey: string): Promise<boolean | string> => {
+      recoveryKey = recoveryKey
+        .replace('edge://recovery?token=', '')
+        .replace('edgesecure://recovery?token=', '')
+        .replace('https://deep.edge.app/recovery#', '')
+        .replace('https://recovery.edgesecure.co/recovery?token=', '')
+
       if (base58.parseUnsafe(recoveryKey)?.length !== 32)
         return lstrings.recovery_token_invalid
       dispatch(launchPasswordRecovery(recoveryKey))
@@ -363,13 +369,10 @@ export const PasswordLoginScene = (props: Props) => {
     onLogEvent('Password_Login_Create_Account')
     dispatch({
       type: 'NAVIGATE',
-      data: {
-        name:
-          hasSavedUsers || createAccountType === 'full'
-            ? 'newAccountUsername'
-            : 'newAccountPin',
-        params: {}
-      }
+      data:
+        hasSavedUsers || createAccountType === 'full'
+          ? { name: 'newAccountUsername', params: {} }
+          : { name: 'newAccountPin', params: {} }
     })
   })
 

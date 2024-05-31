@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: Remove URL components from recovery tokens.
+
 ## 3.11.2 (2024-05-28)
 
 - fixed: Password confirmation field does not automatically focus

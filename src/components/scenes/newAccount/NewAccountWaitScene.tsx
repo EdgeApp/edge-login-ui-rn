@@ -2,11 +2,11 @@ import * as React from 'react'
 import { Image, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { SceneProps } from '../../types/routerTypes'
-import { EdgeAnim } from '../common/EdgeAnim'
-import { Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
-import { ThemedScene } from '../themed/ThemedScene'
+import { SceneProps } from '../../../types/routerTypes'
+import { EdgeAnim } from '../../common/EdgeAnim'
+import { Theme, useTheme } from '../../services/ThemeContext'
+import { EdgeText } from '../../themed/EdgeText'
+import { ThemedScene } from '../../themed/ThemedScene'
 
 const loader = require('../../assets/safeLoader.gif')
 
@@ -15,7 +15,7 @@ export interface NewAccountWaitParams {
   message: string
 }
 
-export const WaitScene = (props: SceneProps<'newAccountWait'>) => {
+export const NewAccountWaitScene = (props: SceneProps<'newAccountWait'>) => {
   const { route } = props
   const { message, title } = route.params
   const theme = useTheme()

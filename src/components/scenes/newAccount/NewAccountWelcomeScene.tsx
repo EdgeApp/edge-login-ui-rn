@@ -40,13 +40,10 @@ export const NewAccountWelcomeScene = (props: Props) => {
     onLogEvent(`Signup_Welcome_Next`)
     dispatch({
       type: 'NAVIGATE',
-      data: {
-        name:
-          hasSavedUsers || experimentConfig.createAccountType === 'full'
-            ? 'newAccountUsername'
-            : 'newAccountPin',
-        params: {}
-      }
+      data:
+        hasSavedUsers || experimentConfig.createAccountType === 'full'
+          ? { name: 'newAccountUsername', params: {} }
+          : { name: 'newAccountPin', params: {} }
     })
   }
 

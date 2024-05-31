@@ -24,11 +24,11 @@ import {
   NewAccountUsernameParams,
   UpgradeUsernameParams
 } from '../components/scenes/newAccount/NewAccountUsernameScene'
+import { NewAccountWaitParams } from '../components/scenes/newAccount/NewAccountWaitScene'
 import { OtpErrorParams } from '../components/scenes/OtpErrorScene'
 import { PasswordLoginParams } from '../components/scenes/PasswordLoginScene'
 import { PinLoginParams } from '../components/scenes/PinLoginScene'
 import { RecoveryLoginParams } from '../components/scenes/RecoveryLoginScene'
-import { NewAccountWaitParams } from '../components/scenes/WaitScene'
 
 /**
  * Defines the acceptable route parameters for each scene key.

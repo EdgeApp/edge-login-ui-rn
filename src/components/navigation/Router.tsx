@@ -32,12 +32,12 @@ import {
   NewAccountUsernameScene,
   UpgradeUsernameScene
 } from '../scenes/newAccount/NewAccountUsernameScene'
+import { NewAccountWaitScene } from '../scenes/newAccount/NewAccountWaitScene'
 import { NewAccountWelcomeScene } from '../scenes/newAccount/NewAccountWelcomeScene'
 import { OtpErrorScene } from '../scenes/OtpErrorScene'
 import { PasswordLoginScene } from '../scenes/PasswordLoginScene'
 import { PinLoginScene } from '../scenes/PinLoginScene'
 import { RecoveryLoginScene } from '../scenes/RecoveryLoginScene'
-import { WaitScene } from '../scenes/WaitScene'
 
 interface Props {
   branding: Branding
@@ -69,7 +69,7 @@ export function Router(props: Props) {
       case 'newAccountTos':
         return <NewAccountTosScene branding={props.branding} route={route} />
       case 'newAccountWait':
-        return <WaitScene route={route} />
+        return <NewAccountWaitScene route={route} />
       case 'newAccountReview':
         return <NewAccountReviewScene route={route} />
       case 'landing':
