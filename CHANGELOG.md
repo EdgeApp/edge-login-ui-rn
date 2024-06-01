@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.12.0 (2024-05-31)
+
 - added: Strip URL components from recovery tokens.
 
 ## 3.11.3 (2024-05-31)
