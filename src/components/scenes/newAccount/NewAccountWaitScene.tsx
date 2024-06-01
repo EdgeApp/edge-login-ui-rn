@@ -8,7 +8,7 @@ import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { ThemedScene } from '../../themed/ThemedScene'
 
-const loader = require('../../assets/safeLoader.gif')
+const loader = require('../../../assets/safeLoader.gif')
 
 export interface NewAccountWaitParams {
   title: string
