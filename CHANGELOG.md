@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: Maestro testId for change pin dots
+
 ## 3.12.0 (2024-05-31)
 
 - added: Strip URL components from recovery tokens.

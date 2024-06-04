@@ -84,7 +84,11 @@ const ChangePinSceneComponent = ({
           </EdgeText>
         </EdgeAnim>
         <EdgeAnim enter={{ type: 'fadeInDown' }}>
-          <DigitInput pin={pin} onChangePin={handleChangePin} />
+          <DigitInput
+            pin={pin}
+            testID="pinInput"
+            onChangePin={handleChangePin}
+          />
         </EdgeAnim>
         <EdgeAnim
           style={styles.actions}
