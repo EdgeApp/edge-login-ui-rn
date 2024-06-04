@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.13.0 (2024-06-03)
+
 - added: Maestro testId for change pin dots
 
 ## 3.12.0 (2024-05-31)
