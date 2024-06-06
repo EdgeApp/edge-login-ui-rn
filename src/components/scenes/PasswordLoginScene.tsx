@@ -67,6 +67,7 @@ export const PasswordLoginScene = (props: Props) => {
   const {
     accountOptions,
     context,
+    forceLightAccountCreate = false,
     onComplete,
     onLogEvent = () => {},
     onPerfEvent
@@ -370,7 +371,8 @@ export const PasswordLoginScene = (props: Props) => {
     dispatch({
       type: 'NAVIGATE',
       data:
-        hasSavedUsers || createAccountType === 'full'
+        !forceLightAccountCreate &&
+        (hasSavedUsers || createAccountType === 'full')
           ? { name: 'newAccountUsername', params: {} }
           : { name: 'newAccountPin', params: {} }
     })

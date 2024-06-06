@@ -51,6 +51,8 @@ interface Props {
    */
   fastLogin?: boolean
 
+  forceLightAccountCreate?: boolean
+
   /**
    * The user to select, if present on the device.
    * Get this from `EdgeContext.localUsers`
@@ -161,6 +163,7 @@ export function LoginScreen(props: Props): JSX.Element {
   const {
     context,
     fastLogin = false,
+    forceLightAccountCreate = false,
     fontDescription,
     initialLoginId,
     onPerfEvent = () => {},
@@ -205,6 +208,7 @@ export function LoginScreen(props: Props): JSX.Element {
         branding,
         context,
         fastLogin: props.fastLogin,
+        forceLightAccountCreate,
         initialUserInfo,
         initialRoute: props.initialRoute,
         onComplete: props.onComplete,

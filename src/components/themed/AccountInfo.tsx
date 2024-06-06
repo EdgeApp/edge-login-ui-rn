@@ -74,7 +74,7 @@ export const AccountInfo = (props: Props) => {
     { label: lstrings.pin, value: pin }
   ]
   const renderInfoRow = (label: string, value: string | undefined) => (
-    <View style={styles.row}>
+    <View style={styles.row} key={value ?? 'na'}>
       <EdgeText
         style={[styles.text, styles.label]}
         numberOfLines={1}
