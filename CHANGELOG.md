@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: 'forceLightAccountCreate' imports prop to force Light Account creation, regardless of experiment config or number of saved accounts
+
 ## 3.13.0 (2024-06-03)
 
 - added: Maestro testId for change pin dots

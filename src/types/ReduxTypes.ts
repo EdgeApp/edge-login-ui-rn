@@ -20,6 +20,7 @@ export interface Imports {
   readonly branding?: Branding
   readonly context: EdgeContext
   readonly fastLogin?: boolean
+  readonly forceLightAccountCreate?: boolean
   readonly initialUserInfo?: EdgeUserInfo
   readonly initialRoute?: InitialRouteName
   readonly onLogEvent?: OnLogEvent
