@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.14.1 (2024-06-14)
+
 - fixed: Crash in account creation due to object used in animation worklet
 
 ## 3.14.0 (2024-06-07)
