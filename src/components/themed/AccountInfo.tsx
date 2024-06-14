@@ -49,10 +49,11 @@ export const AccountInfo = (props: Props) => {
   )
 
   const borderRadius = theme.rem(0.25)
+  const { thinLineWidth } = theme
   const headerStyle = useAnimatedStyle(() => ({
     borderBottomLeftRadius: progress.value === 0 ? borderRadius : 0,
     borderBottomRightRadius: progress.value === 0 ? borderRadius : 0,
-    borderBottomWidth: progress.value === 0 ? theme.thinLineWidth : 0
+    borderBottomWidth: progress.value === 0 ? thinLineWidth : 0
   }))
   const infoStyle = useAnimatedStyle(() => ({
     height: height.value * progress.value + 1,
