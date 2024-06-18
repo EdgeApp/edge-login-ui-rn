@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.15.0 (2024-06-18)
+
 - changed: showNotificationPermissionReminder returns a value depending on if a prompt was actually shown
 
 ## 3.14.1 (2024-06-14)
