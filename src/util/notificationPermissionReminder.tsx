@@ -60,11 +60,12 @@ logicMap[1][1][0] = lstrings.refresh_permission_branded_s
 logicMap[1][1][1] = undefined
 
 /**
- * Asks the users for notification permissions, if needed.
+ * Asks the users for notification permissions, if needed. Returns true if the
+ * permissions modal was shown, false if not.
  */
 export const showNotificationPermissionReminder = async (
   opts: NotificationPermissionReminderOptions
-): Promise<void> => {
+): Promise<boolean> => {
   const {
     appName = lstrings.app_name_default,
     onLogEvent = () => {},
@@ -118,7 +119,7 @@ export const showNotificationPermissionReminder = async (
     if (onNotificationPermit != null && notificationPermissionsInfo != null) {
       onNotificationPermit(notificationPermissionsInfo)
     }
-    return
+    return false
   }
 
   const choiceMap: PermissionsModalChoices = {
@@ -143,7 +144,7 @@ export const showNotificationPermissionReminder = async (
   console.log(`checkAndRequestNotifications result ${JSON.stringify(choices)}`)
 
   // Don't do anything if the user didn't make a choice (dismissed modal)
-  if (choices == null) return
+  if (choices == null) return true
   const newPermissionsInfo: NotificationPermissionsInfo = {
     isNotificationBlocked: !choices?.enable,
     notificationOptIns: {
@@ -174,6 +175,8 @@ export const showNotificationPermissionReminder = async (
   }
 
   if (onNotificationPermit != null) onNotificationPermit(newPermissionsInfo)
+
+  return true
 }
 
 const asNotificationPermissionsInfo = asJSON(
