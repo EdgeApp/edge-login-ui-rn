@@ -149,7 +149,6 @@ const ChangePasswordSceneComponent = ({
 
         <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
           <FilledTextInput
-            autoFocus
             top={0.75}
             horizontal={0.75}
             bottom={0.25}
