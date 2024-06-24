@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Certain iOS device keyboards can cover the 2nd password input field when autofocusing
+
 ## 3.15.0 (2024-06-18)
 
 - changed: showNotificationPermissionReminder returns a value depending on if a prompt was actually shown
