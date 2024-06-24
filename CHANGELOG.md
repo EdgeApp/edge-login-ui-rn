@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.16.0 (2024-06-24)
+
 - changed: Autofocus disabled on ChangePasswordScene
 
 ## 3.15.1 (2024-06-24)
