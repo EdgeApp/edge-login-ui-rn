@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Autofocus disabled on ChangePasswordScene
+
 ## 3.15.1 (2024-06-24)
 
 - fixed: Certain iOS device keyboards can cover the 2nd password input field when autofocusing
