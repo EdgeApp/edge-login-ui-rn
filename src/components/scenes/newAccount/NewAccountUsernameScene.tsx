@@ -13,10 +13,10 @@ import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
 import { EdgeAnim } from '../../common/EdgeAnim'
+import { SceneButtons } from '../../common/SceneButtons'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { FilledTextInput } from '../../themed/FilledTextInput'
-import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
 export interface NewAccountUsernameParams {
@@ -184,15 +184,14 @@ export const ChangeUsernameComponent = (props: Props) => {
               valid={availableText}
             />
           </EdgeAnim>
-          <EdgeAnim enter={{ type: 'fadeInDown', distance: 50 }}>
-            <MainButton
-              label={lstrings.next_label}
-              type="primary"
-              marginRem={[0.5, 0]}
-              disabled={isNextDisabled}
-              onPress={handleNext}
-            />
-          </EdgeAnim>
+          <SceneButtons
+            primary={{
+              label: lstrings.next_label,
+              onPress: handleNext,
+              disabled: isNextDisabled
+            }}
+            animDistanceStart={50}
+          />
         </KeyboardAwareScrollView>
       </View>
     </ThemedScene>
