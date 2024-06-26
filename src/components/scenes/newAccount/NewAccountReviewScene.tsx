@@ -10,11 +10,11 @@ import { useImports } from '../../../hooks/useImports'
 import { useDispatch } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
 import { EdgeAnim } from '../../common/EdgeAnim'
+import { SceneButtons } from '../../common/SceneButtons'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { AccountInfo } from '../../themed/AccountInfo'
 import { EdgeText } from '../../themed/EdgeText'
 import { FormError } from '../../themed/FormError'
-import { MainButton } from '../../themed/MainButton'
 import { ThemedScene } from '../../themed/ThemedScene'
 
 export interface NewAccountReviewParams {
@@ -67,13 +67,12 @@ const AccountReviewComponent = (props: Props) => {
             pin={pin}
           />
         </EdgeAnim>
-        <EdgeAnim
-          style={styles.actions}
-          enter={{ type: 'fadeInDown', distance: 60 }}
-        >
-          <MainButton label={lstrings.create} type="primary" onPress={onNext} />
-        </EdgeAnim>
       </ScrollView>
+      <SceneButtons
+        absolute
+        primary={{ label: lstrings.create, onPress: onNext }}
+        animDistanceStart={60}
+      />
     </ThemedScene>
   )
 }
@@ -87,12 +86,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.875),
     marginBottom: theme.rem(2)
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: theme.rem(5),
-    minHeight: theme.rem(3)
   }
 }))
 
