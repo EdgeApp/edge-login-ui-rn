@@ -71,7 +71,7 @@ const AccountReviewComponent = (props: Props) => {
       <SceneButtons
         absolute
         primary={{ label: lstrings.create, onPress: onNext }}
-        animDistanceStart={60}
+        animDistanceStart={50}
       />
     </ThemedScene>
   )
@@ -79,11 +79,9 @@ const AccountReviewComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    marginHorizontal: theme.rem(0.5),
-    marginTop: theme.rem(1.5)
+    marginHorizontal: theme.rem(0.5)
   },
   description: {
-    fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.875),
     marginBottom: theme.rem(2)
   }
