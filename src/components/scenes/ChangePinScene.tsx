@@ -75,7 +75,7 @@ const ChangePinSceneComponent = ({
     <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
       <ScrollView
         ref={scrollViewRef}
-        style={styles.content}
+        contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
         <EdgeAnim enter={{ type: 'fadeInUp' }}>
@@ -90,15 +90,16 @@ const ChangePinSceneComponent = ({
             onChangePin={handleChangePin}
           />
         </EdgeAnim>
-        <SceneButtons
-          primary={{
-            label: mainButtonLabel,
-            onPress: handlePress,
-            disabled: !isValidPin
-          }}
-          animDistanceStart={1}
-        />
       </ScrollView>
+      <SceneButtons
+        absolute
+        primary={{
+          label: mainButtonLabel,
+          onPress: handlePress,
+          disabled: !isValidPin
+        }}
+        animDistanceStart={50}
+      />
     </ThemedScene>
   )
 }
@@ -106,8 +107,7 @@ const ChangePinSceneComponent = ({
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flexGrow: 1,
-    marginHorizontal: theme.rem(0.5),
-    marginTop: theme.rem(1)
+    marginHorizontal: theme.rem(0.5)
   },
   description: {
     fontFamily: theme.fontFaceDefault,

@@ -108,19 +108,20 @@ const TosComponent = (props: Props) => {
             </EdgeText>
           </EdgeText>
         </EdgeAnim>
-        <EdgeAnim
-          enter={{ type: 'fadeInDown' }}
-          exit={{ type: 'fadeOutDown' }}
-          visible={showNext}
-        >
-          <SceneButtons
-            primary={{
-              label: lstrings.confirm,
-              onPress: onNext
-            }}
-          />
-        </EdgeAnim>
       </ScrollView>
+      <EdgeAnim
+        enter={{ type: 'fadeInDown' }}
+        exit={{ type: 'fadeOutDown' }}
+        visible={showNext}
+      >
+        <SceneButtons
+          absolute
+          primary={{
+            label: lstrings.confirm,
+            onPress: onNext
+          }}
+        />
+      </EdgeAnim>
     </ThemedScene>
   )
 }

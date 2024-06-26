@@ -40,9 +40,25 @@ const AccountReviewComponent = (props: Props) => {
   const { username, password, pin, onNext } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const dispatch = useDispatch()
 
   return (
-    <ThemedScene title={lstrings.review}>
+    <ThemedScene
+      title={lstrings.review}
+      onBack={() =>
+        dispatch({
+          type: 'NAVIGATE',
+          data: {
+            name: 'newAccountPin',
+            params: {
+              username,
+              password,
+              pin
+            }
+          }
+        })
+      }
+    >
       <ScrollView contentContainerStyle={styles.content}>
         <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
           <EdgeText style={styles.description} numberOfLines={2}>
@@ -71,7 +87,7 @@ const AccountReviewComponent = (props: Props) => {
       <SceneButtons
         absolute
         primary={{ label: lstrings.create, onPress: onNext }}
-        animDistanceStart={60}
+        animDistanceStart={50}
       />
     </ThemedScene>
   )
@@ -79,8 +95,7 @@ const AccountReviewComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    marginHorizontal: theme.rem(0.5),
-    marginTop: theme.rem(1.5)
+    marginHorizontal: theme.rem(0.5)
   },
   description: {
     fontFamily: theme.fontFaceDefault,

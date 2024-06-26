@@ -107,7 +107,7 @@ const ChangePasswordSceneComponent = ({
   return (
     <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
       <KeyboardAwareScrollView
-        style={styles.container}
+        contentContainerStyle={styles.container}
         keyboardOpeningTime={0}
         keyboardShouldPersistTaps="handled"
         enableResetScrollToCoords={false}
@@ -172,15 +172,16 @@ const ChangePasswordSceneComponent = ({
             maxLength={100}
           />
         </EdgeAnim>
-        <SceneButtons
-          primary={{
-            label: mainButtonLabel,
-            disabled: isNextButtonDisabled || confirmPassword === '',
-            onPress: handleNext
-          }}
-          animDistanceStart={50}
-        />
       </KeyboardAwareScrollView>
+      <SceneButtons
+        absolute
+        primary={{
+          label: mainButtonLabel,
+          disabled: isNextButtonDisabled || confirmPassword === '',
+          onPress: handleNext
+        }}
+        animDistanceStart={50}
+      />
     </ThemedScene>
   )
 }
@@ -189,12 +190,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flexGrow: 1,
     marginHorizontal: theme.rem(0.5),
-    marginTop: -theme.rem(0.5)
+    alignContent: 'flex-start'
   },
   description: {
-    fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.875),
-    margin: theme.rem(0.5)
+    marginBottom: theme.rem(0.5)
   },
   actions: {
     flexDirection: 'row',

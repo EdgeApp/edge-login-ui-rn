@@ -1,6 +1,5 @@
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
@@ -154,46 +153,45 @@ export const ChangeUsernameComponent = (props: Props) => {
 
   return (
     <ThemedScene onBack={handleBack} title={lstrings.choose_title_username}>
-      <View style={styles.content}>
-        <KeyboardAwareScrollView
-          contentContainerStyle={styles.mainScrollView}
-          keyboardShouldPersistTaps="handled"
-        >
-          <EdgeAnim enter={{ type: 'fadeInUp', distance: 50 }}>
-            <EdgeText style={styles.description} numberOfLines={2}>
-              {sprintf(
-                lstrings.username_desc,
-                branding.appName || lstrings.app_name_default
-              )}
-            </EdgeText>
-          </EdgeAnim>
-          <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
-            <FilledTextInput
-              around={1}
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoFocus
-              placeholder={lstrings.username}
-              onChangeText={handleChangeText}
-              onSubmitEditing={handleNext}
-              returnKeyType="go"
-              value={username ?? ''}
-              clearIcon={!isFetchingAvailability}
-              showSpinner={isFetchingAvailability}
-              error={errorText}
-              valid={availableText}
-            />
-          </EdgeAnim>
-          <SceneButtons
-            primary={{
-              label: lstrings.next_label,
-              onPress: handleNext,
-              disabled: isNextDisabled
-            }}
-            animDistanceStart={50}
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.mainScrollView}
+        keyboardShouldPersistTaps="handled"
+      >
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 50 }}>
+          <EdgeText style={styles.description} numberOfLines={2}>
+            {sprintf(
+              lstrings.username_desc,
+              branding.appName || lstrings.app_name_default
+            )}
+          </EdgeText>
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
+          <FilledTextInput
+            around={1}
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoFocus
+            placeholder={lstrings.username}
+            onChangeText={handleChangeText}
+            onSubmitEditing={handleNext}
+            returnKeyType="go"
+            value={username ?? ''}
+            clearIcon={!isFetchingAvailability}
+            showSpinner={isFetchingAvailability}
+            error={errorText}
+            valid={availableText}
           />
-        </KeyboardAwareScrollView>
-      </View>
+        </EdgeAnim>
+      </KeyboardAwareScrollView>
+      <SceneButtons
+        absolute
+        primary={{
+          label: lstrings.next_label,
+          onPress: handleNext,
+          disabled: isNextDisabled
+        }}
+        animDistanceStart={50}
+      />
     </ThemedScene>
   )
 }
@@ -213,17 +211,12 @@ const getUsernameFormatError = (text: string): null | string => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  content: {
-    flex: 1,
-    marginHorizontal: theme.rem(0.5),
-    marginTop: theme.rem(1.5)
-  },
   mainScrollView: {
-    flex: 1,
-    alignContent: 'flex-start'
+    flexGrow: 1,
+    alignContent: 'flex-start',
+    marginHorizontal: theme.rem(0.5)
   },
   description: {
-    fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.875),
     marginBottom: theme.rem(1)
   }
