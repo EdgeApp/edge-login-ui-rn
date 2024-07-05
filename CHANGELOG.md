@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Ion Icon names
+
 ## 3.16.0 (2024-06-24)
 
 - changed: Autofocus disabled on ChangePasswordScene

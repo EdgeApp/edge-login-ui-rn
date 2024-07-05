@@ -27,7 +27,7 @@ The login UI depends on some extra external native libraries, which you will hav
 - react-native-safe-area-context (4.5.0+)
 - react-native-share v5 (v7 also works)
 - react-native-svg v12
-- react-native-vector-icons v7 (v9 also works)
+- react-native-vector-icons v10
   - Follow the [extra installation steps](https://www.npmjs.com/package/react-native-vector-icons#installation).
   - We use AntDesign, Entypo, MaterialIcons, FontAwesome, FontAwesome5, and SimpleLineIcons.
 - react-native-webview v13

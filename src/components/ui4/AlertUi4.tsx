@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react'
-import { Platform, View } from 'react-native'
+import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -68,11 +68,7 @@ export function AlertCardUi4(props: Props) {
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <IonIcon
-            name={
-              Platform.OS === 'ios'
-                ? 'ios-warning-outline'
-                : 'md-warning-outline'
-            }
+            name="warning-outline"
             style={styles.icon}
             color={theme.primaryText}
             size={theme.rem(1.25)}

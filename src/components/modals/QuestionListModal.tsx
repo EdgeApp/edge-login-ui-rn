@@ -23,7 +23,7 @@ export function QuestionListModal(props: Props) {
 
   function renderRow(item: string): JSX.Element {
     const radio = {
-      icon: `ios-radio-button-${selected === item ? 'on' : 'off'}`,
+      icon: `radio-button-${selected === item ? 'on' : 'off'}`,
       color: theme.iconTappable
     }
     return (
