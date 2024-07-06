@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Platform, View } from 'react-native'
+import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -64,9 +64,7 @@ export function WarningCard({
     <View style={[styles.warning, margin, padding]}>
       <View style={styles.titleContainer}>
         <IonIcon
-          name={
-            Platform.OS === 'ios' ? 'ios-warning-outline' : 'md-warning-outline'
-          }
+          name="warning-outline"
           style={styles.icon}
           color={theme.warningText}
           size={theme.rem(0.8)}
