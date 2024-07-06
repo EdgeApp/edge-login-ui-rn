@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.16.1 (2024-07-05)
+
 - changed: Ion Icon names
 
 ## 3.16.0 (2024-06-24)
