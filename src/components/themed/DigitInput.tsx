@@ -53,6 +53,7 @@ export const DigitInput = (props: Props) => {
           onChangeText={onChangePin}
           maxLength={maxPinLength}
           keyboardType="number-pad"
+          returnKeyType="none"
           value={pin}
           autoFocus
         />

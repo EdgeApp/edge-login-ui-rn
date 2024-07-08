@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Use consistent styling throughout the account creation flow
+
 ## 3.16.2 (2024-07-15)
 
 - fixed: Force the keyboard up when tapping the the PIN input on Android.
