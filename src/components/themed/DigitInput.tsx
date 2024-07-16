@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { TextInput, View } from 'react-native'
+import { Platform, TextInput, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
@@ -33,7 +33,12 @@ export const DigitInput = (props: Props) => {
   const inputRef = React.useRef<TextInput | null>(null)
 
   const handleRefocus = () => {
-    if (inputRef.current != null) inputRef.current.focus()
+    if (inputRef.current != null) {
+      // We don't lose focus when the user closes the keyboard
+      // with the hardware back button, so blur first to fix that:
+      if (Platform.OS === 'android') inputRef.current.blur()
+      inputRef.current.focus()
+    }
   }
 
   return (
