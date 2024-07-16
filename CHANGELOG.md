@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Force the keyboard up when tapping the the PIN input on Android.
+
 ## 3.16.1 (2024-07-05)
 
 - changed: Ion Icon names
