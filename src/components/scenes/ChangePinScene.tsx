@@ -13,12 +13,12 @@ import { useScrollToEnd } from '../../hooks/useScrollToEnd'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { EdgeAnim } from '../common/EdgeAnim'
+import { SceneButtons } from '../common/SceneButtons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { DigitInput, MAX_PIN_LENGTH } from '../themed/DigitInput'
 import { EdgeText } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
 import { ThemedScene } from '../themed/ThemedScene'
 
 export interface ChangePinParams {
@@ -66,6 +66,9 @@ const ChangePinSceneComponent = ({
     // Change pin only when input are numbers
     if ((/^\d+$/.test(newPin) || newPin.length === 0) && newPin.length <= 4) {
       setPin(newPin)
+      if (newPin.length === 4) {
+        Keyboard.dismiss()
+      }
     }
   })
 
@@ -75,7 +78,7 @@ const ChangePinSceneComponent = ({
     <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
       <ScrollView
         ref={scrollViewRef}
-        style={styles.content}
+        contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
         <EdgeAnim enter={{ type: 'fadeInUp' }}>
@@ -90,38 +93,28 @@ const ChangePinSceneComponent = ({
             onChangePin={handleChangePin}
           />
         </EdgeAnim>
-        <EdgeAnim
-          style={styles.actions}
-          visible={isValidPin}
-          enter={{ type: 'fadeInDown' }}
-          exit={{ type: 'fadeOutDown' }}
-        >
-          <MainButton
-            label={mainButtonLabel}
-            type="primary"
-            onPress={handlePress}
-          />
-        </EdgeAnim>
       </ScrollView>
+      <SceneButtons
+        absolute
+        primary={{
+          label: mainButtonLabel,
+          onPress: handlePress,
+          disabled: !isValidPin
+        }}
+        animDistanceStart={50}
+      />
     </ThemedScene>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    flex: 1,
-    marginHorizontal: theme.rem(0.5),
-    marginTop: theme.rem(1)
+    flexGrow: 1,
+    marginHorizontal: theme.rem(0.5)
   },
   description: {
-    fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.875),
     marginBottom: theme.rem(2)
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: theme.rem(2)
   }
 }))
 

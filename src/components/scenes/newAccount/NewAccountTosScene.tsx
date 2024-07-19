@@ -14,13 +14,13 @@ import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
 import { EdgeAnim } from '../../common/EdgeAnim'
+import { SceneButtons } from '../../common/SceneButtons'
 import { ChallengeModal } from '../../modals/ChallengeModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { Checkbox } from '../../themed/Checkbox'
 import { EdgeText } from '../../themed/EdgeText'
 import { ThemedScene } from '../../themed/ThemedScene'
-import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
 
 export interface UpgradeTosParams {
   account: EdgeAccount
@@ -108,20 +108,20 @@ const TosComponent = (props: Props) => {
             </EdgeText>
           </EdgeText>
         </EdgeAnim>
-        <EdgeAnim
-          enter={{ type: 'fadeInDown' }}
-          exit={{ type: 'fadeOutDown' }}
-          visible={showNext}
-        >
-          <ButtonsViewUi4
-            primary={{
-              label: lstrings.confirm,
-              onPress: onNext
-            }}
-            parentType="scene"
-          />
-        </EdgeAnim>
       </ScrollView>
+      <EdgeAnim
+        enter={{ type: 'fadeInDown' }}
+        exit={{ type: 'fadeOutDown' }}
+        visible={showNext}
+      >
+        <SceneButtons
+          absolute
+          primary={{
+            label: lstrings.confirm,
+            onPress: onNext
+          }}
+        />
+      </EdgeAnim>
     </ThemedScene>
   )
 }

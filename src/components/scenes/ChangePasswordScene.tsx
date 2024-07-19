@@ -10,13 +10,13 @@ import { useImports } from '../../hooks/useImports'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { EdgeAnim } from '../common/EdgeAnim'
+import { SceneButtons } from '../common/SceneButtons'
 import { WarningCard } from '../common/WarningCard'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
-import { MainButton } from '../themed/MainButton'
 import {
   PasswordRequirements,
   PasswordRequirementStatus,
@@ -63,7 +63,6 @@ const ChangePasswordSceneComponent = ({
 }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const [spinning, setSpinning] = React.useState(false)
   const [passwordReqs, setPasswordReqs] = React.useState<PasswordRequirements>({
     minLengthMet: 'unmet',
     hasNumber: 'unmet',
@@ -73,6 +72,7 @@ const ChangePasswordSceneComponent = ({
   })
   const [password, setPassword] = React.useState(initPassword ?? '')
   const [confirmPassword, setConfirmPassword] = React.useState('')
+  const [spinner, setSpinner] = React.useState(false)
 
   const secondInputRef = React.useRef<FilledTextInputRef>(null)
 
@@ -82,8 +82,6 @@ const ChangePasswordSceneComponent = ({
     .some(([, value]) => value === 'unmet' || value === 'error')
 
   const handleNext = useHandler(async () => {
-    setSpinning(true)
-
     const newPasswordReqs = validatePassword(password, confirmPassword, 'error')
     setPasswordReqs(newPasswordReqs)
     if (
@@ -91,14 +89,14 @@ const ChangePasswordSceneComponent = ({
         ([, value]) => value === 'unmet' || value === 'error'
       )
     ) {
+      setSpinner(true)
       try {
         await onSubmit(password)
       } catch (e) {
         showError(e)
       }
+      setSpinner(false)
     }
-
-    setSpinning(false)
   })
 
   const handleSubmitPasswordField = useHandler(() => {
@@ -112,7 +110,7 @@ const ChangePasswordSceneComponent = ({
   return (
     <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
       <KeyboardAwareScrollView
-        style={styles.container}
+        contentContainerStyle={styles.container}
         keyboardOpeningTime={0}
         keyboardShouldPersistTaps="handled"
         enableResetScrollToCoords={false}
@@ -177,24 +175,17 @@ const ChangePasswordSceneComponent = ({
             maxLength={100}
           />
         </EdgeAnim>
-        <EdgeAnim
-          style={styles.actions}
-          enter={{ type: 'fadeInDown', distance: 50 }}
-          exit={{ type: 'fadeOutDown', distance: 50 }}
-        >
-          {spinning ? (
-            <MainButton disabled marginRem={0.5} type="primary" spinner />
-          ) : (
-            <MainButton
-              label={mainButtonLabel}
-              disabled={isNextButtonDisabled || confirmPassword === ''}
-              marginRem={0.5}
-              onPress={handleNext}
-              type="primary"
-            />
-          )}
-        </EdgeAnim>
       </KeyboardAwareScrollView>
+      <SceneButtons
+        absolute
+        primary={{
+          label: mainButtonLabel,
+          disabled: isNextButtonDisabled || confirmPassword === '',
+          onPress: handleNext,
+          spinner
+        }}
+        animDistanceStart={50}
+      />
     </ThemedScene>
   )
 }
@@ -203,12 +194,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flexGrow: 1,
     marginHorizontal: theme.rem(0.5),
-    marginTop: -theme.rem(0.5)
+    alignContent: 'flex-start'
   },
   description: {
-    fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.875),
-    margin: theme.rem(0.5)
+    marginBottom: theme.rem(0.5)
   },
   actions: {
     flexDirection: 'row',

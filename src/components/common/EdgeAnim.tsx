@@ -1,7 +1,11 @@
+/**
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+ * edge-login-ui-rn!
+ */
+
 import * as React from 'react'
 import { ViewProps } from 'react-native'
 import Animated, {
-  AnimateProps,
   ComplexAnimationBuilder,
   Easing,
   FadeIn,
@@ -14,13 +18,47 @@ import Animated, {
   FadeOutLeft,
   FadeOutRight,
   FadeOutUp,
-  LinearTransition
+  LinearTransition,
+  StretchInY,
+  StretchOutY
 } from 'react-native-reanimated'
 
-export const DEFAULT_ANIMATION_DURATION_MS = 500
+export const DEFAULT_ANIMATION_DURATION_MS = 300
 export const LAYOUT_ANIMATION = LinearTransition.duration(
   DEFAULT_ANIMATION_DURATION_MS
 )
+export const MAX_LIST_ITEMS_ANIM = 10
+
+// Commonly used enter/exit animations. Use these to prevent
+// dynamically created objects as params that cause a re-render
+export const fadeIn: Anim = { type: 'fadeIn' }
+export const fadeInUp: Anim = { type: 'fadeInUp' }
+export const fadeInUp20: Anim = { type: 'fadeInUp', distance: 20 }
+export const fadeInUp25: Anim = { type: 'fadeInUp', distance: 25 }
+export const fadeInUp30: Anim = { type: 'fadeInUp', distance: 30 }
+export const fadeInUp40: Anim = { type: 'fadeInUp', distance: 40 }
+export const fadeInUp50: Anim = { type: 'fadeInUp', distance: 50 }
+export const fadeInUp60: Anim = { type: 'fadeInUp', distance: 60 }
+export const fadeInUp80: Anim = { type: 'fadeInUp', distance: 80 }
+export const fadeInUp90: Anim = { type: 'fadeInUp', distance: 90 }
+export const fadeInUp110: Anim = { type: 'fadeInUp', distance: 110 }
+export const fadeInUp120: Anim = { type: 'fadeInUp', distance: 120 }
+export const fadeInUp140: Anim = { type: 'fadeInUp', distance: 140 }
+export const fadeInDown: Anim = { type: 'fadeInDown' }
+export const fadeInDown10: Anim = { type: 'fadeInDown', distance: 10 }
+export const fadeInDown20: Anim = { type: 'fadeInDown', distance: 20 }
+export const fadeInDown30: Anim = { type: 'fadeInDown', distance: 30 }
+export const fadeInDown40: Anim = { type: 'fadeInDown', distance: 40 }
+export const fadeInDown50: Anim = { type: 'fadeInDown', distance: 50 }
+export const fadeInDown60: Anim = { type: 'fadeInDown', distance: 60 }
+export const fadeInDown75: Anim = { type: 'fadeInDown', distance: 75 }
+export const fadeInDown80: Anim = { type: 'fadeInDown', distance: 80 }
+export const fadeInDown90: Anim = { type: 'fadeInDown', distance: 90 }
+export const fadeInDown110: Anim = { type: 'fadeInDown', distance: 110 }
+export const fadeInDown120: Anim = { type: 'fadeInDown', distance: 120 }
+export const fadeInDown140: Anim = { type: 'fadeInDown', distance: 140 }
+export const fadeInLeft: Anim = { type: 'fadeInLeft' }
+export const fadeOut: Anim = { type: 'fadeOut' }
 
 type AnimBuilder = typeof ComplexAnimationBuilder
 type AnimTypeFadeIns =
@@ -35,7 +73,13 @@ type AnimTypeFadeOuts =
   | 'fadeOutUp'
   | 'fadeOutLeft'
   | 'fadeOutRight'
-type AnimType = AnimTypeFadeIns | AnimTypeFadeOuts
+type AnimTypeStretchIns = 'stretchInY'
+type AnimTypeStretchOuts = 'stretchOutY'
+type AnimType =
+  | AnimTypeFadeIns
+  | AnimTypeFadeOuts
+  | AnimTypeStretchIns
+  | AnimTypeStretchOuts
 
 interface Anim {
   type: AnimType
@@ -44,9 +88,11 @@ interface Anim {
   distance?: number
 }
 
-interface Props extends AnimateProps<ViewProps> {
+interface Props extends ViewProps {
+  disableAnimation?: boolean
   enter?: Anim
   exit?: Anim
+
   visible?: boolean
 }
 
@@ -60,7 +106,9 @@ const builderMap: Record<AnimType, AnimBuilder> = {
   fadeOutDown: FadeOutDown,
   fadeOutUp: FadeOutUp,
   fadeOutLeft: FadeOutLeft,
-  fadeOutRight: FadeOutRight
+  fadeOutRight: FadeOutRight,
+  stretchInY: StretchInY,
+  stretchOutY: StretchOutY
 }
 
 const getAnimBuilder = (anim?: Anim) => {
@@ -98,16 +146,21 @@ const getAnimBuilder = (anim?: Anim) => {
   return builder
 }
 
-export const EdgeAnim = ({
+const EdgeAnimInner = ({
   children,
+  disableAnimation,
   enter,
   exit,
   visible = true,
   ...rest
-}: Props) => {
+}: Props): JSX.Element | null => {
   if (!visible) return null
   const entering = getAnimBuilder(enter)
   const exiting = getAnimBuilder(exit)
+
+  if (disableAnimation) {
+    return <Animated.View {...rest}>{children}</Animated.View>
+  }
 
   return (
     <Animated.View
@@ -120,3 +173,5 @@ export const EdgeAnim = ({
     </Animated.View>
   )
 }
+
+export const EdgeAnim = React.memo(EdgeAnimInner)
