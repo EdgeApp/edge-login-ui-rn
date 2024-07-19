@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.16.3 (2024-07-19)
+
 - fixed: Use consistent styling throughout the account creation flow
 
 ## 3.16.2 (2024-07-15)
