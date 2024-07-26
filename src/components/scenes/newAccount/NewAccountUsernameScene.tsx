@@ -8,6 +8,7 @@ import { maybeRouteComplete } from '../../../actions/LoginInitActions'
 import { lstrings } from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
+import { useKeyboardPadding } from '../../../hooks/useKeyboardPadding'
 import { Branding } from '../../../types/Branding'
 import { useDispatch } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
@@ -47,6 +48,7 @@ export const ChangeUsernameComponent = (props: Props) => {
   const imports = useImports()
   const theme = useTheme()
   const styles = getStyles(theme)
+  const keyboardPadding = useKeyboardPadding()
 
   const [username, setUsername] = React.useState(initUsername ?? '')
   const [timerId, setTimerId] = React.useState<Timeout | undefined>(undefined)
@@ -154,7 +156,7 @@ export const ChangeUsernameComponent = (props: Props) => {
   return (
     <ThemedScene onBack={handleBack} title={lstrings.choose_title_username}>
       <KeyboardAwareScrollView
-        contentContainerStyle={styles.mainScrollView}
+        contentContainerStyle={[styles.mainScrollView, keyboardPadding]}
         keyboardShouldPersistTaps="handled"
       >
         <EdgeAnim enter={{ type: 'fadeInUp', distance: 50 }}>
@@ -182,16 +184,15 @@ export const ChangeUsernameComponent = (props: Props) => {
             valid={availableText}
           />
         </EdgeAnim>
+        <SceneButtons
+          primary={{
+            label: lstrings.next_label,
+            onPress: handleNext,
+            disabled: isNextDisabled
+          }}
+          animDistanceStart={50}
+        />
       </KeyboardAwareScrollView>
-      <SceneButtons
-        absolute
-        primary={{
-          label: lstrings.next_label,
-          onPress: handleNext,
-          disabled: isNextDisabled
-        }}
-        animDistanceStart={50}
-      />
     </ThemedScene>
   )
 }
@@ -211,6 +212,9 @@ const getUsernameFormatError = (text: string): null | string => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  keyboardAvoidingView: {
+    flex: 1
+  },
   mainScrollView: {
     flexGrow: 1,
     alignContent: 'flex-start',

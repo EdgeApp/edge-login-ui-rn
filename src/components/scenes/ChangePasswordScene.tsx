@@ -7,6 +7,7 @@ import { cacheStyles } from 'react-native-patina'
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
+import { useKeyboardPadding } from '../../hooks/useKeyboardPadding'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { EdgeAnim } from '../common/EdgeAnim'
@@ -63,6 +64,8 @@ const ChangePasswordSceneComponent = ({
 }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
+  const keyboardPadding = useKeyboardPadding()
+
   const [passwordReqs, setPasswordReqs] = React.useState<PasswordRequirements>({
     minLengthMet: 'unmet',
     hasNumber: 'unmet',
@@ -110,7 +113,7 @@ const ChangePasswordSceneComponent = ({
   return (
     <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
       <KeyboardAwareScrollView
-        contentContainerStyle={styles.container}
+        contentContainerStyle={[styles.container, keyboardPadding]}
         keyboardOpeningTime={0}
         keyboardShouldPersistTaps="handled"
         enableResetScrollToCoords={false}
@@ -175,17 +178,16 @@ const ChangePasswordSceneComponent = ({
             maxLength={100}
           />
         </EdgeAnim>
+        <SceneButtons
+          primary={{
+            label: mainButtonLabel,
+            disabled: isNextButtonDisabled || confirmPassword === '',
+            onPress: handleNext,
+            spinner
+          }}
+          animDistanceStart={50}
+        />
       </KeyboardAwareScrollView>
-      <SceneButtons
-        absolute
-        primary={{
-          label: mainButtonLabel,
-          disabled: isNextButtonDisabled || confirmPassword === '',
-          onPress: handleNext,
-          spinner
-        }}
-        animDistanceStart={50}
-      />
     </ThemedScene>
   )
 }
