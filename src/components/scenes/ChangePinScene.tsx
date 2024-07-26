@@ -66,9 +66,6 @@ const ChangePinSceneComponent = ({
     // Change pin only when input are numbers
     if ((/^\d+$/.test(newPin) || newPin.length === 0) && newPin.length <= 4) {
       setPin(newPin)
-      if (newPin.length === 4) {
-        Keyboard.dismiss()
-      }
     }
   })
 
@@ -87,11 +84,7 @@ const ChangePinSceneComponent = ({
           </EdgeText>
         </EdgeAnim>
         <EdgeAnim enter={{ type: 'fadeInDown' }}>
-          <DigitInput
-            pin={pin}
-            testID="pinInput"
-            onChangePin={handleChangePin}
-          />
+          <DigitInput pin={pin} onChangePin={handleChangePin} />
         </EdgeAnim>
       </ScrollView>
       <SceneButtons
