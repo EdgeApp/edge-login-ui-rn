@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.17.0 (2024-07-30)
+
 - changed: Next button on ChangeUsername and ChangePassword scenes dynamically remain above keyboard, while also being scrollable into view while the keyboard is open
 
 ## 3.16.3 (2024-07-19)
