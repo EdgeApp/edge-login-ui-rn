@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.17.1 (2024-08-02)
+
 - fixed: DigitInput unknown returnKeyType for iOS
 - fixed: Unable to paste in password fields with iOS 17.5.1
 - fixed: Mismatched return key label in NewAccountUsernameScene
