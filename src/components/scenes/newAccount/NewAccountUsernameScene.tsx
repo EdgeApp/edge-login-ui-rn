@@ -176,7 +176,7 @@ export const ChangeUsernameComponent = (props: Props) => {
             placeholder={lstrings.username}
             onChangeText={handleChangeText}
             onSubmitEditing={handleNext}
-            returnKeyType="go"
+            returnKeyType="next"
             value={username ?? ''}
             clearIcon={!isFetchingAvailability}
             showSpinner={isFetchingAvailability}
@@ -190,7 +190,7 @@ export const ChangeUsernameComponent = (props: Props) => {
             onPress: handleNext,
             disabled: isNextDisabled
           }}
-          animDistanceStart={50}
+          animDistanceStart={0}
         />
       </KeyboardAwareScrollView>
     </ThemedScene>
