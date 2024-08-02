@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- fixed: DigitInput unknown returnKeyType for iOS
+- fixed: Unable to paste in password fields with iOS 17.5.1
+- fixed: Mismatched return key label in NewAccountUsernameScene
+
 ## 3.17.0 (2024-07-30)
 
 - changed: Next button on ChangeUsername and ChangePassword scenes dynamically remain above keyboard, while also being scrollable into view while the keyboard is open
