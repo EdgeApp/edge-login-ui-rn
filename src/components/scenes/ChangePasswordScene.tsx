@@ -1,6 +1,6 @@
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Keyboard } from 'react-native'
+import { Keyboard, Platform, ScrollView } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { cacheStyles } from 'react-native-patina'
 
@@ -66,6 +66,8 @@ const ChangePasswordSceneComponent = ({
   const styles = getStyles(theme)
   const keyboardPadding = useKeyboardPadding()
 
+  const isIos = Platform.OS === 'ios'
+
   const [passwordReqs, setPasswordReqs] = React.useState<PasswordRequirements>({
     minLengthMet: 'unmet',
     hasNumber: 'unmet',
@@ -78,6 +80,12 @@ const ChangePasswordSceneComponent = ({
   const [spinner, setSpinner] = React.useState(false)
 
   const secondInputRef = React.useRef<FilledTextInputRef>(null)
+
+  /** HACK: iOS *really* does not like `KeyboardAwareScrollView` or letting
+   * anything interfere with its built-in auto-scroll behavior. This ref lets us
+   * have some sort of scrolling control since we already tinker with field
+   * focus. */
+  const scrollViewRef = React.useRef<ScrollView>(null)
 
   // Omit confirmationMatches from next button availability
   const isNextButtonDisabled = Object.entries(passwordReqs)
@@ -104,90 +112,97 @@ const ChangePasswordSceneComponent = ({
 
   const handleSubmitPasswordField = useHandler(() => {
     secondInputRef.current?.focus()
+
+    // HACK: Since we don't use KeyboardAwareScrollView for iOS
+    if (isIos) {
+      scrollViewRef.current?.scrollTo({ y: theme.rem(4.5) })
+    }
   })
 
   React.useEffect(() => {
     setPasswordReqs(validatePassword(password, confirmPassword, 'unmet'))
   }, [password, confirmPassword])
 
+  const content = (
+    <>
+      <EdgeAnim
+        enter={{ type: 'fadeInUp', distance: 50 }}
+        exit={{ type: 'fadeOutDown' }}
+      >
+        <EdgeText style={styles.description} numberOfLines={4}>
+          {lstrings.password_desc}
+        </EdgeText>
+      </EdgeAnim>
+      <EdgeAnim
+        enter={{ type: 'fadeInUp', distance: 30 }}
+        exit={{ type: 'fadeOutDown' }}
+      >
+        <PasswordStatus passwordReqs={passwordReqs} />
+      </EdgeAnim>
+
+      <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
+        <FilledTextInput
+          top={0.75}
+          horizontal={0.75}
+          bottom={0.25}
+          value={password}
+          secureTextEntry
+          returnKeyType="next"
+          placeholder={lstrings.password}
+          onChangeText={setPassword}
+          onSubmitEditing={handleSubmitPasswordField}
+          clearIcon
+          maxLength={100}
+        />
+      </EdgeAnim>
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
+        <FilledTextInput
+          ref={secondInputRef}
+          top={0.25}
+          horizontal={0.75}
+          value={confirmPassword}
+          secureTextEntry
+          returnKeyType="done"
+          placeholder={lstrings.confirm_password}
+          onChangeText={setConfirmPassword}
+          onSubmitEditing={handleNext}
+          clearIcon
+          maxLength={100}
+        />
+      </EdgeAnim>
+      <SceneButtons
+        primary={{
+          label: mainButtonLabel,
+          disabled: isNextButtonDisabled || confirmPassword === '',
+          onPress: handleNext,
+          spinner
+        }}
+        animDistanceStart={0}
+      />
+    </>
+  )
+
   return (
     <ThemedScene onBack={onBack} onSkip={onSkip} title={title}>
-      <KeyboardAwareScrollView
-        contentContainerStyle={[styles.container, keyboardPadding]}
-        keyboardOpeningTime={0}
-        keyboardShouldPersistTaps="handled"
-        enableResetScrollToCoords={false}
-        /**
-         * HACK: In iOS:
-         * - extraScrollHeight is ONLY respected when tapping to
-         * focus a field.
-         * - Pressing next does not apply the extraScrollHeight.
-         * - Refuses to respect extraScrollHeight while typing, and
-         * ALWAYS resets the focus position to make the text field sit just
-         * above the keyboard.
-         *
-         * Android correctly uses this prop to ensure the "next" button is
-         * always visible above the keyboard, screen size permitting.
-         */
-        extraScrollHeight={theme.rem(6)}
-        enableAutomaticScroll
-        enableOnAndroid
-      >
-        <EdgeAnim
-          enter={{ type: 'fadeInUp', distance: 50 }}
-          exit={{ type: 'fadeOutDown' }}
+      {isIos ? (
+        <ScrollView
+          ref={scrollViewRef}
+          contentContainerStyle={[styles.container, keyboardPadding]}
+          keyboardShouldPersistTaps="handled"
         >
-          <EdgeText style={styles.description} numberOfLines={4}>
-            {lstrings.password_desc}
-          </EdgeText>
-        </EdgeAnim>
-        <EdgeAnim
-          enter={{ type: 'fadeInUp', distance: 30 }}
-          exit={{ type: 'fadeOutDown' }}
+          {content}
+        </ScrollView>
+      ) : (
+        <KeyboardAwareScrollView
+          contentContainerStyle={[styles.container, keyboardPadding]}
+          keyboardShouldPersistTaps="handled"
+          extraScrollHeight={theme.rem(6)}
+          enableAutomaticScroll
+          enableOnAndroid
         >
-          <PasswordStatus passwordReqs={passwordReqs} />
-        </EdgeAnim>
-
-        <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
-          <FilledTextInput
-            top={0.75}
-            horizontal={0.75}
-            bottom={0.25}
-            value={password}
-            secureTextEntry
-            returnKeyType="next"
-            placeholder={lstrings.password}
-            onChangeText={setPassword}
-            onSubmitEditing={handleSubmitPasswordField}
-            clearIcon
-            maxLength={100}
-          />
-        </EdgeAnim>
-        <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
-          <FilledTextInput
-            ref={secondInputRef}
-            top={0.25}
-            horizontal={0.75}
-            value={confirmPassword}
-            secureTextEntry
-            returnKeyType="done"
-            placeholder={lstrings.confirm_password}
-            onChangeText={setConfirmPassword}
-            onSubmitEditing={handleNext}
-            clearIcon
-            maxLength={100}
-          />
-        </EdgeAnim>
-        <SceneButtons
-          primary={{
-            label: mainButtonLabel,
-            disabled: isNextButtonDisabled || confirmPassword === '',
-            onPress: handleNext,
-            spinner
-          }}
-          animDistanceStart={50}
-        />
-      </KeyboardAwareScrollView>
+          {content}
+        </KeyboardAwareScrollView>
+      )}
     </ThemedScene>
   )
 }
