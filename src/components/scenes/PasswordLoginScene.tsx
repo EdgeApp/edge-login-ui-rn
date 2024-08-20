@@ -266,7 +266,11 @@ export const PasswordLoginScene = (props: Props) => {
         title={lstrings.forget_account}
         message={sprintf(
           lstrings.forget_username_account,
-          userInfo.username ?? lstrings.username
+          userInfo.username ??
+            sprintf(
+              lstrings.guest_account_id_1s,
+              userInfo.loginId.slice(userInfo.loginId.length - 3)
+            )
         )}
         buttons={{
           ok: { label: lstrings.forget },
