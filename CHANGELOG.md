@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.18.0 (2024-08-22)
+
 - changed: "<No Username>" changed to: "Guest Account ([last 3 loginId characters])"
 
 ## 3.17.1 (2024-08-02)
