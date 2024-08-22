@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: When password login is locked out for some time period, show the time instead of "Invalid password".
+
 ## 3.18.0 (2024-08-22)
 
 - changed: "<No Username>" changed to: "Guest Account ([last 3 loginId characters])"

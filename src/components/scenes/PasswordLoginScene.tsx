@@ -29,6 +29,7 @@ import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
 import { LoginUserInfo, useLocalUsers } from '../../hooks/useLocalUsers'
+import { formatWait } from '../../locales/intl'
 import { Branding } from '../../types/Branding'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
@@ -232,7 +233,14 @@ export const PasswordLoginScene = (props: Props) => {
 
       const passwordError = asMaybePasswordError(error)
       if (passwordError != null) {
-        setPasswordErrorMessage(lstrings.invalid_password)
+        const { wait } = passwordError
+        if (wait != null) {
+          setPasswordErrorMessage(
+            sprintf(lstrings.password_wait_1s, formatWait(wait))
+          )
+        } else {
+          setPasswordErrorMessage(lstrings.invalid_password)
+        }
         return
       }
 
