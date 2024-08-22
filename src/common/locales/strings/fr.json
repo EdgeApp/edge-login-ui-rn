@@ -138,6 +138,7 @@
   "password_recovery": "Récupération du mot de passe",
   "password_requirements": "Password Requirements",
   "password": "Mot de passe",
+  "password_wait_1s": "Please try again in %1$s",
   "pin_changed": "Code PIN modifié",
   "pin_desc_alt": "Your PIN is a 4 digit code used to quickly log back into your account.",
   "pin_desc": "Your PIN is a 4 digit code used to quickly log back into your account.",
