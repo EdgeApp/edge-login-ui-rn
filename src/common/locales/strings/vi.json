@@ -138,6 +138,7 @@
   "password_recovery": "Khôi phục mật khẩu",
   "password_requirements": "Password Requirements",
   "password": "Mật khẩu",
+  "password_wait_1s": "Please try again in %1$s",
   "pin_changed": "Mã PIN đã được đổi",
   "pin_desc_alt": "Your PIN is a 4 digit code used to quickly log back into your account.",
   "pin_desc": "Your PIN is a 4 digit code used to quickly log back into your account.",
