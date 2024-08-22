@@ -138,6 +138,7 @@
   "password_recovery": "パスワード復元",
   "password_requirements": "パスワード要件",
   "password": "パスワード",
+  "password_wait_1s": "Please try again in %1$s",
   "pin_changed": "PINが変更されました",
   "pin_desc_alt": "PINコードは４桁の数字で、素早く再ログインする際に使われます。",
   "pin_desc": "PINコードは４桁の数字で、素早く再ログインする際に使われます。\n\nPINログインは、パスワードによる初回ログイン後のデバイスでのみ使用可能です。",
