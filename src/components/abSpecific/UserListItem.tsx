@@ -2,6 +2,7 @@ import * as React from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
@@ -30,7 +31,13 @@ export function UserListItem(props: Props) {
     onClick(userInfo)
   })
 
-  const username = userInfo.username ?? lstrings.missing_username
+  const username =
+    userInfo.username ??
+    sprintf(
+      lstrings.guest_account_id_1s,
+      userInfo.loginId.slice(userInfo.loginId.length - 3)
+    )
+
   return (
     <EdgeTouchableOpacity
       accessible={false}

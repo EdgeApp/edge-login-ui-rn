@@ -68,6 +68,7 @@ export function PinLoginScene(props: Props) {
   const [pin, setPin] = React.useState('')
   const [showUserList, setShowUserList] = React.useState(false)
   const [touchBusy, setTouchBusy] = React.useState(false)
+  const [displayUsername, setDisplayUsername] = React.useState('')
 
   // Error state:
   const [errorInfo, setErrorInfo] = React.useState<ErrorInfo | undefined>()
@@ -105,19 +106,26 @@ export function PinLoginScene(props: Props) {
   }, [])
 
   React.useEffect(() => {
-    if (
-      userInfo == null ||
-      (!userInfo.touchLoginEnabled && !userInfo.pinLoginEnabled)
-    ) {
-      dispatch({
-        type: 'NAVIGATE',
-        data: {
-          name: 'passwordLogin',
-          params: { username: userInfo?.username ?? '' }
-        }
-      })
+    if (userInfo != null) {
+      const displayUsername =
+        userInfo.username ??
+        sprintf(lstrings.guest_account_id_1s, loginId.slice(loginId.length - 3))
+      setDisplayUsername(displayUsername)
+
+      if (
+        userInfo == null ||
+        (!userInfo.touchLoginEnabled && !userInfo.pinLoginEnabled)
+      ) {
+        dispatch({
+          type: 'NAVIGATE',
+          data: {
+            name: 'passwordLogin',
+            params: { username: userInfo?.username ?? '' }
+          }
+        })
+      }
     }
-  }, [dispatch, userInfo])
+  }, [dispatch, loginId, userInfo])
 
   // Countdown timer:
   React.useEffect(() => {
@@ -152,10 +160,7 @@ export function PinLoginScene(props: Props) {
       <ButtonsModal
         bridge={bridge}
         title={lstrings.forget_account}
-        message={sprintf(
-          lstrings.forget_username_account,
-          userInfo.username ?? lstrings.username
-        )}
+        message={sprintf(lstrings.forget_username_account, displayUsername)}
         buttons={{
           ok: { label: lstrings.forget },
           cancel: { label: lstrings.cancel, type: 'secondary' }
@@ -214,10 +219,10 @@ export function PinLoginScene(props: Props) {
 
   const handleTouchLogin = async (userInfo: EdgeUserInfo): Promise<void> => {
     try {
-      const { loginId, username = lstrings.missing_username } = userInfo
+      const { loginId } = userInfo
       const loginKey = await getLoginKey(
         userInfo,
-        `Touch to login user: "${username}"`,
+        `Touch to login user: "${displayUsername}"`,
         lstrings.login_with_password
       )
       if (loginKey == null) return
@@ -303,8 +308,7 @@ export function PinLoginScene(props: Props) {
       // Normal account: show username
       usernameLabel = userInfo.username
     } else if (!isSingleSavedUser) {
-      // Light account + other saved users: "Tap to Switch..."
-      usernameLabel = lstrings.tap_to_switch_user
+      usernameLabel = displayUsername
     }
     // Light account + no other saved users: hide username label
 

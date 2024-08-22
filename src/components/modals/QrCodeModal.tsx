@@ -59,7 +59,7 @@ export function QrCodeModal(props: Props) {
           // New core versions have the callbacks on the request:
           pending.watch('state', state => {
             if (state === 'started') {
-              setUsername(pending.username ?? lstrings.missing_username)
+              setUsername(pending.username ?? '')
             }
             if (state === 'done' && pending.account != null) {
               bridge.resolve(pending.account)
