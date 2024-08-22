@@ -74,7 +74,7 @@ export function PinLoginScene(props: Props) {
 
   // Pin login state:
   const biometryType = useSelector(state => state.touch.biometryType)
-  const isTouchIdDisabled = hasWait || pin.length === 4 || touchBusy
+  const isTouchIdDisabled = pin.length === 4 || touchBusy
 
   // User list:
   const localUsers = useLocalUsers()
