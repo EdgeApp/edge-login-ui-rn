@@ -138,6 +138,7 @@
   "password_recovery": "Recuperación de Contraseña",
   "password_requirements": "Requisitos de contraseña",
   "password": "Contraseña",
+  "password_wait_1s": "Please try again in %1$s",
   "pin_changed": "NIP cambiado",
   "pin_desc_alt": "Your PIN is a 4 digit code used to quickly log back into your account.",
   "pin_desc": "Tu PIN es un código de 4 dígitos utilizado para iniciar sesión rápidamente de nuevo en tu cuenta.",
