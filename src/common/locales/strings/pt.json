@@ -138,6 +138,7 @@
   "password_recovery": "Recuperação de Senha",
   "password_requirements": "Requisitos de Senha",
   "password": "Senha",
+  "password_wait_1s": "Please try again in %1$s",
   "pin_changed": "PIN Modificado",
   "pin_desc_alt": "O seu PIN é um código de 4 dígitos usado para acessar a sua conta rapidamente.",
   "pin_desc": "O seu PIN é um código de 4 dígitos usado para fazer login rapidamente na sua conta.\n\nO login com PIN só pode ser usado em um dispositivo após o primeiro login com senha.",
