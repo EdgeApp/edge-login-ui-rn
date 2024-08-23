@@ -6,11 +6,10 @@ export type BiometryType = 'FaceID' | 'TouchID' | false
 export type InitialRouteName =
   | 'login'
   | 'login-password'
+  /** @deprecated - No longer used. Same behavior as login-password. */
   | 'login-password-light'
   | 'new-account'
   | 'new-light-account'
-
-export type CreateAccountType = 'full' | 'light'
 
 /**
  * Subset of AppConfig from https://github.com/EdgeApp/edge-react-gui/blob/develop/src/types/types.ts
@@ -70,12 +69,10 @@ export interface TouchIdInfo {
 //
 
 export interface ExperimentConfig {
-  createAccountType: CreateAccountType
   signupCaptcha: 'withCaptcha' | 'withoutCaptcha'
 }
 
 export const asExperimentConfig = asObject<ExperimentConfig>({
-  createAccountType: asOptional(asValue('light', 'full'), 'full'),
   signupCaptcha: asOptional(
     asValue('withCaptcha', 'withoutCaptcha'),
     'withoutCaptcha'

@@ -44,7 +44,6 @@ import { ChallengeModal } from '../modals/ChallengeModal'
 import { GradientFadeOut } from '../modals/GradientFadeout'
 import { QrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { CreateAccountType } from '../publicApi/publicTypes'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
@@ -55,7 +54,6 @@ const MAX_DISPLAYED_LOCAL_USERS = 5
 
 export interface PasswordLoginParams {
   username: string
-  createAccountType?: CreateAccountType
 }
 
 interface Props extends SceneProps<'passwordLogin'> {
@@ -64,7 +62,7 @@ interface Props extends SceneProps<'passwordLogin'> {
 
 export const PasswordLoginScene = (props: Props) => {
   const { branding, route } = props
-  const { username, createAccountType = 'full' } = route.params
+  const { username } = route.params
   const {
     accountOptions,
     context,
@@ -344,7 +342,7 @@ export const PasswordLoginScene = (props: Props) => {
     setUsernameErrorMessage(undefined)
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'passwordLogin', params: { username, createAccountType } }
+      data: { name: 'passwordLogin', params: { username } }
     })
   })
 
@@ -385,11 +383,9 @@ export const PasswordLoginScene = (props: Props) => {
     onLogEvent('Password_Login_Create_Account')
     dispatch({
       type: 'NAVIGATE',
-      data:
-        !forceLightAccountCreate &&
-        (hasSavedUsers || createAccountType === 'full')
-          ? { name: 'newAccountUsername', params: {} }
-          : { name: 'newAccountPin', params: {} }
+      data: forceLightAccountCreate
+        ? { name: 'newAccountPin', params: {} }
+        : { name: 'newAccountUsername', params: {} }
     })
   })
 

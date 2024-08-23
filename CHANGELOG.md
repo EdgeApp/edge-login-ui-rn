@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- changed: Always create full account on `PasswordLoginScene`
 - changed: Allow biometric logins while pin login is locked for invalid attempt timer
 
 ## 3.18.2 (2024-08-26)
