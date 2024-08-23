@@ -15,7 +15,6 @@ export { SecurityAlertsScreen } from './components/publicApi/SecurityAlertsScree
 export type {
   AppConfig,
   BiometryType,
-  CreateAccountType,
   InitialRouteName,
   PerfEvent,
   NotificationPermissionReminderOptions,

@@ -6,10 +6,13 @@ export type BiometryType = 'FaceID' | 'TouchID' | false
 export type InitialRouteName =
   | 'login'
   | 'login-password'
+  /** @deprecated - No longer used. Same behavior as login-password. */
   | 'login-password-light'
   | 'new-account'
   | 'new-light-account'
 
+/** @deprecated - No longer used. Light/full account experiment concluded in
+ * favor of light account. */
 export type CreateAccountType = 'full' | 'light'
 
 /**
@@ -70,12 +73,10 @@ export interface TouchIdInfo {
 //
 
 export interface ExperimentConfig {
-  createAccountType: CreateAccountType
   signupCaptcha: 'withCaptcha' | 'withoutCaptcha'
 }
 
 export const asExperimentConfig = asObject<ExperimentConfig>({
-  createAccountType: asOptional(asValue('light', 'full'), 'full'),
   signupCaptcha: asOptional(
     asValue('withCaptcha', 'withoutCaptcha'),
     'withoutCaptcha'
