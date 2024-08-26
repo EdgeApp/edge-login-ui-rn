@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.18.2 (2024-08-26)
+
 - fixed: Fingerprint login dialog showing "" as the username in some cases
 
 ## 3.18.1 (2024-08-26)
