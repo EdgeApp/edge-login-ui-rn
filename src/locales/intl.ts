@@ -265,16 +265,6 @@ export function formatTime(date: Date): string {
 }
 
 /**
- * Formats a time duration, such as 1.5 minutes or 2 hours
- */
-export function formatWait(seconds: number): string {
-  if (seconds > 90 * 60) return (seconds / (60 * 60)).toFixed(1) + 'h'
-  if (seconds > 90) return (seconds / 60).toFixed(1) + 'm'
-  if (seconds > 1) return seconds.toFixed(1) + 's'
-  return (1000 * seconds).toFixed(1) + 'ms'
-}
-
-/**
  * Returns 'h:mm am/pm, date' string depending on locale.
  */
 export function formatTimeDate(date: Date, dateFormat?: string): string {
