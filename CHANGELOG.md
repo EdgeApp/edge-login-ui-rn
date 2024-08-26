@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Fingerprint login dialog showing "" as the username in some cases
+
 ## 3.18.1 (2024-08-26)
 
 - fixed: When password login is locked out for some time period, show the time instead of "Invalid password".

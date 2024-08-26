@@ -68,8 +68,6 @@ export function PinLoginScene(props: Props) {
   const [pin, setPin] = React.useState('')
   const [showUserList, setShowUserList] = React.useState(false)
   const [touchBusy, setTouchBusy] = React.useState(false)
-  const [displayUsername, setDisplayUsername] = React.useState('')
-
   // Error state:
   const [errorInfo, setErrorInfo] = React.useState<ErrorInfo | undefined>()
   const hasWait = errorInfo != null && errorInfo.wait > 0
@@ -93,6 +91,13 @@ export function PinLoginScene(props: Props) {
     [dropdownItems, loginId]
   )
 
+  const displayUsername = React.useMemo(
+    () =>
+      userInfo?.username ??
+      sprintf(lstrings.guest_account_id_1s, loginId.slice(loginId.length - 3)),
+    [loginId, userInfo]
+  )
+
   // ---------------------------------------------------------------------
   // Effects
   // ---------------------------------------------------------------------
@@ -103,27 +108,20 @@ export function PinLoginScene(props: Props) {
       handleTouchLogin(userInfo).catch(showError)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [displayUsername])
 
   React.useEffect(() => {
-    if (userInfo != null) {
-      const displayUsername =
-        userInfo.username ??
-        sprintf(lstrings.guest_account_id_1s, loginId.slice(loginId.length - 3))
-      setDisplayUsername(displayUsername)
-
-      if (
-        userInfo == null ||
-        (!userInfo.touchLoginEnabled && !userInfo.pinLoginEnabled)
-      ) {
-        dispatch({
-          type: 'NAVIGATE',
-          data: {
-            name: 'passwordLogin',
-            params: { username: userInfo?.username ?? '' }
-          }
-        })
-      }
+    if (
+      userInfo == null ||
+      (!userInfo.touchLoginEnabled && !userInfo.pinLoginEnabled)
+    ) {
+      dispatch({
+        type: 'NAVIGATE',
+        data: {
+          name: 'passwordLogin',
+          params: { username: userInfo?.username ?? '' }
+        }
+      })
     }
   }, [dispatch, loginId, userInfo])
 
