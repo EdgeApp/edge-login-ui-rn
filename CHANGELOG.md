@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.18.1 (2024-08-26)
+
 - fixed: When password login is locked out for some time period, show the time instead of "Invalid password".
 
 ## 3.18.0 (2024-08-22)
