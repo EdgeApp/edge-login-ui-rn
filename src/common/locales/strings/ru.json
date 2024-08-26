@@ -138,7 +138,7 @@
   "password_recovery": "Восстановление пароля",
   "password_requirements": "Password Requirements",
   "password": "Пароль",
-  "password_wait_1s": "Please try again in %1$s",
+  "password_wait_1s": "Please try again in %1$s seconds",
   "pin_changed": "PIN изменен",
   "pin_desc_alt": "Your PIN is a 4 digit code used to quickly log back into your account.",
   "pin_desc": "Your PIN is a 4 digit code used to quickly log back into your account.",
