@@ -28,7 +28,7 @@ export const NewAccountWelcomeScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { experimentConfig, onLogEvent = () => {} } = useImports()
+  const { onLogEvent = () => {} } = useImports()
   const localUsers = useLocalUsers()
   const hasSavedUsers = localUsers.length > 0
 
@@ -40,10 +40,9 @@ export const NewAccountWelcomeScene = (props: Props) => {
     onLogEvent(`Signup_Welcome_Next`)
     dispatch({
       type: 'NAVIGATE',
-      data:
-        hasSavedUsers || experimentConfig.createAccountType === 'full'
-          ? { name: 'newAccountUsername', params: {} }
-          : { name: 'newAccountPin', params: {} }
+      data: hasSavedUsers
+        ? { name: 'newAccountUsername', params: {} }
+        : { name: 'newAccountPin', params: {} }
     })
   }
 
