@@ -138,7 +138,7 @@
   "password_recovery": "Recupero Password",
   "password_requirements": "Requisiti per la password",
   "password": "Password",
-  "password_wait_1s": "Please try again in %1$s seconds",
+  "password_wait_1s": "Si prega di riprovare tra %1$s secondi",
   "pin_changed": "PIN modificato",
   "pin_desc_alt": "Il PIN è un codice a 4 cifre utilizzato per eseguire l'accesso rapido al tuo account.",
   "pin_desc": "Il PIN è un codice a 4 cifre utilizzato per eseguire l'accesso rapido al tuo account.",
