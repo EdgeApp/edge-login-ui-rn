@@ -10,10 +10,11 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
 import { useKeyboardPadding } from '../../../hooks/useKeyboardPadding'
 import { Branding } from '../../../types/Branding'
-import { useDispatch } from '../../../types/ReduxTypes'
+import { useDispatch, useSelector } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
 import { EdgeAnim } from '../../common/EdgeAnim'
 import { SceneButtons } from '../../common/SceneButtons'
+import { retryOnChallenge } from '../../modals/ChallengeModal'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { FilledTextInput } from '../../themed/FilledTextInput'
@@ -48,7 +49,10 @@ export const ChangeUsernameComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const keyboardPadding = useKeyboardPadding()
+  const dispatch = useDispatch()
 
+  const lastChallengeId =
+    useSelector(state => state.createChallengeId) ?? undefined
   const [username, setUsername] = React.useState(initUsername ?? '')
   const [timerId, setTimerId] = React.useState<Timeout | undefined>(undefined)
   const [availableText, setAvailableText] = React.useState<string | undefined>(
@@ -141,11 +145,24 @@ export const ChangeUsernameComponent = (props: Props) => {
       }
 
       setIsFetchingAvailability(true)
-      context.usernameAvailable(text).then(
-        isAvailable =>
-          isAvailable
-            ? onCheckDone(lstrings.username_available)
-            : onCheckDone(undefined, lstrings.username_exists_error),
+      retryOnChallenge({
+        async task(challengeId = lastChallengeId) {
+          return await context.usernameAvailable(text, { challengeId })
+        },
+        onCancel() {},
+        onSuccess(challengeId) {
+          dispatch({ type: 'CREATE_CHALLENGE', data: challengeId })
+        }
+      }).then(
+        isAvailable => {
+          if (isAvailable == null) {
+            return onCheckDone(lstrings.failed_captcha_error)
+          }
+          if (isAvailable) {
+            return onCheckDone(lstrings.username_available)
+          }
+          onCheckDone(undefined, lstrings.username_exists_error)
+        },
         error => onCheckDone(undefined, String(error))
       )
     }, AVAILABILITY_CHECK_DELAY_MS)

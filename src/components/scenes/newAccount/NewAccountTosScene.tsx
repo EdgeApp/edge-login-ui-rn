@@ -189,6 +189,7 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
       })
 
       const account = await handleCreateAccount({ username, password, pin })
+      if (account == null) return handleBack()
 
       dispatch({
         type: 'NAVIGATE',
