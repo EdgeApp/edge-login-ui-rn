@@ -1,4 +1,4 @@
-import type { ChallengeError } from 'edge-core-js'
+import { asMaybeChallengeError, ChallengeError } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
@@ -8,12 +8,40 @@ import { WebView, WebViewNavigation } from 'react-native-webview'
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   bridge: AirshipBridge<boolean | undefined>
   challengeError: ChallengeError
+}
+
+/**
+ * Retries a task if the first attempt throws a challenge error,
+ * and the user successfully solves the challenge.
+ */
+export async function retryOnChallenge<T, C>(opts: {
+  task: (challengeId?: string) => Promise<T>
+  onCancel: () => C
+  onSuccess?: (challengeId: string) => void
+}): Promise<T | C> {
+  const { task, onCancel, onSuccess } = opts
+
+  return await task().catch(async error => {
+    const challengeError = asMaybeChallengeError?.(error)
+    if (challengeError != null) {
+      const result = await Airship.show<boolean | undefined>(bridge => (
+        <ChallengeModal bridge={bridge} challengeError={challengeError} />
+      ))
+      if (result == null) return onCancel()
+      if (result) {
+        onSuccess?.(challengeError.challengeId)
+        return await task(challengeError.challengeId)
+      }
+    }
+    throw error
+  })
 }
 
 export const ChallengeModal = (props: Props) => {

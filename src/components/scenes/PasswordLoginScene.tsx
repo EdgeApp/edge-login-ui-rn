@@ -1,5 +1,4 @@
 import {
-  asMaybeChallengeError,
   asMaybeOtpError,
   asMaybePasswordError,
   asMaybeUsernameError,
@@ -40,7 +39,7 @@ import { UserListItem } from '../abSpecific/UserListItem'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { ChallengeModal } from '../modals/ChallengeModal'
+import { retryOnChallenge } from '../modals/ChallengeModal'
 import { GradientFadeOut } from '../modals/GradientFadeout'
 import { QrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -186,86 +185,70 @@ export const PasswordLoginScene = (props: Props) => {
   })
 
   const handleSubmitPassword = useHandler(() => {
-    setSpinner(true)
-    handleSubmitInner()
-      .catch(e => console.error(e))
-      .finally(() => setSpinner(false))
-  })
-
-  // Use `handleSubmitPassword` instead of this one.
-  // We have this separated out to handle the CAPTCHA modal recursion.
-  const handleSubmitInner = async (challengeId?: string) => {
     const otpAttempt: LoginAttempt = { type: 'password', username, password }
 
-    try {
-      Keyboard.dismiss()
-      const account = await attemptLogin(
-        context,
-        otpAttempt,
-        {
-          ...accountOptions,
-          challengeId
-        },
-        onPerfEvent
-      )
-      onPerfEvent({ name: 'passwordLoginEnd' })
-      onLogEvent('Pasword_Login')
-      await dispatch(completeLogin(account))
-    } catch (error: unknown) {
-      onPerfEvent({ name: 'passwordLoginEnd', error })
-
-      const otpError = asMaybeOtpError(error)
-      if (otpError != null) {
-        dispatch({
-          type: 'NAVIGATE',
-          data: { name: 'otpError', params: { otpAttempt, otpError } }
-        })
-        return
+    setSpinner(true)
+    retryOnChallenge({
+      async task(challengeId) {
+        Keyboard.dismiss()
+        const account = await attemptLogin(
+          context,
+          otpAttempt,
+          {
+            ...accountOptions,
+            challengeId
+          },
+          onPerfEvent
+        )
+        onPerfEvent({ name: 'passwordLoginEnd' })
+        onLogEvent('Pasword_Login')
+        await dispatch(completeLogin(account))
+      },
+      onCancel() {
+        return undefined
       }
+    })
+      .catch(async error => {
+        onPerfEvent({ name: 'passwordLoginEnd', error })
 
-      const usernameError = asMaybeUsernameError(error)
-      if (usernameError != null) {
-        setUsernameErrorMessage(lstrings.invalid_account)
-        return
-      }
+        const otpError = asMaybeOtpError(error)
+        if (otpError != null) {
+          dispatch({
+            type: 'NAVIGATE',
+            data: { name: 'otpError', params: { otpAttempt, otpError } }
+          })
+          return
+        }
 
-      const passwordError = asMaybePasswordError(error)
-      if (passwordError != null) {
-        const { wait } = passwordError
-        if (wait != null && wait >= 0.1) {
-          setPasswordErrorMessage(
-            sprintf(
-              lstrings.password_wait_1s,
-              formatNumber(wait, { maxDecimals: 1 })
+        const usernameError = asMaybeUsernameError(error)
+        if (usernameError != null) {
+          setUsernameErrorMessage(lstrings.invalid_account)
+          return
+        }
+
+        const passwordError = asMaybePasswordError(error)
+        if (passwordError != null) {
+          const { wait } = passwordError
+          if (wait != null && wait >= 0.1) {
+            setPasswordErrorMessage(
+              sprintf(
+                lstrings.password_wait_1s,
+                formatNumber(wait, { maxDecimals: 1 })
+              )
             )
-          )
-        } else {
-          setPasswordErrorMessage(lstrings.invalid_password)
+          } else {
+            setPasswordErrorMessage(lstrings.invalid_password)
+          }
+          return
         }
-        return
-      }
 
-      const challengeError = asMaybeChallengeError?.(error)
-      if (challengeError != null) {
-        const result = await Airship.show<boolean | undefined>(bridge => (
-          <ChallengeModal bridge={bridge} challengeError={challengeError} />
-        ))
-        if (result == null) return // User closed the modal
-        if (result) {
-          // Try again with the passed challenge ID included
-          await handleSubmitInner(challengeError.challengeId)
-        } else {
-          setPasswordErrorMessage(lstrings.failed_captcha_error)
-        }
-        return
-      }
-
-      console.warn('Unknown login error: ', error)
-      setPasswordErrorMessage(
-        error instanceof Error ? error.message : undefined
-      )
-    }
-  }
+        console.warn('Unknown login error: ', error)
+        setPasswordErrorMessage(
+          error instanceof Error ? error.message : undefined
+        )
+      })
+      .finally(() => setSpinner(false))
+  })
 
   const handleDelete = useHandler((userInfo: LoginUserInfo) => {
     Keyboard.dismiss()

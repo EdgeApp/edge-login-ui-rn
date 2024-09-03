@@ -1,9 +1,4 @@
-import {
-  asMaybeChallengeError,
-  asMaybeOtpError,
-  EdgeAccount,
-  OtpError
-} from 'edge-core-js'
+import { asMaybeOtpError, EdgeAccount, OtpError } from 'edge-core-js'
 import * as React from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
@@ -17,7 +12,7 @@ import { SceneProps } from '../../types/routerTypes'
 import { attemptLogin, LoginAttempt } from '../../util/loginAttempt'
 import { makePeriodicTask } from '../../util/periodicTask'
 import { toLocalTime } from '../../util/utils'
-import { ChallengeModal } from '../modals/ChallengeModal'
+import { retryOnChallenge } from '../modals/ChallengeModal'
 import { showResetModal } from '../modals/OtpResetModal'
 import { QrCodeModal } from '../modals/QrCodeModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -107,20 +102,26 @@ export function OtpErrorScene(props: Props) {
 
   const handleBackupModal = useHandler(() => {
     inModal.current = true
-    async function handleSubmit(otpKey: string): Promise<boolean | string> {
-      try {
-        const account = await attemptLogin(
-          context,
-          otpAttempt,
-          {
-            ...accountOptions,
-            otpKey
-          },
-          onPerfEvent
-        )
-        dispatch(completeLogin(account))
-        return true
-      } catch (error) {
+    const handleSubmit = async (otpKey: string): Promise<boolean | string> =>
+      await retryOnChallenge({
+        async task(challengeId) {
+          const account = await attemptLogin(
+            context,
+            otpAttempt,
+            {
+              ...accountOptions,
+              challengeId,
+              otpKey
+            },
+            onPerfEvent
+          )
+          dispatch(completeLogin(account))
+          return true
+        },
+        onCancel() {
+          return lstrings.failed_captcha_error
+        }
+      }).catch(error => {
         // Translate known errors:
         const otpError = asMaybeOtpError(error)
         if (otpError != null) {
@@ -139,31 +140,10 @@ export function OtpErrorScene(props: Props) {
           return lstrings.backup_key_incorrect
         }
 
-        const challengeError = asMaybeChallengeError?.(error)
-        if (challengeError != null) {
-          const result = await Airship.show<boolean | undefined>(bridge => (
-            <ChallengeModal bridge={bridge} challengeError={challengeError} />
-          ))
-          if (result !== true) return lstrings.failed_captcha_error
-
-          const account = await attemptLogin(
-            context,
-            otpAttempt,
-            {
-              ...accountOptions,
-              otpKey,
-              challengeId: challengeError.challengeId
-            },
-            onPerfEvent
-          )
-          dispatch(completeLogin(account))
-          return true
-        }
-
         showError(error)
         return false
-      }
-    }
+      })
+
     Airship.show(bridge => (
       <TextInputModal
         bridge={bridge}
