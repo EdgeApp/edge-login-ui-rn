@@ -16,12 +16,6 @@ interface Props {
   challengeError: ChallengeError
 }
 
-// The Edge login servers return a CAPTCHA page with fixed colors.
-// We want the modal to match the colors on the page,
-// regardless of the current theme:
-const SERVER_TEXT_COLOR = 'white'
-const SERVER_BACKGROUND_COLOR = '#121d25'
-
 export const ChallengeModal = (props: Props) => {
   const { bridge, challengeError } = props
   const theme = useTheme()
@@ -43,9 +37,12 @@ export const ChallengeModal = (props: Props) => {
     return true
   })
 
+  const bgColor = serverColor(theme.modal) ?? '1a1a1a'
+  const fgColor = serverColor(theme.primaryText) ?? 'fff'
+
   return (
     <AirshipModal
-      backgroundColor={SERVER_BACKGROUND_COLOR}
+      backgroundColor={theme.modal}
       bridge={bridge}
       // Create a gap on top of the modal, so the user can tap to dismiss:
       margin={[theme.rem(5), 0, 0]}
@@ -62,21 +59,23 @@ export const ChallengeModal = (props: Props) => {
         >
           <AntDesignIcon
             name="close"
-            color={SERVER_TEXT_COLOR}
+            color={theme.primaryText}
             size={theme.rem(1.25)}
           />
         </EdgeTouchableOpacity>
       </View>
       <WebView
         javaScriptEnabled
-        source={{ uri: challengeError.challengeUri }}
+        source={{
+          uri: challengeError.challengeUri + `?bg=${bgColor}&fg=${fgColor}`
+        }}
         style={styles.webview}
         onLoad={handleLoad}
         onShouldStartLoadWithRequest={handleLoading}
       />
       {!loading ? null : (
         <View pointerEvents="box-none" style={styles.overlay}>
-          <ActivityIndicator color={SERVER_TEXT_COLOR} size="large" />
+          <ActivityIndicator color={theme.primaryText} size="large" />
         </View>
       )}
     </AirshipModal>
@@ -96,7 +95,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
 
   titleText: {
-    color: SERVER_TEXT_COLOR,
+    color: theme.primaryText,
     flexShrink: 1,
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1.2)
@@ -111,10 +110,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // eslint-disable-next-line react-native/no-color-literals
   webview: {
     alignSelf: 'stretch',
-    margin: theme.rem(0.5),
-    // Allow the modal background to appear inside the WebView.
+    // Allow the modal background to appear inside the WebView while loading.
     // This is a magic value from the WebView documentation,
     // so don't use the theme - normal colors don't do anything.
-    backgroundColor: '#00000000'
+    backgroundColor: '#00000000',
+    margin: theme.rem(0.5)
   }
 }))
+
+/**
+ * Transforms a color into the server's query-string format.
+ */
+function serverColor(color: string): string | undefined {
+  const match = color.match(/^#([0-9A-Fa-f]{6})$/)
+  if (match != null) return match[1].toLowerCase()
+}
