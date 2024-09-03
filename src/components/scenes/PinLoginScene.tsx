@@ -172,6 +172,7 @@ export function PinLoginScene(props: Props) {
     } else {
       const { username } = userInfo
       if (username == null) throw new Error('No username')
+      // @ts-expect-error This legacy method has been removed:
       await context.deleteLocalAccount(username)
     }
   }
