@@ -5,9 +5,8 @@ import { useHandler } from './useHandler'
 import { useImports } from './useImports'
 
 export const useCreateAccountHandler = () => {
-  const imports = useImports()
+  const { context, accountOptions } = useImports()
   const dispatch = useDispatch()
-  const { context, accountOptions } = imports
   const handleCreateAccount = useHandler(
     async (createAccountParams: {
       username?: string
