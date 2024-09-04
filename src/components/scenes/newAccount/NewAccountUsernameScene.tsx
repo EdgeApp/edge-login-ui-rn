@@ -14,7 +14,8 @@ import { useDispatch, useSelector } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
 import { EdgeAnim } from '../../common/EdgeAnim'
 import { SceneButtons } from '../../common/SceneButtons'
-import { retryOnChallenge } from '../../modals/ChallengeModal'
+import { ChallengeModal, retryOnChallenge } from '../../modals/ChallengeModal'
+import { Airship } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { FilledTextInput } from '../../themed/FilledTextInput'
@@ -67,6 +68,35 @@ export const ChangeUsernameComponent = (props: Props) => {
 
   const fetchCounter = React.useRef<number>(0)
   const mounted = React.useRef<boolean>(true)
+
+  React.useEffect(() => {
+    if (lastChallengeId != null) return
+
+    // Tag this fetch with a "counter ID" and sync with the outer context
+    fetchCounter.current++
+    const localCounter = fetchCounter.current
+
+    context
+      .fetchChallenge()
+      .then(async challenge => {
+        const { challengeId, challengeUri } = challenge
+
+        // This fetch is stale, so discard the result.
+        // Another fetch began before this one had a chance to finish.
+        if (localCounter !== fetchCounter.current) return
+
+        if (challengeUri != null) {
+          const result = await Airship.show<boolean | undefined>(bridge => (
+            <ChallengeModal bridge={bridge} challengeUri={challengeUri} />
+          ))
+          if (result !== true) return
+        }
+        dispatch({ type: 'CREATE_CHALLENGE', data: challengeId })
+      })
+      .catch(() => {
+        // Automatic background task, so don't show error
+      })
+  }, [context, dispatch, lastChallengeId])
 
   React.useEffect(
     () => () => {

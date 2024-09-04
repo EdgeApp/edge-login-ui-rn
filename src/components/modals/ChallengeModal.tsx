@@ -1,4 +1,4 @@
-import { asMaybeChallengeError, ChallengeError } from 'edge-core-js'
+import { asMaybeChallengeError } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
@@ -14,7 +14,7 @@ import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   bridge: AirshipBridge<boolean | undefined>
-  challengeError: ChallengeError
+  challengeUri: string
 }
 
 /**
@@ -32,7 +32,10 @@ export async function retryOnChallenge<T, C>(opts: {
     const challengeError = asMaybeChallengeError?.(error)
     if (challengeError != null) {
       const result = await Airship.show<boolean | undefined>(bridge => (
-        <ChallengeModal bridge={bridge} challengeError={challengeError} />
+        <ChallengeModal
+          bridge={bridge}
+          challengeUri={challengeError.challengeUri}
+        />
       ))
       if (result == null) return onCancel()
       if (result) {
@@ -45,7 +48,7 @@ export async function retryOnChallenge<T, C>(opts: {
 }
 
 export const ChallengeModal = (props: Props) => {
-  const { bridge, challengeError } = props
+  const { bridge, challengeUri } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -95,7 +98,7 @@ export const ChallengeModal = (props: Props) => {
       <WebView
         javaScriptEnabled
         source={{
-          uri: challengeError.challengeUri + `?bg=${bgColor}&fg=${fgColor}`
+          uri: challengeUri + `?bg=${bgColor}&fg=${fgColor}`
         }}
         style={styles.webview}
         onLoad={handleLoad}
