@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.19.1 (2024-09-06)
+
+- changed: Update translations
+
 ## 3.19.0 (2024-08-27)
 
 - changed: Always create full account on `PasswordLoginScene`
