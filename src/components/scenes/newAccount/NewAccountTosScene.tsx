@@ -76,7 +76,7 @@ const TosComponent = (props: Props) => {
         <EdgeAnim enter={{ type: 'fadeInRight', distance: 50 }}>
           <EdgeText
             style={styles.subtitle}
-          >{`${lstrings.review}: ${lstrings.read_understod_2}`}</EdgeText>
+          >{`${lstrings.review_tos}`}</EdgeText>
         </EdgeAnim>
         {terms.map((term, index) => (
           <EdgeAnim
@@ -101,9 +101,9 @@ const TosComponent = (props: Props) => {
               await Linking.openURL(getAppConfig().termsOfServiceSite)
             }
           >
-            {lstrings.read_understod_1}
+            {lstrings.read_understood_1}
             <EdgeText style={styles.agreeTextLink}>
-              {lstrings.read_understod_2}
+              {lstrings.read_understood_2}
             </EdgeText>
           </EdgeText>
         </EdgeAnim>
@@ -141,15 +141,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(0.875)
   },
   agreeText: {
-    width: '60%',
     alignSelf: 'center',
+    fontSize: theme.rem(0.875),
     marginTop: theme.rem(1),
     marginHorizontal: theme.rem(2),
-    fontSize: theme.rem(0.875)
+    textAlign: 'center',
+    width: '75%'
   },
   agreeTextLink: {
+    color: theme.linkText,
     fontSize: theme.rem(0.875),
-    color: theme.linkText
+    textDecorationLine: 'underline',
+    textDecorationStyle: 'solid'
   }
 }))
 
