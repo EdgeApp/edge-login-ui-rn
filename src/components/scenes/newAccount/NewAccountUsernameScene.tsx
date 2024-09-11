@@ -10,10 +10,12 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
 import { useKeyboardPadding } from '../../../hooks/useKeyboardPadding'
 import { Branding } from '../../../types/Branding'
-import { useDispatch } from '../../../types/ReduxTypes'
+import { useDispatch, useSelector } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
 import { EdgeAnim } from '../../common/EdgeAnim'
 import { SceneButtons } from '../../common/SceneButtons'
+import { ChallengeModal, retryOnChallenge } from '../../modals/ChallengeModal'
+import { Airship } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { FilledTextInput } from '../../themed/FilledTextInput'
@@ -44,12 +46,14 @@ interface Props {
 
 export const ChangeUsernameComponent = (props: Props) => {
   const { branding, initUsername, onBack, onNext } = props
-
-  const imports = useImports()
+  const { context } = useImports()
   const theme = useTheme()
   const styles = getStyles(theme)
   const keyboardPadding = useKeyboardPadding()
+  const dispatch = useDispatch()
 
+  const lastChallengeId =
+    useSelector(state => state.createChallengeId) ?? undefined
   const [username, setUsername] = React.useState(initUsername ?? '')
   const [timerId, setTimerId] = React.useState<Timeout | undefined>(undefined)
   const [availableText, setAvailableText] = React.useState<string | undefined>(
@@ -62,8 +66,37 @@ export const ChangeUsernameComponent = (props: Props) => {
     false
   )
 
-  const mounted = React.useRef<boolean>(true)
   const fetchCounter = React.useRef<number>(0)
+  const mounted = React.useRef<boolean>(true)
+
+  React.useEffect(() => {
+    if (lastChallengeId != null) return
+
+    // Tag this fetch with a "counter ID" and sync with the outer context
+    fetchCounter.current++
+    const localCounter = fetchCounter.current
+
+    context
+      .fetchChallenge()
+      .then(async challenge => {
+        const { challengeId, challengeUri } = challenge
+
+        // This fetch is stale, so discard the result.
+        // Another fetch began before this one had a chance to finish.
+        if (localCounter !== fetchCounter.current) return
+
+        if (challengeUri != null) {
+          const result = await Airship.show<boolean | undefined>(bridge => (
+            <ChallengeModal bridge={bridge} challengeUri={challengeUri} />
+          ))
+          if (result !== true) return
+        }
+        dispatch({ type: 'CREATE_CHALLENGE', data: challengeId })
+      })
+      .catch(() => {
+        // Automatic background task, so don't show error
+      })
+  }, [context, dispatch, lastChallengeId])
 
   React.useEffect(
     () => () => {
@@ -81,9 +114,9 @@ export const ChangeUsernameComponent = (props: Props) => {
   //    check availability before proceeding past the scene
 
   const isNextDisabled =
+    errorText != null ||
     isFetchingAvailability ||
     timerId != null ||
-    errorText != null ||
     username.length === 0
 
   const handleBack = useHandler(() => {
@@ -104,53 +137,66 @@ export const ChangeUsernameComponent = (props: Props) => {
 
     // Save the input and clear out previous text input status messages.
     setUsername(text)
-    setErrorText(undefined)
     setAvailableText(undefined)
+    setErrorText(undefined)
 
     // Validate on the actual user input, including if the last character was
     // non-ASCII.
-    if (text.length > 0) {
-      // Validate username format client-side for length and ASCII-ness
-      const invalidErrorMessage = getUsernameFormatError(text)
+    if (text.length === 0) return
 
-      if (invalidErrorMessage != null) {
-        setAvailableText(undefined)
-        setErrorText(invalidErrorMessage)
-      } else {
-        // Check if username is available after a short delay after the last
-        // typed character has been measured:
-
-        // Start a new timer that will check availability after timer expiration
-        const newTimerId = setTimeout(async () => {
-          if (!mounted.current) return
-          setIsFetchingAvailability(true)
-
-          // Tag this fetch with a "counter ID" and sync with the outer context
-          fetchCounter.current++
-          const localCounter = fetchCounter.current
-
-          const isAvailable = await imports.context.usernameAvailable(text)
-          if (!mounted.current) return
-
-          // This fetch is stale. Another fetch began before this one had a
-          // chance to finish. Discard this result.
-          if (localCounter !== fetchCounter.current) return
-
-          // If the counter from the outer context matches this local counter,
-          // it means no new fetches began during the execution of
-          // fetchIsAvailable.
-
-          // Update UI elements
-          setIsFetchingAvailability(false)
-          setTimerId(undefined)
-          if (isAvailable) {
-            setErrorText(undefined)
-            setAvailableText(lstrings.username_available)
-          } else setErrorText(lstrings.username_exists_error)
-        }, AVAILABILITY_CHECK_DELAY_MS)
-        setTimerId(newTimerId)
-      }
+    // Validate username format client-side for length and ASCII-ness
+    const invalidErrorMessage = getUsernameFormatError(text)
+    if (invalidErrorMessage != null) {
+      setAvailableText(undefined)
+      setErrorText(invalidErrorMessage)
+      return
     }
+
+    // Check if username is available after a short delay after the last
+    // typed character has been measured:
+    const newTimerId = setTimeout(() => {
+      if (!mounted.current) return
+
+      // Tag this fetch with a "counter ID" and sync with the outer context
+      fetchCounter.current++
+      const localCounter = fetchCounter.current
+
+      function onCheckDone(availableText?: string, errorText?: string) {
+        if (!mounted.current) return
+
+        // This fetch is stale, so discard the result.
+        // Another fetch began before this one had a chance to finish.
+        if (localCounter !== fetchCounter.current) return
+
+        setIsFetchingAvailability(false)
+        setTimerId(undefined)
+        setAvailableText(availableText)
+        setErrorText(errorText)
+      }
+
+      setIsFetchingAvailability(true)
+      retryOnChallenge({
+        async task(challengeId = lastChallengeId) {
+          return await context.usernameAvailable(text, { challengeId })
+        },
+        onCancel() {},
+        onSuccess(challengeId) {
+          dispatch({ type: 'CREATE_CHALLENGE', data: challengeId })
+        }
+      }).then(
+        isAvailable => {
+          if (isAvailable == null) {
+            return onCheckDone(lstrings.failed_captcha_error)
+          }
+          if (isAvailable) {
+            return onCheckDone(lstrings.username_available)
+          }
+          onCheckDone(undefined, lstrings.username_exists_error)
+        },
+        error => onCheckDone(undefined, String(error))
+      )
+    }, AVAILABILITY_CHECK_DELAY_MS)
+    setTimerId(newTimerId)
   })
 
   return (
@@ -293,8 +339,8 @@ export const UpgradeUsernameScene = (props: UpgradeUsernameProps) => {
     <ChangeUsernameComponent
       initUsername=""
       branding={branding}
-      onNext={handleNext}
       onBack={onComplete}
+      onNext={handleNext}
     />
   )
 }

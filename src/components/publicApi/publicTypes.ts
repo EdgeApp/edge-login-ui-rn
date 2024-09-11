@@ -1,4 +1,4 @@
-import { asObject, asOptional, asValue } from 'cleaners'
+import { asObject } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
 export type BiometryType = 'FaceID' | 'TouchID' | false
@@ -72,16 +72,9 @@ export interface TouchIdInfo {
 // Experiment Config
 //
 
-export interface ExperimentConfig {
-  signupCaptcha: 'withCaptcha' | 'withoutCaptcha'
-}
+export interface ExperimentConfig {}
 
-export const asExperimentConfig = asObject<ExperimentConfig>({
-  signupCaptcha: asOptional(
-    asValue('withCaptcha', 'withoutCaptcha'),
-    'withoutCaptcha'
-  )
-})
+export const asExperimentConfig = asObject<ExperimentConfig>({})
 
 //
 // Performance Events

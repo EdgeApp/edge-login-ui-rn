@@ -234,7 +234,7 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
           pin: newPin,
           username
         })
-        dispatch(completeLogin(account))
+        if (account != null) dispatch(completeLogin(account))
       } catch (error: unknown) {
         showError(error)
         errorText = String(error)

@@ -15,8 +15,7 @@ import { useDispatch } from '../../../types/ReduxTypes'
 import { SceneProps } from '../../../types/routerTypes'
 import { EdgeAnim } from '../../common/EdgeAnim'
 import { SceneButtons } from '../../common/SceneButtons'
-import { ChallengeModal } from '../../modals/ChallengeModal'
-import { Airship, showError } from '../../services/AirshipInstance'
+import { showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { Checkbox } from '../../themed/Checkbox'
 import { EdgeText } from '../../themed/EdgeText'
@@ -172,29 +171,10 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
     })
   })
 
-  const { experimentConfig, onLogEvent = () => {} } = useImports()
+  const { onLogEvent = () => {} } = useImports()
   const handleCreateAccount = useCreateAccountHandler()
 
   const handleNext = useHandler(async () => {
-    if (experimentConfig.signupCaptcha === 'withCaptcha') {
-      onLogEvent('Signup_Captcha_Shown')
-      const result = await Airship.show<boolean | undefined>(bridge => (
-        <ChallengeModal bridge={bridge} />
-      ))
-
-      // User closed the modal
-      if (result == null) {
-        onLogEvent('Signup_Captcha_Quit')
-        return
-      }
-      if (!result) {
-        onLogEvent('Signup_Captcha_Failed')
-        showError(lstrings.failed_captcha_error)
-        return
-      }
-      onLogEvent('Signup_Captcha_Passed')
-    }
-
     let errorText
     try {
       dispatch({
@@ -209,6 +189,7 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
       })
 
       const account = await handleCreateAccount({ username, password, pin })
+      if (account == null) return handleBack()
 
       dispatch({
         type: 'NAVIGATE',
