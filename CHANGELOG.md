@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 3.20.0 (2024-09-11)
+
+- added: Handle CAPTCHA errors during account creation.
+- changed: Send theme colors to the login server for CAPTCHA display.
+- removed: Signup CAPTCHA experiment.
+
 ## 3.19.1 (2024-09-06)
 
 - changed: Update translations
