@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- changed: TOS scene messaging
+- changed: Update recovery question character minimum to 4 characters
+
 ## 3.20.0 (2024-09-11)
 
 - added: Handle CAPTCHA errors during account creation.
