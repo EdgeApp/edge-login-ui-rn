@@ -108,7 +108,7 @@ export function PinLoginScene(props: Props) {
       handleTouchLogin(userInfo).catch(showError)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [displayUsername])
+  }, [])
 
   React.useEffect(() => {
     if (
