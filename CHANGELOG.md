@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Fingerprint login for Android sometimes showing the wrong account name
+
 ## 3.22.0 (2024-09-17)
 
 - changed: Update translations
