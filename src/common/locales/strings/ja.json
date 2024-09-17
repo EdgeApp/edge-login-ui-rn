@@ -189,6 +189,7 @@
   "recovery": "復元",
   "refresh_permission_branded_s": "アカウントの最高レベルのセキュリティを確保するために、バックグラウンドアプリの更新を有効にしてください。%1$sは、他のデバイスがアカウントにアクセスしようとする場合、通知を送信し、アクセスを承認または拒否できます。",
   "review": "確認",
+  "review_tos": "Review: Terms of Use (Tap each circle to agree)",
   "save_recovery_token": "復元トークンを保存",
   "save": "保存",
   "secure_account": "安全にアカウントを作成しています。",

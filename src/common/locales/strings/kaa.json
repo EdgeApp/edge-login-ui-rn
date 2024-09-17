@@ -189,6 +189,7 @@
   "recovery": "Recovery",
   "refresh_permission_branded_s": "Please enable Background App Refresh to ensure the highest level of security for your account. %1$s will notify you if other devices attempt to access your account and will allow you to accept or reject access.",
   "review": "Review",
+  "review_tos": "Review: Terms of Use (Tap each circle to agree)",
   "save_recovery_token": "Save Recovery Token",
   "save": "Saqlaw",
   "secure_account": "and secure your account",

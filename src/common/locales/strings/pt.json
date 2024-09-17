@@ -189,6 +189,7 @@
   "recovery": "Recuperação",
   "refresh_permission_branded_s": "Ative a atualização do aplicativo em segundo plano para garantir o mais alto nível de segurança para a sua conta. %1$s Irá notificá-lo se outros dispositivos tentarem acessar a sua conta e permitirá que você aceite ou rejeite o acesso.",
   "review": "Revisar",
+  "review_tos": "Review: Terms of Use (Tap each circle to agree)",
   "save_recovery_token": "Salvar Token de Recuperação",
   "save": "Salvar",
   "secure_account": "e garantimos a segurança da sua conta",
