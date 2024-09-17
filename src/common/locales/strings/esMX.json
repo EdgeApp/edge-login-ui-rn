@@ -189,6 +189,7 @@
   "recovery": "Recuperación",
   "refresh_permission_branded_s": "Please enable Background App Refresh to ensure the highest level of security for your account. %1$s will notify you if other devices attempt to access your account and will allow you to accept or reject access.",
   "review": "Comentario",
+  "review_tos": "Review: Terms of Use (Tap each circle to agree)",
   "save_recovery_token": "Guardar token de recuperación",
   "save": "Guardar",
   "secure_account": "y securizamos tu cuenta",
