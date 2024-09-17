@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.22.0 (2024-09-17)
+
+- changed: Update translations
+
 ## 3.21.0 (2024-09-16)
 
 - changed: TOS scene messaging
