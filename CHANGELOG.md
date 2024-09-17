@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.21.0 (2024-09-16)
+
 - changed: TOS scene messaging
 - changed: Update recovery question character minimum to 4 characters
 
