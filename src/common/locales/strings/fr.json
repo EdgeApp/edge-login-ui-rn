@@ -152,7 +152,7 @@
   "qr_modal_message": "Scan this QR code with another device logged into your account:",
   "qr_modal_started": "Logging into account %s",
   "qr_modal_title": "Scanner le code QR",
-  "read_understood_1": "I have read, understood, and agree to the ",
+  "read_understood_1": "J'ai lu, compris et Et je donne mon accord sur les ",
   "read_understood_2": "Terms of Use",
   "recommend_choosing_a_stronger": "\nChoisissez un mot de passe plus fort",
   "recover_by_username": "Veuillez entrer le nom de compte que vous souhaitez récupérer.",
