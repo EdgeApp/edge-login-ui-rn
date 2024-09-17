@@ -48,6 +48,16 @@ interface ErrorInfo {
   wait: number
 }
 
+const getDisplayUsername = (userInfo?: LoginUserInfo | EdgeUserInfo) => {
+  return (
+    userInfo?.username ??
+    sprintf(
+      lstrings.guest_account_id_1s,
+      userInfo?.loginId.slice(userInfo.loginId.length - 3)
+    )
+  )
+}
+
 export function PinLoginScene(props: Props) {
   const { branding, route } = props
   const { loginId } = route.params
@@ -91,13 +101,6 @@ export function PinLoginScene(props: Props) {
     [dropdownItems, loginId]
   )
 
-  const displayUsername = React.useMemo(
-    () =>
-      userInfo?.username ??
-      sprintf(lstrings.guest_account_id_1s, loginId.slice(loginId.length - 3)),
-    [loginId, userInfo]
-  )
-
   // ---------------------------------------------------------------------
   // Effects
   // ---------------------------------------------------------------------
@@ -108,7 +111,7 @@ export function PinLoginScene(props: Props) {
       handleTouchLogin(userInfo).catch(showError)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [displayUsername])
+  }, [])
 
   React.useEffect(() => {
     if (
@@ -158,7 +161,10 @@ export function PinLoginScene(props: Props) {
       <ButtonsModal
         bridge={bridge}
         title={lstrings.forget_account}
-        message={sprintf(lstrings.forget_username_account, displayUsername)}
+        message={sprintf(
+          lstrings.forget_username_account,
+          getDisplayUsername(userInfo)
+        )}
         buttons={{
           ok: { label: lstrings.forget },
           cancel: { label: lstrings.cancel, type: 'secondary' }
@@ -217,16 +223,18 @@ export function PinLoginScene(props: Props) {
   }
 
   const handleTouchLogin = async (userInfo: EdgeUserInfo): Promise<void> => {
+    if (touchBusy) return
+    setTouchBusy(true)
+
     try {
       const { loginId } = userInfo
       const loginKey = await getLoginKey(
         userInfo,
-        `Touch to login user: "${displayUsername}"`,
+        `Touch to login user: "${getDisplayUsername(userInfo)}"`,
         lstrings.login_with_password
       )
       if (loginKey == null) return
 
-      setTouchBusy(true)
       const account = await context.loginWithKey(loginId, loginKey, {
         ...accountOptions,
         useLoginId: true
@@ -307,7 +315,7 @@ export function PinLoginScene(props: Props) {
       // Normal account: show username
       usernameLabel = userInfo.username
     } else if (!isSingleSavedUser) {
-      usernameLabel = displayUsername
+      usernameLabel = getDisplayUsername(userInfo)
     }
     // Light account + no other saved users: hide username label
 
