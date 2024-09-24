@@ -351,7 +351,7 @@ export function PinLoginScene(props: Props) {
           <FourDigitDisplay
             error={errorMessage}
             pin={pin}
-            spinner={hasWait || pin.length === 4 || touchBusy}
+            spinner={hasWait || pin.length === 4}
           />
         )}
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 20 }}>
