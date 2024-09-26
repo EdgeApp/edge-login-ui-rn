@@ -19,6 +19,7 @@ export const useCreateAccountHandler = () => {
       const { username, password, pin } = createAccountParams
 
       return await retryOnChallenge({
+        cancelValue: undefined,
         async task() {
           const account = await context.createAccount({
             ...accountOptions,
@@ -36,8 +37,7 @@ export const useCreateAccountHandler = () => {
           dispatch(loadTouchState())
 
           return account
-        },
-        onCancel() {}
+        }
       })
     }
   )

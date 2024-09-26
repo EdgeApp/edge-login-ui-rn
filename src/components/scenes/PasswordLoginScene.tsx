@@ -189,6 +189,7 @@ export const PasswordLoginScene = (props: Props) => {
 
     setSpinner(true)
     retryOnChallenge({
+      cancelValue: undefined,
       async task(challengeId) {
         Keyboard.dismiss()
         const account = await attemptLogin(
@@ -203,9 +204,6 @@ export const PasswordLoginScene = (props: Props) => {
         onPerfEvent({ name: 'passwordLoginEnd' })
         onLogEvent('Pasword_Login')
         await dispatch(completeLogin(account))
-      },
-      onCancel() {
-        return undefined
       }
     })
       .catch(async error => {

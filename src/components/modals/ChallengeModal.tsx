@@ -22,13 +22,13 @@ interface Props {
  * and the user successfully solves the challenge.
  */
 export async function retryOnChallenge<T, C>(opts: {
-  task: (challengeId?: string) => Promise<T>
-  onCancel: () => C
-  onSuccess?: (challengeId: string) => void
+  cancelValue: C
+  saveChallenge?: (challengeId: string) => void
+  task: (challengeId: string | undefined) => Promise<T>
 }): Promise<T | C> {
-  const { task, onCancel, onSuccess } = opts
+  const { cancelValue, saveChallenge, task } = opts
 
-  return await task().catch(async error => {
+  return await task(undefined).catch(async error => {
     const challengeError = asMaybeChallengeError?.(error)
     if (challengeError != null) {
       const result = await Airship.show<boolean | undefined>(bridge => (
@@ -37,9 +37,9 @@ export async function retryOnChallenge<T, C>(opts: {
           challengeUri={challengeError.challengeUri}
         />
       ))
-      if (result == null) return onCancel()
+      if (result == null) return cancelValue
       if (result) {
-        onSuccess?.(challengeError.challengeId)
+        saveChallenge?.(challengeError.challengeId)
         return await task(challengeError.challengeId)
       }
     }

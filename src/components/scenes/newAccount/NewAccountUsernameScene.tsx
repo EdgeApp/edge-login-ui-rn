@@ -176,12 +176,12 @@ export const ChangeUsernameComponent = (props: Props) => {
 
       setIsFetchingAvailability(true)
       retryOnChallenge({
+        cancelValue: undefined,
+        saveChallenge(challengeId) {
+          dispatch({ type: 'CREATE_CHALLENGE', data: challengeId })
+        },
         async task(challengeId = lastChallengeId) {
           return await context.usernameAvailable(text, { challengeId })
-        },
-        onCancel() {},
-        onSuccess(challengeId) {
-          dispatch({ type: 'CREATE_CHALLENGE', data: challengeId })
         }
       }).then(
         isAvailable => {
