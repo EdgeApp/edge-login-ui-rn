@@ -8,7 +8,8 @@ import { useImports } from './useImports'
 export const useCreateAccountHandler = () => {
   const { context, accountOptions } = useImports()
   const dispatch = useDispatch()
-  const challengeId = useSelector(state => state.createChallengeId) ?? undefined
+  const savedChallengeId =
+    useSelector(state => state.createChallengeId) ?? undefined
 
   const handleCreateAccount = useHandler(
     async (createAccountParams: {
@@ -20,7 +21,7 @@ export const useCreateAccountHandler = () => {
 
       return await retryOnChallenge({
         cancelValue: undefined,
-        async task() {
+        async task(challengeId = savedChallengeId) {
           const account = await context.createAccount({
             ...accountOptions,
             challengeId,

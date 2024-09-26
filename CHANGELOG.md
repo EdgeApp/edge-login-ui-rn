@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Correctly handle challenge errors during light account creation.
+
 ## 3.22.2 (2024-09-26)
 
 - fixed: Spinner showing on pin dots before biometric is read
