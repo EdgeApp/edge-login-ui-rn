@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.22.3 (2024-09-27)
+
 - fixed: Correctly handle challenge errors during light account creation.
 
 ## 3.22.2 (2024-09-26)
