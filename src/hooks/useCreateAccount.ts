@@ -8,7 +8,8 @@ import { useImports } from './useImports'
 export const useCreateAccountHandler = () => {
   const { context, accountOptions } = useImports()
   const dispatch = useDispatch()
-  const challengeId = useSelector(state => state.createChallengeId) ?? undefined
+  const savedChallengeId =
+    useSelector(state => state.createChallengeId) ?? undefined
 
   const handleCreateAccount = useHandler(
     async (createAccountParams: {
@@ -19,7 +20,8 @@ export const useCreateAccountHandler = () => {
       const { username, password, pin } = createAccountParams
 
       return await retryOnChallenge({
-        async task() {
+        cancelValue: undefined,
+        async task(challengeId = savedChallengeId) {
           const account = await context.createAccount({
             ...accountOptions,
             challengeId,
@@ -36,8 +38,7 @@ export const useCreateAccountHandler = () => {
           dispatch(loadTouchState())
 
           return account
-        },
-        onCancel() {}
+        }
       })
     }
   )

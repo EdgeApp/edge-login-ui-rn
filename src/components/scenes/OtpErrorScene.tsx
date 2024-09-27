@@ -104,6 +104,7 @@ export function OtpErrorScene(props: Props) {
     inModal.current = true
     const handleSubmit = async (otpKey: string): Promise<boolean | string> =>
       await retryOnChallenge({
+        cancelValue: lstrings.failed_captcha_error,
         async task(challengeId) {
           const account = await attemptLogin(
             context,
@@ -117,9 +118,6 @@ export function OtpErrorScene(props: Props) {
           )
           dispatch(completeLogin(account))
           return true
-        },
-        onCancel() {
-          return lstrings.failed_captcha_error
         }
       }).catch(error => {
         // Translate known errors:
