@@ -93,7 +93,11 @@ const TosComponent = (props: Props) => {
             </Checkbox>
           </EdgeAnim>
         ))}
-        <EdgeAnim enter={{ type: 'fadeInDown' }}>
+        <EdgeAnim
+          enter={{ type: 'fadeInDown' }}
+          exit={{ type: 'fadeOutDown' }}
+          visible={showNext}
+        >
           <EdgeText
             style={styles.agreeText}
             numberOfLines={2}
@@ -106,21 +110,15 @@ const TosComponent = (props: Props) => {
               {lstrings.read_understood_2}
             </EdgeText>
           </EdgeText>
+
+          <SceneButtons
+            primary={{
+              label: lstrings.confirm,
+              onPress: onNext
+            }}
+          />
         </EdgeAnim>
       </ScrollView>
-      <EdgeAnim
-        enter={{ type: 'fadeInDown' }}
-        exit={{ type: 'fadeOutDown' }}
-        visible={showNext}
-      >
-        <SceneButtons
-          absolute
-          primary={{
-            label: lstrings.confirm,
-            onPress: onNext
-          }}
-        />
-      </EdgeAnim>
     </ThemedScene>
   )
 }
