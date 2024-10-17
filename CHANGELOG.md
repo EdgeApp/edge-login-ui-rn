@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.22.5 (2024-10-17)
+
 - fixed: `NewAccountTosScene` confirm button obscures text on some devices
 
 ## 3.22.4 (2024-10-01)
