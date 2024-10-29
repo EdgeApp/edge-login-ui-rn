@@ -79,11 +79,9 @@ export const showNotificationPermissionReminder = async (
       ? 1
       : 0
 
-  const statusAppRefresh = isIos
-    ? await AbcCoreJsUi.backgroundAppRefreshStatus().catch((error: undefined) =>
-        console.log(error)
-      )
-    : undefined
+  const statusAppRefresh = await AbcCoreJsUi.backgroundAppRefreshStatus().catch(
+    (error: unknown) => console.log(error)
+  )
   const refreshEnabled = statusAppRefresh !== RESULTS.BLOCKED ? 1 : 0
 
   const notificationPermissionsInfoJson = await disklet

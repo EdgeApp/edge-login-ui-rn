@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: (Android) Detect if user restricted background battery usage
+
 ## 3.23.0 (2024-11-01)
 
 - changed: Changed semantics for invalid password login error message: "Invalid username or password"
