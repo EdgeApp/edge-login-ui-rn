@@ -235,7 +235,7 @@ export const PasswordLoginScene = (props: Props) => {
               )
             )
           } else {
-            setPasswordErrorMessage(lstrings.invalid_password)
+            setPasswordErrorMessage(lstrings.invalid_credentials)
           }
           return
         }
