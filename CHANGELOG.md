@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.23.0 (2024-11-01)
+
 - changed: Changed semantics for invalid password login error message: "Invalid username or password"
 
 ## 3.22.5 (2024-10-17)
