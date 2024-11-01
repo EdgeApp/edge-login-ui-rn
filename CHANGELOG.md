@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Changed semantics for invalid password login error message: "Invalid username or password"
+
 ## 3.22.5 (2024-10-17)
 
 - fixed: `NewAccountTosScene` confirm button obscures text on some devices
