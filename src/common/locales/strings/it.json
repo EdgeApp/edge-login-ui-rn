@@ -75,7 +75,7 @@
   "hide_account_info": "Nascondi le informazioni sull'account",
   "initiate_password_recovery": "Inserisci il Token Di Recupero. Puoi trovarlo in un'email che è stata inviata da te stesso al tuo indirizzo mail, se avevi impostato il Recupero Password prima di perdere l'accesso.",
   "invalid_account": "L'account non esiste",
-  "invalid_credentials": "Invalid username or password",
+  "invalid_credentials": "Nome utente o password non validi",
   "invalid_pin": "PIN non valido",
   "it_would_take_xx_to_crack": "Occorrerebbero %s per craccare la tua password",
   "keypad_eight": "8",
