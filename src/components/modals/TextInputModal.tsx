@@ -11,7 +11,7 @@ import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { AlertCardUi4 } from '../ui4/AlertUi4'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from '../ui4/EdgeModal'
 
 interface Props {
   // Resolves to the entered string, or void if cancelled.
@@ -100,7 +100,7 @@ export function TextInputModal(props: Props) {
   }
 
   return (
-    <ModalUi4
+    <EdgeModal
       warning={warning}
       bridge={bridge}
       onCancel={() => bridge.resolve(undefined)}
@@ -153,6 +153,6 @@ export function TextInputModal(props: Props) {
           type="secondary"
         />
       )}
-    </ModalUi4>
+    </EdgeModal>
   )
 }

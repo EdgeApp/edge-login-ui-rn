@@ -15,7 +15,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ModalScrollArea, ModalTitle } from '../themed/ModalParts'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from '../ui4/EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<string | undefined>
@@ -84,10 +84,10 @@ export const SecurityAlertsModal = (props: Props) => {
   }
 
   return (
-    <ModalUi4 bridge={bridge} warning onCancel={handleCancel}>
+    <EdgeModal bridge={bridge} warning onCancel={handleCancel}>
       <ModalTitle>{lstrings.security_is_our_priority_modal_title}</ModalTitle>
       <ModalScrollArea>{renderList()}</ModalScrollArea>
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

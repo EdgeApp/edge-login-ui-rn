@@ -7,7 +7,7 @@ import { showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage } from '../themed/ModalParts'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from '../ui4/EdgeModal'
 
 export interface ButtonInfo {
   label: string
@@ -89,7 +89,7 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(
   }
 
   return (
-    <ModalUi4
+    <EdgeModal
       warning={warning}
       bridge={bridge}
       title={title}
@@ -138,6 +138,6 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(
           })}
         </View>
       </View>
-    </ModalUi4>
+    </EdgeModal>
   )
 }
