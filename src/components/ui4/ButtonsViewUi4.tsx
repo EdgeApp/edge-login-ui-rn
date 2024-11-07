@@ -10,7 +10,7 @@ import { EdgeAnim } from '../common/EdgeAnim'
 import { maybeComponent } from '../hoc/maybeComponent'
 import { styled } from '../hoc/styled'
 import { Space } from '../layout/Space'
-import { ButtonTypeUi4, ButtonUi4 } from './ButtonUi4'
+import { EdgeButtonType, EdgeButton } from './EdgeButton'
 
 const INTER_BUTTON_SPACING_REM = 1
 const ANIM_DURATION = 1000
@@ -75,7 +75,7 @@ export const ButtonsViewUi4 = React.memo(
     const spacing = <Space aroundRem={INTER_BUTTON_SPACING_REM / 2} />
 
     const renderButton = (
-      type: ButtonTypeUi4,
+      type: EdgeButtonType,
       buttonProps?: ButtonInfo,
       index: number = 0
     ) => {
@@ -94,7 +94,7 @@ export const ButtonsViewUi4 = React.memo(
           disableAnimation={disableAnimation}
           enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance }}
         >
-          <ButtonUi4
+          <EdgeButton
             layout={layout}
             label={label}
             onPress={onPress}

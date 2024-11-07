@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { ButtonUi4 } from '../ui4/ButtonUi4'
+import { EdgeButton } from '../ui4/EdgeButton'
 
 export type MainButtonType = 'primary' | 'secondary' | 'escape'
 
@@ -22,52 +22,44 @@ interface Props {
   // using the same logic as the web `margin` property. Defaults to 0.
   marginRem?: number[] | number
 
-  // The gap inside the button. Takes 0-4 numbers (top, right, bottom, left),
-  // using the same logic as the web `padding` property. Defaults to 0.5.
-  paddingRem?: number[] | number
-
   // True to show a spinner after the contents:
   spinner?: boolean
 
   // Which visual style to use. Defaults to primary (solid):
   type?: MainButtonType
 
-  // From ButtonUi4
+  // From EdgeButton
   layout?: 'row' | 'column' | 'solo'
-
-  testID?: string
 }
 
 /**
- * A stand-alone button to perform the primary action in a modal or scene.
+ * @deprecated
+ * Use EdgeButton instead, and consider whether there is a genuine need for
+ * special margins in MainButton use cases from a UI4 design perspective.
  */
 export function MainButton(props: Props) {
   const {
     children,
     disabled = false,
     label,
-    marginRem = [0, 1, 0, 1],
+    marginRem,
     onPress,
     type = 'primary',
-    paddingRem,
     layout,
-    spinner = false,
-    testID
+    spinner = false
   } = props
 
   return (
-    <ButtonUi4
+    <EdgeButton
       disabled={disabled}
       label={label}
       marginRem={marginRem}
       onPress={onPress}
-      paddingRem={paddingRem}
       spinner={spinner}
       type={type === 'escape' ? 'tertiary' : type}
       layout={layout}
-      testID={testID}
     >
       {children}
-    </ButtonUi4>
+    </EdgeButton>
   )
 }
