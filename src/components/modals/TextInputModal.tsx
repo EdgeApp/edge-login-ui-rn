@@ -10,7 +10,7 @@ import { showError } from '../services/AirshipInstance'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { AlertCardUi4 } from '../ui4/AlertUi4'
+import { AlertCard } from '../ui4/AlertCard'
 import { EdgeModal } from '../ui4/EdgeModal'
 
 interface Props {
@@ -112,7 +112,7 @@ export function TextInputModal(props: Props) {
         <>{message}</>
       )}
       {warningMessage != null ? (
-        <AlertCardUi4
+        <AlertCard
           type="warning"
           title={lstrings.warning}
           marginRem={0.5}

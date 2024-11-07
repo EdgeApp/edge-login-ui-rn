@@ -4,10 +4,9 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
-import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
@@ -41,7 +40,7 @@ interface Props {
  *  | This is the footer text   |
  *  |___________________________|
  */
-export function AlertCardUi4(props: Props) {
+export function AlertCard(props: Props) {
   const { title, type, header, body, footer, marginRem, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -108,13 +107,13 @@ const getStyles = (theme: Theme) =>
       margin: theme.rem(0.5)
     },
     titleContainer: {
-      display: 'flex',
       flexDirection: 'row',
       alignItems: 'center'
     },
     titleText: {
       marginLeft: theme.rem(0.2),
-      fontFamily: theme.fontFaceMedium
+      fontFamily: theme.fontFaceMedium,
+      flexShrink: 1
     },
     icon: {
       marginRight: theme.rem(0.2)
