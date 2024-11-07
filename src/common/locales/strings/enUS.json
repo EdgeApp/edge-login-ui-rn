@@ -237,5 +237,6 @@
   "complete_captcha_title": "Are you a human?",
   "failed_captcha_error": "Incorrect solution",
   "review_login_request": "Review Login Request",
-  "login_attempt_detected_1s": "A login attempt has been detected for the following account(s):\n\n%1$s"
+  "login_attempt_detected": "A login attempt has been detected for the following account(s):",
+  "twofa_attempt_detected": "An attempt to remove 2-factor security has been detected for the following account(s):"
 }
