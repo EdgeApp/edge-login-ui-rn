@@ -5,11 +5,10 @@
 
 import * as React from 'react'
 
-import { ButtonsViewUi4, ButtonsViewUi4Props } from '../ui4/ButtonsViewUi4'
+import { ButtonsView, ButtonsViewProps } from '../ui4/ButtonsView'
 
-interface Props
-  extends Omit<Omit<ButtonsViewUi4Props, 'parentType'>, 'layout'> {}
+interface Props extends Omit<Omit<ButtonsViewProps, 'parentType'>, 'layout'> {}
 
 export const SceneButtons = (props: Props) => {
-  return <ButtonsViewUi4 {...props} parentType="scene" />
+  return <ButtonsView {...props} parentType="scene" />
 }
