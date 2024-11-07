@@ -317,6 +317,17 @@ export interface Theme {
   escapeButtonFontSizeRem: number
   escapeButtonFont: string
 
+  dangerButtonOutline: string
+  dangerButtonOutlineWidth: number
+  dangerButton: string[]
+  dangerButtonColorStart: GradientCoords
+  dangerButtonColorEnd: GradientCoords
+  dangerButtonText: string
+  dangerButtonTextShadow: TextShadowParams
+  dangerButtonShadow: ThemeShadowParams
+  dangerButtonFontSizeRem: number
+  dangerButtonFont: string
+
   pinUsernameButtonOutline: string
   pinUsernameButtonOutlineWidth: number
   pinUsernameButton: string[]

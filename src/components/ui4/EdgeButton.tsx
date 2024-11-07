@@ -14,7 +14,12 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-export type EdgeButtonType = 'primary' | 'secondary' | 'tertiary'
+export type EdgeButtonType =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  // For things like "Block"/"Deny"/"Delete"/etc
+  | 'destructive'
 
 interface Props {
   children?: React.ReactNode
@@ -100,6 +105,15 @@ export function EdgeButton(props: Props) {
         colors: theme.escapeButton,
         end: theme.escapeButtonColorEnd,
         start: theme.escapeButtonColorStart
+      }
+    },
+    destructive: {
+      textStyle: styles.primaryText,
+      spinnerColor: theme.dangerButtonText,
+      gradientProps: {
+        colors: theme.dangerButton,
+        end: theme.dangerButtonColorEnd,
+        start: theme.dangerButtonColorStart
       }
     }
   }
@@ -284,6 +298,11 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontFamily: theme.escapeButtonFont,
       fontSize: theme.rem(theme.escapeButtonFontSizeRem),
       color: theme.escapeButtonText
+    },
+    dangerText: {
+      fontFamily: theme.dangerButtonFont,
+      fontSize: theme.rem(theme.dangerButtonFontSizeRem),
+      color: theme.dangerButtonText
     },
     leftMarginedText: {
       marginLeft: theme.rem(0.5)
