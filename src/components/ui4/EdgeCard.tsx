@@ -19,7 +19,7 @@ import {
 } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { SectionView } from './SectionViewUi4'
+import { SectionView } from './SectionView'
 
 interface Props {
   // Top layer:
