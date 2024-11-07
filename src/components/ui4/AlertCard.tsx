@@ -12,7 +12,7 @@ import { EdgeCard } from './EdgeCard'
 
 interface Props {
   body?: string[] | string // Bullet point messages if an array is provided
-  title: string
+  title?: string
   type: 'error' | 'warning'
   footer?: string
   header?: string
@@ -65,17 +65,19 @@ export function AlertCard(props: Props) {
       onPress={onPress}
     >
       <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <IonIcon
-            name="warning-outline"
-            style={styles.icon}
-            color={theme.primaryText}
-            size={theme.rem(1.25)}
-          />
-          <EdgeText numberOfLines={0} style={styles.titleText}>
-            {title}
-          </EdgeText>
-        </View>
+        {title == null ? null : (
+          <View style={styles.titleContainer}>
+            <IonIcon
+              name="warning-outline"
+              style={styles.icon}
+              color={theme.primaryText}
+              size={theme.rem(1.25)}
+            />
+            <EdgeText numberOfLines={0} style={styles.titleText}>
+              {title}
+            </EdgeText>
+          </View>
+        )}
 
         {header == null ? null : (
           <EdgeText style={styles.text}>{header}</EdgeText>
@@ -113,15 +115,15 @@ const getStyles = (theme: Theme) =>
     titleText: {
       marginLeft: theme.rem(0.2),
       fontFamily: theme.fontFaceMedium,
-      flexShrink: 1
+      flexShrink: 1,
+      marginBottom: theme.rem(0.5)
     },
     icon: {
       marginRight: theme.rem(0.2)
     },
     text: {
       fontSize: theme.rem(0.75),
-      marginHorizontal: theme.rem(0.25),
-      marginTop: theme.rem(0.5)
+      marginHorizontal: theme.rem(0.25)
     },
     bulletPointContainer: {
       marginTop: theme.rem(0.5)
