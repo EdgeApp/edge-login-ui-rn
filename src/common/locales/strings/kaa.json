@@ -75,7 +75,7 @@
   "hide_account_info": "Hide account information",
   "initiate_password_recovery": "Enter Recovery Token. You can find the recovery token in an email that was sent from yourself if password recovery was setup prior to losing access.",
   "invalid_account": "Account does not exist",
-  "invalid_password": "Invalid password",
+  "invalid_credentials": "Invalid username or password",
   "invalid_pin": "Invalid PIN",
   "it_would_take_xx_to_crack": "It would take %s to crack your password",
   "keypad_eight": "8",
