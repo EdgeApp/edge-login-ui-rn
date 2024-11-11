@@ -2,6 +2,7 @@ package co.airbitz.AbcCoreJsUi;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
@@ -392,10 +393,15 @@ public class AbcCoreJsUiModule extends ReactContextBaseJavaModule {
     }
   }
 
-  // Function should only be used in iOS and not available on android.
-  // Resolve with a unavailable if ever, meaning not available on this device
   @ReactMethod
   public void backgroundAppRefreshStatus(Promise promise) {
-    promise.resolve("unavailable");
+    if (android.os.Build.VERSION.SDK_INT >= 28) {
+      ActivityManager activityManager =
+          (ActivityManager) getReactApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+      String backgroundStatus = activityManager.isBackgroundRestricted() ? "blocked" : "granted";
+      promise.resolve(backgroundStatus);
+    } else {
+      promise.resolve("unavailable");
+    }
   }
 }
