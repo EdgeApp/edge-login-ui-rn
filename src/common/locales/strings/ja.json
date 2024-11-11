@@ -75,7 +75,7 @@
   "hide_account_info": "アカウント情報を非表示",
   "initiate_password_recovery": "リカバリトークンを入力してください。 アクセスを失う前にパスワードの復元が設定されていた場合、ご自身で送信したEメールにリカバリトークンの記載があります。",
   "invalid_account": "アカウントが存在しません",
-  "invalid_password": "無効なパスワード",
+  "invalid_credentials": "Invalid username or password",
   "invalid_pin": "PINが正しくありません",
   "it_would_take_xx_to_crack": "あなたのパスワードを破るのには %s かかるでしょう",
   "keypad_eight": "8",
