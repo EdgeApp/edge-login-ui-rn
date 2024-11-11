@@ -75,7 +75,7 @@
   "hide_account_info": "Kontoinformationen verbergen",
   "initiate_password_recovery": "Wiederherstellungs-Token eingeben. Sie können das Wiederherstellungs-Token in einer E-Mail finden, die von Ihnen gesendet wurde, wenn die Passwort-Wiederherstellung eingerichtet wurde, bevor Sie den Zugriff verlieren.",
   "invalid_account": "Account does not exist",
-  "invalid_password": "Invalid password",
+  "invalid_credentials": "Invalid username or password",
   "invalid_pin": "Ungültiger PIN",
   "it_would_take_xx_to_crack": "Es würde %s dauern um Ihr Passwort zu knacken",
   "keypad_eight": "8",
