@@ -75,7 +75,7 @@
   "hide_account_info": "隐藏账户信息",
   "initiate_password_recovery": "Enter Recovery Token. You can find the recovery token in an email that was sent from yourself if password recovery was setup prior to losing access.",
   "invalid_account": "Account does not exist",
-  "invalid_password": "Invalid password",
+  "invalid_credentials": "Invalid username or password",
   "invalid_pin": "无效的PIN码",
   "it_would_take_xx_to_crack": "破解密码需要%s秒",
   "keypad_eight": "8",
