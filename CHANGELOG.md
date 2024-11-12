@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.24.0 (2024-11-11)
+
 - added: (Android) Detect if user restricted background battery usage
 - changed: `SecurityAlertsScene` and `SecurityAlertsModal` redesign
 
