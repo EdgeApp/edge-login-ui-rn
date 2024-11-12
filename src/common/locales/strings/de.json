@@ -1,6 +1,8 @@
 {
   "account_confirmation": "Benutzerkonto Bestätigung",
   "account_locked_for": "Benutzerkonto gesperrt für\n%1$s weitere Sekunden",
+  "access_confirmation_title": "Access Confirmation",
+  "access_confirmation_body": "I understand that granting access to this login attempt gives this person full access to my funds and that this action is not reversible.",
   "alert_dropdown_alert": "Achtung! ",
   "alert_dropdown_warning": "Warnung! ",
   "alert_modal_action": "\nBitte melden Sie sich an, um diese Warnung zu genehmigen oder abzulehnen",
@@ -15,7 +17,11 @@
   "alert_scene_message": "Ein neues Gerät möchte sich in Ihr Konto einloggen.",
   "alert_scene_reset_date": "Sofern nicht verweigert, wird der Zugriff gewährt am: ",
   "alert_scene_reset_message": "Jemand versucht die 2-Faktor-Autentifizierung von Ihrem Konto zu entfernen.",
-  "alert_scene_warning": "Wenn Sie diese Anmeldung nicht angefordert haben, könnte Ihr Passwort gestohlen worden sein und Sie könnten Geld verlieren. Bitte verweigern Sie die Anfrage und ändern Sie Ihr Passwort.",
+  "alert_scene_message_many_new": "Several new devices would like to log in to your account.",
+  "alert_scene_warning_review": "If you did not request this login, your password may have been stolen and you could lose funds. Please review this request.",
+  "allow": "Allow",
+  "deny": "Deny",
+  "deny_all": "Deny All",
   "answer_case_sensitive": "Bei Antworten auf Groß- und Kleinschreibung achten",
   "answers_four_chanracters": "Antworten sollten mindestens 4 Zeichen lang sein",
   "app_logo_hint": "App logo",
@@ -73,6 +79,7 @@
   "great_job": "Gute Arbeit!",
   "hang_tight": "Etwas Geduld, während wir erstellen",
   "hide_account_info": "Kontoinformationen verbergen",
+  "i_understand_agree": "I understand and agree",
   "initiate_password_recovery": "Wiederherstellungs-Token eingeben. Sie können das Wiederherstellungs-Token in einer E-Mail finden, die von Ihnen gesendet wurde, wenn die Passwort-Wiederherstellung eingerichtet wurde, bevor Sie den Zugriff verlieren.",
   "invalid_account": "Account does not exist",
   "invalid_credentials": "Invalid username or password",
@@ -228,5 +235,8 @@
   "welcome": "Willkommen bei %s",
   "your_answer_label": "Ihre Antwort",
   "complete_captcha_title": "Are you a human?",
-  "failed_captcha_error": "Incorrect solution"
+  "failed_captcha_error": "Incorrect solution",
+  "review_login_request": "Review Login Request",
+  "login_attempt_detected": "A login attempt has been detected for the following account(s):",
+  "twofa_attempt_detected": "An attempt to remove 2-factor security has been detected for the following account(s):"
 }
