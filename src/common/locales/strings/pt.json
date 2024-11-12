@@ -1,6 +1,8 @@
 {
   "account_confirmation": "Confirmação da Conta",
   "account_locked_for": "Conta bloqueada por \nmais %1$s segundos",
+  "access_confirmation_title": "Access Confirmation",
+  "access_confirmation_body": "I understand that granting access to this login attempt gives this person full access to my funds and that this action is not reversible.",
   "alert_dropdown_alert": "Alerta! ",
   "alert_dropdown_warning": "Atenção! ",
   "alert_modal_action": "\nFaça login para aprovar ou negar este alerta",
@@ -15,7 +17,11 @@
   "alert_scene_message": "Um novo dispositivo gostaria de acessar a sua conta.",
   "alert_scene_reset_date": "A menos que negado, o acesso será concedido em: ",
   "alert_scene_reset_message": "Alguém está tentando remover a segurança de 2 fatores da sua conta.",
-  "alert_scene_warning": "Se você não solicitou este login, sua senha pode ter sido roubada e você pode perder fundos. Por Favor, negue a solicitação e altere a sua senha.",
+  "alert_scene_message_many_new": "Several new devices would like to log in to your account.",
+  "alert_scene_warning_review": "If you did not request this login, your password may have been stolen and you could lose funds. Please review this request.",
+  "allow": "Allow",
+  "deny": "Deny",
+  "deny_all": "Deny All",
   "answer_case_sensitive": "As respostas diferenciam letras maiúsculas de minúsculas",
   "answers_four_chanracters": "Respostas devem ter pelo menos 4 caracteres",
   "app_logo_hint": "App logo",
@@ -73,6 +79,7 @@
   "great_job": "Bom Trabalho!",
   "hang_tight": "Aguente firme enquanto criamos",
   "hide_account_info": "Ocultar informações da conta",
+  "i_understand_agree": "I understand and agree",
   "initiate_password_recovery": "Insira o Token de Recuperação. Você pode encontrar o token de recuperação num e-mail enviado por você mesmo se a recuperação de senha foi configurada antes de perder o acesso.",
   "invalid_account": "Esta conta não existe",
   "invalid_credentials": "Invalid username or password",
@@ -228,5 +235,8 @@
   "welcome": "Bem-vindo(a) à %s!",
   "your_answer_label": "Sua resposta",
   "complete_captcha_title": "Você é um humano?",
-  "failed_captcha_error": "Solução incorreta"
+  "failed_captcha_error": "Solução incorreta",
+  "review_login_request": "Review Login Request",
+  "login_attempt_detected": "A login attempt has been detected for the following account(s):",
+  "twofa_attempt_detected": "An attempt to remove 2-factor security has been detected for the following account(s):"
 }
