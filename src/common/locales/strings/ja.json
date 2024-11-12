@@ -1,6 +1,8 @@
 {
   "account_confirmation": "アカウント確認",
   "account_locked_for": "アカウントはあと%1$s秒間ロックされます。",
+  "access_confirmation_title": "Access Confirmation",
+  "access_confirmation_body": "I understand that granting access to this login attempt gives this person full access to my funds and that this action is not reversible.",
   "alert_dropdown_alert": "警告！ ",
   "alert_dropdown_warning": "注意! ",
   "alert_modal_action": "\nログインしてこのアラートを承認または拒否してください",
@@ -15,7 +17,11 @@
   "alert_scene_message": "新しいデバイスがアカウントにログインしようとしています。",
   "alert_scene_reset_date": "拒否されない限り、アクセスは許可されます： ",
   "alert_scene_reset_message": "誰かがあなたのアカウントから二段階認証セキュリティを削除しようとしています。",
-  "alert_scene_warning": "このログインをリクエストしていない場合、パスワードが盗まれ、資金が失われる可能性があります。 リクエストを拒否し、パスワードを変更してください。",
+  "alert_scene_message_many_new": "Several new devices would like to log in to your account.",
+  "alert_scene_warning_review": "If you did not request this login, your password may have been stolen and you could lose funds. Please review this request.",
+  "allow": "Allow",
+  "deny": "Deny",
+  "deny_all": "Deny All",
   "answer_case_sensitive": "回答の大文字と小文字まで一致させてください",
   "answers_four_chanracters": "回答は少なくとも４文字必要です。",
   "app_logo_hint": "アプリのロゴ",
@@ -73,6 +79,7 @@
   "great_job": "よくできました！",
   "hang_tight": "作成中です。少々お待ちください。",
   "hide_account_info": "アカウント情報を非表示",
+  "i_understand_agree": "I understand and agree",
   "initiate_password_recovery": "リカバリトークンを入力してください。 アクセスを失う前にパスワードの復元が設定されていた場合、ご自身で送信したEメールにリカバリトークンの記載があります。",
   "invalid_account": "アカウントが存在しません",
   "invalid_credentials": "Invalid username or password",
@@ -228,5 +235,8 @@
   "welcome": "%sへようこそ",
   "your_answer_label": "あなたの回答",
   "complete_captcha_title": "Are you a human?",
-  "failed_captcha_error": "Incorrect solution"
+  "failed_captcha_error": "Incorrect solution",
+  "review_login_request": "Review Login Request",
+  "login_attempt_detected": "A login attempt has been detected for the following account(s):",
+  "twofa_attempt_detected": "An attempt to remove 2-factor security has been detected for the following account(s):"
 }
