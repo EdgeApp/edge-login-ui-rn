@@ -1,5 +1,6 @@
 /**
- * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+ * edge-login-ui-rn!
  */
 
 import * as React from 'react'
@@ -8,17 +9,17 @@ import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
-import {
-  fixSides,
-  mapSides,
-  sidesToMargin,
-  sidesToPadding
-} from '../../util/sides'
+import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-export type ButtonTypeUi4 = 'primary' | 'secondary' | 'tertiary'
+export type EdgeButtonType =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  // For things like "Block"/"Deny"/"Delete"/etc
+  | 'destructive'
 
 interface Props {
   children?: React.ReactNode
@@ -41,16 +42,13 @@ interface Props {
   spinner?: boolean
 
   // Which visual style to use. Defaults to primary (solid):
-  type?: ButtonTypeUi4
+  type?: EdgeButtonType
 
   // Still uses 'type', but makes it shorter (2 rem vs 3 rem)
   mini?: boolean
 
   /** @deprecated - Shouldn't use this post-UI4 transition */
   marginRem?: number[] | number
-
-  /** @deprecated - Shouldn't use this post-UI4 transition */
-  paddingRem?: number[] | number
 
   testID?: string
 }
@@ -60,7 +58,7 @@ interface Props {
  * - Typically to be used as a child of ButtonsViewUi4.
  * - NOT meant to be used on its own outside of ButtonsViewUi4 unless layout='solo'
  */
-export function ButtonUi4(props: Props) {
+export function EdgeButton(props: Props) {
   const {
     layout = 'solo',
     children,
@@ -71,7 +69,6 @@ export function ButtonUi4(props: Props) {
     spinner = false,
     mini = false,
     marginRem,
-    paddingRem,
     testID
   } = props
 
@@ -109,6 +106,15 @@ export function ButtonUi4(props: Props) {
         end: theme.escapeButtonColorEnd,
         start: theme.escapeButtonColorStart
       }
+    },
+    destructive: {
+      textStyle: styles.primaryText,
+      spinnerColor: theme.dangerButtonText,
+      gradientProps: {
+        colors: theme.dangerButton,
+        end: theme.dangerButtonColorEnd,
+        start: theme.dangerButtonColorStart
+      }
     }
   }
 
@@ -128,6 +134,15 @@ export function ButtonUi4(props: Props) {
       </EdgeText>
     )
 
+  // Use margin props as padding for the invisible container to increase
+  // tappable area while visually looking like margins
+  const customMarginPadding = React.useMemo(() => {
+    if (marginRem == null) return undefined
+
+    // Use margin as padding to increase tappable area
+    return sidesToPadding(mapSides(fixSides(marginRem, 0), theme.rem))
+  }, [marginRem, theme])
+
   const touchContainerStyle = React.useMemo(() => {
     const retStyle: ViewStyle[] = [styles.touchContainerCommon]
 
@@ -135,24 +150,14 @@ export function ButtonUi4(props: Props) {
     if (layout === 'row') retStyle.push(styles.touchContainerRow)
     if (layout === 'solo') retStyle.push(styles.touchContainerSolo)
 
-    const customMargin =
-      marginRem == null
-        ? undefined
-        : sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
     retStyle.push(
-      customMargin != null
-        ? {
-            // Use margin as padding to increase tappable area
-            paddingLeft: customMargin.marginLeft,
-            paddingRight: customMargin.marginRight,
-            paddingTop: customMargin.marginTop,
-            paddingBottom: customMargin.marginBottom
-          }
+      customMarginPadding != null
+        ? customMarginPadding
         : styles.touchContainerSpacing
     )
 
     return retStyle
-  }, [layout, marginRem, styles, theme])
+  }, [layout, customMarginPadding, styles])
 
   const visibleContainerStyle = React.useMemo(() => {
     const retStyle: ViewStyle[] = [styles.visibleContainerCommon]
@@ -169,19 +174,12 @@ export function ButtonUi4(props: Props) {
         ? styles.visibleSizeTertiary
         : styles.visibleSizeDefault
     )
-
-    if (paddingRem != null) {
-      retStyle.push(
-        sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
-      )
-    }
-
     retStyle.push({
       opacity: disabled ? 0.3 : hideContent ? 0.7 : 1
     })
 
     return retStyle
-  }, [disabled, hideContent, layout, mini, paddingRem, styles, theme, type])
+  }, [disabled, hideContent, layout, mini, styles, type])
 
   return (
     <EdgeTouchableOpacity
@@ -204,7 +202,10 @@ export function ButtonUi4(props: Props) {
         )}
       </LinearGradient>
       {!hideContent ? null : (
-        <ActivityIndicator color={spinnerColor} style={styles.spinner} />
+        <ActivityIndicator
+          color={spinnerColor}
+          style={[customMarginPadding, styles.spinner]}
+        />
       )}
     </EdgeTouchableOpacity>
   )
@@ -298,12 +299,16 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontSize: theme.rem(theme.escapeButtonFontSizeRem),
       color: theme.escapeButtonText
     },
+    dangerText: {
+      fontFamily: theme.dangerButtonFont,
+      fontSize: theme.rem(theme.dangerButtonFontSizeRem),
+      color: theme.dangerButtonText
+    },
     leftMarginedText: {
       marginLeft: theme.rem(0.5)
     },
     spinner: {
-      position: 'absolute',
-      height: theme.rem(2)
+      position: 'absolute'
     }
   }
 })

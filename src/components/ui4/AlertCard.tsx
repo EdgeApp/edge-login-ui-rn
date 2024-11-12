@@ -4,16 +4,15 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
-import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { CardUi4 } from './CardUi4'
+import { EdgeCard } from './EdgeCard'
 
 interface Props {
   body?: string[] | string // Bullet point messages if an array is provided
-  title: string
+  title?: string
   type: 'error' | 'warning'
   footer?: string
   header?: string
@@ -41,7 +40,7 @@ interface Props {
  *  | This is the footer text   |
  *  |___________________________|
  */
-export function AlertCardUi4(props: Props) {
+export function AlertCard(props: Props) {
   const { title, type, header, body, footer, marginRem, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -58,7 +57,7 @@ export function AlertCardUi4(props: Props) {
   }
 
   return (
-    <CardUi4
+    <EdgeCard
       gradientBackground={
         type === 'error' ? theme.cardGradientError : theme.cardGradientWarning
       }
@@ -66,17 +65,19 @@ export function AlertCardUi4(props: Props) {
       onPress={onPress}
     >
       <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <IonIcon
-            name="warning-outline"
-            style={styles.icon}
-            color={theme.primaryText}
-            size={theme.rem(1.25)}
-          />
-          <EdgeText numberOfLines={0} style={styles.titleText}>
-            {title}
-          </EdgeText>
-        </View>
+        {title == null ? null : (
+          <View style={styles.titleContainer}>
+            <IonIcon
+              name="warning-outline"
+              style={styles.icon}
+              color={theme.primaryText}
+              size={theme.rem(1.25)}
+            />
+            <EdgeText numberOfLines={0} style={styles.titleText}>
+              {title}
+            </EdgeText>
+          </View>
+        )}
 
         {header == null ? null : (
           <EdgeText style={styles.text}>{header}</EdgeText>
@@ -98,7 +99,7 @@ export function AlertCardUi4(props: Props) {
           </EdgeText>
         )}
       </View>
-    </CardUi4>
+    </EdgeCard>
   )
 }
 
@@ -108,21 +109,21 @@ const getStyles = (theme: Theme) =>
       margin: theme.rem(0.5)
     },
     titleContainer: {
-      display: 'flex',
       flexDirection: 'row',
       alignItems: 'center'
     },
     titleText: {
       marginLeft: theme.rem(0.2),
-      fontFamily: theme.fontFaceMedium
+      fontFamily: theme.fontFaceMedium,
+      flexShrink: 1,
+      marginBottom: theme.rem(0.5)
     },
     icon: {
       marginRight: theme.rem(0.2)
     },
     text: {
       fontSize: theme.rem(0.75),
-      marginHorizontal: theme.rem(0.25),
-      marginTop: theme.rem(0.5)
+      marginHorizontal: theme.rem(0.25)
     },
     bulletPointContainer: {
       marginTop: theme.rem(0.5)

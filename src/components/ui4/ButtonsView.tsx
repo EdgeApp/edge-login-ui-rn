@@ -10,7 +10,7 @@ import { EdgeAnim } from '../common/EdgeAnim'
 import { maybeComponent } from '../hoc/maybeComponent'
 import { styled } from '../hoc/styled'
 import { Space } from '../layout/Space'
-import { ButtonTypeUi4, ButtonUi4 } from './ButtonUi4'
+import { EdgeButton, EdgeButtonType } from './EdgeButton'
 
 const INTER_BUTTON_SPACING_REM = 1
 const ANIM_DURATION = 1000
@@ -26,7 +26,7 @@ export interface ButtonInfo {
   animDistanceStart?: number
 }
 
-export interface ButtonsViewUi4Props {
+export interface ButtonsViewProps {
   // Specifies whether the component should be positioned absolutely.
   // Default value is false.
   absolute?: boolean
@@ -55,7 +55,7 @@ export interface ButtonsViewUi4Props {
 /**
  * A consistently styled view for displaying button layouts.
  */
-export const ButtonsViewUi4 = React.memo(
+export const ButtonsView = React.memo(
   ({
     absolute = false,
     primary,
@@ -65,7 +65,7 @@ export const ButtonsViewUi4 = React.memo(
     layout,
     parentType,
     animDistanceStart
-  }: ButtonsViewUi4Props) => {
+  }: ButtonsViewProps) => {
     const buttonInfos = [primary, secondary, secondary2, tertiary].filter(
       key => key != null
     )
@@ -75,7 +75,7 @@ export const ButtonsViewUi4 = React.memo(
     const spacing = <Space aroundRem={INTER_BUTTON_SPACING_REM / 2} />
 
     const renderButton = (
-      type: ButtonTypeUi4,
+      type: EdgeButtonType,
       buttonProps?: ButtonInfo,
       index: number = 0
     ) => {
@@ -86,6 +86,7 @@ export const ButtonsViewUi4 = React.memo(
         animDistanceStart != null
           ? animDistanceStart + index * ANIM_DISTANCE_INCREMENT
           : undefined
+      // TODO: Sync EdgeAnim w/ LoginUi
       const disableAnimation = Platform.OS === 'android'
 
       return (
@@ -94,7 +95,7 @@ export const ButtonsViewUi4 = React.memo(
           disableAnimation={disableAnimation}
           enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance }}
         >
-          <ButtonUi4
+          <EdgeButton
             layout={layout}
             label={label}
             onPress={onPress}

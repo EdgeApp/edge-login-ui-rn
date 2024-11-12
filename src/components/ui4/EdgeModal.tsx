@@ -1,7 +1,3 @@
-/**
- * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
- */
-
 import * as React from 'react'
 import { BackHandler, Dimensions, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -17,18 +13,17 @@ import Animated, {
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
-import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { BlurBackground } from './BlurBackground'
 
 const BACKGROUND_ALPHA = 0.7
+const SCROLL_INDICATOR_INSET_FIX = { right: 1 }
 
-export interface ModalPropsUi4<T = unknown> {
+export interface EdgeModalProps<T = unknown> {
   bridge: AirshipBridge<T>
 
   // If a non-string title is provided, it's up to the caller to ensure no close
@@ -36,9 +31,6 @@ export interface ModalPropsUi4<T = unknown> {
   title?: React.ReactNode
 
   children?: React.ReactNode
-
-  // Disable the swipe-to-close gesture:
-  noSwiping?: boolean
 
   // Include a scroll area:
   scroll?: boolean
@@ -58,12 +50,11 @@ const duration = 300
  * A modal that slides a modal up from the bottom of the screen
  * and dims the rest of the app.
  */
-export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
+export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
   const {
     bridge,
     title,
     children,
-    noSwiping = false,
     scroll = false,
     warning = false,
     onCancel
@@ -123,7 +114,6 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
   }, [handleCancel])
 
   const gesture = Gesture.Pan()
-    .enabled(!noSwiping)
     .onUpdate(e => {
       offset.value = e.translationY
     })
@@ -148,7 +138,6 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
 
   const bottomGap = safeAreaGap + dragSlop
   const isHeaderless = title == null && onCancel == null
-  const isCustomTitle = title != null && typeof title !== 'string'
 
   const modalLayout = {
     borderColor: warning ? theme.warningText : theme.modalBorderColor,
@@ -180,27 +169,17 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
               ) : (
                 title ?? undefined
               )}
-              {onCancel == null ? null : (
-                <EdgeTouchableOpacity
-                  style={
-                    isCustomTitle
-                      ? styles.closeIconContainerAbsolute
-                      : styles.closeIconContainer
-                  }
-                  onPress={onCancel}
-                >
-                  <AntDesignIcon
-                    name="close"
-                    color={theme.deactivatedText}
-                    size={theme.rem(1.25)}
-                  />
-                </EdgeTouchableOpacity>
-              )}
             </View>
           )}
 
           {scroll ? (
-            <ScrollView style={styles.scroll}>{children}</ScrollView>
+            <ScrollView
+              style={styles.scroll}
+              keyboardDismissMode="on-drag"
+              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+            >
+              {children}
+            </ScrollView>
           ) : (
             children
           )}
@@ -255,15 +234,27 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'flex-start',
     alignItems: 'flex-end',
     justifyContent: 'flex-start',
-    paddingTop: theme.rem(0.15), // Bake in margins to align with 1 line of text, no matter the number of lines
-    marginRight: theme.rem(0.25) // Less margins because the icon itself comes with whitespace
+    // Increase tappable area with padding, while net X with negative margin to visually appear as if X padding
+    paddingTop: theme.rem(1.15), // Bake in margins to align with 1 line of text, no matter the number of lines
+    paddingRight: theme.rem(1.25), // Less margins because the icon itself comes with whitespace
+    paddingBottom: theme.rem(0.75),
+    marginTop: -theme.rem(1),
+    marginRight: -theme.rem(1),
+    marginBottom: -theme.rem(0.75)
   },
   closeIconContainerAbsolute: {
     // Used when the caller passes a special title that may span the entire
     // width. It's up to the caller to ensure there's no overlap with the close button.
     position: 'absolute',
-    top: theme.rem(0.15), // Bake in margins to align with 1 line of text, which is often supplied in custom headers.
-    right: theme.rem(0.25)
+    top: 0,
+    right: 0,
+    paddingTop: theme.rem(1), // Bake in margins to align with 1 line of text, no matter the number of lines
+    paddingRight: theme.rem(1.25), // Less margins because the icon itself comes with whitespace
+    paddingBottom: theme.rem(0.75),
+    paddingLeft: theme.rem(1),
+    marginTop: -theme.rem(1),
+    marginRight: -theme.rem(1),
+    marginBottom: -theme.rem(0.75)
   },
   titleContainer: {
     flexDirection: 'row',

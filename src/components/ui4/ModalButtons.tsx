@@ -5,10 +5,10 @@
 
 import * as React from 'react'
 
-import { ButtonsView, ButtonsViewProps } from '../ui4/ButtonsView'
+import { ButtonsView, ButtonsViewProps } from './ButtonsView'
 
 interface Props extends Omit<Omit<ButtonsViewProps, 'parentType'>, 'layout'> {}
 
-export const SceneButtons = (props: Props) => {
-  return <ButtonsView {...props} parentType="scene" />
+export const ModalButtons = (props: Props) => {
+  return <ButtonsView {...props} layout="column" parentType="modal" />
 }

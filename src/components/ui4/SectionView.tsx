@@ -4,10 +4,9 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
-import { cacheStyles } from 'react-native-patina'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   children: React.ReactNode | React.ReactNode[]
@@ -20,7 +19,7 @@ interface Props {
   marginRem?: number[] | number
 
   /** @deprecated Only to be used during the UI4 transition */
-  dividerVerticalRem?: number[] | number
+  dividerMarginRem?: number[] | number
 }
 
 const DEFAULT_MARGIN_REM = 0.5
@@ -33,7 +32,7 @@ const DEFAULT_MARGIN_REM = 0.5
  * between sections.
  */
 export const SectionView = (props: Props): JSX.Element | null => {
-  const { children, extendRight = false, marginRem, dividerVerticalRem } = props
+  const { children, extendRight = false, marginRem, dividerMarginRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -44,8 +43,8 @@ export const SectionView = (props: Props): JSX.Element | null => {
       ? styles.marginScene
       : styles.marginCard
   const dividerMargin =
-    dividerVerticalRem != null
-      ? sidesToMargin(mapSides(fixSides(dividerVerticalRem, 0), theme.rem))
+    dividerMarginRem != null
+      ? sidesToMargin(mapSides(fixSides(dividerMarginRem, 0), theme.rem))
       : extendRight
       ? styles.dividerMarginScene
       : styles.dividerMarginCard
@@ -82,7 +81,8 @@ export const SectionView = (props: Props): JSX.Element | null => {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flexDirection: 'column',
-    flex: 1
+    flexGrow: 1,
+    flexShrink: 1
   },
   marginCard: {
     marginVertical: theme.rem(0)

@@ -31,16 +31,24 @@ const palette = {
 
   // Fonts
   SFUITextRegular: 'SF-UI-Text-Regular',
+  QuicksandMedium: 'Quicksand-Medium',
+  QuicksandRegular: 'Quicksand-Regular',
 
   // UI4 palette
   whiteOp37: 'rgba(255, 255, 255, .37)',
   darkGreyOp30: 'hsla(0, 0%, 53%, 0.3)',
   blackOp65: 'rgba(0, 0, 0, .65)',
+  graySecondary: 'hsla(0, 0%, 100%, 0.20)',
 
   // Background:
   backgroundBlack: '#1a1a1a',
 
   // Gradients
+  darkestGreen: '#20312f',
+  darkGreen: '#00604d',
+
+  dangerOuter: 'rgba(240, 81, 35, 0.44)',
+  dangerInner: 'rgba(237, 28, 36, 0.44)',
   warningOuter: 'rgba(119, 43, 15, 0.44)',
   warningInner: 'rgba(130, 91, 33, 0.44)',
   errorOuter: 'rgba(148, 71, 46, 0.44)',
@@ -104,26 +112,40 @@ export const edgeDark: Theme = {
   keypadButtonFont: 'System',
 
   primaryButtonOutline: palette.transparent,
-  primaryButtonOutlineWidth: 1,
-  primaryButton: [palette.edgeMint, palette.edgeMint],
+  primaryButtonOutlineWidth: 0,
+  primaryButton: [palette.darkestGreen, palette.darkGreen],
   primaryButtonColorStart: { x: 0, y: 0 },
   primaryButtonColorEnd: { x: 1, y: 0 },
-  primaryButtonText: palette.edgeBlue,
+  primaryButtonText: palette.white,
   primaryButtonTextShadow: textNoShadow,
-  primaryButtonShadow: themeNoShadow,
+  primaryButtonShadow: {
+    shadowColor: palette.black,
+    shadowOffset: { width: -1.5, height: 1.5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    /** @deprecated */
+    elevation: 0
+  },
   primaryButtonFontSizeRem: 1,
-  primaryButtonFont: 'System',
+  primaryButtonFont: palette.QuicksandMedium,
 
-  secondaryButtonOutline: palette.edgeMint,
-  secondaryButtonOutlineWidth: 1,
-  secondaryButton: [palette.transparent, palette.transparent],
+  secondaryButtonOutline: palette.graySecondary,
+  secondaryButtonOutlineWidth: 0,
+  secondaryButton: [palette.graySecondary, palette.graySecondary],
   secondaryButtonColorStart: { x: 0, y: 0 },
   secondaryButtonColorEnd: { x: 1, y: 1 },
-  secondaryButtonText: palette.edgeMint,
+  secondaryButtonText: palette.white,
   secondaryButtonTextShadow: textNoShadow,
-  secondaryButtonShadow: themeNoShadow,
+  secondaryButtonShadow: {
+    shadowColor: palette.black,
+    shadowOffset: { width: -1.5, height: 1.5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    /** @deprecated */
+    elevation: 0
+  },
   secondaryButtonFontSizeRem: 1,
-  secondaryButtonFont: 'System',
+  secondaryButtonFont: palette.QuicksandRegular,
 
   escapeButtonOutline: palette.transparent,
   escapeButtonOutlineWidth: 0,
@@ -134,7 +156,18 @@ export const edgeDark: Theme = {
   escapeButtonTextShadow: textNoShadow,
   escapeButtonShadow: themeNoShadow,
   escapeButtonFontSizeRem: 1,
-  escapeButtonFont: 'System',
+  escapeButtonFont: palette.QuicksandRegular,
+
+  dangerButtonOutline: palette.transparent,
+  dangerButtonOutlineWidth: 0,
+  dangerButton: [palette.dangerOuter, palette.dangerInner, palette.dangerOuter],
+  dangerButtonColorStart: { x: 0, y: 0.25 },
+  dangerButtonColorEnd: { x: 1, y: 0.75 },
+  dangerButtonText: palette.white,
+  dangerButtonTextShadow: textNoShadow,
+  dangerButtonShadow: themeNoShadow,
+  dangerButtonFontSizeRem: 1,
+  dangerButtonFont: 'System',
 
   pinUsernameButtonOutline: palette.transparent,
   pinUsernameButtonOutlineWidth: 0,

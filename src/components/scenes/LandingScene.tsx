@@ -11,7 +11,7 @@ import { SceneProps } from '../../types/routerTypes'
 import { scale } from '../../util/scaling'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { ThemedScene } from '../themed/ThemedScene'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { ButtonsView } from '../ui4/ButtonsView'
 
 interface Props extends SceneProps<'landing'> {
   branding: Branding
@@ -56,7 +56,7 @@ export const LandingScene = (props: Props) => {
           </View>
         </View>
 
-        <ButtonsViewUi4
+        <ButtonsView
           primary={{
             label: lstrings.get_started,
             testID: 'createAccountButton',

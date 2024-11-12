@@ -4,8 +4,8 @@ import { AirshipBridge } from 'react-native-airship'
 import { lstrings } from '../../common/locales/strings'
 import { Checkbox } from '../themed/Checkbox'
 import { ModalMessage } from '../themed/ModalParts'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { ButtonsView } from '../ui4/ButtonsView'
+import { EdgeModal } from '../ui4/EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<Required<PermissionsModalChoices> | undefined>
@@ -47,7 +47,7 @@ export function RequestPermissionsModal(props: Props) {
   }
 
   return (
-    <ModalUi4
+    <EdgeModal
       bridge={bridge}
       title={lstrings.security_is_our_priority_modal_title}
       warning
@@ -69,7 +69,7 @@ export function RequestPermissionsModal(props: Props) {
       >
         {lstrings.notifications_opt_in_marketing}
       </Checkbox>
-      <ButtonsViewUi4
+      <ButtonsView
         primary={{
           label: lstrings.enable,
           onPress: () => handlePress('enable', true)
@@ -80,6 +80,6 @@ export function RequestPermissionsModal(props: Props) {
         }}
         parentType="modal"
       />
-    </ModalUi4>
+    </EdgeModal>
   )
 }

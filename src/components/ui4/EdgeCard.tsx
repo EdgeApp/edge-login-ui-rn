@@ -7,7 +7,6 @@ import { StyleSheet, View } from 'react-native'
 import LinearGradient, {
   LinearGradientProps
 } from 'react-native-linear-gradient'
-import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -19,9 +18,8 @@ import {
   sidesToPadding
 } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { showError } from '../services/AirshipInstance'
-import { Theme, useTheme } from '../services/ThemeContext'
-import { SectionView } from './SectionViewUi4'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { SectionView } from './SectionView'
 
 interface Props {
   // Top layer:
@@ -29,7 +27,9 @@ interface Props {
 
   // children & icon share the same 2nd layer:
   children: React.ReactNode | React.ReactNode[]
-  icon?: React.ReactNode
+
+  // TODO: Not implemented, but not used yet anyway.
+  // icon?: React.ReactNode | string
 
   // Everything else underneath, in order:
   gradientBackground?: LinearGradientProps // 3rd layer
@@ -41,6 +41,7 @@ interface Props {
   paddingRem?: number[] | number
 
   // Options:
+  fill?: boolean // Set flex to 1 for tiling
   sections?: boolean // Automatic section dividers, only if chilren are multiple nodes
   onClose?: () => Promise<void> | void // If specified, adds a close button, absolutely positioned in the top right
 
@@ -60,16 +61,16 @@ interface Props {
  *
  * onClose: If specified, adds a close button
  */
-export const CardUi4 = (props: Props) => {
+export const EdgeCard = (props: Props) => {
   const {
     children,
-    icon,
     marginRem,
     paddingRem,
     overlay,
     sections,
     gradientBackground,
     nodeBackground,
+    fill = false,
     onClose,
     onLongPress,
     onPress
@@ -78,35 +79,41 @@ export const CardUi4 = (props: Props) => {
   const styles = getStyles(theme)
 
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
-
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
+  const fillStyle = fill ? styles.fill : undefined
+
   const isPressable = onPress != null || onLongPress != null
 
   const handlePress = useHandler(async () => {
     if (onPress != null) {
       triggerHaptic('impactLight')
-      try {
-        await onPress()
-      } catch (err) {
-        showError(err)
-      }
+      await onPress()
     }
   })
 
   const handleLongPress = useHandler(async () => {
     if (onLongPress != null) {
       triggerHaptic('impactLight')
-      try {
-        await onLongPress()
-      } catch (err) {
-        showError(err)
-      }
+      await onLongPress()
     }
   })
 
-  const handleClose = useHandler(() => {
-    triggerHaptic('impactLight')
+  const handleClose = useHandler(async () => {
+    if (onClose != null) {
+      triggerHaptic('impactLight')
+      await onClose()
+    }
   })
+
+  const viewStyle = React.useMemo(
+    () => [styles.cardContainer, margin, padding, fillStyle],
+    [styles.cardContainer, margin, padding, fillStyle]
+  )
+
+  const nonNullChildren = React.Children.toArray(children).filter(
+    child => child != null && React.isValidElement(child)
+  )
+  if (nonNullChildren.length === 0) return null
 
   const background = (
     <View style={styles.backgroundFill}>
@@ -119,9 +126,6 @@ export const CardUi4 = (props: Props) => {
       )}
     </View>
   )
-
-  const maybeIcon =
-    icon == null ? null : <View style={styles.iconContainer}>{icon}</View>
 
   const content = sections ? <SectionView>{children}</SectionView> : children
 
@@ -144,37 +148,26 @@ export const CardUi4 = (props: Props) => {
       <View style={styles.overlayContainer}>{overlay}</View>
     )
 
-  const allContent =
-    icon == null ? (
-      <>
-        {background}
-        {content}
-        {maybeCloseButton}
-        {maybeOverlay}
-      </>
-    ) : (
-      <>
-        {background}
-        <View style={styles.rowContainer}>
-          {maybeIcon}
-          {content}
-        </View>
-        {maybeCloseButton}
-        {maybeOverlay}
-      </>
-    )
+  const allContent = (
+    <>
+      {background}
+      {content}
+      {maybeCloseButton}
+      {maybeOverlay}
+    </>
+  )
 
   return isPressable ? (
     <EdgeTouchableOpacity
       accessible={false}
       onPress={handlePress}
       onLongPress={handleLongPress}
-      style={[styles.cardContainer, margin, padding]}
+      style={viewStyle}
     >
       {allContent}
     </EdgeTouchableOpacity>
   ) : (
-    <View style={[styles.cardContainer, margin, padding]}>{allContent}</View>
+    <View style={viewStyle}>{allContent}</View>
   )
 }
 
@@ -187,7 +180,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   cardContainer: {
     borderRadius: theme.cardBorderRadius,
-    flex: 1
+    alignSelf: 'stretch'
   },
   cornerContainer: {
     margin: theme.rem(1),
@@ -204,14 +197,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: 2,
     pointerEvents: 'none'
   },
-  rowContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  iconContainer: {
-    margin: theme.rem(0.25),
-    justifyContent: 'center',
-    alignContent: 'center'
+  fill: {
+    flex: 1
   }
 }))

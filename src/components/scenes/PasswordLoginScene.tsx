@@ -47,7 +47,7 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
 import { ThemedScene } from '../themed/ThemedScene'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { ButtonsView } from '../ui4/ButtonsView'
 
 const MAX_DISPLAYED_LOCAL_USERS = 5
 
@@ -526,7 +526,7 @@ export const PasswordLoginScene = (props: Props) => {
     return (
       <View style={styles.buttonsBox}>
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-          <ButtonsViewUi4
+          <ButtonsView
             primary={{
               label: lstrings.login_button,
               onPress: handleSubmitPassword,

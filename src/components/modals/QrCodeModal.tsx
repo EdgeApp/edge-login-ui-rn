@@ -16,7 +16,7 @@ import { QrCode } from '../common/QrCode'
 import { showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ModalMessage } from '../themed/ModalParts'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from '../ui4/EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<EdgeAccount | undefined>
@@ -103,7 +103,7 @@ export function QrCodeModal(props: Props) {
   const handleCancel = useHandler(() => bridge.resolve(undefined))
 
   return (
-    <ModalUi4
+    <EdgeModal
       bridge={bridge}
       onCancel={handleCancel}
       title={lstrings.qr_modal_title}
@@ -121,7 +121,7 @@ export function QrCodeModal(props: Props) {
           <QrCode key="qrcode" data={qrData} size={theme.rem(14)} />
         )}
       </View>
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 
