@@ -1,6 +1,8 @@
 {
   "account_confirmation": "Conferma account",
   "account_locked_for": "Account bloccato per altri \n%1$s secondi",
+  "access_confirmation_title": "Conferma Accesso",
+  "access_confirmation_body": "Capisco che concedere l'accesso a questo tentativo di login darà a questa persona pieno accesso ai miei fondi e che questa azione non è reversibile.",
   "alert_dropdown_alert": "Avviso! ",
   "alert_dropdown_warning": "Attenzione! ",
   "alert_modal_action": "\nEffettua il login per approvare o negare questo avviso",
@@ -15,7 +17,11 @@
   "alert_scene_message": "Un nuovo dispositivo vorrebbe accedere al tuo account.",
   "alert_scene_reset_date": "A meno che non lo neghi, l'accesso sarà concesso su: ",
   "alert_scene_reset_message": "Qualcuno sta cercando di rimuovere la sicurezza a 2 fattori dal tuo account.",
-  "alert_scene_warning": "Se non hai richiesto tu questo accesso, la tua password potrebbe essere stata rubata e potresti perdere fondi. Si prega di negare la richiesta e modificare la password.",
+  "alert_scene_message_many_new": "Diversi nuovi dispositivi vorrebbero accedere al tuo account.",
+  "alert_scene_warning_review": "Se non hai richiesto tu questo accesso, la tua password potrebbe essere stata rubata e potresti perdere i tuoi fondi. Si prega di rivedere questa richiesta.",
+  "allow": "Consenti",
+  "deny": "Nega",
+  "deny_all": "Nega a tutti",
   "answer_case_sensitive": "Le risposte sono case sensitive, occhio alle maiuscole!",
   "answers_four_chanracters": "La risposta deve essere di almeno 4 caratteri",
   "app_logo_hint": "App logo",
@@ -73,9 +79,10 @@
   "great_job": "Ben fatto!",
   "hang_tight": "Tieniti forte mentre creiamo",
   "hide_account_info": "Nascondi le informazioni sull'account",
+  "i_understand_agree": "Ho capito e accetto",
   "initiate_password_recovery": "Inserisci il Token Di Recupero. Puoi trovarlo in un'email che è stata inviata da te stesso al tuo indirizzo mail, se avevi impostato il Recupero Password prima di perdere l'accesso.",
   "invalid_account": "L'account non esiste",
-  "invalid_password": "Password non valida",
+  "invalid_credentials": "Nome utente o password non validi",
   "invalid_pin": "PIN non valido",
   "it_would_take_xx_to_crack": "Occorrerebbero %s per craccare la tua password",
   "keypad_eight": "8",
@@ -228,5 +235,8 @@
   "welcome": "Benvenuto/a su %s!",
   "your_answer_label": "La tua risposta",
   "complete_captcha_title": "Sei un umano?",
-  "failed_captcha_error": "Soluzione non corretta"
+  "failed_captcha_error": "Soluzione non corretta",
+  "review_login_request": "Rivedi richiesta di accesso",
+  "login_attempt_detected": "È stato rilevato un tentativo di accesso per i seguenti account:",
+  "twofa_attempt_detected": "È stato rilevato un tentativo di rimuovere la sicurezza a 2 fattori per i seguenti account:"
 }
