@@ -237,6 +237,6 @@
   "complete_captcha_title": "Sei un umano?",
   "failed_captcha_error": "Soluzione non corretta",
   "review_login_request": "Rivedi richiesta di accesso",
-  "login_attempt_detected": "A login attempt has been detected for the following account(s):",
-  "twofa_attempt_detected": "An attempt to remove 2-factor security has been detected for the following account(s):"
+  "login_attempt_detected": "È stato rilevato un tentativo di accesso per i seguenti account:",
+  "twofa_attempt_detected": "È stato rilevato un tentativo di rimuovere la sicurezza a 2 fattori per i seguenti account:"
 }
