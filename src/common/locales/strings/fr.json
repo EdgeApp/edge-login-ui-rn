@@ -1,6 +1,8 @@
 {
   "account_confirmation": "Confirmation de compte",
   "account_locked_for": "Compte bloqué pour %1$s encore plus de quelques secondes",
+  "access_confirmation_title": "Access Confirmation",
+  "access_confirmation_body": "I understand that granting access to this login attempt gives this person full access to my funds and that this action is not reversible.",
   "alert_dropdown_alert": "Alert! ",
   "alert_dropdown_warning": "Alerte! ",
   "alert_modal_action": "\nPlease log in to approve or deny this alert",
@@ -15,7 +17,11 @@
   "alert_scene_message": "A new device would like to log in to your account.",
   "alert_scene_reset_date": "Unless denied, access will be granted on: ",
   "alert_scene_reset_message": "Someone is trying to remove 2-factor security from your account.",
-  "alert_scene_warning": "If you did not request this login, your password may have been stolen and you could lose funds. Please deny the request and change your password.",
+  "alert_scene_message_many_new": "Several new devices would like to log in to your account.",
+  "alert_scene_warning_review": "If you did not request this login, your password may have been stolen and you could lose funds. Please review this request.",
+  "allow": "Allow",
+  "deny": "Deny",
+  "deny_all": "Deny All",
   "answer_case_sensitive": "Les réponses sont sensibles à la casse",
   "answers_four_chanracters": "Votre réponse doit comporter au moins 4 caractères",
   "app_logo_hint": "App logo",
@@ -73,9 +79,10 @@
   "great_job": "Great Job!",
   "hang_tight": "Veuillez patienter quelques instants",
   "hide_account_info": "Masquer les informations de compte",
+  "i_understand_agree": "I understand and agree",
   "initiate_password_recovery": "Enter Recovery Token. You can find the recovery token in an email that was sent from yourself if password recovery was setup prior to losing access.",
   "invalid_account": "Account does not exist",
-  "invalid_password": "Invalid password",
+  "invalid_credentials": "Invalid username or password",
   "invalid_pin": "Code NIP invalide",
   "it_would_take_xx_to_crack": "Il faudrait %s à casser votre mot de passe",
   "keypad_eight": "8",
@@ -228,5 +235,8 @@
   "welcome": "Welcome to %s!",
   "your_answer_label": "Votre réponse",
   "complete_captcha_title": "Are you a human?",
-  "failed_captcha_error": "Incorrect solution"
+  "failed_captcha_error": "Incorrect solution",
+  "review_login_request": "Review Login Request",
+  "login_attempt_detected": "A login attempt has been detected for the following account(s):",
+  "twofa_attempt_detected": "An attempt to remove 2-factor security has been detected for the following account(s):"
 }

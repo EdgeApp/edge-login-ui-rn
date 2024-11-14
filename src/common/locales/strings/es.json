@@ -1,6 +1,8 @@
 {
   "account_confirmation": "Confirmación de cuenta",
   "account_locked_for": "Cuenta bloqueada por %1$s segundos más",
+  "access_confirmation_title": "Access Confirmation",
+  "access_confirmation_body": "I understand that granting access to this login attempt gives this person full access to my funds and that this action is not reversible.",
   "alert_dropdown_alert": "¡Alerta! ",
   "alert_dropdown_warning": "¡Advertencia! ",
   "alert_modal_action": "\nInicie sesión para aprobar o rechazar esta alerta",
@@ -15,7 +17,11 @@
   "alert_scene_message": "Un nuevo dispositivo quiere iniciar sesión en tu cuenta.",
   "alert_scene_reset_date": "A menos que se niegue, el acceso se concederá en: ",
   "alert_scene_reset_message": "Alguien está tratando de eliminar la seguridad de 2 factores de tu cuenta.",
-  "alert_scene_warning": "Si no solicitaste este acceso, tu contraseña podría haber sido robada y podrías perder fondos. Por favor, rechaza la solicitud y cambia tu contraseña.",
+  "alert_scene_message_many_new": "Several new devices would like to log in to your account.",
+  "alert_scene_warning_review": "If you did not request this login, your password may have been stolen and you could lose funds. Please review this request.",
+  "allow": "Allow",
+  "deny": "Deny",
+  "deny_all": "Deny All",
   "answer_case_sensitive": "Las respuestas son sensibles al uso de mayúsculas/minúsculas",
   "answers_four_chanracters": "Las respuestas deben tener un mínimo de 4 carácteres",
   "app_logo_hint": "App logo",
@@ -73,9 +79,10 @@
   "great_job": "¡Buen trabajo!",
   "hang_tight": "Espera mientras creamos",
   "hide_account_info": "Ocultar información de la cuenta",
+  "i_understand_agree": "I understand and agree",
   "initiate_password_recovery": "Introduzca el token de recuperación. Puedes encontrar el token de recuperación en un correo electrónico que fue enviado por ti mismo si la recuperación de contraseña fue configurada antes de perder el acceso.",
   "invalid_account": "Account does not exist",
-  "invalid_password": "Invalid password",
+  "invalid_credentials": "Invalid username or password",
   "invalid_pin": "PIN incorrecto",
   "it_would_take_xx_to_crack": "Descubrir tu contraseña llevaría %s",
   "keypad_eight": "8",
@@ -228,5 +235,8 @@
   "welcome": "Bienvenido(a) a %s!",
   "your_answer_label": "Tu respuesta",
   "complete_captcha_title": "Are you a human?",
-  "failed_captcha_error": "Incorrect solution"
+  "failed_captcha_error": "Incorrect solution",
+  "review_login_request": "Review Login Request",
+  "login_attempt_detected": "A login attempt has been detected for the following account(s):",
+  "twofa_attempt_detected": "An attempt to remove 2-factor security has been detected for the following account(s):"
 }
