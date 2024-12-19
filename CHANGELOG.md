@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 3.24.1 (2024-12-19)
+
+- changed: Update translations.
+- changed: Upgrade biggystring.
+
 ## 3.24.0 (2024-11-11)
 
 - added: (Android) Detect if user restricted background battery usage
