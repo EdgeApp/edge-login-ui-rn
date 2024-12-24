@@ -173,10 +173,28 @@ const checkSecurityMessages = () => async (
       <SecurityAlertsModal bridge={bridge} messages={relevantMessages} />
     ))
     if (username != null) {
-      dispatch({
-        type: 'NAVIGATE',
-        data: { name: 'passwordLogin', params: { username } }
-      })
+      const info = context.localUsers.find(info => info.username === username)
+      if (
+        info != null &&
+        (info.pinLoginEnabled ||
+          upgradeUser(info, getState().touch).touchLoginEnabled)
+      ) {
+        dispatch({
+          type: 'NAVIGATE',
+          data: {
+            name: 'pinLogin',
+            params: { loginId: info.loginId }
+          }
+        })
+      } else {
+        dispatch({
+          type: 'NAVIGATE',
+          data: {
+            name: 'passwordLogin',
+            params: { username }
+          }
+        })
+      }
     }
   }
 }
