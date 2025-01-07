@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.24.2 (2025-01-06)
+
 - fixed: `SecurityAlertsModal` routes to `pinLoginScene` if pin is enabled for the user
 
 ## 3.24.1 (2024-12-19)
