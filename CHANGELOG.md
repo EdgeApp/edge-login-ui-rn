@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.24.3 (2025-01-16)
+
 - fixed: Fix recovery date off by one day bug.
 
 ## 3.24.2 (2025-01-06)
