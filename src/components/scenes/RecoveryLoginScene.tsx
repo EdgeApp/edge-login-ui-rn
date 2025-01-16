@@ -13,7 +13,7 @@ import { SceneProps } from '../../types/routerTypes'
 import { attemptLogin, LoginAttempt } from '../../util/loginAttempt'
 import { Tile } from '../common/Tile'
 import { WarningCard } from '../common/WarningCard'
-import { DateModal } from '../modals/DateModal'
+import { DateModal, toRecoveryDateString } from '../modals/DateModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -51,9 +51,9 @@ export const RecoveryLoginScene = (props: SceneProps<'recoveryLogin'>) => {
     const now = new Date()
     Airship.show<Date>(bridge => (
       <DateModal bridge={bridge} initialValue={now} />
-    )).then(answer => {
-      const date = answer.toISOString().split('T')[0]
-      answers[index] = date
+    )).then(date => {
+      const answer = toRecoveryDateString(date)
+      answers[index] = answer
       setAnswers([...answers])
     })
   }

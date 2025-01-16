@@ -21,7 +21,7 @@ import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { Tile } from '../../common/Tile'
 import { WarningCard } from '../../common/WarningCard'
 import { ButtonsModal } from '../../modals/ButtonsModal'
-import { DateModal } from '../../modals/DateModal'
+import { DateModal, toRecoveryDateString } from '../../modals/DateModal'
 import { QuestionListModal } from '../../modals/QuestionListModal'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { Airship, showError } from '../../services/AirshipInstance'
@@ -124,9 +124,9 @@ export const ChangeRecoveryScene = (props: Props) => {
     await Airship.show<Date>(bridge => (
       <DateModal bridge={bridge} initialValue={now} />
     ))
-      .then(answer => {
-        const date = answer.toISOString().split('T')[0]
-        answers[index] = date
+      .then(date => {
+        const answer = toRecoveryDateString(date)
+        answers[index] = answer
         setAnswers([...answers])
       })
       .catch((error: Error) => {
