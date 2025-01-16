@@ -85,8 +85,8 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
     )
   }
 
-  handleChange = (event: unknown, date?: Date) => {
-    // @ts-expect-error
+  handleChange = (_event: unknown, date?: Date) => {
+    if (date == null) return
     this.setState({ date })
   }
 
@@ -105,7 +105,7 @@ export function DateModalAndroid(props: Props) {
   return (
     <DateTimePicker
       mode="date"
-      onChange={(event, date?: Date) => {
+      onChange={(_event, date?: Date) => {
         bridge.resolve(date != null ? date : initialValue)
         bridge.remove()
       }}
@@ -116,3 +116,17 @@ export function DateModalAndroid(props: Props) {
 
 export const DateModal =
   Platform.OS === 'android' ? DateModalAndroid : withTheme(DateModalIos)
+
+/**
+ * Returns the date portion of a date object, formatted YYYY-MM-DD.
+ * It makes sure to return the date local to the current timezone.
+ *
+ * It's only use-case is to convert a date object from the date picker modal
+ * to a formatted string.
+ *
+ * @param date A JS Date Object
+ * @returns the formatted date string (YYYY-MM-DD).
+ */
+export function toRecoveryDateString(date: Date): string {
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+}

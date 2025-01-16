@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Fix recovery date off by one day bug.
+
 ## 3.24.2 (2025-01-06)
 
 - fixed: `SecurityAlertsModal` routes to `pinLoginScene` if pin is enabled for the user
