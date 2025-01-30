@@ -14,7 +14,7 @@
   "homepage": "https://github.com/EdgeApp/edge-login-ui-rn",
   "license": "SEE LICENSE IN LICENSE",
   "author": "Airbitz, Inc.",
-  "main": "lib/index.js",
+  "main": "src/index.ts",
   "files": [
     "/android/build.gradle",
     "/android/src/",

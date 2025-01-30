@@ -17,6 +17,7 @@ import { sprintf } from 'sprintf-js'
 import { completeLogin } from '../../actions/LoginCompleteActions'
 import { FaceIdXml } from '../../assets/xml/FaceId'
 import { lstrings } from '../../common/locales/strings'
+import { getDuressSettings, setDuressSettings } from '../../duress'
 import { useImports } from '../../hooks/useImports'
 import { LoginUserInfo, useLocalUsers } from '../../hooks/useLocalUsers'
 import { getLoginKey } from '../../keychain'
@@ -70,6 +71,7 @@ export function PinLoginScene(props: Props) {
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
+  const duressSettings = getDuressSettings()
 
   // ---------------------------------------------------------------------
   // State
@@ -88,11 +90,21 @@ export function PinLoginScene(props: Props) {
 
   // User list:
   const localUsers = useLocalUsers()
-  const dropdownItems = React.useMemo(
-    () =>
-      localUsers.filter(user => user.pinLoginEnabled || user.touchLoginEnabled),
-    [localUsers]
-  )
+  const dropdownItems = React.useMemo(() => {
+    if (duressSettings.duressModeOn) {
+      return localUsers.filter(
+        user => user.username === duressSettings.duressDisplayUsername
+      )
+    } else {
+      return localUsers.filter(
+        user => user.pinLoginEnabled || user.touchLoginEnabled
+      )
+    }
+  }, [
+    duressSettings.duressModeOn,
+    localUsers,
+    duressSettings.duressDisplayUsername
+  ])
 
   // Active user:
   const userInfo = React.useMemo<LoginUserInfo | undefined>(
@@ -187,13 +199,47 @@ export function PinLoginScene(props: Props) {
     userInfo: LoginUserInfo,
     pin: string
   ): Promise<void> => {
+    const { loginId, username } = userInfo
+    const { duressModeOn, duressUsername, duressPin } = getDuressSettings()
     try {
-      const { loginId } = userInfo
       onPerfEvent({ name: 'pinLoginBegin' })
+      if (duressModeOn && duressUsername != null && duressPin != null) {
+        // Try to login with the duressPin
+        try {
+          const account = await context.loginWithPIN(
+            duressUsername,
+            duressPin,
+            {
+              ...accountOptions,
+              useLoginId: false
+            }
+          )
+          onPerfEvent({ name: 'pinLoginEnd' })
+          await dispatch(completeLogin(account))
+          return
+        } catch (error: unknown) {
+          // If we're in duress mode and the duressPin is incorrect,
+          // then we'll try to login with the normal PIN. if that works,
+          // then turn off duress mode
+          const passwordError = asMaybePasswordError(error)
+          if (passwordError == null) {
+            throw error
+          }
+          // Let the normal PIN error handling handle the rest
+        }
+      }
       const account = await context.loginWithPIN(loginId, pin, {
         ...accountOptions,
         useLoginId: true
       })
+      if (duressModeOn) {
+        // Duress mode was on the but PIN successfully logged into the
+        // display username. Turn off duress mode.
+        setDuressSettings({
+          duressModeOn: false,
+          duressDisplayUsername: undefined
+        })
+      }
       onPerfEvent({ name: 'pinLoginEnd' })
       await dispatch(completeLogin(account))
     } catch (error: unknown) {
@@ -204,6 +250,25 @@ export function PinLoginScene(props: Props) {
       const passwordError = asMaybePasswordError(error)
       const usernameError = asMaybeUsernameError(error)
       const networkError = asMaybeNetworkError(error)
+
+      /**
+       * If the PIN is incorrect for the currenct account, and the user has duress mode
+       * settings set, and the PIN matches the duress PIN, and the username does not match
+       * then try to login with the duress account.
+       */
+      if (
+        passwordError != null &&
+        duressUsername != null &&
+        duressPin != null &&
+        duressPin === pin &&
+        duressUsername !== username
+      ) {
+        setDuressSettings({
+          duressDisplayUsername: username ?? '',
+          duressModeOn: true
+        })
+        return await handlePinLogin(userInfo, pin)
+      }
       setErrorInfo({
         message:
           passwordError != null

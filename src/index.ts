@@ -5,6 +5,7 @@ import './util/androidFetch'
 // ---------------------------------------------------------------------
 
 export { LoginUiProvider } from './components/publicApi/LoginUiProvider'
+export { ChangeDuressCodeScreen } from './components/publicApi/ChangeDuressCodeScreen'
 export { ChangePasswordScreen } from './components/publicApi/ChangePasswordScreen'
 export { ChangePinScreen } from './components/publicApi/ChangePinScreen'
 export { UpgradeUsernameScreen } from './components/publicApi/UpgradeUsernameScreen'
