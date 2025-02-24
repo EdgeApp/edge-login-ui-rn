@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Input text selection color adjusted for transparency on Android.
+
 ## 3.24.3 (2025-01-16)
 
 - fixed: Fix recovery date off by one day bug.

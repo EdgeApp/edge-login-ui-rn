@@ -22,6 +22,7 @@ const palette = {
   accentOrange: '#F1AA19',
   blackOp25: 'rgba(0, 0, 0, .25)',
   blackOp50: 'rgba(0, 0, 0, .5)',
+  whiteOp25: 'rgba(255, 255, 255, .25)',
   whiteOp75: 'rgba(255, 255, 255, .75)',
   whiteOp10: 'rgba(255, 255, 255, .1)',
   grayOp80: 'rgba(135, 147, 158, .8)',
@@ -207,6 +208,7 @@ export const edgeDark: Theme = {
   textInputPlaceholderColor: palette.gray,
   textInputPlaceholderColorDisabled: palette.gray,
   textInputPlaceholderColorFocused: palette.edgeMint,
+  textInputSelectionColor: palette.whiteOp25,
 
   // Dropdown colors:
   dropdownWarning: palette.accentOrange,
