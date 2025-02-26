@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Modals synced with edge-react-gui, including desktop platform-specific close button visibility.
+
 ## 3.24.4 (2025-02-24)
 
 - fixed: Input text selection color adjusted for transparency on Android.
