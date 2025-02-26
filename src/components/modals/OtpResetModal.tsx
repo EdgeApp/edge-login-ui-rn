@@ -17,7 +17,6 @@ export async function showResetModal(
           onPress: async () => await requestOtpReset().then(() => true)
         }
       }}
-      closeArrow
       bridge={bridge}
     />
   ))
