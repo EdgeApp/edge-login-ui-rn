@@ -6,12 +6,17 @@ import { Airship } from '../services/AirshipInstance'
 import { changeTheme, getTheme, ThemeProvider } from '../services/ThemeContext'
 
 /**
- * We use this context to determine if `LoginUiProvider` is mounted.
+ * We use this context to determine if `LoginUiProvider` is mounted, and whether
+ * we are on mobile or desktop.
  */
-const loginUiContext = React.createContext(false)
+export const loginUiContext = React.createContext({
+  hasProvider: false,
+  isDesktop: false
+})
 
 interface Props {
   themeOverride?: Theme
+  isDesktop?: boolean
   children: React.ReactNode
 }
 
@@ -37,7 +42,9 @@ function LoginUiProviderComponent(props: Props): JSX.Element {
   }
 
   return (
-    <loginUiContext.Provider value>
+    <loginUiContext.Provider
+      value={{ hasProvider: true, isDesktop: props.isDesktop ?? false }}
+    >
       <SafeAreaProvider>
         <ThemeProvider>
           <Airship>{props.children}</Airship>
@@ -53,7 +60,7 @@ export function MaybeProvideLoginUi(props: {
   children: JSX.Element
 }): JSX.Element {
   const { children } = props
-  const hasProvider = React.useContext(loginUiContext)
+  const { hasProvider } = React.useContext(loginUiContext)
 
   return hasProvider ? children : <LoginUiProvider>{children}</LoginUiProvider>
 }
