@@ -4,7 +4,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { lstrings } from '../../common/locales/strings'
 import { Checkbox } from '../themed/Checkbox'
 import { ModalMessage } from '../themed/ModalParts'
-import { ButtonsView } from '../ui4/ButtonsView'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeModal } from '../ui4/EdgeModal'
 
 interface Props {

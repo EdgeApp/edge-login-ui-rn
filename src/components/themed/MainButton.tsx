@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { EdgeButton } from '../ui4/EdgeButton'
+import { EdgeButton } from '../buttons/EdgeButton'
 
 export type MainButtonType = 'primary' | 'secondary' | 'escape'
 
