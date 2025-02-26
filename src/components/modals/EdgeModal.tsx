@@ -18,7 +18,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { BlurBackground } from './BlurBackground'
+import { BlurBackground } from '../ui4/BlurBackground'
 
 const BACKGROUND_ALPHA = 0.7
 const SCROLL_INDICATOR_INSET_FIX = { right: 1 }

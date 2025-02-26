@@ -2,10 +2,10 @@ import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../common/locales/strings'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { Checkbox } from '../themed/Checkbox'
 import { ModalMessage } from '../themed/ModalParts'
-import { ButtonsView } from '../buttons/ButtonsView'
-import { EdgeModal } from '../ui4/EdgeModal'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<Required<PermissionsModalChoices> | undefined>

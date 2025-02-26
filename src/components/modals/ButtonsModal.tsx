@@ -7,7 +7,7 @@ import { showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage } from '../themed/ModalParts'
-import { EdgeModal } from '../ui4/EdgeModal'
+import { EdgeModal } from './EdgeModal'
 
 export interface ButtonInfo {
   label: string
