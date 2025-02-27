@@ -7,6 +7,7 @@ import { WebView, WebViewNavigation } from 'react-native-webview'
 
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
+import { useImports } from '../../hooks/useImports'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -49,6 +50,8 @@ export async function retryOnChallenge<T, C>(opts: {
 
 export const ChallengeModal = (props: Props) => {
   const { bridge, challengeUri } = props
+  const { context } = useImports()
+  const { isDesktop } = context
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -84,16 +87,18 @@ export const ChallengeModal = (props: Props) => {
         <EdgeText style={styles.titleText} numberOfLines={2}>
           {lstrings.complete_captcha_title}
         </EdgeText>
-        <EdgeTouchableOpacity
-          style={styles.closeIconContainer}
-          onPress={handleCancel}
-        >
-          <AntDesignIcon
-            name="close"
-            color={theme.primaryText}
-            size={theme.rem(1.25)}
-          />
-        </EdgeTouchableOpacity>
+        {!isDesktop ? null : (
+          <EdgeTouchableOpacity
+            style={styles.closeIconContainer}
+            onPress={handleCancel}
+          >
+            <AntDesignIcon
+              name="close"
+              color={theme.primaryText}
+              size={theme.rem(1.25)}
+            />
+          </EdgeTouchableOpacity>
+        )}
       </View>
       <WebView
         javaScriptEnabled
