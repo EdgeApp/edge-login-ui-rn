@@ -10,8 +10,8 @@ import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { scale } from '../../util/scaling'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { ThemedScene } from '../themed/ThemedScene'
-import { ButtonsView } from '../ui4/ButtonsView'
 
 interface Props extends SceneProps<'landing'> {
   branding: Branding

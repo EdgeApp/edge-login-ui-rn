@@ -16,7 +16,7 @@ import { QrCode } from '../common/QrCode'
 import { showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ModalMessage } from '../themed/ModalParts'
-import { EdgeModal } from '../ui4/EdgeModal'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<EdgeAccount | undefined>

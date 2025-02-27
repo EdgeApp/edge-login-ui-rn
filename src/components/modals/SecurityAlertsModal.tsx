@@ -12,8 +12,8 @@ import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { ModalTitle } from '../themed/ModalParts'
 import { EdgeCard } from '../ui4/EdgeCard'
-import { EdgeModal } from '../ui4/EdgeModal'
 import { SectionView } from '../ui4/SectionView'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<string | undefined>

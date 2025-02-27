@@ -7,7 +7,7 @@ import { useFilter } from '../../hooks/useFilter'
 import { useTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { ModalFooter, ModalMessage } from '../themed/ModalParts'
-import { EdgeModal } from '../ui4/EdgeModal'
+import { EdgeModal } from './EdgeModal'
 
 interface Props<T> {
   bridge: AirshipBridge<any>

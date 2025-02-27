@@ -5,7 +5,7 @@
 
 import * as React from 'react'
 
-import { ButtonsView, ButtonsViewProps } from '../ui4/ButtonsView'
+import { ButtonsView, ButtonsViewProps } from '../buttons/ButtonsView'
 
 interface Props extends Omit<Omit<ButtonsViewProps, 'parentType'>, 'layout'> {}
 

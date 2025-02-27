@@ -36,6 +36,7 @@ import { base58 } from '../../util/base58'
 import { attemptLogin, LoginAttempt } from '../../util/loginAttempt'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { UserListItem } from '../abSpecific/UserListItem'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -47,7 +48,6 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
 import { ThemedScene } from '../themed/ThemedScene'
-import { ButtonsView } from '../ui4/ButtonsView'
 
 const MAX_DISPLAYED_LOCAL_USERS = 5
 
