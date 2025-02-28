@@ -13,12 +13,15 @@ import Animated, {
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
+import { loginUiContext } from '../publicApi/LoginUiProvider'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { BlurBackground } from './BlurBackground'
+import { BlurBackground } from '../ui4/BlurBackground'
 
 const BACKGROUND_ALPHA = 0.7
 const SCROLL_INDICATOR_INSET_FIX = { right: 1 }
@@ -26,20 +29,28 @@ const SCROLL_INDICATOR_INSET_FIX = { right: 1 }
 export interface EdgeModalProps<T = unknown> {
   bridge: AirshipBridge<T>
 
-  // If a non-string title is provided, it's up to the caller to ensure no close
-  // button overlap.
+  /**
+   * If a non-string title is provided, it's up to the caller to ensure no close
+   * button overlap.
+   */
   title?: React.ReactNode
 
   children?: React.ReactNode
 
-  // Include a scroll area:
+  /**
+   * Include a scroll area:
+   */
   scroll?: boolean
 
-  // Gives the box a border:
+  /**
+   * Gives the box a border:
+   */
   warning?: boolean
 
-  // Called when the user taps outside the modal or clicks the back button.
-  // If this is missing, the modal will not be closable.
+  /**
+   * Called when the user taps outside the modal or clicks the back button.
+   * If this is missing, the modal will not be closable.
+   */
   onCancel?: () => void
 }
 
@@ -61,7 +72,9 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
   } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const { isDesktop } = React.useContext(loginUiContext)
 
+  const isShowCloseButton = isDesktop && onCancel != null
   const halfRem = theme.rem(0.5)
   const closeThreshold = theme.rem(6)
   const dragSlop = theme.rem(1)
@@ -138,6 +151,7 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
 
   const bottomGap = safeAreaGap + dragSlop
   const isHeaderless = title == null && onCancel == null
+  const isCustomTitle = title != null && typeof title !== 'string'
 
   const modalLayout = {
     borderColor: warning ? theme.warningText : theme.modalBorderColor,
@@ -168,6 +182,22 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
                 </EdgeText>
               ) : (
                 title ?? undefined
+              )}
+              {!isShowCloseButton ? null : (
+                <EdgeTouchableOpacity
+                  style={
+                    isCustomTitle
+                      ? styles.closeIconContainerAbsolute
+                      : styles.closeIconContainer
+                  }
+                  onPress={onCancel}
+                >
+                  <AntDesignIcon
+                    name="close"
+                    color={theme.deactivatedText}
+                    size={theme.rem(1.25)}
+                  />
+                </EdgeTouchableOpacity>
               )}
             </View>
           )}

@@ -11,7 +11,7 @@ import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { AlertCard } from '../ui4/AlertCard'
-import { EdgeModal } from '../ui4/EdgeModal'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   // Resolves to the entered string, or void if cancelled.
