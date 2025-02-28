@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.25.0 (2025-02-28)
+
 - changed: Modals synced with edge-react-gui, including desktop platform-specific close button visibility.
 
 ## 3.24.4 (2025-02-24)
