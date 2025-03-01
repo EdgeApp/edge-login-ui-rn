@@ -1,3 +1,4 @@
+import { ChangeDuressCodeParams } from '../components/scenes/ChangeDuressCodeScene'
 import {
   ChangePasswordParams,
   NewAccountPasswordParams,
@@ -34,6 +35,7 @@ import { RecoveryLoginParams } from '../components/scenes/RecoveryLoginScene'
  * Defines the acceptable route parameters for each scene key.
  */
 export interface LoginParamList {
+  changeDuressCode: ChangeDuressCodeParams
   changePassword: ChangePasswordParams
   changePin: ChangePinParams
   changeRecovery: ChangeRecoveryParams

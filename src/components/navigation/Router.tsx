@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import { Branding } from '../../types/Branding'
 import { useSelector } from '../../types/ReduxTypes'
 import { MaybeProvideLoginUi } from '../publicApi/LoginUiProvider'
+import { ChangeDuressCodeScene } from '../scenes/ChangeDuressCodeScene'
 import {
   ChangePasswordScene,
   NewAccountPasswordScene,
@@ -52,6 +53,8 @@ export function Router(props: Props) {
         return <ChangePasswordScene route={route} />
       case 'changePin':
         return <ChangePinScene route={route} />
+      case 'changeDuressCode':
+        return <ChangeDuressCodeScene route={route} />
       case 'changeRecovery':
         return <ChangeRecoveryScene branding={props.branding} route={route} />
       case 'newAccountWelcome':

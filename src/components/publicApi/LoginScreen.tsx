@@ -18,6 +18,7 @@ import {
   OnNotificationPermit,
   OnPerfEvent
 } from './publicTypes'
+import { getDuressSettings } from 'edge-login-ui-rn/src/duress'
 
 interface Props {
   // ---------------------------------------------------------------------
@@ -167,9 +168,15 @@ export function LoginScreen(props: Props): JSX.Element {
     fontDescription,
     initialLoginId,
     onPerfEvent = () => {},
-    username
+    username: propUsername
   } = props
-
+  const { duressDisplayUsername, duressModeOn } = getDuressSettings()
+  let username
+  if (duressModeOn) {
+    username = duressDisplayUsername ?? ''
+  } else {
+    username = propUsername
+  }
   // Look up the requested user:
   const initialUserInfo =
     initialLoginId != null

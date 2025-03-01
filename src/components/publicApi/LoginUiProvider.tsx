@@ -4,6 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { asOptionalTheme, Theme } from '../../types/Theme'
 import { Airship } from '../services/AirshipInstance'
 import { changeTheme, getTheme, ThemeProvider } from '../services/ThemeContext'
+import { initDuress } from 'edge-login-ui-rn/src/duress'
 
 /**
  * We use this context to determine if `LoginUiProvider` is mounted.

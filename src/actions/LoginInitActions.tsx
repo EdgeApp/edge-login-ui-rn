@@ -14,6 +14,7 @@ import {
 } from '../types/ReduxTypes'
 import { launchPasswordRecovery } from './LoginAction'
 import { loadTouchState } from './TouchActions'
+import { getDuressSettings } from 'edge-login-ui-rn/src/duress'
 
 /**
  * Fires off all the things we need to do to get the login scene up & running.
@@ -76,11 +77,24 @@ export const maybeRouteComplete = (fallbackAction: Action) => (
  * Loading is done, so send the user to the initial route.
  */
 function routeInitialization(state: RootState, imports: Imports): Action {
-  const {
-    context,
+  const { context } = imports
+
+  let {
     initialUserInfo = arrangeUsers(context.localUsers)[0]
   } = imports
   const { touch } = state
+
+  const { duressModeOn, duressDisplayUsername, duressDisplayLoginId } = getDuressSettings()
+
+  if (duressModeOn && duressDisplayLoginId != null) {
+    initialUserInfo = {
+      username: duressDisplayUsername,
+      loginId: duressDisplayLoginId,
+      keyLoginEnabled: true,
+      pinLoginEnabled: true,
+      lastLogin: new Date()
+    }
+  }
 
   // Try to find the user requested by the LoginScene props:
   const startupUser =

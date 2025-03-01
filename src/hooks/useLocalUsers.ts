@@ -6,6 +6,7 @@ import { useSelector } from '../types/ReduxTypes'
 import { getKeychainStatus } from '../util/keychainFile'
 import { useImports } from './useImports'
 import { useWatch } from './useWatch'
+import { getDuressSettings } from 'edge-login-ui-rn/src/duress'
 
 export interface LoginUserInfo extends EdgeUserInfo {
   touchLoginEnabled: boolean
@@ -15,9 +16,23 @@ export function useLocalUsers(): LoginUserInfo[] {
   const { context } = useImports()
   const localUsers = useWatch(context, 'localUsers')
   const touchState = useSelector(state => state.touch)
+  const { duressDisplayUsername, duressDisplayLoginId, duressModeOn } = getDuressSettings()
 
   return React.useMemo(
-    () => arrangeUsers(localUsers).map(info => upgradeUser(info, touchState)),
+    () => {
+      if (duressModeOn) {
+        const duressEdgeUserInfo: LoginUserInfo = {
+          username: duressDisplayUsername,
+          loginId: duressDisplayLoginId ?? '',
+          keyLoginEnabled: true,
+          pinLoginEnabled: true,
+          touchLoginEnabled: true,
+          lastLogin: new Date()
+        }
+        return [duressEdgeUserInfo]
+      }
+
+      return arrangeUsers(localUsers).map(info => upgradeUser(info, touchState))},
     [localUsers, touchState]
   )
 }
