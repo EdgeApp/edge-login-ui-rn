@@ -56,7 +56,7 @@ export async function sendRecoveryEmail(
 ${truncateUsername(username)}
 
 iOS
-edge://recovery?token=${recoveryKey}
+${encodeURIComponent(`edge://recovery?token=${recoveryKey}`)}
 
 Android
 https://deep.edge.app/recovery#${recoveryKey}
