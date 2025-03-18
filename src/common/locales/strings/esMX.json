@@ -237,6 +237,6 @@
   "complete_captcha_title": "No, soy una inteligencia artificial diseñada para ayudarte. 😊?",
   "failed_captcha_error": "Solución incorrecta",
   "review_login_request": "Revisar Solicitud de Inicio de Sesión",
-  "login_attempt_detected": "A login attempt has been detected for the following account(s):",
-  "twofa_attempt_detected": "An attempt to remove 2-factor security has been detected for the following account(s):"
+  "login_attempt_detected": "Se ha detectado un intento de inicio de sesión para la(s) siguiente(s) cuenta(s):",
+  "twofa_attempt_detected": "Se ha detectado un intento de eliminar la seguridad de 2 factores para la(s) siguiente(s) cuenta(s):"
 }
