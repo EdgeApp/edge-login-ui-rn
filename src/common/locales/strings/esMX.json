@@ -213,7 +213,7 @@
   "terms_four": "Entiendo que soy responsable de la protección de mis contraseñas, pares de claves privadas, NIP y cualquier otro código para acceder al software. %s no es responsable si mi información se ve comprometida o es accedida por un tercero y se pierden fondos",
   "terms_one": "Entiendo que mis fondos son mantenidos seguramente en este dispositivo, no por parte de %s",
   "terms_three": "Entiendo que si pierdo mi nombre de usuario y contraseña, %s no sera capaz de recuperar mi cuenta, a no ser que configure la recuperación de cuenta",
-  "terms_two_alt": " I understand that if I lose my device or uninstall the app without first backing up my account with a username and password, my digital assets cannot be retrieved.",
+  "terms_two_alt": " Entiendo que si pierdo mi dispositivo o desinstalo la aplicación sin antes hacer una copia de seguridad de mi cuenta con un nombre de usuario y contraseña, no podré recuperar mis activos digitales.",
   "terms_two": "Entiendo que se pierdo este dispositivo o desinstalo la aplicación, mis activos digitales sólo pueden ser recuperados con mi usuario y contraseña",
   "to_fix": "arreglar",
   "use_faceId": "Usar Face ID",
@@ -234,9 +234,9 @@
   "welcome_advantage_two_title": "Tu seguridad es clave",
   "welcome": "Bienvenido(a) a %s!",
   "your_answer_label": "Tu respuesta",
-  "complete_captcha_title": "Are you a human?",
-  "failed_captcha_error": "Incorrect solution",
-  "review_login_request": "Review Login Request",
+  "complete_captcha_title": "No, soy una inteligencia artificial diseñada para ayudarte. 😊?",
+  "failed_captcha_error": "Solución incorrecta",
+  "review_login_request": "Revisar Solicitud de Inicio de Sesión",
   "login_attempt_detected": "A login attempt has been detected for the following account(s):",
   "twofa_attempt_detected": "An attempt to remove 2-factor security has been detected for the following account(s):"
 }
