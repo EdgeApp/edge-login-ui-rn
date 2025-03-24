@@ -92,6 +92,7 @@ export function QrCodeModal(props: Props) {
         }
         setQrData('edge://edge/' + pending.id)
       })
+      .catch(error => bridge.reject(error))
 
     return () => {
       // Close the request, ignoring errors (in case it is already closed):
