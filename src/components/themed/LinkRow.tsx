@@ -8,7 +8,7 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
-  onPress?: () => void
+  onPress?: () => void | Promise<void>
 
   // If this is set, the component will insert a text node before the other children:
   label?: string
