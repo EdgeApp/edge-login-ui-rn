@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 3.25.1 (2025-02-28)
+
+- changed: Translated more Spanish strings.
 - fixed: Show errors when loading QR codes fails.
 
 ## 3.25.0 (2025-02-28)
