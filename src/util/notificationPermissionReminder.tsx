@@ -26,30 +26,20 @@ const disklet = makeReactNativeDisklet()
 const notificationPermissionsInfoFile = 'notificationsPermisions.json'
 const isIos = Platform.OS === 'ios'
 
-//
-// Logic for showing notification/app refresh request
-//
-// 0 = false, 1 = true
-// nr = notifications and app refresh request message
-// n = notifications request message
-// r = app refresh request only message
-//
-// | Notif Enabled |  Notif Block | App Refresh Enabled || Message |
-// |---------------|--------------|---------------------||---------|
-// |       0       |       0      |           0         >>    nr   |
-// |       0       |       0      |           1         >>    n    |
-// |       0       |       1      |           0         >>    r    |
-// |       0       |       1      |           1         >>         |
-// |       1       |       0      |           0         >>    r    |
-// |       1       |       0      |           1         >>         |
-// |       1       |       1      |           0         >>    r    |
-// |       1       |       1      |           1         >>         |
-//
 const logicMap: Array<Array<Array<string | undefined>>> = [
   [[], []],
   [[], []]
 ]
 
+/*
+Logic for showing notification/app refresh request message:
+
+0 = false, 1 = true
+
+         ┌ Notification Enabled
+         |  ┌ Notification Blocked
+         |  |  ┌ App Refresh Enabled
+         |  |  |  */
 logicMap[0][0][0] = lstrings.notifications_and_refresh_permissions_branded_s
 logicMap[0][0][1] = lstrings.notifications_permissions_branded_s
 logicMap[0][1][0] = lstrings.refresh_permission_branded_s
@@ -114,9 +104,6 @@ export const showNotificationPermissionReminder = async (
   console.log(`permissionMessage:${permissionMessage}`)
 
   if (permissionMessage == null) {
-    if (onNotificationPermit != null && notificationPermissionsInfo != null) {
-      onNotificationPermit(notificationPermissionsInfo)
-    }
     return false
   }
 
