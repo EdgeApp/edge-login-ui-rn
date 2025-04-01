@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-changed: Only call `onNotificationPermit` callback if notification modal is shown
+## 3.26.0 (2025-04-01)
+
+- changed: Only call `onNotificationPermit` callback if notification modal is shown
 
 ## 3.25.1 (2025-02-28)
 
