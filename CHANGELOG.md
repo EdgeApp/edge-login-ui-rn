@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+changed: Only call `onNotificationPermit` callback if notification modal is shown
+
 ## 3.25.1 (2025-02-28)
 
 - changed: Translated more Spanish strings.

@@ -114,9 +114,6 @@ export const showNotificationPermissionReminder = async (
   console.log(`permissionMessage:${permissionMessage}`)
 
   if (permissionMessage == null) {
-    if (onNotificationPermit != null && notificationPermissionsInfo != null) {
-      onNotificationPermit(notificationPermissionsInfo)
-    }
     return false
   }
 
