@@ -59,7 +59,7 @@ export async function refreshTouchId(account: EdgeAccount): Promise<void> {
   const file = await readKeychainFile()
   const status = getKeychainStatus(file, account)
 
-  if (supported && status !== false) {
+  if (supported && status !== false && !account.isDuressAccount) {
     const loginKey = await account.getLoginKey()
     const location =
       typeof status === 'string' ? status : account.rootLoginId + '_loginId'
@@ -83,7 +83,7 @@ export async function enableTouchId(account: EdgeAccount): Promise<void> {
   const file = await readKeychainFile()
   const status = getKeychainStatus(file, account)
 
-  if (!supported) {
+  if (!supported || account.isDuressAccount) {
     throw new Error('TouchIdNotSupportedError')
   }
 
