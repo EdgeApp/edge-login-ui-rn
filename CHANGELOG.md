@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.26.1 (2025-05-12)
+
 - fixed: Fixed biometric login bug caused by saving the duress account's login key. 
 
 ## 3.26.0 (2025-04-01)
