@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Fixed biometric login bug caused by saving the duress account's login key. 
+
 ## 3.26.0 (2025-04-01)
 
 - changed: Only call `onNotificationPermit` callback if notification modal is shown
