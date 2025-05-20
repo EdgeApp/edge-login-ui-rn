@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Prevent pin changes which match duress pin.
+
 ## 3.26.1 (2025-05-12)
 
 - fixed: Fixed biometric login bug caused by saving the duress account's login key. 

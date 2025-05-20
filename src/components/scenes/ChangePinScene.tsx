@@ -15,7 +15,7 @@ import { SceneProps } from '../../types/routerTypes'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneButtons } from '../common/SceneButtons'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { DigitInput, MAX_PIN_LENGTH } from '../themed/DigitInput'
 import { EdgeText } from '../themed/EdgeText'
@@ -127,6 +127,11 @@ export const ChangePinScene = (props: SceneProps<'changePin'>) => {
   const handleSubmit = useHandler(async (pin: string) => {
     Keyboard.dismiss()
     try {
+      const isCorrect = await account.checkPin(pin, { forDuressAccount: true })
+      if (isCorrect) {
+        showToast(lstrings.duress_mode_pin_match_rule_message)
+        return
+      }
       await account.changePin({ pin })
       await Airship.show(bridge => (
         <ButtonsModal
@@ -159,6 +164,11 @@ export const ResecurePinScene = (props: SceneProps<'resecurePin'>) => {
   const handleSubmit = useHandler(async (pin: string) => {
     Keyboard.dismiss()
     try {
+      const isCorrect = await account.checkPin(pin, { forDuressAccount: true })
+      if (isCorrect) {
+        showToast(lstrings.duress_mode_pin_match_rule_message)
+        return
+      }
       await account.changePin({ pin })
       await Airship.show(bridge => (
         <ButtonsModal
