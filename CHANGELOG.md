@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.26.2 (2025-05-21)
+
 - fixed: Prevent pin changes which match duress pin.
 
 ## 3.26.1 (2025-05-12)
