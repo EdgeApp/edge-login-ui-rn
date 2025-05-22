@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.27.0 (2025-05-22)
+
 - changed: `ButtonsModal` confirmation for PIN changes changed to a `showToast` 
 
 ## 3.26.2 (2025-05-21)
