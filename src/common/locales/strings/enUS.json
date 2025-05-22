@@ -65,6 +65,7 @@
   "disable_otp_modal_body": "2FA will take 7 days to disable if no action is taken by the account user on authenticated devices.",
   "disable": "Disable",
   "done": "Done",
+  "duress_mode_pin_match_rule_message": "The PIN you entered matches the PIN for the duress account. Please enter a different PIN.",
   "email_address": "Email Address",
   "email_error_modal": "Please set up an email client that is default to your device's OS in order to send a token to yourself",
   "enable": "Enable",
