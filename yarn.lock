@@ -1046,10 +1046,10 @@ domutils@^2.8.0:
     domelementtype "^2.2.0"
     domhandler "^4.2.0"
 
-edge-core-js@^2.27.2:
-  version "2.27.2"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.27.2.tgz#a9591482f1b2e1ddb80dc7d6fd2000b08e179007"
-  integrity sha512-tQLuxvbMGwoQCd7tzqSbTL0DnfSP3DLeItS8BBDS7OQI4vCb/sgmpFpE4PN4KIZXEcniIWWKGx56LafgttNEMQ==
+edge-core-js@^2.28.0:
+  version "2.28.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.28.0.tgz#3ec5549c1b821ba7cea369c7ff36ed980553b1f3"
+  integrity sha512-c6oU43fMu9L53kMy9qhsqKHkJ05QqKEeSc80FhwfDTeBtlG9/hn+tdie50wREki3p4amLMvXdqVoqX/m+RwWUQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"

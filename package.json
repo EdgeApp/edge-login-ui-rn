@@ -71,7 +71,7 @@
     "babel-eslint": "^10.1.0",
     "css-module-flow": "^1.0.0",
     "disklet": "^0.5.2",
-    "edge-core-js": "^2.27.2",
+    "edge-core-js": "^2.28.0",
     "eslint": "^7.14.0",
     "eslint-config-standard-kit": "0.15.1",
     "eslint-plugin-flowtype": "^5.2.0",
