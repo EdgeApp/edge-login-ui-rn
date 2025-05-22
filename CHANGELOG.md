@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: `ButtonsModal` confirmation for PIN changes changed to a `showToast` 
+
 ## 3.26.2 (2025-05-21)
 
 - fixed: Prevent pin changes which match duress pin.

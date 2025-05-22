@@ -14,8 +14,7 @@ import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneButtons } from '../common/SceneButtons'
-import { ButtonsModal } from '../modals/ButtonsModal'
-import { Airship, showError, showToast } from '../services/AirshipInstance'
+import { showError, showToast } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { DigitInput, MAX_PIN_LENGTH } from '../themed/DigitInput'
 import { EdgeText } from '../themed/EdgeText'
@@ -133,14 +132,7 @@ export const ChangePinScene = (props: SceneProps<'changePin'>) => {
         return
       }
       await account.changePin({ pin })
-      await Airship.show(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          title={lstrings.pin_changed}
-          message={lstrings.pin_successfully_changed}
-          buttons={{ ok: { label: lstrings.ok } }}
-        />
-      ))
+      showToast(lstrings.pin_changed)
       onComplete()
     } catch (e) {
       showError(e)
@@ -170,14 +162,7 @@ export const ResecurePinScene = (props: SceneProps<'resecurePin'>) => {
         return
       }
       await account.changePin({ pin })
-      await Airship.show(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          title={lstrings.pin_changed}
-          message={lstrings.pin_successfully_changed}
-          buttons={{ ok: { label: lstrings.ok } }}
-        />
-      ))
+      showToast(lstrings.pin_changed)
       handleComplete()
     } catch (e) {
       showError(e)
