@@ -65,6 +65,7 @@
   "disable_otp_modal_body": "[2FA] отключится через 7 дней, если не будет произведено действий пользователем учетной записи на проверенных устройствах.",
   "disable": "Отключить",
   "done": "Готово",
+  "duress_mode_pin_match_rule_message": "The PIN you entered matches the PIN for the duress account. Please enter a different PIN.",
   "email_address": "Адрес электронной почты",
   "email_error_modal": "Пожалуйста, настройте почтовый клиент, который является по умолчанию для вашего устройства, чтобы отправить токены себе",
   "enable": "Включить",

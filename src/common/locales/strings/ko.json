@@ -65,6 +65,7 @@
   "disable_otp_modal_body": "계정소지자가 인증되어있는 장치로 어떤 행동도 취하지 않는 한 2단계 인증 비활성화는 7일이 소요됩니다.",
   "disable": "비활성화",
   "done": "완료",
+  "duress_mode_pin_match_rule_message": "The PIN you entered matches the PIN for the duress account. Please enter a different PIN.",
   "email_address": "이메일 주소",
   "email_error_modal": "토큰을 자신에게 보내려면 고객님의 장치의 OS에서 초기설정의 이메일 주소로 설정해 주십시오.",
   "enable": "활성화",
