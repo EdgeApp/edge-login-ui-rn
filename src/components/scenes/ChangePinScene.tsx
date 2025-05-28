@@ -126,10 +126,14 @@ export const ChangePinScene = (props: SceneProps<'changePin'>) => {
   const handleSubmit = useHandler(async (pin: string) => {
     Keyboard.dismiss()
     try {
-      const isCorrect = await account.checkPin(pin, { forDuressAccount: true })
-      if (isCorrect) {
-        showToast(lstrings.duress_mode_pin_match_rule_message)
-        return
+      if (account.canDuressLogin && !account.isDuressAccount) {
+        const isCorrect = await account.checkPin(pin, {
+          forDuressAccount: true
+        })
+        if (isCorrect) {
+          showToast(lstrings.duress_mode_pin_match_rule_message)
+          return
+        }
       }
       await account.changePin({ pin })
       showToast(lstrings.pin_changed)
@@ -156,10 +160,14 @@ export const ResecurePinScene = (props: SceneProps<'resecurePin'>) => {
   const handleSubmit = useHandler(async (pin: string) => {
     Keyboard.dismiss()
     try {
-      const isCorrect = await account.checkPin(pin, { forDuressAccount: true })
-      if (isCorrect) {
-        showToast(lstrings.duress_mode_pin_match_rule_message)
-        return
+      if (account.canDuressLogin && !account.isDuressAccount) {
+        const isCorrect = await account.checkPin(pin, {
+          forDuressAccount: true
+        })
+        if (isCorrect) {
+          showToast(lstrings.duress_mode_pin_match_rule_message)
+          return
+        }
       }
       await account.changePin({ pin })
       showToast(lstrings.pin_changed)
