@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.27.1 (2025-05-28)
+
 - fixed: Fix PIN changes being blocked by duress mode PIN check.
 
 ## 3.27.0 (2025-05-22)
