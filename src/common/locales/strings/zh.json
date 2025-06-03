@@ -65,6 +65,7 @@
   "disable_otp_modal_body": "如果帐户用户在已授权的设备上没有执行任何操作, 双重身份验证 将需要7天才能禁用.",
   "disable": "禁用",
   "done": "完成",
+  "duress_mode_pin_match_rule_message": "The PIN you entered matches the PIN for the duress account. Please enter a different PIN.",
   "email_address": "电邮地址",
   "email_error_modal": "请设置一个默认为您的设备的操作系统的电子邮件客户端, 以便向您自己发送代币",
   "enable": "启用",

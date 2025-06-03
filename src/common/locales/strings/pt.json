@@ -65,6 +65,7 @@
   "disable_otp_modal_body": "O 2FA demorará 7 dias para desabilitar caso nenhuma ação seja tomada pelo usuário da conta nos dispositivos autenticados.",
   "disable": "Desativar",
   "done": "Feito",
+  "duress_mode_pin_match_rule_message": "The PIN you entered matches the PIN for the duress account. Please enter a different PIN.",
   "email_address": "Endereço de e-mail",
   "email_error_modal": "Por Favor, configure um cliente de e-mail padrão para o sistema operacional do seu dispositivo a fim de enviar um token para você mesmo",
   "enable": "Habilitar",
