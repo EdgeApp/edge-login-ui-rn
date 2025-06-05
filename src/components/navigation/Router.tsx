@@ -16,6 +16,7 @@ import {
   ResecurePinScene
 } from '../scenes/ChangePinScene'
 import { ChangeRecoveryScene } from '../scenes/existingAccout/ChangeRecoveryScene'
+import { ChangeUsernameScene } from '../scenes/existingAccout/ChangeUsernameScene'
 import { OtpRepairScene } from '../scenes/existingAccout/OtpRepairScene'
 import { SecurityAlertsScene } from '../scenes/existingAccout/SecurityAlertsScene'
 import { LandingScene } from '../scenes/LandingScene'
@@ -100,6 +101,8 @@ export function Router(props: Props) {
         return <UpgradeTosScene branding={props.branding} route={route} />
       case 'upgradeUsername':
         return <UpgradeUsernameScene branding={props.branding} route={route} />
+      case 'changeUsername':
+        return <ChangeUsernameScene branding={props.branding} route={route} />
     }
   }
 
