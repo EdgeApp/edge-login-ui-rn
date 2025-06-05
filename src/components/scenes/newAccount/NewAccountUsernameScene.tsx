@@ -40,12 +40,13 @@ type Timeout = ReturnType<typeof setTimeout>
 interface Props {
   branding: Branding
   initUsername?: string
+  title?: string
   onBack?: () => void
   onNext: (username: string) => void | Promise<void>
 }
 
 export const ChangeUsernameComponent = (props: Props) => {
-  const { branding, initUsername, onBack, onNext } = props
+  const { branding, initUsername, title, onBack, onNext } = props
   const { context } = useImports()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -119,11 +120,8 @@ export const ChangeUsernameComponent = (props: Props) => {
     timerId != null ||
     username.length === 0
 
-  const handleBack = useHandler(() => {
-    if (onBack != null) onBack()
-  })
   const handleNext = useHandler(async () => {
-    if (!isNextDisabled) onNext(username)
+    if (!isNextDisabled) await onNext(username)
   })
 
   const handleChangeText = useHandler(async (text: string) => {
@@ -200,7 +198,7 @@ export const ChangeUsernameComponent = (props: Props) => {
   })
 
   return (
-    <ThemedScene onBack={handleBack} title={lstrings.choose_title_username}>
+    <ThemedScene onBack={onBack} title={title}>
       <KeyboardAwareScrollView
         contentContainerStyle={[styles.mainScrollView, keyboardPadding]}
         keyboardShouldPersistTaps="handled"
@@ -306,6 +304,7 @@ export const NewAccountUsernameScene = (props: NewAccountUsernameProps) => {
   return (
     <ChangeUsernameComponent
       initUsername={route.params.username}
+      title={lstrings.choose_title_username}
       branding={branding}
       onBack={handleBack}
       onNext={handleNext}
@@ -338,6 +337,7 @@ export const UpgradeUsernameScene = (props: UpgradeUsernameProps) => {
   return (
     <ChangeUsernameComponent
       initUsername=""
+      title={lstrings.choose_title_username}
       branding={branding}
       onBack={onComplete}
       onNext={handleNext}
