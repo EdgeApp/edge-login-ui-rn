@@ -10,6 +10,7 @@ import {
   ResecurePinParams
 } from '../components/scenes/ChangePinScene'
 import { ChangeRecoveryParams } from '../components/scenes/existingAccout/ChangeRecoveryScene'
+import { ChangeUsernameParams } from '../components/scenes/existingAccout/ChangeUsernameScene'
 import { OtpRepairParams } from '../components/scenes/existingAccout/OtpRepairScene'
 import { SecurityAlertParams } from '../components/scenes/existingAccout/SecurityAlertsScene'
 import {
@@ -34,6 +35,7 @@ import { RecoveryLoginParams } from '../components/scenes/RecoveryLoginScene'
  * Defines the acceptable route parameters for each scene key.
  */
 export interface LoginParamList {
+  changeUsername: ChangeUsernameParams
   changePassword: ChangePasswordParams
   changePin: ChangePinParams
   changeRecovery: ChangeRecoveryParams
