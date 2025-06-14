@@ -9,7 +9,7 @@ import { ChangeUsernameComponent } from '../newAccount/NewAccountUsernameScene'
 
 export interface ChangeUsernameParams {
   account: EdgeAccount
-  username?: string
+  password: string
 }
 
 interface ChangeUsernameProps extends SceneProps<'changeUsername'> {
@@ -23,9 +23,13 @@ export const ChangeUsernameScene = (props: ChangeUsernameProps) => {
   const { branding, route } = props
   const { onComplete = () => {} } = useImports()
   const account: EdgeAccount = route.params.account
+  const password = route.params.password
 
   const handleNext = useHandler((newUsername: string) => {
-    onComplete({ username: newUsername })
+    account
+      .changeUsername({ username: newUsername, password })
+      .catch(error => console.error(error))
+    onComplete()
   })
 
   return (
@@ -33,7 +37,6 @@ export const ChangeUsernameScene = (props: ChangeUsernameProps) => {
       initUsername={account.username ?? ''}
       branding={branding}
       onNext={handleNext}
-      onBack={() => null}
     />
   )
 }

@@ -8,7 +8,8 @@ import { asExperimentConfig, OnLogEvent, OnPerfEvent } from './publicTypes'
 interface Props {
   account: EdgeAccount
   context: EdgeContext
-  onComplete: (result?: { username?: string }) => void
+  password: string
+  onComplete: () => void
   onLogEvent?: OnLogEvent
   onPerfEvent?: OnPerfEvent
 }
@@ -22,6 +23,7 @@ export function ChangeUsernameScreen(props: Props): JSX.Element {
   const {
     account,
     context,
+    password,
     onComplete,
     onLogEvent,
     onPerfEvent = () => {}
@@ -41,7 +43,7 @@ export function ChangeUsernameScreen(props: Props): JSX.Element {
         type: 'NAVIGATE',
         data: {
           name: 'changeUsername',
-          params: { account }
+          params: { account, password }
         }
       }}
     >

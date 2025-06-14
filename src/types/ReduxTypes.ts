@@ -24,7 +24,7 @@ export interface Imports {
   readonly initialUserInfo?: EdgeUserInfo
   readonly initialRoute?: InitialRouteName
   readonly onLogEvent?: OnLogEvent
-  readonly onComplete?: (result?: { username?: string }) => void
+  readonly onComplete?: () => void
   readonly onLogin?: OnLogin
   readonly onPerfEvent: OnPerfEvent
   readonly onNotificationPermit?: OnNotificationPermit
