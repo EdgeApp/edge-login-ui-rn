@@ -25,10 +25,8 @@ export const ChangeUsernameScene = (props: ChangeUsernameProps) => {
   const account: EdgeAccount = route.params.account
   const password = route.params.password
 
-  const handleNext = useHandler((newUsername: string) => {
-    account
-      .changeUsername({ username: newUsername, password })
-      .catch(error => console.error(error))
+  const handleNext = useHandler(async (newUsername: string) => {
+    await account.changeUsername({ username: newUsername, password })
     onComplete()
   })
 
