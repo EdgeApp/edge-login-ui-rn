@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: `ChangeUsernameScene` and `ChangeUsernameScreen` components
+
 ## 3.27.1 (2025-05-28)
 
 - fixed: Fix PIN changes being blocked by duress mode PIN check.
