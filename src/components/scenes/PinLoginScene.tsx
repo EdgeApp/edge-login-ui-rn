@@ -105,14 +105,6 @@ export function PinLoginScene(props: Props) {
   // Effects
   // ---------------------------------------------------------------------
 
-  // Runs once at start:
-  React.useEffect(() => {
-    if (userInfo != null && biometryType !== 'FaceID') {
-      handleTouchLogin(userInfo).catch(showError)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   React.useEffect(() => {
     if (
       userInfo == null ||
@@ -271,7 +263,6 @@ export function PinLoginScene(props: Props) {
       data: { name: 'pinLogin', params: { loginId: userInfo.loginId } }
     })
     setErrorInfo(undefined)
-    handleTouchLogin(userInfo).catch(showError)
   }
 
   const handleShowDrop = () => {

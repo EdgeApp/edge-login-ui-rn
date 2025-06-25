@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- removed: Automatic biometric triggers on the `PinLoginScene`
+
 ## 3.28.0 (2025-06-24)
 
 - added: `ChangeUsernameScene` and `ChangeUsernameScreen` components
