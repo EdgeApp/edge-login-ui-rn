@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-- removed: Automatic biometric triggers on the `PinLoginScene`
+## 3.28.1 (2025-06-25)
+
+- changed: Automatic biometric triggers on the `PinLoginScene` are disabled
 
 ## 3.28.0 (2025-06-24)
 
