@@ -65,6 +65,7 @@
   "disable_otp_modal_body": "Le multi facteurs d’authentification se désactivera au bout de 7 jours si aucune action n’est effectuée par l’utilisateur avec l’appareil authentifié.",
   "disable": "Désactiver",
   "done": "Effectué",
+  "duress_mode_pin_match_rule_message": "The PIN you entered matches the PIN for the duress account. Please enter a different PIN.",
   "email_address": "Adresse mail",
   "email_error_modal": "Veuillez régler l'adress Email client qui est connecé à l'OS de votre apreil afin d'envoyer des Tokens à votre adress mail",
   "enable": "Activer",
