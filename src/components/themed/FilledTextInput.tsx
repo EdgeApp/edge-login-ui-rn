@@ -35,6 +35,7 @@ import {
   EyeIconAnimated
 } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
+import { EdgeText } from './EdgeText'
 import { NumericInput } from './NumericInput'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
@@ -396,7 +397,9 @@ export const FilledTextInput = React.forwardRef<
       </EdgeTouchableWithoutFeedback>
       {valid != null || error != null || charactersLeft !== '' ? (
         <MessagesContainer noLayoutFlow={charactersLeft === ''}>
-          <Message danger={error != null}>{valid ?? error ?? null}</Message>
+          <Message danger={error != null} numberOfLines={2} disableFontScaling>
+            {valid ?? error ?? null}
+          </Message>
           <Message>{charactersLeft}</Message>
         </MessagesContainer>
       ) : null}
@@ -707,7 +710,7 @@ const MessagesContainer = styled(Animated.View)<{ noLayoutFlow?: boolean }>(
       flexDirection: 'row',
       justifyContent: 'space-between',
       paddingHorizontal: theme.rem(0.5),
-      height: theme.rem(1)
+      height: theme.rem(2)
     },
     props.noLayoutFlow
       ? {
@@ -716,13 +719,13 @@ const MessagesContainer = styled(Animated.View)<{ noLayoutFlow?: boolean }>(
           // pushing components below the this text field down.
           // If there's a counter, this field is already taking up the maximum
           // amount of vertical space, so the above is not an issue.
-          marginBottom: -theme.rem(1)
+          marginBottom: -theme.rem(2)
         }
       : {}
   ]
 )
 
-const Message = styled(Text)<{ danger?: boolean }>(theme => props => [
+const Message = styled(EdgeText)<{ danger?: boolean }>(theme => props => [
   {
     color: props.danger === true ? theme.dangerText : theme.secondaryText,
     fontFamily: theme.fontFaceDefault,
