@@ -1,4 +1,4 @@
-import { EdgeAccount } from 'edge-core-js'
+import { asMaybeNetworkError, EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, ScrollView } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -200,7 +200,11 @@ export const NewAccountTosScene = (props: NewAccountTosProps) => {
         }
       })
     } catch (error: unknown) {
-      showError(error)
+      if (asMaybeNetworkError(error) != null) {
+        showError(lstrings.network_error_generic)
+      } else {
+        showError(error)
+      }
       errorText = String(error)
       dispatch({
         type: 'NAVIGATE',
@@ -262,7 +266,11 @@ export const UpgradeTosScene = (props: UpgradeTosProps) => {
         }
       })
     } catch (error: unknown) {
-      showError(error)
+      if (asMaybeNetworkError(error) != null) {
+        showError(lstrings.network_error_generic)
+      } else {
+        showError(error)
+      }
       errorText = String(error)
     }
 

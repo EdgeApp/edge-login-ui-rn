@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Make network errors human-readable
+
 ## 3.28.1 (2025-06-25)
 
 - changed: Automatic biometric triggers on the `PinLoginScene` are disabled
