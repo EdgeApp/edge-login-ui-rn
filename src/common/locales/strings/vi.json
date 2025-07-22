@@ -65,6 +65,7 @@
   "disable_otp_modal_body": "2FA sẽ mất 7 ngày để vô hiệu hoá nếu không có hoạt động được thực hiện bởi chủ tài khoản trên các thiết bị đã được xác thực.",
   "disable": "Vô hiệu hoá",
   "done": "Xong",
+  "duress_mode_pin_match_rule_message": "The PIN you entered matches the PIN for the duress account. Please enter a different PIN.",
   "email_address": "Địa chỉ email",
   "email_error_modal": "Vui lòng thiết lập một địa chỉ mail mặc định cho hệ điểu hành của máy bạn để gửi mã bảo mật",
   "enable": "Kích hoạt",
