@@ -1,4 +1,5 @@
 import {
+  asMaybeNetworkError,
   asMaybeOtpError,
   asMaybePasswordError,
   asMaybeUsernameError,
@@ -237,6 +238,11 @@ export const PasswordLoginScene = (props: Props) => {
           } else {
             setPasswordErrorMessage(lstrings.invalid_credentials)
           }
+          return
+        }
+
+        if (asMaybeNetworkError(error) != null) {
+          setPasswordErrorMessage(lstrings.network_error_generic)
           return
         }
 
