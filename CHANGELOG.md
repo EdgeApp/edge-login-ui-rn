@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.28.2 (2025-07-22)
+
+- changed: Update translations.
+
 ## 3.28.1 (2025-06-25)
 
 - changed: Automatic biometric triggers on the `PinLoginScene` are disabled
@@ -16,7 +20,7 @@
 
 ## 3.27.0 (2025-05-22)
 
-- changed: `ButtonsModal` confirmation for PIN changes changed to a `showToast` 
+- changed: `ButtonsModal` confirmation for PIN changes changed to a `showToast`
 
 ## 3.26.2 (2025-05-21)
 
@@ -24,7 +28,7 @@
 
 ## 3.26.1 (2025-05-12)
 
-- fixed: Fixed biometric login bug caused by saving the duress account's login key. 
+- fixed: Fixed biometric login bug caused by saving the duress account's login key.
 
 ## 3.26.0 (2025-04-01)
 
