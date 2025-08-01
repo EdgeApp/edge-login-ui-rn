@@ -456,10 +456,16 @@ function translateNetworkError(
   userInfo: LoginUserInfo
 ): string {
   if (userInfo.username != null) {
-    return `${error.message} ${lstrings.pin_network_error_full_password}`
+    return sprintf(
+      lstrings.network_error_generic_1s,
+      lstrings.pin_network_error_full_password
+    )
   }
   if (userInfo.keyLoginEnabled) {
-    return `${error.message} ${lstrings.pin_network_error_biometric}`
+    return sprintf(
+      lstrings.network_error_generic_1s,
+      lstrings.pin_network_error_biometric
+    )
   }
   return error.message
 }

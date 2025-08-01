@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- changed: Make network errors human-readable
 - changed: Username text inputs will force lowercase input values
 
 ## 3.28.2 (2025-07-22)
