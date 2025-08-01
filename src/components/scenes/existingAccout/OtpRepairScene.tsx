@@ -4,6 +4,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import { completeLogin } from '../../../actions/LoginCompleteActions'
+import { getAppConfig } from '../../../common/appConfig'
 import { lstrings } from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
@@ -125,6 +126,17 @@ export function OtpRepairScene(props: Props): JSX.Element {
   // Find the automatic login date:
   const date = otpError.voucherActivates ?? otpResetDate
 
+  let supportEmailAddendum = ''
+  const thirtyDaysFromNow = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+  if (date != null && date > thirtyDaysFromNow) {
+    supportEmailAddendum = `\n\n${sprintf(
+      isIp
+        ? lstrings.otp_scene_ip_support_email
+        : lstrings.otp_scene_2fa_support_email,
+      getAppConfig().supportEmail
+    )}`
+  }
+
   return (
     <ThemedScene onBack={onComplete} title={lstrings.otp_header_repair}>
       <IconHeaderRow
@@ -162,7 +174,8 @@ export function OtpRepairScene(props: Props): JSX.Element {
         <>
           <DividerWithText />
           <MessageText>
-            {sprintf(lstrings.otp_scene_wait, toLocalTime(date))}
+            {sprintf(lstrings.otp_scene_wait, toLocalTime(date)) +
+              supportEmailAddendum}
           </MessageText>
         </>
       )}
