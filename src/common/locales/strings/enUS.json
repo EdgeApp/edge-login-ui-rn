@@ -141,6 +141,8 @@
   "otp_scene_qr": "Scan QR code with another logged-in device",
   "otp_scene_retrying": "Retrying login...",
   "otp_scene_wait": "Wait until %s when this device will be automatically authorized to log in",
+  "otp_scene_ip_support_email": "Please reach out to %1$s for assistance with IP lock out",
+  "otp_scene_2fa_support_email": "Please reach out to %1$s for assistance with 2FA lock out",
   "password_change_warning": "Changing your password doesn't protect compromised accounts that have already been accessed. If you believe your account has an unknown login please move remaining funds to a new account. \n\nDo not send funds to the compromised account.",
   "password_changed": "Password Changed",
   "password_desc": "Your password is used to encrypt your account and to log in.",

@@ -33,7 +33,7 @@ export interface AppConfig {
   // phoneNumber: string
   // referralServers?: string[]
   // supportsEdgeLogin: boolean
-  // supportEmail: string
+  supportEmail: string
   // supportSite: string
   termsOfServiceSite: string
   // website: string
