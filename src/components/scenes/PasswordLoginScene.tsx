@@ -324,7 +324,10 @@ export const PasswordLoginScene = (props: Props) => {
     setUsernameErrorMessage(undefined)
     dispatch({
       type: 'NAVIGATE',
-      data: { name: 'passwordLogin', params: { username } }
+      data: {
+        name: 'passwordLogin',
+        params: { username: username.toLowerCase() }
+      }
     })
   })
 
@@ -434,6 +437,7 @@ export const PasswordLoginScene = (props: Props) => {
       <View style={styles.inputWrapper}>
         <View onLayout={handleUsernameLayout}>
           <FilledTextInput
+            autoCapitalize="none"
             autoCorrect={false}
             autoFocus={false}
             clearIcon={!hasSavedUsers}

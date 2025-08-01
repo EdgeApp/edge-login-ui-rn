@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Username text inputs will force lowercase input values
+
 ## 3.28.2 (2025-07-22)
 
 - changed: Update translations.

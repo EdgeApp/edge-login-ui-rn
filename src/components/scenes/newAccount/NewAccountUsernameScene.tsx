@@ -134,7 +134,7 @@ export const ChangeUsernameComponent = (props: Props) => {
     }
 
     // Save the input and clear out previous text input status messages.
-    setUsername(text)
+    setUsername(text.toLowerCase())
     setAvailableText(undefined)
     setErrorText(undefined)
 
