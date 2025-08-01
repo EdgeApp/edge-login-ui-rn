@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.29.0 (2025-08-01)
+
 - changed: Make network errors human-readable
 - changed: Username text inputs will force lowercase input values
 - changed: Insert support email address into OTP screens for account lockout time greater than 30 days
