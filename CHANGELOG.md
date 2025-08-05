@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.29.1 (2025-08-05)
+
+- changed: Update transations.
+
 ## 3.29.0 (2025-08-01)
 
 - changed: Make network errors human-readable
