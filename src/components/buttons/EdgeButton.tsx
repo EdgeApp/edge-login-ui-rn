@@ -8,6 +8,8 @@ import {
   ActivityIndicator,
   Platform,
   StyleSheet,
+  // HACK: Some sort of lint configuration conflict...
+  // eslint-disable-next-line prettier/prettier
   type TextStyle,
   View,
   type ViewStyle
@@ -131,8 +133,15 @@ export function EdgeButton(props: Props): React.ReactElement | null {
           left: 10000,
           right: 10000
         }
-      : theme.rem(0.5)
-
+      // TODO: Needs a rn upgrade to use this:
+      // : theme.rem(0.5)
+     : {
+      top: theme.rem(0.5),
+      bottom: theme.rem(0.5),
+      // Expand horizontally so taps register across the full width
+      left: theme.rem(0.5),
+      right: theme.rem(0.5)
+     }
   const content = (
     <View
       style={[
