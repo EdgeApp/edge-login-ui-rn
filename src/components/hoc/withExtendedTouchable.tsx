@@ -48,7 +48,7 @@ export function withExtendedTouchable<
   }: PropsWithOptionalChildren<T> & ExtendedProps) => {
     const [isDebouncing, setIsDebouncing] = useState<boolean>(false)
     const [isAwaiting, setIsAwaiting] = useState<boolean>(false)
-    const timeoutRef = useRef<number | null>(null)
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     useEffect(() => {
       return () => {
