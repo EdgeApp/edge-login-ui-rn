@@ -4,22 +4,23 @@
  */
 
 import * as React from 'react'
-import { ActivityIndicator, View, ViewStyle } from 'react-native'
+import type { TextStyle, ViewStyle } from 'react-native'
+import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
-import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { Theme, useTheme } from '../services/ThemeContext'
+import type { Theme } from '../services/ThemeContext'
+import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 export type EdgeButtonType =
   | 'primary'
   | 'secondary'
   | 'tertiary'
-  // For things like "Block"/"Deny"/"Delete"/etc
-  | 'destructive'
+  | 'destructive' // Not syncing with GUI unless we need it. This is a weird one-off.
 
 interface Props {
   children?: React.ReactNode
@@ -36,7 +37,7 @@ interface Props {
   label?: string
 
   // Parent container layout
-  layout?: 'row' | 'column' | 'solo'
+  layout?: 'row' | 'column' | 'solo' | 'fullWidth'
 
   // True to show a spinner after the contents:
   spinner?: boolean
@@ -58,7 +59,7 @@ interface Props {
  * - Typically to be used as a child of ButtonsViewUi4.
  * - NOT meant to be used on its own outside of ButtonsViewUi4 unless layout='solo'
  */
-export function EdgeButton(props: Props) {
+export function EdgeButton(props: Props): React.ReactElement | null {
   const {
     layout = 'solo',
     children,
@@ -79,236 +80,227 @@ export function EdgeButton(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const buttonProps = {
-    primary: {
-      textStyle: styles.primaryText,
-      spinnerColor: theme.primaryButtonText,
-      gradientProps: {
-        colors: theme.primaryButton,
-        end: theme.primaryButtonColorEnd,
-        start: theme.primaryButtonColorStart
-      }
-    },
-    secondary: {
-      textStyle: styles.secondaryText,
-      spinnerColor: theme.secondaryButtonText,
-      gradientProps: {
-        colors: theme.secondaryButton,
-        end: theme.secondaryButtonColorEnd,
-        start: theme.secondaryButtonColorStart
-      }
-    },
-    tertiary: {
-      textStyle: styles.tertiaryText,
-      spinnerColor: theme.escapeButtonText,
-      gradientProps: {
-        colors: theme.escapeButton,
-        end: theme.escapeButtonColorEnd,
-        start: theme.escapeButtonColorStart
-      }
-    },
-    destructive: {
-      textStyle: styles.primaryText,
-      spinnerColor: theme.dangerButtonText,
-      gradientProps: {
-        colors: theme.dangerButton,
-        end: theme.dangerButtonColorEnd,
-        start: theme.dangerButtonColorStart
+  // Sizing rules per variant:
+  const isTertiary = type === 'tertiary'
+  const visualHeightRem = isTertiary ? 1.5 : mini ? 2.0 : 3.0
+  const paddingXRem = isTertiary ? 0.75 : mini ? 1.25 : 1.5
+  const paddingYRem = isTertiary ? 0.0 : 0
+
+  const containerMargin = sidesToMargin(
+    mapSides(fixSides(marginRem, 0), theme.rem)
+  )
+
+  const opacity = disabled ? 0.3 : spinner || pending ? 0.7 : 1
+
+  // Layout behavior for parent containers:
+  const layoutContainerStyle = React.useMemo<ViewStyle>(() => {
+    if (layout === 'row') {
+      return { width: '50%' }
+    }
+    if (layout === 'column' || layout === 'fullWidth') {
+      return {
+        alignSelf: 'stretch',
+        alignItems: 'stretch',
+        flexBasis: 'auto',
+        flexGrow: 0,
+        flexShrink: 0,
+        padding: layout === 'fullWidth' ? theme.rem(1) : undefined
       }
     }
-  }
+    // solo
+    return { alignItems: 'center', justifyContent: 'center' }
+  }, [layout, theme])
 
-  const { spinnerColor, textStyle, gradientProps } = buttonProps[type]
+  // Content row adjusted according to spinner prop value
+  const contentRowStyle = React.useMemo<ViewStyle>(
+    () => ({
+      ...styles.contentRow,
+      opacity: spinner ? 0 : 1
+    }),
+    [spinner, styles.contentRow]
+  )
 
-  // Show a spinner if waiting on the onPress promise OR if the spinner prop is
-  // manually enabled.
-  const hideContent = pending || spinner
+  // Tappable area overshoot
+  const hitSlop =
+    layout === 'solo'
+      ? {
+          top: theme.rem(0.5),
+          bottom: theme.rem(0.5),
+          // Expand horizontally so taps register across the full width
+          left: 10000,
+          right: 10000
+        }
+      : theme.rem(0.5)
 
-  const maybeText =
-    label == null ? null : (
-      <EdgeText
-        numberOfLines={1}
-        style={[textStyle, children == null ? null : styles.leftMarginedText]}
-      >
-        {label}
-      </EdgeText>
-    )
-
-  // Use margin props as padding for the invisible container to increase
-  // tappable area while visually looking like margins
-  const customMarginPadding = React.useMemo(() => {
-    if (marginRem == null) return undefined
-
-    // Use margin as padding to increase tappable area
-    return sidesToPadding(mapSides(fixSides(marginRem, 0), theme.rem))
-  }, [marginRem, theme])
-
-  const touchContainerStyle = React.useMemo(() => {
-    const retStyle: ViewStyle[] = [styles.touchContainerCommon]
-
-    if (layout === 'column') retStyle.push(styles.touchContainerColumn)
-    if (layout === 'row') retStyle.push(styles.touchContainerRow)
-    if (layout === 'solo') retStyle.push(styles.touchContainerSolo)
-
-    retStyle.push(
-      customMarginPadding != null
-        ? customMarginPadding
-        : styles.touchContainerSpacing
-    )
-
-    return retStyle
-  }, [layout, customMarginPadding, styles])
-
-  const visibleContainerStyle = React.useMemo(() => {
-    const retStyle: ViewStyle[] = [styles.visibleContainerCommon]
-
-    if (layout === 'column') retStyle.push(styles.visibleContainerColumn)
-    if (layout === 'row') retStyle.push(styles.visibleContainerRow)
-    if (layout === 'solo') retStyle.push(styles.visibleContainerSolo)
-    if (type === 'tertiary') retStyle.push(styles.visibleContainerTertiary)
-
-    retStyle.push(
-      mini
-        ? styles.visibleSizeMini
-        : type === 'tertiary'
-        ? styles.visibleSizeTertiary
-        : styles.visibleSizeDefault
-    )
-    retStyle.push({
-      opacity: disabled ? 0.3 : hideContent ? 0.7 : 1
-    })
-
-    return retStyle
-  }, [disabled, hideContent, layout, mini, styles, type])
-
-  return (
-    <EdgeTouchableOpacity
-      disabled={disabled || pending || spinner}
-      style={touchContainerStyle}
-      onPress={handlePress}
-      testID={testID}
-    >
-      <LinearGradient {...gradientProps} style={visibleContainerStyle}>
-        {hideContent ? (
-          <View style={styles.invisibleContent}>
-            {children}
-            {maybeText}
-          </View>
-        ) : (
-          <>
-            {children}
-            {maybeText}
-          </>
-        )}
-      </LinearGradient>
-      {!hideContent ? null : (
-        <ActivityIndicator
-          color={spinnerColor}
-          style={[customMarginPadding, styles.spinner]}
+  const content = (
+    <>
+      {type === 'tertiary' ? null : (
+        <LinearGradient
+          colors={
+            type === 'primary'
+              ? theme.primaryButton
+              : type === 'secondary'
+              ? theme.secondaryButton
+              : theme.dangerButton
+          }
+          start={
+            type === 'primary'
+              ? theme.primaryButtonColorStart
+              : type === 'secondary'
+              ? theme.secondaryButtonColorStart
+              : theme.dangerButtonColorStart
+          }
+          end={
+            type === 'primary'
+              ? theme.primaryButtonColorEnd
+              : type === 'secondary'
+              ? theme.secondaryButtonColorEnd
+              : theme.dangerButtonColorEnd
+          }
+          style={styles.pillBackground}
         />
       )}
-    </EdgeTouchableOpacity>
+
+      <View style={contentRowStyle}>
+        {children == null ? null : (
+          <View style={styles.leading}>{children}</View>
+        )}
+        {label == null ? null : (
+          <EdgeText
+            style={[
+              styles.labelBase,
+              type === 'primary'
+                ? styles.labelPrimary
+                : type === 'secondary'
+                ? styles.labelSecondary
+                : type === 'destructive'
+                ? styles.labelDestructive
+                : styles.labelTertiary,
+              children == null ? null : styles.labelWithIcon
+            ]}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.65}
+          >
+            {label}
+          </EdgeText>
+        )}
+      </View>
+
+      {!spinner && !pending ? null : (
+        <View style={styles.spinnerOverlay} pointerEvents="none">
+          <ActivityIndicator
+            color={
+              type === 'primary'
+                ? theme.primaryButtonText
+                : type === 'secondary'
+                ? theme.secondaryButtonText
+                : type === 'destructive'
+                ? theme.dangerButtonText
+                : theme.escapeButtonText
+            }
+          />
+        </View>
+      )}
+    </>
+  )
+
+  return (
+    <View style={[layoutContainerStyle, containerMargin]}>
+      <EdgeTouchableOpacity
+        disabled={disabled || pending}
+        onPress={handlePress}
+        hitSlop={hitSlop}
+        testID={testID}
+        activeOpacity={Platform.OS === 'ios' ? 0.6 : 0.7}
+        style={[
+          styles.pillBase,
+          type !== 'tertiary' ? styles.pillSolid : styles.pillTertiary,
+          layout === 'column' || (layout === 'row' && !isTertiary)
+            ? styles.pillStretch
+            : null,
+          {
+            height: theme.rem(visualHeightRem),
+            paddingHorizontal: theme.rem(paddingXRem),
+            paddingVertical: theme.rem(paddingYRem),
+            opacity
+          }
+        ]}
+      >
+        {content}
+      </EdgeTouchableOpacity>
+    </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => {
-  const visibleContainerCommon: ViewStyle = {
+  const pillBase: ViewStyle = {
     borderRadius: theme.rem(theme.buttonBorderRadiusRem),
-    flexGrow: 0,
-    flexShrink: 0,
+    overflow: 'visible',
     alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row'
+    justifyContent: 'center'
+  }
+
+  const pillBackground: ViewStyle = {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: theme.rem(theme.buttonBorderRadiusRem)
+  }
+
+  const labelBase: TextStyle = {
+    includeFontPadding: false
+    // Defaults will be overridden per type below
   }
 
   return {
-    // Invisible Touchable Container Styles:
-    touchContainerCommon: {
+    pillBase,
+    pillSolid: {
+      position: 'relative'
+    },
+    pillStretch: {
+      alignSelf: 'stretch'
+    },
+    pillTertiary: {
+      backgroundColor: 'transparent',
+      position: 'relative'
+    },
+    pillBackground,
+    contentRow: {
+      flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center'
     },
-    touchContainerSpacing: {
-      // Combination of negative margin and positive padding to increase
-      // invisible tappable area outside of the bounds of the visible button
-      margin: -theme.rem(0.5),
-      padding: theme.rem(0.5)
+    leading: {
+      alignItems: 'center',
+      justifyContent: 'center'
     },
-    touchContainerRow: {
-      alignSelf: 'stretch',
-      flex: 1 // Size equally against other buttons in the row
-    },
-    touchContainerColumn: {
-      alignSelf: 'stretch',
-      flexBasis: 'auto',
-      flexGrow: 0,
-      flexShrink: 0
-    },
-    touchContainerSolo: {
-      alignSelf: 'center',
-      flexBasis: 'auto',
-      flexGrow: 0,
-      flexShrink: 0
-    },
-    invisibleContent: {
-      ...visibleContainerCommon,
-      opacity: 0
-    },
-    // Visible Container Styles
-    visibleContainerCommon,
-    visibleSizeDefault: {
-      paddingHorizontal: theme.rem(1.5),
-      height: theme.rem(3)
-    },
-    visibleSizeMini: {
-      alignSelf: 'center',
-      paddingHorizontal: theme.rem(1.25),
-      height: theme.rem(2)
-    },
-    visibleSizeTertiary: {
-      // Reduce the bounds of a tertiary button so it doesn't appear to be too
-      // far from other buttons
-      padding: 0,
-      height: undefined
-    },
-    visibleContainerColumn: {
-      alignSelf: 'stretch'
-    },
-    visibleContainerRow: {
-      alignSelf: 'stretch'
-    },
-    visibleContainerSolo: {
-      alignSelf: 'center'
-    },
-    visibleContainerTertiary: {
-      alignSelf: 'center'
-    },
-
-    // Content
-    primaryText: {
-      fontFamily: theme.primaryButtonFont,
-      fontSize: theme.rem(theme.primaryButtonFontSizeRem),
-      color: theme.primaryButtonText
-    },
-    secondaryText: {
-      fontFamily: theme.secondaryButtonFont,
-      fontSize: theme.rem(theme.secondaryButtonFontSizeRem),
-      color: theme.secondaryButtonText
-    },
-    tertiaryText: {
-      fontFamily: theme.escapeButtonFont,
-      fontSize: theme.rem(theme.escapeButtonFontSizeRem),
-      color: theme.escapeButtonText
-    },
-    dangerText: {
-      fontFamily: theme.dangerButtonFont,
-      fontSize: theme.rem(theme.dangerButtonFontSizeRem),
-      color: theme.dangerButtonText
-    },
-    leftMarginedText: {
+    labelBase,
+    labelWithIcon: {
       marginLeft: theme.rem(0.5)
     },
-    spinner: {
-      position: 'absolute'
+    labelPrimary: {
+      color: theme.primaryButtonText,
+      fontFamily: theme.primaryButtonFont,
+      fontSize: theme.rem(theme.primaryButtonFontSizeRem)
+    },
+    labelSecondary: {
+      color: theme.secondaryButtonText,
+      fontFamily: theme.secondaryButtonFont,
+      fontSize: theme.rem(theme.secondaryButtonFontSizeRem)
+    },
+    labelDestructive: {
+      color: theme.dangerButtonText,
+      fontFamily: theme.dangerButtonFont,
+      fontSize: theme.rem(theme.dangerButtonFontSizeRem)
+    },
+    labelTertiary: {
+      color: theme.escapeButtonText,
+      fontFamily: theme.escapeButtonFont,
+      fontSize: theme.rem(theme.escapeButtonFontSizeRem)
+    },
+    spinnerOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      alignItems: 'center',
+      justifyContent: 'center'
     }
   }
 })
