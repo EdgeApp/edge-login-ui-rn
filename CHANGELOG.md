@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.29.2 (2025-08-12)
+
+- fixed: Button layouts
+
 ## 3.29.1 (2025-08-05)
 
 - changed: Update transations.
