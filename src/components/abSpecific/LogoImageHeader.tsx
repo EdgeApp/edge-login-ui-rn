@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Image, View } from 'react-native'
+import { Image, ImageBackground, PixelRatio } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import * as Assets from '../../assets/'
@@ -19,6 +19,16 @@ export function LogoImageHeader(props: Props): JSX.Element {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  // Compute a pixel-aligned width while preserving the desired visual height.
+  const imageStyle = React.useMemo(() => {
+    const desiredHeightDp = theme.rem(2.75)
+    const source = Image.resolveAssetSource(primaryLogo)
+    const aspectRatio = source.width / source.height
+    const scale = PixelRatio.get()
+    const widthDp = Math.round(desiredHeightDp * aspectRatio * scale) / scale
+    return { width: widthDp, aspectRatio }
+  }, [primaryLogo, theme])
+
   const taps = React.useRef(0)
   const handlePress = useHandler(() => {
     if (primaryLogoCallback != null) {
@@ -35,27 +45,23 @@ export function LogoImageHeader(props: Props): JSX.Element {
 
   return (
     <EdgeTouchableWithoutFeedback onPress={handlePress}>
-      <View style={styles.container}>
-        <Image
-          accessibilityHint={lstrings.app_logo_hint}
-          source={primaryLogo}
-          style={styles.image}
-          resizeMode="contain"
-        />
-      </View>
+      <ImageBackground
+        accessibilityHint={lstrings.app_logo_hint}
+        source={primaryLogo}
+        resizeMode="contain"
+        style={[styles.imageContainer, imageStyle]}
+      />
     </EdgeTouchableWithoutFeedback>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
+  imageContainer: {
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     paddingBottom: theme.rem(1.5),
-    width: '100%'
-  },
-  image: {
-    height: theme.rem(2.75),
+    width: '100%',
+    // Height is derived from width + aspectRatio to avoid fractional pixel rounding
     overflow: 'visible',
     resizeMode: 'contain'
   }
