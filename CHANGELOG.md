@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.29.3 (2025-08-15)
+
 - fixed: `PinLoginScene` and `PasswordLoginScene` logo clipping
 
 ## 3.29.2 (2025-08-12)
