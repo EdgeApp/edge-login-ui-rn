@@ -115,6 +115,7 @@
   "notifications_opt_in_marketing": "Envie-me também notícias sobre o aplicativo",
   "notifications_opt_in_price_changes": "Também me informe sobre as mudanças de preço",
   "notifications_permissions_branded_s": "Por favor, habilite as notificações para garantir o mais alto nível de segurança para a sua conta. %1$s Irá notificá-lo se outros dispositivos tentarem acessar a sua conta e permitirá que você aceite ou rejeite o acesso.",
+  "notifications_urgent_required": "Notify me of urgent security alerts (required)",
   "ok": "OK",
   "off_hint": "Off",
   "on_hint": "On",
