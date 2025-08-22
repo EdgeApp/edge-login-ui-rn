@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.30.0 (2025-08-22)
+
 - changed: Permissions modal uses right-aligned switches and adds a required top row for urgent security alerts
 
 ## 3.29.3 (2025-08-15)
