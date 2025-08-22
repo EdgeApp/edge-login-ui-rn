@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: `LogoImageHeader` styling on physical devices
+
 ## 3.29.3 (2025-08-15)
 
 - fixed: `PinLoginScene` and `PasswordLoginScene` logo clipping
