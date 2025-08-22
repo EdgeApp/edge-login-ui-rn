@@ -31,6 +31,7 @@ export type {
 export { refreshTouchId } from './keychain'
 export { showNotificationPermissionReminder } from './util/notificationPermissionReminder'
 export { showOtpReminder } from './util/otpReminder'
+export { RequestPermissionsModal } from './components/modals/RequestPermissionsModal'
 export {
   hasSecurityAlerts,
   watchSecurityAlerts
