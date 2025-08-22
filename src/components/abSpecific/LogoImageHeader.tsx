@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Image, ImageBackground, PixelRatio } from 'react-native'
+import { Image, ImageBackground, PixelRatio, ViewStyle } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import * as Assets from '../../assets/'
@@ -20,13 +20,17 @@ export function LogoImageHeader(props: Props): JSX.Element {
   const styles = getStyles(theme)
 
   // Compute a pixel-aligned width while preserving the desired visual height.
-  const imageStyle = React.useMemo(() => {
+  const imageStyle: ViewStyle = React.useMemo(() => {
     const desiredHeightDp = theme.rem(2.75)
     const source = Image.resolveAssetSource(primaryLogo)
     const aspectRatio = source.width / source.height
     const scale = PixelRatio.get()
     const widthDp = Math.round(desiredHeightDp * aspectRatio * scale) / scale
-    return { width: widthDp, aspectRatio }
+    return {
+      width: widthDp,
+      aspectRatio,
+      alignSelf: 'center'
+    }
   }, [primaryLogo, theme])
 
   const taps = React.useRef(0)
@@ -44,12 +48,15 @@ export function LogoImageHeader(props: Props): JSX.Element {
   })
 
   return (
-    <EdgeTouchableWithoutFeedback onPress={handlePress}>
+    <EdgeTouchableWithoutFeedback
+      onPress={handlePress}
+      style={styles.imageContainer}
+    >
       <ImageBackground
         accessibilityHint={lstrings.app_logo_hint}
         source={primaryLogo}
         resizeMode="contain"
-        style={[styles.imageContainer, imageStyle]}
+        style={imageStyle}
       />
     </EdgeTouchableWithoutFeedback>
   )
