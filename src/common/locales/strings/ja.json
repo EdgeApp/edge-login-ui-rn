@@ -115,6 +115,7 @@
   "notifications_opt_in_marketing": "アプリについてのニュースを受け取る。",
   "notifications_opt_in_price_changes": "価格の変更についても教えてください",
   "notifications_permissions_branded_s": "最高のセキュリティレベルを確保するために、通知の更新を有効にしてください。%1$sは、他のデバイスがアカウントにアクセスしようとする際に通知し、アクセスを承認または拒否できます。",
+  "notifications_urgent_required": "Notify me of urgent security alerts (required)",
   "ok": "OK",
   "off_hint": "Off",
   "on_hint": "On",
