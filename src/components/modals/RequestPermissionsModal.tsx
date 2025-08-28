@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Switch, View } from 'react-native'
+import { Platform, Switch, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
 
@@ -106,7 +106,14 @@ export function RequestPermissionsModal(props: Props) {
             ios_backgroundColor={theme.deactivatedText}
             trackColor={{
               false: theme.deactivatedText,
-              true: theme.iconTappable
+              true:
+                Platform.OS === 'ios'
+                  ? // iOS applies a dimmed appearance to the track color when
+                    // disabled
+                    theme.iconTappable
+                  : // Android keeps the same track color when disabled - use an
+                    // artificially dimmed version of the color
+                    theme.switchTrackDisabledOn
             }}
             value
           />

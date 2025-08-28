@@ -11,6 +11,7 @@ const palette = {
   edgeNavy: '#0D2145',
   edgeBlue: '#0E4B75',
   edgeMint: '#66EDA8',
+  edgeMintDisabled: '#44bd95',
   darkAqua: '#1b2f3b',
   blueGray: '#A4C7DF',
   gray: '#87939E',
@@ -189,6 +190,9 @@ export const edgeDark: Theme = {
   outlineTextInputBorderColorFocused: palette.edgeMint,
   outlineTextInputLabelColor: palette.blueGray,
   outlineTextInputLabelColorFocused: palette.edgeMint,
+
+  // A switch that's on but not toggleable
+  switchTrackDisabledOn: palette.edgeMintDisabled,
 
   // Simple Text Input
   textInputTextColor: palette.white,

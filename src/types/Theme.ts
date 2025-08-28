@@ -340,6 +340,8 @@ export interface Theme {
   pinUsernameButtonFontSizeRem: number
   pinUsernameButtonFont: string
 
+  switchTrackDisabledOn: string
+
   // Outline Text Input
   outlineTextInputColor: string
   outlineTextInputTextColor: string
