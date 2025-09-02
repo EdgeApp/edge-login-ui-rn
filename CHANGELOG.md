@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: `RequestPermissionsModal` switch color update for Android
+
 ## 3.30.1 (2025-08-25)
 
 - fixed: `LogoImageHeader` styling on physical devices
