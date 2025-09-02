@@ -17,12 +17,11 @@ import { useHandler } from '../../hooks/useHandler'
 import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
-import { UnscaledTextInput } from '../common/UnscaledTextInput'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, CloseIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
 
-const AnimatedTextInput = Animated.createAnimatedComponent(UnscaledTextInput)
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
 export type SimpleTextInputReturnKeyType =
   | 'done'
@@ -239,6 +238,7 @@ export const SimpleTextInput = React.forwardRef<
         <InnerContainer>
           {placeholder == null ? null : (
             <PlaceholderText
+              allowFontScaling={false}
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
               hasValueAnimation={hasValueAnimation}
@@ -248,6 +248,7 @@ export const SimpleTextInput = React.forwardRef<
             </PlaceholderText>
           )}
           <InputField
+            allowFontScaling={false}
             accessible
             ref={inputRef}
             keyboardType={props.keyboardType}

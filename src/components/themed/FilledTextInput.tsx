@@ -315,6 +315,7 @@ export const FilledTextInput = React.forwardRef<
             {placeholder == null ? null : (
               <Placeholder shift={focusValue}>
                 <PlaceholderText
+                  allowFontScaling={false}
                   disableAnimation={disableAnimation}
                   focusAnimation={focusAnimation}
                   scale={scale}
@@ -327,7 +328,10 @@ export const FilledTextInput = React.forwardRef<
             )}
 
             {prefix == null ? null : (
-              <PrefixAnimatedText visibility={focusValue}>
+              <PrefixAnimatedText
+                allowFontScaling={false}
+                visibility={focusValue}
+              >
                 {prefix}
               </PrefixAnimatedText>
             )}
