@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Text } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
@@ -11,6 +10,7 @@ import {
   sidesToPadding
 } from '../../util/sides'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
+import { UnscaledText } from '../common/UnscaledText'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -68,14 +68,14 @@ export function PinButton(props: Props) {
         style={[touchableStyle, dynamicStyles, styles.linearGradient]}
       >
         {label == null || pending ? null : (
-          <Text
+          <UnscaledText
             adjustsFontSizeToFit
             minimumFontScale={0.75}
             numberOfLines={1}
             style={textStyle}
           >
             {label}
-          </Text>
+          </UnscaledText>
         )}
         {pending ? null : children}
       </LinearGradient>

@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
+import { UnscaledText } from '../common/UnscaledText'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -18,7 +19,7 @@ function IconHeaderRowComponent(props: Props & ThemeProps) {
 
   return (
     <View style={styles.row}>
-      <Text style={styles.icon}>{renderIcon(theme)}</Text>
+      <UnscaledText style={styles.icon}>{renderIcon(theme)}</UnscaledText>
       <View style={styles.text}>{children}</View>
     </View>
   )

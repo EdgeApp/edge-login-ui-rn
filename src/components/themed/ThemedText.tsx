@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Text } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
+import { UnscaledText } from '../common/UnscaledText'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 interface NativeProps {
@@ -26,7 +26,7 @@ export function ThemedText(props: NativeProps) {
   const { style, ...rest } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  return <Text style={[styles.themedText, style]} {...rest} />
+  return <UnscaledText style={[styles.themedText, style]} {...rest} />
 }
 
 /**
@@ -35,7 +35,7 @@ export function ThemedText(props: NativeProps) {
 export function TitleText(props: { children: React.ReactNode }) {
   const theme = useTheme()
   const styles = getStyles(theme)
-  return <Text style={styles.titleText}>{props.children}</Text>
+  return <UnscaledText style={styles.titleText}>{props.children}</UnscaledText>
 }
 
 /**
@@ -44,7 +44,9 @@ export function TitleText(props: { children: React.ReactNode }) {
 export function MessageText(props: { children: React.ReactNode }) {
   const theme = useTheme()
   const styles = getStyles(theme)
-  return <Text style={styles.messageText}>{props.children}</Text>
+  return (
+    <UnscaledText style={styles.messageText}>{props.children}</UnscaledText>
+  )
 }
 
 /**
@@ -52,7 +54,9 @@ export function MessageText(props: { children: React.ReactNode }) {
  * to wrap text that is of greater importance (bolder).
  */
 export function Strong(props: { children: React.ReactNode }) {
-  return <Text style={{ fontWeight: 'bold' }}>{props.children}</Text>
+  return (
+    <UnscaledText style={{ fontWeight: 'bold' }}>{props.children}</UnscaledText>
+  )
 }
 
 /**
@@ -61,7 +65,7 @@ export function Strong(props: { children: React.ReactNode }) {
 export function Warning(props: { children: React.ReactNode }) {
   const theme = useTheme()
   const styles = getStyles(theme)
-  return <Text style={styles.warning}>{props.children}</Text>
+  return <UnscaledText style={styles.warning}>{props.children}</UnscaledText>
 }
 
 /**
@@ -70,7 +74,7 @@ export function Warning(props: { children: React.ReactNode }) {
 export function Error(props: { children: React.ReactNode }) {
   const theme = useTheme()
   const styles = getStyles(theme)
-  return <Text style={styles.error}>{props.children}</Text>
+  return <UnscaledText style={styles.error}>{props.children}</UnscaledText>
 }
 
 const getStyles = cacheStyles((theme: Theme) => {

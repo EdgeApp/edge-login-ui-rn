@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
+import { UnscaledText } from '../common/UnscaledText'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -38,9 +39,9 @@ export function FourDigitDisplay(props: Props): JSX.Element {
         )}
       </View>
       <View style={styles.errorContainer}>
-        <Text style={styles.errorText} numberOfLines={2}>
+        <UnscaledText style={styles.errorText} numberOfLines={2}>
           {error}
-        </Text>
+        </UnscaledText>
       </View>
     </View>
   )

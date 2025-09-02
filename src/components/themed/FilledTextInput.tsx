@@ -8,7 +8,6 @@ import { useMemo } from 'react'
 import {
   ActivityIndicator,
   Platform,
-  Text,
   TextInput,
   TouchableOpacity,
   View
@@ -28,6 +27,8 @@ import Animated, {
 import { useHandler } from '../../hooks/useHandler'
 import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
+import { UnscaledText } from '../common/UnscaledText'
+import { UnscaledTextInput } from '../common/UnscaledTextInput'
 import { styled, styledWithRef } from '../hoc/styled'
 import {
   AnimatedIconComponent,
@@ -38,7 +39,7 @@ import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { NumericInput } from './NumericInput'
 
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
+const AnimatedTextInput = Animated.createAnimatedComponent(UnscaledTextInput)
 const isAndroid = Platform.OS === 'android'
 
 export type FilledTextInputReturnKeyType =
@@ -550,7 +551,7 @@ const PrefixAnimatedText = styled(Animated.Text)<{
   ]
 })
 
-const SuffixText = styled(Text)(theme => {
+const SuffixText = styled(UnscaledText)(theme => {
   return {
     color: theme.secondaryText,
     fontFamily: theme.fontFaceDefault,

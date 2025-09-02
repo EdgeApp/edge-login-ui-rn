@@ -17,11 +17,12 @@ import { useHandler } from '../../hooks/useHandler'
 import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
+import { UnscaledTextInput } from '../common/UnscaledTextInput'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, CloseIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
 
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
+const AnimatedTextInput = Animated.createAnimatedComponent(UnscaledTextInput)
 
 export type SimpleTextInputReturnKeyType =
   | 'done'

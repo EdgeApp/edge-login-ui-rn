@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { Text } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { UnscaledText } from '../common/UnscaledText'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -48,11 +48,11 @@ export function LinkRow(props: Props) {
       onPress={onPress}
     >
       {label == null ? null : (
-        <Text accessible style={styles.text}>
+        <UnscaledText accessible style={styles.text}>
           {label}
-        </Text>
+        </UnscaledText>
       )}
-      <Text style={styles.icon}>{renderIcon(theme)}</Text>
+      <UnscaledText style={styles.icon}>{renderIcon(theme)}</UnscaledText>
     </EdgeTouchableOpacity>
   )
 }

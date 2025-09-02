@@ -3,13 +3,14 @@
  */
 
 import * as React from 'react'
-import { Platform, ScrollView, Text, View } from 'react-native'
+import { Platform, ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { lstrings } from '../../common/locales/strings'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { UnscaledText } from '../common/UnscaledText'
 import { GradientFadeOut } from '../modals/GradientFadeout'
 import { Theme, useTheme } from '../services/ThemeContext'
 
@@ -35,9 +36,11 @@ export function ModalTitle(props: ModalTitleProps) {
   return (
     <View style={styles.titleContainer}>
       {icon ? <View style={styles.titleIconContainer}>{icon}</View> : null}
-      <Text style={[styles.titleText, centerStyle, padding, androidAdjust]}>
+      <UnscaledText
+        style={[styles.titleText, centerStyle, padding, androidAdjust]}
+      >
         {children}
-      </Text>
+      </UnscaledText>
     </View>
   )
 }
@@ -55,9 +58,11 @@ export function ModalMessage(props: {
   const androidAdjust = Platform.OS === 'android' ? styles.androidAdjust : null
 
   return (
-    <Text style={[styles.messageText, padding, warningStyle, androidAdjust]}>
+    <UnscaledText
+      style={[styles.messageText, padding, warningStyle, androidAdjust]}
+    >
       {children}
-    </Text>
+    </UnscaledText>
   )
 }
 

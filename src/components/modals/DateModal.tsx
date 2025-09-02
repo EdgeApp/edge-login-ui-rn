@@ -5,11 +5,12 @@
 
 import DateTimePicker from '@react-native-community/datetimepicker'
 import * as React from 'react'
-import { Appearance, Platform, Text, TextStyle } from 'react-native'
+import { Appearance, Platform, TextStyle } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
 
 import { lstrings } from '../../common/locales/strings'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { UnscaledText } from '../common/UnscaledText'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 
 export interface Props {
@@ -75,7 +76,7 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
         }
       >
         <EdgeTouchableOpacity onPress={this.handleDone}>
-          <Text style={textStyle}>{lstrings.done}</Text>
+          <UnscaledText style={textStyle}>{lstrings.done}</UnscaledText>
         </EdgeTouchableOpacity>
         <DateTimePicker
           display="spinner"

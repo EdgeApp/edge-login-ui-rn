@@ -55,6 +55,7 @@ export const NumericInput = forwardRef<TextInput, Props>(
     if (animated)
       return (
         <AnimatedTextInput
+          allowFontScaling={false}
           ref={ref}
           onChangeText={handleChangeText}
           keyboardType="decimal-pad"
@@ -64,6 +65,7 @@ export const NumericInput = forwardRef<TextInput, Props>(
       )
     return (
       <TextInput
+        allowFontScaling={false}
         ref={ref}
         onChangeText={handleChangeText}
         keyboardType="decimal-pad"
