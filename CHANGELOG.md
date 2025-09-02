@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Fix logo spacing in `PinLoginScene`
+
 ## 3.31.0 (2025-09-01)
 
 - changed: `RequestPermissionsModal` switch color update for Android
