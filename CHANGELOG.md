@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.31.0 (2025-09-01)
+
 - changed: `RequestPermissionsModal` switch color update for Android
 
 ## 3.30.1 (2025-08-25)
