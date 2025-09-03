@@ -430,7 +430,10 @@ export function PinLoginScene(props: Props) {
           onPress={handleHideDrop}
         >
           <View style={styles.featureBox}>
-            <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
+            <EdgeAnim
+              style={styles.logoSpacing}
+              enter={{ type: 'fadeInUp', distance: 60 }}
+            >
               <LogoImageHeader branding={branding} />
             </EdgeAnim>
             <View style={styles.featureBoxBody}>{renderBottomHalf()}</View>
@@ -490,6 +493,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   featureBoxBody: {
     height: theme.rem(15),
     width: '100%'
+  },
+  logoSpacing: {
+    marginBottom: theme.rem(1.5)
   },
   innerView: {
     height: '100%',

@@ -21,7 +21,7 @@ export function LogoImageHeader(props: Props): JSX.Element {
 
   // Compute a pixel-aligned width while preserving the desired visual height.
   const imageStyle: ViewStyle = React.useMemo(() => {
-    const desiredHeightDp = theme.rem(2.75)
+    const desiredHeightDp = theme.rem(2.5)
     const source = Image.resolveAssetSource(primaryLogo)
     const aspectRatio = source.width / source.height
     const scale = PixelRatio.get()
