@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { lstrings } from '../../common/locales/strings'
+import { UnscaledText } from '../common/UnscaledText'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -19,7 +20,7 @@ function DividerWithTextComponent(props: Props & ThemeProps) {
   return (
     <View style={styles.container}>
       <View style={styles.line} />
-      <Text style={styles.text}>{label}</Text>
+      <UnscaledText style={styles.text}>{label}</UnscaledText>
       <View style={styles.line} />
     </View>
   )

@@ -1,8 +1,7 @@
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { useMemo, useState } from 'react'
-import { Keyboard, ScrollView, Text, View } from 'react-native'
-import {} from 'react-native-gesture-handler'
+import { Keyboard, ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
@@ -19,6 +18,7 @@ import { SceneProps } from '../../../types/routerTypes'
 import { validateEmail } from '../../../util/utils'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { Tile } from '../../common/Tile'
+import { UnscaledText } from '../../common/UnscaledText'
 import { WarningCard } from '../../common/WarningCard'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { DateModal, toRecoveryDateString } from '../../modals/DateModal'
@@ -171,9 +171,9 @@ export const ChangeRecoveryScene = (props: Props) => {
     return (
       <ModalMessage>
         {lstrings.recovery_save_hint_token + '\n\n'}
-        <Text style={styles.warningText}>
+        <UnscaledText style={styles.warningText}>
           {lstrings.recovery_save_hint_username_answers + '\n\n'}
-        </Text>
+        </UnscaledText>
         {showEmailPrompt ? lstrings.recovery_save_email_prompt : null}
       </ModalMessage>
     )
@@ -339,9 +339,9 @@ export const ChangeRecoveryScene = (props: Props) => {
         />
         <EdgeTouchableOpacity onPress={deleteRecovery}>
           <View style={styles.disableButtonContainer}>
-            <Text numberOfLines={1} style={styles.disableButton}>
+            <UnscaledText numberOfLines={1} style={styles.disableButton}>
               {lstrings.recovery_disable_button}
-            </Text>
+            </UnscaledText>
           </View>
         </EdgeTouchableOpacity>
       </View>

@@ -6,7 +6,7 @@ import {
   NetworkError
 } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, Keyboard, Platform, Text, View } from 'react-native'
+import { FlatList, Keyboard, Platform, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -30,6 +30,7 @@ import { UserListItem } from '../abSpecific/UserListItem'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
+import { UnscaledText } from '../common/UnscaledText'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -325,14 +326,14 @@ export function PinLoginScene(props: Props) {
               end={theme.pinUsernameButtonColorEnd}
               style={[styles.linearGradient, styles.usernameButton]}
             >
-              <Text
+              <UnscaledText
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
                 numberOfLines={1}
                 style={styles.usernameText}
               >
                 {usernameLabel}
-              </Text>
+              </UnscaledText>
             </LinearGradient>
           </EdgeTouchableOpacity>
         </EdgeAnim>
@@ -349,7 +350,9 @@ export function PinLoginScene(props: Props) {
           {renderTouchImage()}
         </EdgeAnim>
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-          <Text style={styles.touchImageText}>{renderTouchImageText()}</Text>
+          <UnscaledText style={styles.touchImageText}>
+            {renderTouchImageText()}
+          </UnscaledText>
         </EdgeAnim>
       </View>
     )

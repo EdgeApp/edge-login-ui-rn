@@ -4,6 +4,7 @@ import { cacheStyles } from 'react-native-patina'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
+import { UnscaledTextInput } from '../common/UnscaledTextInput'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { PinDots } from './PinDots'
 
@@ -47,7 +48,7 @@ export const DigitInput = (props: Props) => {
         <View style={styles.interactiveContainer}>
           <PinDots pinLength={pin.length} maxLength={maxPinLength} />
         </View>
-        <TextInput
+        <UnscaledTextInput
           ref={inputRef}
           style={styles.input}
           onChangeText={onChangePin}

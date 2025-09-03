@@ -238,6 +238,7 @@ export const SimpleTextInput = React.forwardRef<
         <InnerContainer>
           {placeholder == null ? null : (
             <PlaceholderText
+              allowFontScaling={false}
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
               hasValueAnimation={hasValueAnimation}
@@ -247,6 +248,7 @@ export const SimpleTextInput = React.forwardRef<
             </PlaceholderText>
           )}
           <InputField
+            allowFontScaling={false}
             accessible
             ref={inputRef}
             keyboardType={props.keyboardType}

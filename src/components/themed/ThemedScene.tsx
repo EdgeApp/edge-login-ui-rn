@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { SafeAreaView, Text, View } from 'react-native'
+import { SafeAreaView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
@@ -8,6 +8,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { Branding } from '../../types/Branding'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { UnscaledText } from '../common/UnscaledText'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 
@@ -71,9 +72,9 @@ export function ThemedScene(props: Props) {
                 style={styles.buttonIcon}
               />
               {backButtonText == null ? null : (
-                <Text accessible style={styles.buttonText}>
+                <UnscaledText accessible style={styles.buttonText}>
                   {backButtonText}
-                </Text>
+                </UnscaledText>
               )}
             </EdgeTouchableOpacity>
           )}
@@ -84,7 +85,9 @@ export function ThemedScene(props: Props) {
               style={styles.rightButton}
               onPress={onSkip}
             >
-              <Text style={styles.buttonText}>{lstrings.skip}</Text>
+              <UnscaledText style={styles.buttonText}>
+                {lstrings.skip}
+              </UnscaledText>
             </EdgeTouchableOpacity>
           )}
           {parentButton == null || parentButton.text == null ? null : (
@@ -93,16 +96,16 @@ export function ThemedScene(props: Props) {
               style={styles.rightButton}
               onPress={handleParentButtonPress}
             >
-              <Text style={parentButton.style || styles.buttonText}>
+              <UnscaledText style={parentButton.style || styles.buttonText}>
                 {parentButton.text}
-              </Text>
+              </UnscaledText>
             </EdgeTouchableOpacity>
           )}
         </View>
       )}
       {title == null ? null : (
         <View>
-          <Text style={styles.titleText}>{title}</Text>
+          <UnscaledText style={styles.titleText}>{title}</UnscaledText>
         </View>
       )}
       {!hasHeader || noUnderline ? null : <DividerLine marginRem={[1, 1, 0]} />}

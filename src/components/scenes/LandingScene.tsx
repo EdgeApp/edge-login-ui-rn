@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 
 import { lstrings } from '../../common/locales/strings'
 import * as Constants from '../../constants/index'
@@ -11,6 +11,7 @@ import { SceneProps } from '../../types/routerTypes'
 import { scale } from '../../util/scaling'
 import { LogoImageHeader } from '../abSpecific/LogoImageHeader'
 import { ButtonsView } from '../buttons/ButtonsView'
+import { UnscaledText } from '../common/UnscaledText'
 import { ThemedScene } from '../themed/ThemedScene'
 
 interface Props extends SceneProps<'landing'> {
@@ -48,9 +49,9 @@ export const LandingScene = (props: Props) => {
             <LogoImageHeader branding={props.branding} />
             <View style={styles.featureBoxContent}>
               <View style={styles.featureBoxDescription}>
-                <Text style={styles.tagText}>
+                <UnscaledText style={styles.tagText}>
                   {branding.landingSceneText ?? lstrings.landing_tagline}
-                </Text>
+                </UnscaledText>
               </View>
             </View>
           </View>

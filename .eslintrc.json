@@ -16,7 +16,7 @@
   ],
   "rules": {
     "react-native/no-inline-styles": "off",
-    "react-native/no-raw-text": ["error", { "skip": ["EdgeText"] }],
+    "react-native/no-raw-text": ["error", { "skip": ["UnscaledText", "EdgeText"] }],
     "simple-import-sort/imports": "error"
   },
   "overrides": [
