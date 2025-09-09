@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.31.2 (2025-09-09)
+
+- changed: Updated translations
+
 ## 3.31.1 (2025-09-03)
 
 - fixed: Fix logo spacing in `PinLoginScene`
