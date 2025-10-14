@@ -1,6 +1,7 @@
 import { asMaybeOtpError, EdgeAccount, OtpError } from 'edge-core-js'
 import * as React from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { base16, base64 } from 'rfc4648'
 import { sprintf } from 'sprintf-js'
 
 import { completeLogin } from '../../actions/LoginCompleteActions'
@@ -248,6 +249,17 @@ export function OtpErrorScene(props: Props) {
             {sprintf(lstrings.otp_scene_wait, toLocalTime(date)) +
               supportEmailAddendum}
           </MessageText>
+          {voucherId == null ? null : (
+            <MessageText>
+              {sprintf(
+                lstrings.otp_lock_id,
+                base16
+                  .stringify(base64.parse(voucherId))
+                  .toLowerCase()
+                  .slice(0, 8)
+              )}
+            </MessageText>
+          )}
         </>
       )}
       {resetToken == null || date != null ? null : (

@@ -48,6 +48,7 @@
     "cleaners": "^0.3.12",
     "date-fns": "^2.23.0",
     "qrcode-generator": "^1.4.4",
+    "rfc4648": "^1.5.3",
     "react-native-airship": "^0.2.9",
     "react-native-haptic-feedback": "^1.14.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",

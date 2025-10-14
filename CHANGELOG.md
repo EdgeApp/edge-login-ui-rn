@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: "Lock ID" shown in `OtpRepairScene` and `OtpErrorScene` UI
+
 ## 3.31.2 (2025-09-09)
 
 - changed: Updated translations
