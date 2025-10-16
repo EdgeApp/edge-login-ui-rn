@@ -244,5 +244,6 @@
   "failed_captcha_error": "Soluzione non corretta",
   "review_login_request": "Rivedi richiesta di accesso",
   "login_attempt_detected": "È stato rilevato un tentativo di accesso per i seguenti account:",
-  "twofa_attempt_detected": "È stato rilevato un tentativo di rimuovere la sicurezza a 2 fattori per i seguenti account:"
+  "twofa_attempt_detected": "È stato rilevato un tentativo di rimuovere la sicurezza a 2 fattori per i seguenti account:",
+  "otp_lock_id": "Lock ID: %s"
 }
