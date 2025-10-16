@@ -244,5 +244,6 @@
   "failed_captcha_error": "Solução incorreta",
   "review_login_request": "Review Login Request",
   "login_attempt_detected": "A login attempt has been detected for the following account(s):",
-  "twofa_attempt_detected": "An attempt to remove 2-factor security has been detected for the following account(s):"
+  "twofa_attempt_detected": "An attempt to remove 2-factor security has been detected for the following account(s):",
+  "otp_lock_id": "Lock ID: %s"
 }
