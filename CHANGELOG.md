@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: `Biometric_Login` tracking event
+
 ## 3.32.0 (2025-10-16)
 
 - changed: "Lock ID" shown in `OtpRepairScene` and `OtpErrorScene` UI

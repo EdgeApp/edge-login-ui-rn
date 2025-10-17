@@ -104,6 +104,7 @@ export type TrackingEventName =
 
   // Pin Login Scene Events
   | 'Pin_Login'
+  | 'Biometric_Login'
 
   // Recovery Events
   | 'Recovery_Token_Submit'
