@@ -78,14 +78,14 @@ export function PinLoginScene(props: Props) {
 
   const [pin, setPin] = React.useState('')
   const [showUserList, setShowUserList] = React.useState(false)
-  const [touchBusy, setTouchBusy] = React.useState(false)
+  const [biometricBusy, setBiometricBusy] = React.useState(false)
   // Error state:
   const [errorInfo, setErrorInfo] = React.useState<ErrorInfo | undefined>()
   const hasWait = errorInfo != null && errorInfo.wait > 0
 
   // Pin login state:
   const biometryType = useSelector(state => state.touch.biometryType)
-  const isTouchIdDisabled = pin.length === 4 || touchBusy
+  const isBiometricDisabled = pin.length === 4 || biometricBusy
 
   // User list:
   const localUsers = useLocalUsers()
@@ -211,13 +211,15 @@ export function PinLoginScene(props: Props) {
         wait: Math.ceil(passwordError?.wait ?? 0)
       })
       setPin('')
-      setTouchBusy(false)
+      setBiometricBusy(false)
     }
   }
 
-  const handleTouchLogin = async (userInfo: EdgeUserInfo): Promise<void> => {
-    if (touchBusy) return
-    setTouchBusy(true)
+  const handleBiometricLogin = async (
+    userInfo: EdgeUserInfo
+  ): Promise<void> => {
+    if (biometricBusy) return
+    setBiometricBusy(true)
 
     try {
       const { loginId } = userInfo
@@ -232,15 +234,16 @@ export function PinLoginScene(props: Props) {
         ...accountOptions,
         useLoginId: true
       })
+      onLogEvent('Biometric_Login')
       await dispatch(completeLogin(account))
     } finally {
-      setTouchBusy(false)
+      setBiometricBusy(false)
     }
   }
 
-  const handleTouchId = () => {
+  const handleBiometricId = () => {
     if (userInfo == null) return
-    handleTouchLogin(userInfo).catch(showError)
+    handleBiometricLogin(userInfo).catch(showError)
   }
 
   const handlePress = (value: string) => {
@@ -347,11 +350,11 @@ export function PinLoginScene(props: Props) {
           />
         )}
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 20 }}>
-          {renderTouchImage()}
+          {renderBiometricImage()}
         </EdgeAnim>
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-          <UnscaledText style={styles.touchImageText}>
-            {renderTouchImageText()}
+          <UnscaledText style={styles.biometricImageText}>
+            {renderBiometricImageText()}
           </UnscaledText>
         </EdgeAnim>
       </View>
@@ -371,14 +374,14 @@ export function PinLoginScene(props: Props) {
     )
   }
 
-  const renderTouchImage = () => {
+  const renderBiometricImage = () => {
     if (userInfo == null || !userInfo.touchLoginEnabled) return null
 
     if (biometryType === 'FaceID') {
       return (
         <EdgeTouchableOpacity
-          onPress={handleTouchId}
-          disabled={isTouchIdDisabled}
+          onPress={handleBiometricId}
+          disabled={isBiometricDisabled}
         >
           <SvgXml
             xml={FaceIdXml}
@@ -392,8 +395,8 @@ export function PinLoginScene(props: Props) {
     if (biometryType === 'TouchID') {
       return (
         <EdgeTouchableOpacity
-          onPress={handleTouchId}
-          disabled={isTouchIdDisabled}
+          onPress={handleBiometricId}
+          disabled={isBiometricDisabled}
         >
           <MaterialCommunityIcons
             name="fingerprint"
@@ -406,7 +409,7 @@ export function PinLoginScene(props: Props) {
     return null
   }
 
-  const renderTouchImageText = () => {
+  const renderBiometricImageText = () => {
     if (userInfo == null || !userInfo.touchLoginEnabled) return ''
     if (biometryType === 'FaceID') {
       return lstrings.use_faceId
@@ -506,7 +509,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'flex-start',
     alignItems: 'center'
   },
-  touchImageText: {
+  biometricImageText: {
     marginTop: theme.rem(0.5),
     color: theme.iconTappable
   },
