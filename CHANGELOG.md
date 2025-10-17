@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.33.0 (2025-10-17)
+
 - added: `Biometric_Login` tracking event
 
 ## 3.32.0 (2025-10-16)
