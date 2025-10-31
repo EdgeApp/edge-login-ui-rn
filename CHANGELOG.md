@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.34.0 (2025-10-31)
+
 - changed: "X" button re-added to `EdgeModal` for accessibility
 
 ## 3.33.0 (2025-10-17)
