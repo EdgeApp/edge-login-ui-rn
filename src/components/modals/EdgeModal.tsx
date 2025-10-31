@@ -1,3 +1,8 @@
+/**
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+ * edge-login-ui-rn!
+ */
+
 import * as React from 'react'
 import { BackHandler, Dimensions, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -18,7 +23,6 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { useHandler } from '../../hooks/useHandler'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
-import { loginUiContext } from '../publicApi/LoginUiProvider'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { BlurBackground } from '../ui4/BlurBackground'
@@ -61,7 +65,7 @@ const duration = 300
  * A modal that slides a modal up from the bottom of the screen
  * and dims the rest of the app.
  */
-export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
+export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
   const {
     bridge,
     title,
@@ -72,9 +76,7 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
   } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { isDesktop } = React.useContext(loginUiContext)
 
-  const isShowCloseButton = isDesktop && onCancel != null
   const halfRem = theme.rem(0.5)
   const closeThreshold = theme.rem(6)
   const dragSlop = theme.rem(1)
@@ -110,7 +112,9 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
       offset.value = withTiming(
         Dimensions.get('window').height,
         { duration },
-        () => runOnJS(bridge.remove)()
+        () => {
+          runOnJS(bridge.remove)()
+        }
       )
     })
   }, [bridge, opacity, offset])
@@ -123,7 +127,9 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
         return true
       }
     )
-    return () => backHandler.remove()
+    return () => {
+      backHandler.remove()
+    }
   }, [handleCancel])
 
   const gesture = Gesture.Pan()
@@ -136,6 +142,7 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
       }
       offset.value = withTiming(0, { duration })
     })
+    .simultaneousWithExternalGesture(Gesture.Tap())
 
   //
   // Dynamic styles
@@ -183,7 +190,7 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
               ) : (
                 title ?? undefined
               )}
-              {!isShowCloseButton ? null : (
+              {onCancel == null ? null : (
                 <EdgeTouchableOpacity
                   style={
                     isCustomTitle
@@ -191,6 +198,7 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
                       : styles.closeIconContainer
                   }
                   onPress={onCancel}
+                  testID="modal-close-button"
                 >
                   <AntDesignIcon
                     name="close"
@@ -206,6 +214,7 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
             <ScrollView
               style={styles.scroll}
               keyboardDismissMode="on-drag"
+              keyboardShouldPersistTaps="handled"
               scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
             >
               {children}
