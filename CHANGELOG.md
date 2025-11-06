@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.34.1 (2025-10-31)
+
+- fixed: Accept 6-digit 2FA codes in the backup modal.
+
 ## 3.34.0 (2025-10-31)
 
 - changed: "X" button re-added to `EdgeModal` for accessibility
