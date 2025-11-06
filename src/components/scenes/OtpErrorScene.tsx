@@ -68,7 +68,7 @@ export function OtpErrorScene(props: Props) {
           accountOptions,
           onPerfEvent
         )
-        dispatch(completeLogin(account))
+        await dispatch(completeLogin(account))
       } catch (error) {
         const otpError = asMaybeOtpError(error)
         if (otpError != null) {
@@ -104,8 +104,13 @@ export function OtpErrorScene(props: Props) {
 
   const handleBackupModal = useHandler(() => {
     inModal.current = true
-    const handleSubmit = async (otpKey: string): Promise<boolean | string> =>
-      await retryOnChallenge({
+    const handleSubmit = async (input: string): Promise<boolean | string> => {
+      input = input.replace(/\s/g, '')
+
+      // Is this a 6-digit code?
+      const isOtpCode = /^\d{6}$/.test(input)
+
+      return await retryOnChallenge({
         cancelValue: lstrings.failed_captcha_error,
         async task(challengeId) {
           const account = await attemptLogin(
@@ -114,11 +119,12 @@ export function OtpErrorScene(props: Props) {
             {
               ...accountOptions,
               challengeId,
-              otpKey
+              otpKey: isOtpCode ? undefined : input,
+              otp: isOtpCode ? input : undefined
             },
             onPerfEvent
           )
-          dispatch(completeLogin(account))
+          await dispatch(completeLogin(account))
           return true
         }
       }).catch(error => {
@@ -143,6 +149,7 @@ export function OtpErrorScene(props: Props) {
         showError(error)
         return false
       })
+    }
 
     Airship.show(bridge => (
       <TextInputModal
