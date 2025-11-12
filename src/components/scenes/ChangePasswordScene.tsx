@@ -370,11 +370,14 @@ const validatePassword = (
   confirmPassword: string,
   failStatus: PasswordRequirementStatus
 ): PasswordRequirements => {
+  // Bypass some requirements for sufficiently long passwords:
+  const isLong = password.length >= 16
+
   return {
     minLengthMet: password.length >= 10 ? 'met' : failStatus,
-    hasNumber: /[0-9]/.test(password) ? 'met' : failStatus,
-    hasLowercase: /[a-z]/.test(password) ? 'met' : failStatus,
-    hasUppercase: /[A-Z]/.test(password) ? 'met' : failStatus,
+    hasNumber: isLong || /[0-9]/.test(password) ? 'met' : failStatus,
+    hasLowercase: isLong || /[a-z]/.test(password) ? 'met' : failStatus,
+    hasUppercase: isLong || /[A-Z]/.test(password) ? 'met' : failStatus,
     confirmationMatches:
       confirmPassword !== '' && confirmPassword === password
         ? 'met'
