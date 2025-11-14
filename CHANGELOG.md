@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Added a "Done" return key to the DigitsInput for pin-entry.
+
 ## 3.34.1 (2025-10-31)
 
 - fixed: Accept 6-digit 2FA codes in the backup modal.
