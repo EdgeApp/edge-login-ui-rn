@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.34.2 (2025-11-13)
+
 - fixed: Added a "Done" return key to the DigitsInput for pin-entry.
 
 ## 3.34.1 (2025-10-31)
