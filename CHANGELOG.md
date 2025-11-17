@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.34.3 (2025-11-17)
+
 - fixed: Loosen uppercase / lowercase / number requirements for really long passwords.
 
 ## 3.34.2 (2025-11-13)
