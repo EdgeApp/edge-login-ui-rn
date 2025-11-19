@@ -243,7 +243,7 @@
   "complete_captcha_title": "¿Eres humano?",
   "failed_captcha_error": "Solución incorrecta",
   "review_login_request": "Revisar solicitud de inicio de sesión",
-  "login_attempt_detected": "A login attempt has been detected for the following account(s):",
-  "twofa_attempt_detected": "An attempt to remove 2-factor security has been detected for the following account(s):",
-  "otp_lock_id": "Lock ID: %s"
+  "login_attempt_detected": "Se ha detectado un intento de inicio de sesión para la(s) siguiente(s) cuenta(s):",
+  "twofa_attempt_detected": "Se ha detectado un intento de eliminar la seguridad de 2 factores para la(s) siguiente(s) cuenta(s):",
+  "otp_lock_id": "ID de bloqueo: %s"
 }
