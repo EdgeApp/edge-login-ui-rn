@@ -5,12 +5,12 @@
 import * as React from 'react'
 import { Platform, ScrollView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { lstrings } from '../../common/locales/strings'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { UnscaledText } from '../common/UnscaledText'
+import { CloseIcon } from '../icons/ThemedIcons'
 import { GradientFadeOut } from '../modals/GradientFadeout'
 import { Theme, useTheme } from '../services/ThemeContext'
 
@@ -74,13 +74,12 @@ export function ModalFooter(props: ModalFooterProps) {
   const styles = getStyles(theme)
 
   return (
-    <EdgeTouchableOpacity onPress={props.onPress} style={styles.closeContainer}>
-      <AntDesignIcon
-        accessibilityHint={lstrings.modal_close_hint}
-        color={theme.iconTappable}
-        name="close"
-        size={theme.rem(1.25)}
-      />
+    <EdgeTouchableOpacity
+      accessibilityHint={lstrings.modal_close_hint}
+      onPress={props.onPress}
+      style={styles.closeContainer}
+    >
+      <CloseIcon color={theme.iconTappable} size={theme.rem(1.25)} />
     </EdgeTouchableOpacity>
   )
 }
