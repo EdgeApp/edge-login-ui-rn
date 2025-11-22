@@ -3,16 +3,16 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
+import { ChevronRightIcon } from '../icons/ThemedIcons'
+import { SectionView } from '../layout/SectionView'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { ModalTitle } from '../themed/ModalParts'
 import { EdgeCard } from '../ui4/EdgeCard'
-import { SectionView } from '../ui4/SectionView'
 import { EdgeModal } from './EdgeModal'
 
 interface Props {
@@ -44,8 +44,7 @@ export const SecurityAlertsModal = (props: Props) => {
       >
         <View style={styles.cardContainer}>
           <EdgeText>{username}</EdgeText>
-          <FontAwesome5
-            name="chevron-right"
+          <ChevronRightIcon
             size={theme.rem(1.25)}
             color={theme.iconTappable}
             style={styles.chevron}

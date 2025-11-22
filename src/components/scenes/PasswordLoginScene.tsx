@@ -20,7 +20,6 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import { launchPasswordRecovery } from '../../actions/LoginAction'
@@ -40,6 +39,7 @@ import { UserListItem } from '../abSpecific/UserListItem'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { ChevronDownIcon, ChevronUpIcon } from '../icons/ThemedIcons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { retryOnChallenge } from '../modals/ChallengeModal'
 import { GradientFadeOut } from '../modals/GradientFadeout'
@@ -463,17 +463,9 @@ export const PasswordLoginScene = (props: Props) => {
             onPress={handleToggleUsernameList}
           >
             {showUsernameList ? (
-              <MaterialIcon
-                name="expand-less"
-                size={theme.rem(1.5)}
-                style={styles.iconColor}
-              />
+              <ChevronUpIcon size={theme.rem(1.5)} style={styles.iconColor} />
             ) : (
-              <MaterialIcon
-                name="expand-more"
-                size={theme.rem(1.5)}
-                style={styles.iconColor}
-              />
+              <ChevronDownIcon size={theme.rem(1.5)} style={styles.iconColor} />
             )}
           </EdgeTouchableOpacity>
         ) : null}

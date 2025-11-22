@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- fixed: Sync components with edge-react-gui.
+- fixed: Inconsistencies between X and chevron icons on various components
+
 ## 3.34.3 (2025-11-17)
 
 - fixed: Loosen uppercase / lowercase / number requirements for really long passwords.
