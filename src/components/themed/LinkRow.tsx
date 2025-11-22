@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { cacheStyles } from 'react-native-patina'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { UnscaledText } from '../common/UnscaledText'
+import { ChevronRightIcon } from '../icons/ThemedIcons'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -27,11 +27,7 @@ export function LinkRow(props: Props) {
     marginRem,
     onPress,
     renderIcon = (theme: Theme) => (
-      <FontAwesome5
-        name="chevron-right"
-        color={theme.iconTappable}
-        size={theme.rem(1)}
-      />
+      <ChevronRightIcon color={theme.iconTappable} size={theme.rem(1)} />
     )
   } = props
   const theme = useTheme()

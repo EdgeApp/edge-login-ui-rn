@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { SafeAreaView, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
@@ -9,6 +8,7 @@ import { Branding } from '../../types/Branding'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { UnscaledText } from '../common/UnscaledText'
+import { ChevronLeftIcon } from '../icons/ThemedIcons'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 
@@ -63,11 +63,10 @@ export function ThemedScene(props: Props) {
               accessible={false}
               style={styles.leftButton}
               onPress={onBack}
+              testID="headerLeftButton"
             >
-              <FontAwesome5
-                accessible
-                testID="headerLeftButton"
-                name="chevron-left"
+              <ChevronLeftIcon
+                color={theme.primaryText}
                 size={theme.rem(1)}
                 style={styles.buttonIcon}
               />

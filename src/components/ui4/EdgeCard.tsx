@@ -1,13 +1,9 @@
-/**
- * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
- */
-
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import LinearGradient, {
   LinearGradientProps
 } from 'react-native-linear-gradient'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import { cacheStyles } from 'react-native-patina'
 
 import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
@@ -18,8 +14,9 @@ import {
   sidesToPadding
 } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { SectionView } from './SectionView'
+import { CloseIcon } from '../icons/ThemedIcons'
+import { SectionView } from '../layout/SectionView'
+import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   // Top layer:
@@ -43,6 +40,7 @@ interface Props {
   // Options:
   fill?: boolean // Set flex to 1 for tiling
   sections?: boolean // Automatic section dividers, only if chilren are multiple nodes
+  testID?: string
   onClose?: () => Promise<void> | void // If specified, adds a close button, absolutely positioned in the top right
 
   // Touchable area for the following span the entire card:
@@ -64,13 +62,17 @@ interface Props {
 export const EdgeCard = (props: Props) => {
   const {
     children,
-    marginRem,
-    paddingRem,
-    overlay,
-    sections,
-    gradientBackground,
-    nodeBackground,
     fill = false,
+    gradientBackground,
+    // icon,
+    marginRem,
+    nodeBackground,
+    overlay,
+    paddingRem,
+    sections,
+    testID,
+
+    // Handlers:
     onClose,
     onLongPress,
     onPress
@@ -104,7 +106,6 @@ export const EdgeCard = (props: Props) => {
       await onClose()
     }
   })
-
   const viewStyle = React.useMemo(
     () => [styles.cardContainer, margin, padding, fillStyle],
     [styles.cardContainer, margin, padding, fillStyle]
@@ -135,11 +136,7 @@ export const EdgeCard = (props: Props) => {
         style={styles.cornerContainer}
         onPress={handleClose}
       >
-        <AntDesignIcon
-          color={theme.primaryText}
-          name="close"
-          size={theme.rem(1.25)}
-        />
+        <CloseIcon />
       </EdgeTouchableOpacity>
     )
 
@@ -151,7 +148,7 @@ export const EdgeCard = (props: Props) => {
   const allContent = (
     <>
       {background}
-      {content}
+      <View style={styles.iconRowContainer}>{content}</View>
       {maybeCloseButton}
       {maybeOverlay}
     </>
@@ -160,9 +157,10 @@ export const EdgeCard = (props: Props) => {
   return isPressable ? (
     <EdgeTouchableOpacity
       accessible={false}
+      testID={testID}
+      style={viewStyle}
       onPress={handlePress}
       onLongPress={handleLongPress}
-      style={viewStyle}
     >
       {allContent}
     </EdgeTouchableOpacity>
@@ -196,6 +194,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     margin: 2,
     pointerEvents: 'none'
+  },
+  iconRowContainer: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   fill: {
     flex: 1

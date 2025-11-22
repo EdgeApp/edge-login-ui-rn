@@ -4,6 +4,7 @@ import { cacheStyles } from 'react-native-patina'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
+import { ChevronRightIcon } from '../icons/ThemedIcons'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeTouchableWithoutFeedback } from './EdgeTouchableWithoutFeedback'
@@ -107,13 +108,13 @@ export class TileComponent extends React.PureComponent<Props> {
             </View>
             {type === 'touchable' ? (
               <View style={styles.iconContainer}>
-                <FontAwesomeIcon
-                  name="chevron-right"
-                  style={
+                <ChevronRightIcon
+                  color={
                     disabled === true
-                      ? styles.arrowIconDeactivated
-                      : styles.arrowIcon
+                      ? theme.iconDeactivated
+                      : theme.iconTappable
                   }
+                  size={theme.rem(1)}
                 />
               </View>
             ) : null}

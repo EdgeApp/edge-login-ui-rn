@@ -4,6 +4,7 @@ import Animated, {
   useAnimatedStyle
 } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import Feather from 'react-native-vector-icons/Feather'
 import type { Icon } from 'react-native-vector-icons/Icon'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -20,10 +21,13 @@ export interface AnimatedIconProps {
 }
 export type AnimatedIconComponent = React.FunctionComponent<AnimatedIconProps>
 
+type IconStyle = React.ComponentProps<typeof AntDesignIcon>['style']
+
 export interface IconProps {
   accessible?: boolean
   color?: string
   size?: number
+  style?: IconStyle
 }
 export type IconComponent = React.FunctionComponent<IconProps>
 
@@ -67,26 +71,29 @@ function AnimatedFontIcon(props: AnimatedIconProps & IconChoice): JSX.Element {
   )
 }
 
-function ThemedFontIcon(props: IconProps & IconChoice): JSX.Element {
+function ThemedFontIcon(props: IconProps & IconChoice): React.ReactElement {
   const theme = useTheme()
   const {
     accessible,
     color = theme.icon,
     IconComponent,
     name,
-    size = theme.rem(1)
+    size = theme.rem(1),
+    style
   } = props
 
-  const style = {
-    color: color,
+  const baseStyle = {
+    color,
     fontSize: size
   }
+  const combinedStyle = style == null ? baseStyle : [baseStyle, style]
+
   return (
     <IconComponent
       accessible={accessible}
       name={name}
       adjustsFontSizeToFit
-      style={style}
+      style={combinedStyle}
     />
   )
 }
@@ -123,6 +130,13 @@ export function EyeIconAnimated(
     name: off ? 'eye-off-outline' : 'eye-outline'
   })
 }
+
+export const ChevronLeftAnimated = makeAnimatedFontIcon(Feather, 'chevron-left')
+
+export const ChevronUpIcon = makeFontIcon(Feather, 'chevron-up')
+export const ChevronDownIcon = makeFontIcon(Feather, 'chevron-down')
+export const ChevronLeftIcon = makeFontIcon(Feather, 'chevron-left')
+export const ChevronRightIcon = makeFontIcon(Feather, 'chevron-right')
 
 export const CloseIcon = makeFontIcon(AntDesignIcon, 'close')
 export const CloseIconAnimated = makeAnimatedFontIcon(AntDesignIcon, 'close')
