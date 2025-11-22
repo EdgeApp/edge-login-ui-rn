@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { LoginUserInfo } from '../../hooks/useLocalUsers'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CloseIcon } from '../icons/ThemedIcons'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -53,10 +53,10 @@ export function UserListItem(props: Props) {
         testID={`${username}.deleteIcon`}
         onPress={handleDelete}
       >
-        <MaterialIcon
-          style={styles.deleteButton}
-          name="close"
+        <CloseIcon
+          color={theme.iconTappable}
           size={theme.rem(1)}
+          style={styles.deleteButton}
         />
       </EdgeTouchableOpacity>
     </EdgeTouchableOpacity>

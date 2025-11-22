@@ -2,12 +2,12 @@ import { asMaybeChallengeError } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { WebView, WebViewNavigation } from 'react-native-webview'
 
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CloseIcon } from '../icons/ThemedIcons'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -88,11 +88,7 @@ export const ChallengeModal = (props: Props) => {
           style={styles.closeIconContainer}
           onPress={handleCancel}
         >
-          <AntDesignIcon
-            name="close"
-            color={theme.primaryText}
-            size={theme.rem(1.25)}
-          />
+          <CloseIcon color={theme.primaryText} size={theme.rem(1.25)} />
         </EdgeTouchableOpacity>
       </View>
       <WebView

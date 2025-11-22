@@ -11,11 +11,11 @@ import Animated, {
   withSpring,
   withTiming
 } from 'react-native-reanimated'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { lstrings } from '../../common/locales/strings'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
+import { ChevronDownIcon } from '../icons/ThemedIcons'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
@@ -118,11 +118,7 @@ export const AccountInfo = (props: Props) => {
               : lstrings.show_account_info}
           </EdgeText>
           <Animated.View style={[styles.headerIcon, iconStyle]}>
-            <MaterialIcon
-              name="keyboard-arrow-down"
-              size={theme.rem(1.5)}
-              color={theme.iconTappable}
-            />
+            <ChevronDownIcon size={theme.rem(1.5)} color={theme.iconTappable} />
           </Animated.View>
         </Animated.View>
       </EdgeTouchableWithoutFeedback>
