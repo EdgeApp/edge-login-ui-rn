@@ -1,12 +1,10 @@
-/**
- * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
- */
-
 import * as React from 'react'
 import { View } from 'react-native'
+import { cacheStyles } from 'react-native-patina'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { DividerLineUi4 } from '../common/DividerLineUi4'
+import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   children: React.ReactNode | React.ReactNode[]
@@ -31,7 +29,7 @@ const DEFAULT_MARGIN_REM = 0.5
  * wideSpacing is meant for sectioning out a scene where more spacing is needed
  * between sections.
  */
-export const SectionView = (props: Props): JSX.Element | null => {
+export const SectionView = (props: Props): React.ReactElement | null => {
   const { children, extendRight = false, marginRem, dividerMarginRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -42,18 +40,15 @@ export const SectionView = (props: Props): JSX.Element | null => {
       : extendRight
       ? styles.marginScene
       : styles.marginCard
-  const dividerMargin =
-    dividerMarginRem != null
-      ? sidesToMargin(mapSides(fixSides(dividerMarginRem, 0), theme.rem))
-      : extendRight
-      ? styles.dividerMarginScene
-      : styles.dividerMarginCard
 
-  const nonNullChildren = React.Children.map(children, child => {
-    if (child != null) {
-      return child
+  const nonNullChildren = React.Children.map(
+    children,
+    (child): React.ReactNode => {
+      if (child != null) {
+        return child
+      }
     }
-  })
+  )
   const numChildren = React.Children.count(nonNullChildren)
 
   if (children == null || numChildren === 0) return null
@@ -63,17 +58,23 @@ export const SectionView = (props: Props): JSX.Element | null => {
     <View style={[styles.container, margin]}>
       {numChildren === 1
         ? nonNullChildren
-        : React.Children.map(nonNullChildren, (child, index) => {
-            if (index < numChildren - 1) {
-              return (
-                <>
-                  {child}
-                  <View style={[styles.divider, dividerMargin]} />
-                </>
-              )
+        : React.Children.map(
+            nonNullChildren,
+            (child, index): React.ReactNode => {
+              if (index < numChildren - 1) {
+                return (
+                  <>
+                    {child}
+                    <DividerLineUi4
+                      marginRem={dividerMarginRem}
+                      extendRight={extendRight}
+                    />
+                  </>
+                )
+              }
+              return child
             }
-            return child
-          })}
+          )}
     </View>
   )
 }
@@ -89,18 +90,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   marginScene: {
     marginVertical: theme.rem(DEFAULT_MARGIN_REM)
-  },
-  divider: {
-    height: theme.thinLineWidth,
-    borderBottomWidth: theme.thinLineWidth,
-    borderBottomColor: theme.lineDivider
-  },
-  dividerMarginScene: {
-    marginVertical: theme.rem(DEFAULT_MARGIN_REM),
-    marginLeft: theme.rem(1),
-    marginRight: -theme.rem(DEFAULT_MARGIN_REM)
-  },
-  dividerMarginCard: {
-    margin: theme.rem(DEFAULT_MARGIN_REM)
   }
 }))
