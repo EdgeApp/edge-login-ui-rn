@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.34.4 (2025-11-26)
+
 - fixed: Sync components with edge-react-gui.
 - fixed: Inconsistencies between X and chevron icons on various components
 
