@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: `EdgeCard` styling issues.
+
 ## 3.34.4 (2025-11-26)
 
 - fixed: Sync components with edge-react-gui.

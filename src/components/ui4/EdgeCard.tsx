@@ -148,7 +148,7 @@ export const EdgeCard = (props: Props) => {
   const allContent = (
     <>
       {background}
-      <View style={styles.iconRowContainer}>{content}</View>
+      {content}
       {maybeCloseButton}
       {maybeOverlay}
     </>
@@ -194,12 +194,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     margin: 2,
     pointerEvents: 'none'
-  },
-  iconRowContainer: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexDirection: 'row',
-    alignItems: 'center'
   },
   fill: {
     flex: 1
