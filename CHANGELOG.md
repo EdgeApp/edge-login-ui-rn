@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.34.5 (2025-12-04)
+
 - fixed: `EdgeCard` styling issues.
 
 ## 3.34.4 (2025-11-26)
