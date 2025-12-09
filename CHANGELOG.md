@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.34.6 (2025-12-09)
+
+- changed: Update translations
+
 ## 3.34.5 (2025-12-04)
 
 - fixed: `EdgeCard` styling issues.
