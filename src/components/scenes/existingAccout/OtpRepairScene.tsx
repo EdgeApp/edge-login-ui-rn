@@ -1,11 +1,11 @@
 import { asMaybeOtpError, EdgeAccount, OtpError } from 'edge-core-js'
 import * as React from 'react'
+import { Linking } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { base16, base64 } from 'rfc4648'
 import { sprintf } from 'sprintf-js'
 
 import { completeLogin } from '../../../actions/LoginCompleteActions'
-import { getAppConfig } from '../../../common/appConfig'
 import { lstrings } from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
@@ -17,7 +17,9 @@ import { showResetModal } from '../../modals/OtpResetModal'
 import { QrCodeModal } from '../../modals/QrCodeModal'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { Airship, showError } from '../../services/AirshipInstance'
+import { useTheme } from '../../services/ThemeContext'
 import { DividerWithText } from '../../themed/DividerWithText'
+import { EdgeText } from '../../themed/EdgeText'
 import { IconHeaderRow } from '../../themed/IconHeaderRow'
 import { LinkRow } from '../../themed/LinkRow'
 import { ThemedScene } from '../../themed/ThemedScene'
@@ -122,21 +124,28 @@ export function OtpRepairScene(props: Props): JSX.Element {
   // Render
   //
 
+  const theme = useTheme()
   const isIp = otpError.reason === 'ip'
 
   // Find the automatic login date:
   const date = otpError.voucherActivates ?? otpResetDate
 
-  let supportEmailAddendum = ''
+  // Compute lockId from voucherId for display and support link
+  const lockId =
+    voucherId != null
+      ? base16.stringify(base64.parse(voucherId)).toLowerCase().slice(0, 8)
+      : null
+
+  // Show support link if date is more than 30 days away
   const thirtyDaysFromNow = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-  if (date != null && date > thirtyDaysFromNow) {
-    supportEmailAddendum = `\n\n${sprintf(
-      isIp
-        ? lstrings.otp_scene_ip_support_email
-        : lstrings.otp_scene_2fa_support_email,
-      getAppConfig().supportEmail
-    )}`
-  }
+  const showSupportLink = date != null && date > thirtyDaysFromNow
+
+  const handleSupportLink = useHandler(async () => {
+    const url = `https://support.edge.app/hc/en-us/articles/45107691857563${
+      lockId != null ? `?lockid=${lockId}` : ''
+    }`
+    await Linking.openURL(url)
+  })
 
   return (
     <ThemedScene onBack={onComplete} title={lstrings.otp_header_repair}>
@@ -175,19 +184,24 @@ export function OtpRepairScene(props: Props): JSX.Element {
         <>
           <DividerWithText />
           <MessageText>
-            {sprintf(lstrings.otp_scene_wait, toLocalTime(date)) +
-              supportEmailAddendum}
+            {sprintf(lstrings.otp_scene_wait, toLocalTime(date))}
           </MessageText>
-          {voucherId == null ? null : (
-            <MessageText>
-              {sprintf(
-                lstrings.otp_lock_id,
-                base16
-                  .stringify(base64.parse(voucherId))
-                  .toLowerCase()
-                  .slice(0, 8)
-              )}
-            </MessageText>
+          {!showSupportLink ? null : (
+            <EdgeText
+              style={{
+                color: theme.escapeButtonText,
+                fontFamily: theme.fontFamily,
+                fontSize: theme.rem(1),
+                margin: theme.rem(0.5),
+                textAlign: 'left'
+              }}
+              onPress={handleSupportLink}
+            >
+              {lstrings.otp_scene_support_message}
+            </EdgeText>
+          )}
+          {lockId == null ? null : (
+            <MessageText>{sprintf(lstrings.otp_lock_id, lockId)}</MessageText>
           )}
         </>
       )}
