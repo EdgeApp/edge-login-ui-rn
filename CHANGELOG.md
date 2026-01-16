@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Scrollable content on OTP error and repair scenes.
+
 ## 3.34.6 (2025-12-09)
 
 - changed: Update translations

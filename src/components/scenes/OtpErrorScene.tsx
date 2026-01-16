@@ -1,5 +1,6 @@
 import { asMaybeOtpError, EdgeAccount, OtpError } from 'edge-core-js'
 import * as React from 'react'
+import { ScrollView } from 'react-native-gesture-handler'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { base16, base64 } from 'rfc4648'
 import { sprintf } from 'sprintf-js'
@@ -221,63 +222,65 @@ export function OtpErrorScene(props: Props) {
       onBack={handleBack}
       title={isIp ? lstrings.otp_header_ip : lstrings.otp_header}
     >
-      <IconHeaderRow
-        renderIcon={theme => (
-          <Warning>
-            <FontAwesome name="exclamation-triangle" size={theme.rem(2.5)} />
-          </Warning>
-        )}
-      >
-        <MessageText>
-          <Warning>
-            {isIp
-              ? lstrings.otp_scene_header_ip
-              : lstrings.otp_scene_header_2fa}
-          </Warning>
-        </MessageText>
-      </IconHeaderRow>
-      <DividerWithText label={lstrings.to_fix} />
-      <MessageText>{lstrings.otp_scene_approve}</MessageText>
-      <DividerWithText />
-      <LinkRow label={lstrings.otp_scene_qr} onPress={handleQrModal} />
-      {isIp ? null : (
-        <>
-          <DividerWithText />
-          <LinkRow
-            label={lstrings.otp_backup_code_modal_title}
-            onPress={handleBackupModal}
-          />
-        </>
-      )}
-      {date == null ? null : (
-        <>
-          <DividerWithText />
-          <MessageText>
-            {sprintf(lstrings.otp_scene_wait, toLocalTime(date)) +
-              supportEmailAddendum}
-          </MessageText>
-          {voucherId == null ? null : (
-            <MessageText>
-              {sprintf(
-                lstrings.otp_lock_id,
-                base16
-                  .stringify(base64.parse(voucherId))
-                  .toLowerCase()
-                  .slice(0, 8)
-              )}
-            </MessageText>
+      <ScrollView style={{ flexGrow: 1, flexShrink: 0 }}>
+        <IconHeaderRow
+          renderIcon={theme => (
+            <Warning>
+              <FontAwesome name="exclamation-triangle" size={theme.rem(2.5)} />
+            </Warning>
           )}
-        </>
-      )}
-      {resetToken == null || date != null ? null : (
-        <>
-          <DividerWithText />
-          <LinkRow
-            label={lstrings.disable_otp_button_two}
-            onPress={handleResetModal}
-          />
-        </>
-      )}
+        >
+          <MessageText>
+            <Warning>
+              {isIp
+                ? lstrings.otp_scene_header_ip
+                : lstrings.otp_scene_header_2fa}
+            </Warning>
+          </MessageText>
+        </IconHeaderRow>
+        <DividerWithText label={lstrings.to_fix} />
+        <MessageText>{lstrings.otp_scene_approve}</MessageText>
+        <DividerWithText />
+        <LinkRow label={lstrings.otp_scene_qr} onPress={handleQrModal} />
+        {isIp ? null : (
+          <>
+            <DividerWithText />
+            <LinkRow
+              label={lstrings.otp_backup_code_modal_title}
+              onPress={handleBackupModal}
+            />
+          </>
+        )}
+        {date == null ? null : (
+          <>
+            <DividerWithText />
+            <MessageText>
+              {sprintf(lstrings.otp_scene_wait, toLocalTime(date)) +
+                supportEmailAddendum}
+            </MessageText>
+            {voucherId == null ? null : (
+              <MessageText>
+                {sprintf(
+                  lstrings.otp_lock_id,
+                  base16
+                    .stringify(base64.parse(voucherId))
+                    .toLowerCase()
+                    .slice(0, 8)
+                )}
+              </MessageText>
+            )}
+          </>
+        )}
+        {resetToken == null || date != null ? null : (
+          <>
+            <DividerWithText />
+            <LinkRow
+              label={lstrings.disable_otp_button_two}
+              onPress={handleResetModal}
+            />
+          </>
+        )}
+      </ScrollView>
     </ThemedScene>
   )
 }
