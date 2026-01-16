@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.34.7 (2026-01-15)
+
 - fixed: Scrollable content on OTP error and repair scenes.
 
 ## 3.34.6 (2025-12-09)
