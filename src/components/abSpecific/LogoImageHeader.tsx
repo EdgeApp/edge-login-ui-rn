@@ -15,8 +15,9 @@ interface Props {
 
 export function LogoImageHeader(props: Props): JSX.Element {
   const { branding } = props
-  const { primaryLogo = Assets.LOGO_BIG, primaryLogoCallback } = branding
   const theme = useTheme()
+  const defaultLogo = theme.isDark ? Assets.LOGO_BIG : Assets.LOGO_BIG_LIGHT
+  const { primaryLogo = defaultLogo, primaryLogoCallback } = branding
   const styles = getStyles(theme)
 
   // Compute a pixel-aligned width while preserving the desired visual height.
