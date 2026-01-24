@@ -1,6 +1,2 @@
 export const LOGO_BIG = require('./edgeLogo/Edge_logo_L.png')
-export const LOGO_SMALL = require('./edgeLogo/Edge_logo_S.png')
-export const PASSWORD_REQ_CHECKED = require('./icons/passwordRequirements/checked.png')
-export const PASSWORD_REQ_UNCHECKED = require('./icons/passwordRequirements/unchecked.png')
-export const WELCOME_LOCK = require('./icons/welcome/lock.png')
-export const WELCOME_SHIELD_KEY = require('./icons/welcome/shield_key.png')
+export const LOGO_BIG_LIGHT = require('./edgeLogo/Edge_logo_L-light.png')

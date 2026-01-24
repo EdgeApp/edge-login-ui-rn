@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Light mode theme colors and images
+
 ## 3.34.7 (2026-01-15)
 
 - fixed: Scrollable content on OTP error and repair scenes.

@@ -4,7 +4,7 @@ import { cacheStyles } from 'react-native-patina'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { sprintf } from 'sprintf-js'
 
-import { LOGO_BIG } from '../../../assets'
+import { LOGO_BIG, LOGO_BIG_LIGHT } from '../../../assets'
 import { lstrings } from '../../../common/locales/strings'
 import * as Constants from '../../../constants/index'
 import { useImports } from '../../../hooks/useImports'
@@ -34,7 +34,8 @@ export const NewAccountWelcomeScene = (props: Props) => {
 
   const appName = branding.appName || lstrings.app_name_default
   const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
-  const logoSrc = branding.primaryLogo || LOGO_BIG
+  const defaultLogo = theme.isDark ? LOGO_BIG : LOGO_BIG_LIGHT
+  const logoSrc = branding.primaryLogo || defaultLogo
 
   const handleDone = (): void => {
     onLogEvent(`Signup_Welcome_Next`)
