@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.35.0 (2026-01-26)
+
 - changed: Light mode theme colors and images
 
 ## 3.34.7 (2026-01-15)
