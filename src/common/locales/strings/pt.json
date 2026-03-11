@@ -122,7 +122,7 @@
   "or": "ou",
   "otp_authentication_header": "A autenticação de dois fatores (2FA) foi ativada",
   "otp_authentication_message": "A autenticação de dois fatores (2FA) foi ativada. Um código de autenticação exclusivo foi gerado. Se você perder o seu telefone ou desinstalar o aplicativo, levará 7 dias para desativar o 2FA e acessar a sua conta de outro dispositivo sem o seguinte código de autenticação.\n\n%s",
-  "otp_backup_code_modal_title": "Digite o Código de Backup",
+  "otp_backup_code_modal_title": "Enter 2FA code",
   "otp_email_body_branded": "Por favor, clique no link abaixo de um dispositivo móvel com %1$s instalado para iniciar a recuperação de conta para um nome de usuário ",
   "otp_email_body2": "Você também pode utilizar o Token de recuperação exibido abaixo:",
   "otp_email_body3_branded": "Digite ou copie e cole o token de recuperação exibido acima no aplicativo %1$s tocando em Esqueci a senha na tela de login.",
