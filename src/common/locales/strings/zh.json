@@ -122,7 +122,7 @@
   "or": "or",
   "otp_authentication_header": "2FA has been enabled",
   "otp_authentication_message": "2FA has been enabled. A unique authentication code has been generated. If you lose your phone or uninstall the app, it will take 7 days to disable 2FA and access your account from another device without the following authentication code.\n\n%s",
-  "otp_backup_code_modal_title": "Enter Backup Code",
+  "otp_backup_code_modal_title": "Enter 2FA code",
   "otp_email_body_branded": "Please click the link below from a mobile device with %1$s installed to initiate account recovery for username ",
   "otp_email_body2": "You can also use the Recovery Token displayed below:",
   "otp_email_body3_branded": "Enter or copy and paste the recovery token displayed above inside the %1$s app by tapping on Forgot Password at the login screen.",

@@ -122,7 +122,7 @@
   "or": "oder",
   "otp_authentication_header": "2FA wurde aktiviert",
   "otp_authentication_message": "2FA wurde aktiviert. Ein einzigartiger Authentifizierungscode wurde generiert. Wenn du dein Telefon verlierst oder die App deinstalliert, dauert es 7 Tage, um 2FA zu deaktivieren und auf dein Konto von einem anderen Gerät zuzugreifen, ohne folgenden Authentifizierungscode.\n\n%s",
-  "otp_backup_code_modal_title": "Backup-Code eingeben",
+  "otp_backup_code_modal_title": "Enter 2FA code",
   "otp_email_body_branded": "Bitte klicken Sie unten auf den Link von einem mobilen Gerät mit %1$s installiert, um die Kontowiederherstellung für den Benutzernamen einzuleiten ",
   "otp_email_body2": "Sie können auch das unten angezeigte Wiederherstellungs-Token verwenden:",
   "otp_email_body3_branded": "Geben Sie das Recovery-Token ein, das oben in der %1$s App angezeigt wird, indem Sie auf Passwort vergessen auf dem Anmeldebildschirm tippen.",
