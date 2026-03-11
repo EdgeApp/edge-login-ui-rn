@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Update 2FA button text from `Enter Backup Code` to `Enter 2FA code`
+
 ## 3.35.1 (2026-02-24)
 
 - changed: Update translations
