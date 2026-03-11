@@ -122,7 +122,7 @@
   "or": "or",
   "otp_authentication_header": "2단계 인증이 활성화되었습니다.",
   "otp_authentication_message": "2단계 인증이 활성화되었습니다. 고유의 인증 코드가 생성됩니다. 휴대전화를 분실하거나 어플을 삭제할 경우, 2단계 인증을 비활성화 하거나 다른 기기에서 해당 인증 코드를 사용하지 않고 본인 계정에 접속하려면 7일이 소요가 됩니다.\n\n%s",
-  "otp_backup_code_modal_title": "Enter Backup Code",
+  "otp_backup_code_modal_title": "Enter 2FA code",
   "otp_email_body_branded": "Please click the link below from a mobile device with %1$s installed to initiate account recovery for username ",
   "otp_email_body2": "You can also use the Recovery Token displayed below:",
   "otp_email_body3_branded": "Enter or copy and paste the recovery token displayed above inside the %1$s app by tapping on Forgot Password at the login screen.",
