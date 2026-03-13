@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.35.3 (2026-03-13)
+
+- changed: Update additional text from `backup Code` to `2FA code`
+
 ## 3.35.2 (2026-03-10)
 
 - changed: Update 2FA button text from `Enter Backup Code` to `Enter 2FA code`
