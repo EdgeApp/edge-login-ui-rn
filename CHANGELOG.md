@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Update translations
+
 ## 3.35.3 (2026-03-13)
 
 - changed: Update additional text from `backup Code` to `2FA code`
