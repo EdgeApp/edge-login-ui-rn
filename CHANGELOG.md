@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.35.4 (2026-03-24)
+
 - changed: Update translations
 
 ## 3.35.3 (2026-03-13)
