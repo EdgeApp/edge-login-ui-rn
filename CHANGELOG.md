@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.35.5 (2026-04-10)
+
 - fixed: Show a readable network error when username availability checks fail.
 
 ## 3.35.4 (2026-03-24)
