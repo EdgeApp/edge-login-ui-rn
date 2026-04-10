@@ -1,4 +1,4 @@
-import { EdgeAccount } from 'edge-core-js'
+import { asMaybeNetworkError, EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { cacheStyles } from 'react-native-patina'
@@ -191,7 +191,13 @@ export const ChangeUsernameComponent = (props: Props) => {
           }
           onCheckDone(undefined, lstrings.username_exists_error)
         },
-        error => onCheckDone(undefined, String(error))
+        (error: unknown) => {
+          if (asMaybeNetworkError(error) != null) {
+            onCheckDone(undefined, lstrings.network_error_generic)
+            return
+          }
+          onCheckDone(undefined, String(error))
+        }
       )
     }, AVAILABILITY_CHECK_DELAY_MS)
     setTimerId(newTimerId)

@@ -108,7 +108,7 @@
   "must_one_number": "Должна быть как минимум одна цифра",
   "must_one_uppercase": "Должна быть как минимум одна буква в верхнем регистре",
   "must_ten_characters": "Должно быть не менее 10 символов",
-  "network_error_generic": "Unable to connect. Please try again later and check your internet connection.",
+  "network_error_generic": "Unable to connect. Please check your internet connection and try again.",
   "network_error_generic_1s": "Unable to connect. %1$s",
   "next_label": "Далее",
   "notifications_and_refresh_permissions_branded_s": "Please enable Notifications and Background App Refresh to ensure the highest level of security for your account. %1$s will notify you if other devices attempt to access your account and will allow you to accept or reject access.",

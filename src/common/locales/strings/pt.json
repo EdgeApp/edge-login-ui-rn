@@ -108,7 +108,7 @@
   "must_one_number": "Deve ter pelo menos 1 número",
   "must_one_uppercase": "Deve ter pelo menos 1 letra maiúscula",
   "must_ten_characters": "Deve ter pelo menos 10 caracteres",
-  "network_error_generic": "Unable to connect. Please try again later and check your internet connection.",
+  "network_error_generic": "Unable to connect. Please check your internet connection and try again.",
   "network_error_generic_1s": "Unable to connect. %1$s",
   "next_label": "Próximo",
   "notifications_and_refresh_permissions_branded_s": "Por Favor, ative as notificações e a atualização do aplicativo em segundo plano para garantir o mais alto nível de segurança para a sua conta. %1$s Irá notificá-lo se outros dispositivos tentarem acessar a sua conta e permitirá que você aceite ou rejeite o acesso.",
