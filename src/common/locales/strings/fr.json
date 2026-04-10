@@ -108,7 +108,7 @@
   "must_one_number": "Doit avoir au moins 1 numéro",
   "must_one_uppercase": "Doit avoir au moins 1 lettre majuscule",
   "must_ten_characters": "Doit avoir au moins 10 caractères",
-  "network_error_generic": "Unable to connect. Please try again later and check your internet connection.",
+  "network_error_generic": "Unable to connect. Please check your internet connection and try again.",
   "network_error_generic_1s": "Unable to connect. %1$s",
   "next_label": "Suivant",
   "notifications_and_refresh_permissions_branded_s": "Please enable Notifications and Background App Refresh to ensure the highest level of security for your account. %1$s will notify you if other devices attempt to access your account and will allow you to accept or reject access.",

@@ -108,7 +108,7 @@
   "must_one_number": "Debe tener al menos un número",
   "must_one_uppercase": "Debe tener al menos una letra mayúscula",
   "must_ten_characters": "Debe tener al menos 10 carácteres",
-  "network_error_generic": "No se pudo conectar. Inténtalo de nuevo más tarde y verifica tu conexión a internet.",
+  "network_error_generic": "No se pudo conectar. Verifica tu conexión a internet y vuelve a intentarlo.",
   "network_error_generic_1s": "No se pudo conectar. %1$s",
   "next_label": "Siguiente",
   "notifications_and_refresh_permissions_branded_s": "Activa las notificaciones y la actualización en segundo plano para garantizar el máximo nivel de seguridad para tu cuenta. %1$s te avisará si otros dispositivos intentan acceder a tu cuenta y te permitirá aceptar o rechazar el acceso.",

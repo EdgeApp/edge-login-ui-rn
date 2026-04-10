@@ -108,7 +108,7 @@
   "must_one_number": "少なくとも数字が一つ必要です",
   "must_one_uppercase": "少なくとも大文字が一つ必要です",
   "must_ten_characters": "少なくとも１０文字必要です",
-  "network_error_generic": "Unable to connect. Please try again later and check your internet connection.",
+  "network_error_generic": "Unable to connect. Please check your internet connection and try again.",
   "network_error_generic_1s": "Unable to connect. %1$s",
   "next_label": "次へ",
   "notifications_and_refresh_permissions_branded_s": "アカウントの最高レベルのセキュリティを確保するために、通知とバックグラウンドアプリの更新を有効にしてください。%1$sは、他のデバイスがあなたのアカウントにアクセスしようとすると通知し、アクセスを承認または拒否できます。",

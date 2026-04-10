@@ -108,7 +108,7 @@
   "must_one_number": "Deve avere almeno un numero",
   "must_one_uppercase": "Deve avere almeno una lettera maiuscola",
   "must_ten_characters": "Deve avere almeno 10 caratteri",
-  "network_error_generic": "Impossibile connettersi. Riprova più tardi e controlla la tua connessione internet.",
+  "network_error_generic": "Impossibile connettersi. Controlla la tua connessione internet e riprova.",
   "network_error_generic_1s": "Impossibile connettersi. %1$s",
   "next_label": "Avanti",
   "notifications_and_refresh_permissions_branded_s": "Abilita le notifiche e il monitoraggio dell'applicazione in background per assicurare il più alto livello di sicurezza al tuo account. %1$s ti avviserà se altri dispositivi tenteranno di accedere al tuo account e ti permetterà di consentire o rifiutare l'accesso.",
