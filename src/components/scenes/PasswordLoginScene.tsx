@@ -518,6 +518,7 @@ export const PasswordLoginScene = (props: Props) => {
           autoCorrect={false}
           autoFocus={false}
           error={passwordErrorMessage}
+          maxLength={100}
           placeholder={lstrings.password}
           returnKeyType="done"
           secureTextEntry
