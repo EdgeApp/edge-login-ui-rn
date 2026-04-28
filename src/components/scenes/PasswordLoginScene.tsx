@@ -351,7 +351,13 @@ export const PasswordLoginScene = (props: Props) => {
 
       if (base58.parseUnsafe(recoveryKey)?.length !== 32)
         return lstrings.recovery_token_invalid
-      dispatch(launchPasswordRecovery(recoveryKey))
+      dispatch(launchPasswordRecovery(recoveryKey)).catch((err: unknown) => {
+        if (asMaybeNetworkError(err) != null) {
+          showError(lstrings.network_error_generic)
+          return
+        }
+        showError(err)
+      })
       return true
     }
   )
@@ -512,6 +518,7 @@ export const PasswordLoginScene = (props: Props) => {
           autoCorrect={false}
           autoFocus={false}
           error={passwordErrorMessage}
+          maxLength={100}
           placeholder={lstrings.password}
           returnKeyType="done"
           secureTextEntry
