@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.35.7 (2026-04-28)
+
 - fixed: Match login password length cap to account creation to prevent silent truncation mismatches.
 
 ## 3.35.6 (2026-04-24)
