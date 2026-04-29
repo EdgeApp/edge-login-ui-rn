@@ -17,6 +17,7 @@ interface Props {
   disabled?: boolean
   marginRem?: number[] | number
   onChange: (value: boolean) => void
+  disableFontScaling?: boolean
 }
 
 const CheckboxComponent = ({
@@ -28,6 +29,7 @@ const CheckboxComponent = ({
   marginRem,
   ellipsizeMode,
   numberOfLines,
+  disableFontScaling = false,
   theme
 }: Props & ThemeProps) => {
   const styles = getStyles(theme)
@@ -53,6 +55,7 @@ const CheckboxComponent = ({
           style={[styles.label, textStyle]}
           ellipsizeMode={ellipsizeMode}
           numberOfLines={numberOfLines}
+          disableFontScaling={disableFontScaling}
         >
           {children}
         </EdgeText>
