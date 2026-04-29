@@ -493,7 +493,7 @@ export const PasswordLoginScene = (props: Props) => {
             const { username } = userInfo
             return (
               <UserListItem
-                key={username}
+                key={username ?? ''}
                 userInfo={userInfo}
                 onClick={handleSelectUser}
                 onDelete={handleDelete}
