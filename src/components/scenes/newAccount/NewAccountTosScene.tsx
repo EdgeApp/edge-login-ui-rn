@@ -86,6 +86,8 @@ const TosComponent = (props: Props) => {
             <Checkbox
               textStyle={styles.term}
               value={termValues[index]}
+              numberOfLines={0}
+              disableFontScaling
               onChange={(value: boolean) => handleStatusChange(index, value)}
               marginRem={[0, 0, 1.33, 0]}
             >
