@@ -490,10 +490,9 @@ export const PasswordLoginScene = (props: Props) => {
           onScroll={scrollHandler}
         >
           {localUsers.map(userInfo => {
-            const { username } = userInfo
             return (
               <UserListItem
-                key={username ?? ''}
+                key={userInfo.loginId}
                 userInfo={userInfo}
                 onClick={handleSelectUser}
                 onDelete={handleDelete}
