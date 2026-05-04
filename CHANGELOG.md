@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.35.8 (2026-05-04)
+
 - fixed: Prevent reactive text shrinking on TOS checkbox labels
 
 ## 3.35.7 (2026-04-28)
