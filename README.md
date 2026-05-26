@@ -8,7 +8,7 @@ Edge expects to work with React Native v0.60.0 or greater.
 
 First, add the Edge libraries to your project:
 
-`yarn add edge-core-js edge-login-ui-rn`
+`npm install edge-core-js edge-login-ui-rn`
 
 The login UI depends on some extra external native libraries, which you will have to install as well:
 

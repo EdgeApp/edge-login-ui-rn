@@ -945,7 +945,7 @@
 - rn: Synchronize outlined text field logic fixes
 - rn: Tighten the outlined text field props
 - rn: Fix the crash in the QR-login modal
-- rn: Run `yarn precommit` to update strings
+- rn: Run `npm run precommit` to update strings
 - rn: Always close modals on the way out the door
 - rn: Fix coding errors caught by TypeScript
 - rn: Add missing react-native-gesture-handler dependency

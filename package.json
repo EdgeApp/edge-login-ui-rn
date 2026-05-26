@@ -37,11 +37,6 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint"
   },
-  "resolutions": {
-    "js-yaml": "3.13.1",
-    "scrypt.js": "0.3.0",
-    "sha3": "2.1.4"
-  },
   "dependencies": {
     "base-x": "^4.0.0",
     "biggystring": "^4.2.3",
@@ -104,11 +99,15 @@
     "rimraf": "^3.0.2",
     "rn-id-blurview": "^1.2.1",
     "sucrase": "^3.19.0",
-    "typescript": "^4.9.5",
-    "yarn-deduplicate": "^5.0.0"
+    "typescript": "^4.9.5"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
+  },
+  "overrides": {
+    "js-yaml": "3.13.1",
+    "scrypt.js": "0.3.0",
+    "sha3": "2.1.4"
   }
 }
