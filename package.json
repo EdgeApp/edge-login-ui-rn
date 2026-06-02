@@ -28,7 +28,7 @@
   "scripts": {
     "dev": "nodemon",
     "fix-android": "(cd android; ./format-java.sh)",
-    "fix": "npm run lint -- --fix && yarn-deduplicate",
+    "fix": "npm run lint -- --fix",
     "flow": "flow",
     "lint": "eslint .",
     "precommit": "lint-staged && flow && tsc",
