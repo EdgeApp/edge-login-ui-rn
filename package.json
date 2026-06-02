@@ -38,7 +38,7 @@
     "*.{js,jsx,ts,tsx}": "eslint"
   },
   "dependencies": {
-    "base-x": "^4.0.0",
+    "base-x": "^4.0.1",
     "biggystring": "^4.2.3",
     "cleaners": "^0.3.12",
     "date-fns": "^2.23.0",
@@ -106,7 +106,6 @@
     "react-native": "*"
   },
   "overrides": {
-    "js-yaml": "3.13.1",
     "scrypt.js": "0.3.0",
     "sha3": "2.1.4"
   }
