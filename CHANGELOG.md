@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- changed: Convert the build tooling from Yarn to npm.
+- security: Upgrade dependencies per Socket security recommendations.
+
 ## 3.35.8 (2026-05-04)
 
 - fixed: Prevent reactive text shrinking on TOS checkbox labels
