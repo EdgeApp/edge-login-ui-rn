@@ -63,7 +63,7 @@ export const maybeRouteComplete = (fallbackAction: Action) => (
   if (
     imports.onComplete != null &&
     (initialRouteSceneName === sceneState.name ||
-      (imports.initialRoute === 'login' && sceneState.name === 'passwordLogin'))
+      (imports.initialRoute === 'login' && sceneState.name === 'login'))
   ) {
     imports.onComplete()
     return
@@ -102,7 +102,7 @@ function routeInitialization(state: RootState, imports: Imports): Action {
       return {
         type: 'NAVIGATE',
         data: {
-          name: 'pinLogin',
+          name: 'login',
           params: { loginId: startupUser.loginId }
         }
       }
@@ -110,7 +110,7 @@ function routeInitialization(state: RootState, imports: Imports): Action {
       return {
         type: 'NAVIGATE',
         data: {
-          name: 'passwordLogin',
+          name: 'login',
           params: { username: startupUser.username ?? '' }
         }
       }
@@ -125,8 +125,8 @@ function routeInitialization(state: RootState, imports: Imports): Action {
       return {
         type: 'NAVIGATE',
         data: {
-          name: 'passwordLogin',
-          params: { username: startupUser?.username ?? '' }
+          name: 'login',
+          params: { username: startupUser?.username ?? '', passwordOnly: true }
         }
       }
     case 'new-account':
@@ -182,7 +182,7 @@ const checkSecurityMessages = () => async (
         dispatch({
           type: 'NAVIGATE',
           data: {
-            name: 'pinLogin',
+            name: 'login',
             params: { loginId: info.loginId }
           }
         })
@@ -190,8 +190,8 @@ const checkSecurityMessages = () => async (
         dispatch({
           type: 'NAVIGATE',
           data: {
-            name: 'passwordLogin',
-            params: { username }
+            name: 'login',
+            params: { username, passwordOnly: true }
           }
         })
       }

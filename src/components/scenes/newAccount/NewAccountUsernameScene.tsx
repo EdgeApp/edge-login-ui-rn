@@ -291,7 +291,7 @@ export const NewAccountUsernameScene = (props: NewAccountUsernameProps) => {
     dispatch(
       maybeRouteComplete({
         type: 'NAVIGATE',
-        data: { name: 'passwordLogin', params: { username: '' } }
+        data: { name: 'login', params: { username: '', passwordOnly: true } }
       })
     )
   })

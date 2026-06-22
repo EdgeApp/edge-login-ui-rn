@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Merge the password and PIN login scenes into one scene with a login-method toggle and a sign-in help sheet.
+
 ## 3.36.0 (2026-06-13)
 
 - changed: Convert the build tooling from Yarn to npm.

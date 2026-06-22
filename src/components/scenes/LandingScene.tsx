@@ -35,8 +35,11 @@ export const LandingScene = (props: Props) => {
     dispatch({
       type: 'NAVIGATE',
       data: {
-        name: 'passwordLogin',
-        params: { username: initialUserInfo?.username ?? '' }
+        name: 'login',
+        params: {
+          username: initialUserInfo?.username ?? '',
+          passwordOnly: true
+        }
       }
     })
   })

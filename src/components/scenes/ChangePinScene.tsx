@@ -200,8 +200,8 @@ export const NewAccountPinScene = (props: SceneProps<'newAccountPin'>) => {
         ? maybeRouteComplete({
             type: 'NAVIGATE',
             data: {
-              name: 'passwordLogin',
-              params: { username: '' }
+              name: 'login',
+              params: { username: '', passwordOnly: true }
             }
           })
         : maybeRouteComplete({
