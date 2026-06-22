@@ -203,6 +203,10 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
   outlineTextInputLabelColor: asOptional(asString),
   outlineTextInputLabelColorFocused: asOptional(asString),
 
+  // Login flavor toggle (grey segmented control):
+  loginToggleBackground: asOptional(asString),
+  loginToggleSelected: asOptional(asString),
+
   // Dropdown colors:
   dropdownWarning: asOptional(asString),
   dropdownError: asOptional(asString),
@@ -388,6 +392,10 @@ export interface Theme {
   textInputPlaceholderColorDisabled: string
   textInputPlaceholderColorFocused: string
   textInputSelectionColor: string
+
+  // Login flavor toggle (grey segmented control):
+  loginToggleBackground: string
+  loginToggleSelected: string
 
   // Dropdown colors:
   dropdownWarning: string
