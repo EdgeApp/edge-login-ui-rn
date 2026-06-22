@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Merge the password and PIN login scenes into a single login scene with a Password / Pin-Biometric toggle, an in-scene username dropdown, and a "Trouble Signing in?" help sheet for QR-code login and password recovery.
+
 ## 3.36.0 (2026-06-13)
 
 - changed: Convert the build tooling from Yarn to npm.
