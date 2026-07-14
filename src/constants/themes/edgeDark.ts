@@ -24,6 +24,7 @@ const palette = {
   blackOp25: 'rgba(0, 0, 0, .25)',
   blackOp50: 'rgba(0, 0, 0, .5)',
   whiteOp25: 'rgba(255, 255, 255, .25)',
+  whiteOp50: 'rgba(255, 255, 255, .5)',
   whiteOp75: 'rgba(255, 255, 255, .75)',
   whiteOp10: 'rgba(255, 255, 255, .1)',
   grayOp80: 'rgba(135, 147, 158, .8)',
@@ -194,25 +195,29 @@ export const edgeDark: Theme = {
   // A switch that's on but not toggleable
   switchTrackDisabledOn: palette.edgeMintDisabled,
 
-  // Simple Text Input
+  // Simple Text Input (neutral grey fill, matching edge-react-gui)
   textInputTextColor: palette.white,
   textInputTextColorDisabled: palette.gray,
   textInputTextColorFocused: palette.white,
-  textInputBackgroundColor: palette.darkAqua,
-  textInputBackgroundColorDisabled: palette.darkAqua,
-  textInputBackgroundColorFocused: palette.darkAqua,
+  textInputBackgroundColor: palette.graySecondary,
+  textInputBackgroundColorDisabled: palette.transparent,
+  textInputBackgroundColorFocused: palette.graySecondary,
   textInputBorderColor: `${palette.edgeMint}00`,
-  textInputBorderColorDisabled: palette.gray,
+  textInputBorderColorDisabled: palette.graySecondary,
   textInputBorderColorFocused: palette.edgeMint,
   textInputBorderRadius: 100,
   textInputBorderWidth: 1,
-  textInputIconColor: palette.gray,
-  textInputIconColorDisabled: palette.gray,
+  textInputIconColor: palette.whiteOp50,
+  textInputIconColorDisabled: palette.whiteOp50,
   textInputIconColorFocused: palette.edgeMint,
-  textInputPlaceholderColor: palette.gray,
-  textInputPlaceholderColorDisabled: palette.gray,
-  textInputPlaceholderColorFocused: palette.edgeMint,
+  textInputPlaceholderColor: palette.whiteOp50,
+  textInputPlaceholderColorDisabled: palette.whiteOp50,
+  textInputPlaceholderColorFocused: palette.whiteOp50,
   textInputSelectionColor: palette.whiteOp25,
+
+  // Login flavor toggle (grey segmented control):
+  loginToggleBackground: palette.whiteOp10,
+  loginToggleSelected: palette.graySecondary,
 
   // Dropdown colors:
   dropdownWarning: palette.accentOrange,

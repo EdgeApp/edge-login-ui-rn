@@ -13,6 +13,7 @@ import { ChangeRecoveryParams } from '../components/scenes/existingAccout/Change
 import { ChangeUsernameParams } from '../components/scenes/existingAccout/ChangeUsernameScene'
 import { OtpRepairParams } from '../components/scenes/existingAccout/OtpRepairScene'
 import { SecurityAlertParams } from '../components/scenes/existingAccout/SecurityAlertsScene'
+import { LoginParams } from '../components/scenes/LoginScene'
 import {
   NewAccountReviewParams,
   UpgradeAccountReviewParams
@@ -27,8 +28,6 @@ import {
 } from '../components/scenes/newAccount/NewAccountUsernameScene'
 import { NewAccountWaitParams } from '../components/scenes/newAccount/NewAccountWaitScene'
 import { OtpErrorParams } from '../components/scenes/OtpErrorScene'
-import { PasswordLoginParams } from '../components/scenes/PasswordLoginScene'
-import { PinLoginParams } from '../components/scenes/PinLoginScene'
 import { RecoveryLoginParams } from '../components/scenes/RecoveryLoginScene'
 
 /**
@@ -52,10 +51,9 @@ export interface LoginParamList {
   upgradeAccountReview: UpgradeAccountReviewParams
   landing: {}
   loading: {}
+  login: LoginParams
   otpError: OtpErrorParams
   otpRepair: OtpRepairParams
-  passwordLogin: PasswordLoginParams
-  pinLogin: PinLoginParams
   recoveryLogin: RecoveryLoginParams
   resecurePassword: ResecurePasswordParams
   resecurePin: ResecurePinParams

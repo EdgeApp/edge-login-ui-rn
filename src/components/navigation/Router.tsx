@@ -21,6 +21,7 @@ import { OtpRepairScene } from '../scenes/existingAccout/OtpRepairScene'
 import { SecurityAlertsScene } from '../scenes/existingAccout/SecurityAlertsScene'
 import { LandingScene } from '../scenes/LandingScene'
 import { LoadingScene } from '../scenes/LoadingScene'
+import { LoginScene } from '../scenes/LoginScene'
 import {
   NewAccountReviewScene,
   UpgradeReviewScene
@@ -36,8 +37,6 @@ import {
 import { NewAccountWaitScene } from '../scenes/newAccount/NewAccountWaitScene'
 import { NewAccountWelcomeScene } from '../scenes/newAccount/NewAccountWelcomeScene'
 import { OtpErrorScene } from '../scenes/OtpErrorScene'
-import { PasswordLoginScene } from '../scenes/PasswordLoginScene'
-import { PinLoginScene } from '../scenes/PinLoginScene'
 import { RecoveryLoginScene } from '../scenes/RecoveryLoginScene'
 
 interface Props {
@@ -77,14 +76,12 @@ export function Router(props: Props) {
         return <LandingScene branding={props.branding} route={route} />
       case 'loading':
         return <LoadingScene route={route} />
+      case 'login':
+        return <LoginScene branding={props.branding} route={route} />
       case 'otpError':
         return <OtpErrorScene route={route} />
       case 'otpRepair':
         return <OtpRepairScene branding={props.branding} route={route} />
-      case 'passwordLogin':
-        return <PasswordLoginScene branding={props.branding} route={route} />
-      case 'pinLogin':
-        return <PinLoginScene branding={props.branding} route={route} />
       case 'recoveryLogin':
         return <RecoveryLoginScene route={route} />
       case 'resecurePassword':
