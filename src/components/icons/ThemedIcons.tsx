@@ -143,3 +143,6 @@ export const CloseIconAnimated = makeAnimatedFontIcon(AntDesignIcon, 'close')
 
 export const SearchIcon = makeFontIcon(AntDesignIcon, 'search1')
 export const SearchIconAnimated = makeAnimatedFontIcon(AntDesignIcon, 'search1')
+
+export const QrCodeIcon = makeFontIcon(AntDesignIcon, 'qrcode')
+export const WarningIcon = makeFontIcon(AntDesignIcon, 'warning')
