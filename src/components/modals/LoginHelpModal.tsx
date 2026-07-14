@@ -1,14 +1,13 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
-import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { ChevronRightIcon } from '../icons/ThemedIcons'
+import { QrCodeIcon, WarningIcon } from '../icons/ThemedIcons'
+import { EdgeRow } from '../rows/EdgeRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeCard } from '../ui4/EdgeCard'
 import { EdgeModal } from './EdgeModal'
 
 export type LoginHelpResult = 'qr' | 'recovery'
@@ -20,7 +19,9 @@ interface Props {
 /**
  * The "Trouble Signing in?" modal. Folds the QR-code login and the password
  * recovery token entry into a single help sheet, resolving with the option the
- * user selected (or `undefined` if they dismissed it).
+ * user selected (or `undefined` if they dismissed it). The options reuse the
+ * shared EdgeCard + EdgeRow kit so they match the card rows used elsewhere in
+ * the app.
  */
 export const LoginHelpModal: React.FC<Props> = (props: Props) => {
   const { bridge } = props
@@ -37,61 +38,38 @@ export const LoginHelpModal: React.FC<Props> = (props: Props) => {
       title={lstrings.login_help_title}
       onCancel={handleCancel}
     >
-      <EdgeTouchableOpacity
-        accessible
-        testID="loginHelpQr"
-        style={styles.row}
-        onPress={handleQr}
-      >
-        <AntDesignIcon
-          name="qrcode"
-          style={styles.rowIcon}
-          color={theme.iconTappable}
-          size={theme.rem(1.5)}
+      <EdgeCard sections>
+        <EdgeRow
+          testID="loginHelpQr"
+          icon={
+            <View style={styles.icon}>
+              <QrCodeIcon color={theme.iconTappable} size={theme.rem(1.5)} />
+            </View>
+          }
+          body={lstrings.login_help_qr}
+          maximumHeight="large"
+          rightButtonType="touchable"
+          onPress={handleQr}
         />
-        <EdgeText style={styles.rowText} numberOfLines={2}>
-          {lstrings.login_help_qr}
-        </EdgeText>
-        <ChevronRightIcon size={theme.rem(1.25)} color={theme.iconTappable} />
-      </EdgeTouchableOpacity>
-      <View style={styles.divider} />
-      <EdgeTouchableOpacity
-        accessible
-        testID="loginHelpRecovery"
-        style={styles.row}
-        onPress={handleRecovery}
-      >
-        <AntDesignIcon
-          name="warning"
-          style={styles.rowIcon}
-          color={theme.iconTappable}
-          size={theme.rem(1.5)}
+        <EdgeRow
+          testID="loginHelpRecovery"
+          icon={
+            <View style={styles.icon}>
+              <WarningIcon color={theme.iconTappable} size={theme.rem(1.5)} />
+            </View>
+          }
+          body={lstrings.login_help_recovery}
+          maximumHeight="large"
+          rightButtonType="touchable"
+          onPress={handleRecovery}
         />
-        <EdgeText style={styles.rowText} numberOfLines={2}>
-          {lstrings.login_help_recovery}
-        </EdgeText>
-        <ChevronRightIcon size={theme.rem(1.25)} color={theme.iconTappable} />
-      </EdgeTouchableOpacity>
+      </EdgeCard>
     </EdgeModal>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: theme.rem(0.75)
-  },
-  rowIcon: {
+  icon: {
     marginRight: theme.rem(0.75)
-  },
-  rowText: {
-    flex: 1,
-    marginRight: theme.rem(0.5)
-  },
-  divider: {
-    height: theme.thinLineWidth,
-    backgroundColor: theme.secondaryText,
-    opacity: 0.3
   }
 }))
