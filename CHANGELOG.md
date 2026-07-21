@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Crash on Android when mounting text inputs under React Native's new architecture (Fabric rejects the fontSize of 0 that side icons animate to at rest).
+
 ## 3.37.2 (2026-08-31)
 
 - fixed: Expose button spinner IDs on iOS
