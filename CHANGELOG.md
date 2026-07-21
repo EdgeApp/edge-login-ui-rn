@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Crash on Android when mounting text inputs under React Native's new architecture (Fabric rejects the fontSize of 0 that side icons animate to at rest).
+
 ## 3.37.3 (2026-10-01)
 
 - fixed: Select the username text when the login field gains focus.
