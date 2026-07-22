@@ -7,11 +7,19 @@ import { Theme, useTheme } from '../services/ThemeContext'
 
 const isAndroid = Platform.OS === 'android'
 
+// Android below 12 (API 31) blurs via RenderScript, which cannot snapshot
+// content rendered by the new architecture - BlurView paints a light gray
+// wash instead of blurred content. Worse, plain sibling Views also fail to
+// paint inside modals on those devices, so hosts must provide their own
+// solid background color and this component renders nothing.
+export const isBlurDisabled = isAndroid && Number(Platform.Version) < 31
+
 /** A blur background WITH rounded corners, used for most components */
 export const BlurBackground = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  if (isBlurDisabled) return null
   return (
     <BlurView
       blurType={theme.isDark ? 'dark' : 'light'}
@@ -26,6 +34,7 @@ export const BlurBackgroundNoRoundedCorners = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  if (isBlurDisabled) return null
   return (
     <BlurView
       blurType={theme.isDark ? 'dark' : 'light'}

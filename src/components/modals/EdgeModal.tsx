@@ -25,7 +25,7 @@ import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeed
 import { CloseIcon } from '../icons/ThemedIcons'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { BlurBackground } from '../ui4/BlurBackground'
+import { BlurBackground, isBlurDisabled } from '../ui4/BlurBackground'
 
 const BACKGROUND_ALPHA = 0.7
 const SCROLL_INDICATOR_INSET_FIX = { right: 1 }
@@ -238,7 +238,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   modal: {
     alignSelf: 'flex-end',
-    backgroundColor: theme.modalBackground,
+    // Devices that cannot render the blur background get a solid color
+    // approximating the blurred glass look:
+    backgroundColor: isBlurDisabled
+      ? theme.isDark
+        ? '#2b2b2b'
+        : '#f2f2f2'
+      : theme.modalBackground,
     borderTopLeftRadius: theme.rem(1),
     borderTopRightRadius: theme.rem(1),
     flexShrink: 1,
