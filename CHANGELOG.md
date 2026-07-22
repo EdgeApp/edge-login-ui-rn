@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fixed: Dev-mode render error on the password login scene ("[Worklets] Cannot copy value of type `Date`") by capturing only the saved-user count in animation worklets.
 - fixed: Crash on Android when mounting text inputs under React Native's new architecture (Fabric rejects the fontSize of 0 that side icons animate to at rest).
 
 ## 3.37.2 (2026-08-31)
