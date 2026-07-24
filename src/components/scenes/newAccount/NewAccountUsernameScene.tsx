@@ -20,6 +20,7 @@ import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { FilledTextInput } from '../../themed/FilledTextInput'
 import { ThemedScene } from '../../themed/ThemedScene'
+import { AlertCard } from '../../ui4/AlertCard'
 
 export interface NewAccountUsernameParams {
   password?: string
@@ -41,12 +42,20 @@ interface Props {
   branding: Branding
   initUsername?: string
   title?: string
+  warningMessage?: string
   onBack?: () => void
   onNext: (username: string) => void | Promise<void>
 }
 
 export const ChangeUsernameComponent = (props: Props) => {
-  const { branding, initUsername, title, onBack, onNext } = props
+  const {
+    branding,
+    initUsername,
+    title,
+    warningMessage,
+    onBack,
+    onNext
+  } = props
   const { context } = useImports()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -217,6 +226,16 @@ export const ChangeUsernameComponent = (props: Props) => {
             )}
           </EdgeText>
         </EdgeAnim>
+        {warningMessage == null ? null : (
+          <EdgeAnim enter={{ type: 'fadeInUp', distance: 50 }}>
+            <AlertCard
+              type="warning"
+              title={lstrings.warning}
+              body={warningMessage}
+              marginRem={[0, 0.5, 1, 0.5]}
+            />
+          </EdgeAnim>
+        )}
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
           <FilledTextInput
             horizontal={0.5}

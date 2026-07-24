@@ -1,6 +1,7 @@
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
+import { lstrings } from '../../../common/locales/strings'
 import { useHandler } from '../../../hooks/useHandler'
 import { useImports } from '../../../hooks/useImports'
 import { Branding } from '../../../types/Branding'
@@ -34,6 +35,7 @@ export const ChangeUsernameScene = (props: ChangeUsernameProps) => {
     <ChangeUsernameComponent
       initUsername={account.username ?? ''}
       branding={branding}
+      warningMessage={lstrings.change_username_warning}
       onNext={handleNext}
     />
   )
