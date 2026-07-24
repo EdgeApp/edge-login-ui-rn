@@ -219,7 +219,8 @@ export const ChangeUsernameComponent = (props: Props) => {
         </EdgeAnim>
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 25 }}>
           <FilledTextInput
-            around={1}
+            horizontal={0.5}
+            vertical={1}
             autoCapitalize="none"
             autoCorrect={false}
             autoFocus
@@ -267,11 +268,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   mainScrollView: {
     flexGrow: 1,
-    alignContent: 'flex-start',
-    marginHorizontal: theme.rem(0.5)
+    alignContent: 'flex-start'
   },
   description: {
     fontSize: theme.rem(0.875),
+    marginHorizontal: theme.rem(0.5),
     marginBottom: theme.rem(1)
   }
 }))
