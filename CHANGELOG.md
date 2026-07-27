@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: Warn users on the change-username scene that other logged-in devices will keep the old username and must log out and sign back in with the new one.
+
 ## 3.36.0 (2026-06-13)
 
 - changed: Convert the build tooling from Yarn to npm.
