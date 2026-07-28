@@ -7,6 +7,8 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import type { Icon } from 'react-native-vector-icons/Icon'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { useTheme } from '../services/ThemeContext'
 
@@ -146,3 +148,10 @@ export const SearchIconAnimated = makeAnimatedFontIcon(AntDesignIcon, 'search1')
 
 export const QrCodeIcon = makeFontIcon(AntDesignIcon, 'qrcode')
 export const WarningIcon = makeFontIcon(AntDesignIcon, 'warning')
+
+export const FingerprintIcon = makeFontIcon(
+  MaterialCommunityIcon,
+  'fingerprint'
+)
+
+export const BackspaceIcon = makeFontIcon(MaterialIcon, 'backspace')
