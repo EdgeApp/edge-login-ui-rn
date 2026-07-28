@@ -21,7 +21,6 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated'
 import { SvgXml } from 'react-native-svg'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { sprintf } from 'sprintf-js'
 
 import { launchPasswordRecovery } from '../../actions/LoginAction'
@@ -46,7 +45,11 @@ import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { UnscaledText } from '../common/UnscaledText'
-import { ChevronDownIcon, ChevronUpIcon } from '../icons/ThemedIcons'
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  FingerprintIcon
+} from '../icons/ThemedIcons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { retryOnChallenge } from '../modals/ChallengeModal'
 import { GradientFadeOut } from '../modals/GradientFadeout'
@@ -175,7 +178,6 @@ export const LoginScene = (props: Props): React.ReactElement => {
   // it would strand guest accounts, which have no username or password to type.
   const pinEnabled = hasPinOrBiometric(activeUser)
   const hasWait = pinErrorInfo != null && pinErrorInfo.wait > 0
-  const isBiometricDisabled = pin.length === 4 || biometricBusy
 
   // A login captures its credentials when it starts, so switching flavor or
   // account mid-request would finish the login for an account the UI no longer
@@ -906,7 +908,7 @@ export const LoginScene = (props: Props): React.ReactElement => {
       return (
         <EdgeTouchableOpacity
           onPress={handleBiometricId}
-          disabled={isBiometricDisabled}
+          disabled={biometricBusy}
         >
           <SvgXml
             xml={FaceIdXml}
@@ -921,13 +923,9 @@ export const LoginScene = (props: Props): React.ReactElement => {
       return (
         <EdgeTouchableOpacity
           onPress={handleBiometricId}
-          disabled={isBiometricDisabled}
+          disabled={biometricBusy}
         >
-          <MaterialCommunityIcons
-            name="fingerprint"
-            size={theme.rem(3)}
-            color={theme.iconTappable}
-          />
+          <FingerprintIcon size={theme.rem(3)} color={theme.iconTappable} />
         </EdgeTouchableOpacity>
       )
     }
@@ -955,26 +953,42 @@ export const LoginScene = (props: Props): React.ReactElement => {
     }
 
     const showKeypad = activeUser != null && activeUser.pinLoginEnabled
+    const biometricImage = renderBiometricImage()
+
+    // The PIN dots and the biometric toggle share one slot and are never both
+    // visible. The toggle holds the slot only while it is the sole thing worth
+    // showing: no digits entered, no error, and no lockout countdown. Anything
+    // the dots need to report (a typed digit, an invalid-PIN error, a wait
+    // timer) takes the slot back, so a fully empty set of dots is only ever
+    // visible when biometric login is unavailable.
+    const showBiometric =
+      biometricImage != null &&
+      pin.length === 0 &&
+      !hasWait &&
+      errorMessage === ''
 
     return (
       <View style={styles.pinBody}>
-        {!showKeypad ? (
-          <View style={styles.pinSpacer} />
-        ) : (
-          <FourDigitDisplay
-            error={errorMessage}
-            pin={pin}
-            spinner={hasWait || pin.length === 4}
-          />
-        )}
-        <EdgeAnim enter={{ type: 'fadeInDown', distance: 20 }}>
-          {renderBiometricImage()}
-        </EdgeAnim>
-        <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-          <UnscaledText style={styles.biometricImageText}>
-            {renderBiometricImageText()}
-          </UnscaledText>
-        </EdgeAnim>
+        <View style={styles.pinPrompt}>
+          {showBiometric ? (
+            <>
+              <EdgeAnim enter={{ type: 'fadeInDown', distance: 20 }}>
+                {biometricImage}
+              </EdgeAnim>
+              <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+                <UnscaledText style={styles.biometricImageText}>
+                  {renderBiometricImageText()}
+                </UnscaledText>
+              </EdgeAnim>
+            </>
+          ) : !showKeypad ? null : (
+            <FourDigitDisplay
+              error={errorMessage}
+              pin={pin}
+              spinner={hasWait || pin.length === 4}
+            />
+          )}
+        </View>
         {!showKeypad ? null : (
           <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
             <PinKeypad
@@ -1202,8 +1216,13 @@ const getStyles = cacheStyles((theme: Theme) => {
       alignItems: 'center',
       marginTop: theme.rem(1)
     },
-    pinSpacer: {
-      marginTop: theme.rem(2)
+    // Fixed height so swapping between the biometric toggle and the PIN dots
+    // never shifts the keypad below it:
+    pinPrompt: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: theme.rem(5.5),
+      width: '100%'
     },
     biometricImageText: {
       marginTop: theme.rem(0.5),
