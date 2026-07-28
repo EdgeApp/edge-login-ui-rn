@@ -92,6 +92,7 @@ export function PinKeypad(props: Props): JSX.Element {
             />
           </View>
           <EdgeTouchableWithoutFeedback
+            testID="pinKeypadBack"
             onPress={() => onPress('back')}
             disabled={disabled}
           >
