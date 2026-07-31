@@ -15,7 +15,14 @@ export const rootReducer = combineReducers<RootState>({
     state: string | null = null,
     action: Action
   ): string | null {
-    return action.type === 'CREATE_CHALLENGE' ? action.data : state
+    switch (action.type) {
+      case 'CREATE_CHALLENGE':
+        return action.data
+      case 'CLEAR_CREATE_CHALLENGE':
+        return null
+      default:
+        return state
+    }
   },
   scene,
   touch

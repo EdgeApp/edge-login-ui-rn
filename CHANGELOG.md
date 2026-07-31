@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- fixed: Recover a half-created account by logging in with the entered credentials when account creation fails with a NetworkError, instead of dead-ending at "account already exists".
+- fixed: Clear the consumed single-use create challenge id once a create attempt settles, so a retry fetches a fresh challenge instead of replaying a dead id and popping a redundant CAPTCHA modal.
+
 ## 3.37.0 (2026-07-27)
 
 - added: Warn users on the change-username scene that other logged-in devices will keep the old username and must log out and sign back in with the new one.
