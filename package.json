@@ -43,7 +43,6 @@
     "cleaners": "^0.3.12",
     "date-fns": "^2.23.0",
     "qrcode-generator": "^1.4.4",
-    "rfc4648": "^1.5.3",
     "react-native-airship": "^0.2.9",
     "react-native-haptic-feedback": "^1.14.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
@@ -51,6 +50,7 @@
     "react-redux": "^7.2.4",
     "redux": "~3.5.2",
     "redux-thunk": "~2.1.0",
+    "rfc4648": "^1.5.3",
     "sprintf-js": "^1.0.3",
     "zxcvbn": "^4.4.2"
   },
@@ -78,6 +78,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-react-native": "^3.11.0",
     "eslint-plugin-simple-import-sort": "^6.0.1",
+    "expo-linear-gradient": "~57.0.1",
     "flow-bin": "^0.250.0",
     "husky": "^7.0.0",
     "lint-staged": "^10.5.3",

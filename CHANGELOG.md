@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- changed: Draw gradients with `expo-linear-gradient` instead of `react-native-linear-gradient`, which has no codegen spec and so renders through the new architecture's legacy view-manager interop. Themes now declare gradient colors as a tuple of two or more, which `LinearGradient` requires.
 - fixed: Gray modal backgrounds on Android versions below 12, where the blur effect cannot render under the new architecture (modals use a solid background color there instead).
 - fixed: Dev-mode render error on the password login scene ("[Worklets] Cannot copy value of type `Date`") by capturing only the saved-user count in animation worklets.
 - fixed: Crash on Android when mounting text inputs under React Native's new architecture (Fabric rejects the fontSize of 0 that side icons animate to at rest).
