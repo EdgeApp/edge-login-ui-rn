@@ -5,9 +5,9 @@ import {
   EdgeUserInfo,
   NetworkError
 } from 'edge-core-js'
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import { FlatList, Keyboard, Platform, View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SvgXml } from 'react-native-svg'
