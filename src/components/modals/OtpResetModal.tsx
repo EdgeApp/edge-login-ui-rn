@@ -7,7 +7,7 @@ import { ButtonsModal } from './ButtonsModal'
 export async function showResetModal(
   requestOtpReset: () => Promise<void>
 ): Promise<void> {
-  await Airship.show(bridge => (
+  await Airship.show<'ok' | undefined>(bridge => (
     <ButtonsModal
       title={lstrings.disable_otp_header}
       message={lstrings.disable_otp_modal_body}

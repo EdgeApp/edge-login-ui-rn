@@ -46,7 +46,7 @@ export const launchPasswordRecovery = (recoveryKey: string) => async (
     }
   }
 
-  Airship.show(bridge => (
+  Airship.show<string | undefined>(bridge => (
     <TextInputModal
       bridge={bridge}
       onSubmit={handleSubmit}

@@ -110,7 +110,7 @@ export async function showOtpReminder(account: EdgeAccount): Promise<void> {
 
 const enableOtp = async (account: EdgeAccount) => {
   await account.enableOtp()
-  return await Airship.show(bridge => (
+  return await Airship.show<'ok' | undefined>(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={lstrings.otp_authentication_header}
