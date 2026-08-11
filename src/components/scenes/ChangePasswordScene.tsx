@@ -233,7 +233,7 @@ export const ChangePasswordScene = (props: SceneProps<'changePassword'>) => {
     Keyboard.dismiss()
 
     await account.changePassword(password)
-    await Airship.show(bridge => (
+    await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={lstrings.password_changed}
@@ -272,7 +272,7 @@ export const ResecurePasswordScene = (
     Keyboard.dismiss()
 
     await account.changePassword(password)
-    await Airship.show(bridge => (
+    await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={lstrings.password_changed}

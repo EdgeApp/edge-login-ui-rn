@@ -150,7 +150,7 @@ export function PinLoginScene(props: Props) {
     setShowUserList(false)
     Keyboard.dismiss()
 
-    const button = await Airship.show(bridge => (
+    const button = await Airship.show<'cancel' | 'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={lstrings.forget_account}

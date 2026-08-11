@@ -260,7 +260,7 @@ export const PasswordLoginScene = (props: Props) => {
 
   const handleDelete = useHandler((userInfo: LoginUserInfo) => {
     Keyboard.dismiss()
-    Airship.show(bridge => (
+    Airship.show<'cancel' | 'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={lstrings.forget_account}
@@ -369,7 +369,7 @@ export const PasswordLoginScene = (props: Props) => {
   const handleForgotPassword = useHandler(async () => {
     Keyboard.dismiss()
     onLogEvent('Password_Login_Forgot_Password')
-    await Airship.show(bridge => (
+    await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         onSubmit={handleSubmitRecoveryKey}

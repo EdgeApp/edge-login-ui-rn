@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Upgrade react-native-airship to 0.3.0 and react-native-patina to 0.2.0, matching the versions edge-react-gui installs so the app no longer ends up with two copies of each.
+- fixed: Type the fifteen `Airship.show` calls that were relying on the modal to infer their result type, which airship 0.2.10 stopped doing.
 - changed: Draw gradients with `expo-linear-gradient` instead of `react-native-linear-gradient`, which has no codegen spec and so renders through the new architecture's legacy view-manager interop. Themes now declare gradient colors as a tuple of two or more, which `LinearGradient` requires.
 - fixed: Gray modal backgrounds on Android versions below 12, where the blur effect cannot render under the new architecture (modals use a solid background color there instead).
 - fixed: Dev-mode render error on the password login scene ("[Worklets] Cannot copy value of type `Date`") by capturing only the saved-user count in animation worklets.
