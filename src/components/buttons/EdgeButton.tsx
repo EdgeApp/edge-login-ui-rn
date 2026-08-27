@@ -190,6 +190,7 @@ export function EdgeButton(props: Props): React.ReactElement | null {
       {!spinner && !pending ? null : (
         <View style={styles.spinnerOverlay} pointerEvents="none">
           <ActivityIndicator
+            testID={testID == null ? undefined : `${testID}.spinner`}
             color={
               type === 'primary'
                 ? theme.primaryButtonText

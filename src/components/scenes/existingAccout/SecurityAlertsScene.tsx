@@ -102,7 +102,8 @@ export class SecurityAlertsSceneComponent extends React.Component<
                 ? undefined
                 : {
                     label: lstrings.deny_all,
-                    onPress: this.handleDenyAll
+                    onPress: this.handleDenyAll,
+                    testID: 'securityAlertDenyAllButton'
                   }
             }
             secondary={{
@@ -117,7 +118,8 @@ export class SecurityAlertsSceneComponent extends React.Component<
             layout="column"
             primary={{
               label: lstrings.deny_all,
-              onPress: this.handleDenyAll
+              onPress: this.handleDenyAll,
+              testID: 'securityAlertDenyAllButton'
             }}
           />
         )
@@ -232,6 +234,7 @@ export class SecurityAlertsSceneComponent extends React.Component<
               onPress={this.handleDeny(voucher)}
               type="destructive"
               layout="row"
+              testID="securityAlertDenyButton"
             />
           </StyledButtonContainer>
         )}
