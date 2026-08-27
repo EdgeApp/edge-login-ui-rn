@@ -44,6 +44,7 @@
   "change_recovery_question6": "Qual é a data de nascimento da sua sobrinha ou sobrinho favorito?",
   "change_recovery_question8": "Qual era o seu endereço na faculdade?",
   "change_recovery_question9": "Qual era o nome e o sobrenome do seu avô materno?",
+  "change_username_warning": "Changing your username only updates it on this device. Any other devices logged into this account will keep the old username. To keep using them, log out of those devices and sign back in with your new username.",
   "choose_recovery_question": "Escolha a pergunta de recuperação",
   "choose_title_password": "Definir Senha",
   "choose_title_pin": "Definir PIN",
