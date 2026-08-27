@@ -44,6 +44,7 @@
   "change_recovery_question6": "あなたのお気に入りの甥や姪の誕生日はいつですか？",
   "change_recovery_question8": "大学での住所は何でしたか?",
   "change_recovery_question9": "あなたの母方の祖父の名前と姓は何ですか？",
+  "change_username_warning": "Changing your username only updates it on this device. Any other devices logged into this account will keep the old username. To keep using them, log out of those devices and sign back in with your new username.",
   "choose_recovery_question": "復元時の質問を選ぶ",
   "choose_title_password": "パスワードを設定",
   "choose_title_pin": "PINコードを設定",
