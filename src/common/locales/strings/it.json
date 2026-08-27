@@ -44,6 +44,7 @@
   "change_recovery_question6": "Qual è la data di nascita della tua o del tuo nipote preferito?",
   "change_recovery_question8": "Qual è stato il tuo corso di laurea?",
   "change_recovery_question9": "Qual è / qual è stato il nome e il cognome del tuo nonno materno?",
+  "change_username_warning": "Cambiare il tuo nome utente lo aggiorna solo su questo dispositivo. Qualsiasi altro dispositivo connesso a questo account manterrà il vecchio nome utente. Per continuare a usarli, disconnetti questi dispositivi e accedi con il tuo nuovo nome utente.",
   "choose_recovery_question": "Scegli una domanda di recupero",
   "choose_title_password": "Imposta la password",
   "choose_title_pin": "Imposta il PIN",
