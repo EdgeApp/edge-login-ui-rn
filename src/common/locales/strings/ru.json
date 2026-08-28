@@ -44,6 +44,7 @@
   "change_recovery_question6": "What is the birthdate of your favorite niece or nephew?",
   "change_recovery_question8": "What was your address in college?",
   "change_recovery_question9": "What was your maternal grandfather's first and last name?",
+  "change_username_warning": "Changing your username only updates it on this device. Any other devices logged into this account will keep the old username. To keep using them, log out of those devices and sign back in with your new username.",
   "choose_recovery_question": "Выберите вопросы для восстановления",
   "choose_title_password": "Set Password",
   "choose_title_pin": "Set PIN",
