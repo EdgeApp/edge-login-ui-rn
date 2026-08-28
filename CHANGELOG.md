@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 3.37.1 (2026-08-28)
+
+- added: Maestro testIds for security alerts
+- changed: Update translations
+
 ## 3.37.0 (2026-07-27)
 
 - added: Warn users on the change-username scene that other logged-in devices will keep the old username and must log out and sign back in with the new one.
