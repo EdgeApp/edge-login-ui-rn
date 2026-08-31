@@ -1,7 +1,7 @@
+import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { asMaybeOtpError, EdgeAccount, OtpError } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { base16, base64 } from 'rfc4648'
 import { sprintf } from 'sprintf-js'
 

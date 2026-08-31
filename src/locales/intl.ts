@@ -1,6 +1,6 @@
 import { gt, mul, toFixed } from 'biggystring'
 import { format } from 'date-fns'
-import { getLocales, getNumberFormatSettings } from 'react-native-localize'
+import { getLocales } from 'expo-localization'
 
 import { locales } from './dateLocales'
 
@@ -33,9 +33,12 @@ const NUMBER_GROUP_SIZE = 3
 export const locale: IntlLocaleType = { ...EN_US_LOCALE }
 
 // Set the locale at boot:
-const [firstLocale = { languageTag: 'en_US' }] = getLocales()
-const numberFormat = getNumberFormatSettings()
-setIntlLocale({ localeIdentifier: firstLocale.languageTag, ...numberFormat })
+const [firstLocale] = getLocales()
+setIntlLocale({
+  localeIdentifier: firstLocale?.languageTag ?? 'en_US',
+  decimalSeparator: firstLocale?.decimalSeparator ?? '.',
+  groupingSeparator: firstLocale?.digitGroupingSeparator ?? ','
+})
 
 /**
  * Formats number input according to user locale

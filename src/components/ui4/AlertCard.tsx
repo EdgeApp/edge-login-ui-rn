@@ -2,9 +2,9 @@
  * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
  */
 
+import IonIcon from '@expo/vector-icons/Ionicons'
 import * as React from 'react'
 import { View } from 'react-native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'

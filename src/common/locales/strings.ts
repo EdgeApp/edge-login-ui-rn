@@ -1,4 +1,4 @@
-import { getLocales } from 'react-native-localize'
+import { getLocales } from 'expo-localization'
 
 import de from './strings/de.json'
 import en from './strings/enUS.json'

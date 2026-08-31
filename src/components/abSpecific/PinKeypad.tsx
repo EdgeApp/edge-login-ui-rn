@@ -1,7 +1,7 @@
+import MaterialIcon from '@expo/vector-icons/MaterialIcons'
 import * as React from 'react'
 import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { lstrings } from '../../common/locales/strings'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'

@@ -1,9 +1,9 @@
 import * as React from 'react'
-import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
+import { LinearGradient } from './LinearGradient'
 
 interface Props {
   /** Extend to the right outside of the container. For scene-level usage. */

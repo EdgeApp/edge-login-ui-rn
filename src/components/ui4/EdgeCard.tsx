@@ -1,8 +1,5 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import LinearGradient, {
-  LinearGradientProps
-} from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -14,6 +11,7 @@ import {
   sidesToPadding
 } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import LinearGradient, { LinearGradientProps } from '../common/LinearGradient'
 import { CloseIcon } from '../icons/ThemedIcons'
 import { SectionView } from '../layout/SectionView'
 import { Theme, useTheme } from '../services/ThemeContext'

@@ -1,7 +1,7 @@
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { sprintf } from 'sprintf-js'
 
 import { LOGO_BIG, LOGO_BIG_LIGHT } from '../../../assets'

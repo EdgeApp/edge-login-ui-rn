@@ -1,7 +1,7 @@
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons'
 import * as React from 'react'
 import { TextStyle, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'

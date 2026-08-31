@@ -1,12 +1,12 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
+import Feather from '@expo/vector-icons/Feather'
+import IonIcon from '@expo/vector-icons/Ionicons'
+import { isLoaded } from 'expo-font'
 import React from 'react'
 import Animated, {
   SharedValue,
   useAnimatedStyle
 } from 'react-native-reanimated'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import Feather from 'react-native-vector-icons/Feather'
-import type { Icon } from 'react-native-vector-icons/Icon'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useTheme } from '../services/ThemeContext'
 
@@ -31,13 +31,46 @@ export interface IconProps {
 }
 export type IconComponent = React.FunctionComponent<IconProps>
 
+type FontIconSet = React.ComponentType<any> & {
+  getFontFamily: () => string
+  getRawGlyphMap: () => Record<string, string | number>
+  loadFont: () => Promise<void>
+}
+
 //
 // Inner components
 //
 
 interface IconChoice {
-  IconComponent: typeof Icon
+  IconComponent: FontIconSet
   name: string
+}
+
+/**
+ * The @expo/vector-icons families register their fonts with expo-font the
+ * first time one of their own components renders. We draw glyphs into a raw
+ * text node, so we have to request the font ourselves.
+ */
+function useIconFont(IconComponent: FontIconSet): boolean {
+  const [fontIsLoaded, setFontIsLoaded] = React.useState(() =>
+    isLoaded(IconComponent.getFontFamily())
+  )
+
+  React.useEffect(() => {
+    if (fontIsLoaded) return
+    let alive = true
+    IconComponent.loadFont().then(
+      () => {
+        if (alive) setFontIsLoaded(true)
+      },
+      () => {}
+    )
+    return () => {
+      alive = false
+    }
+  }, [IconComponent, fontIsLoaded])
+
+  return fontIsLoaded
 }
 
 function AnimatedFontIcon(props: AnimatedIconProps & IconChoice): JSX.Element {
@@ -46,9 +79,12 @@ function AnimatedFontIcon(props: AnimatedIconProps & IconChoice): JSX.Element {
   const defaultColor = theme.icon
   const defaultSize = theme.rem(1)
 
+  const fontIsLoaded = useIconFont(IconComponent)
   const fontFamily = IconComponent.getFontFamily()
   const glyphMap = IconComponent.getRawGlyphMap()
-  const glyph = String.fromCodePoint(glyphMap[name])
+  const code = glyphMap[name]
+  const glyph =
+    typeof code === 'number' ? String.fromCodePoint(code) : String(code ?? '')
 
   const style = useAnimatedStyle(() => ({
     color: color?.value ?? defaultColor,
@@ -66,7 +102,7 @@ function AnimatedFontIcon(props: AnimatedIconProps & IconChoice): JSX.Element {
       accessible={accessible}
       style={style}
     >
-      {glyph}
+      {fontIsLoaded ? glyph : ''}
     </Animated.Text>
   )
 }
@@ -103,13 +139,13 @@ function ThemedFontIcon(props: IconProps & IconChoice): React.ReactElement {
 //
 
 function makeAnimatedFontIcon(
-  IconComponent: typeof Icon,
+  IconComponent: FontIconSet,
   name: string
 ): AnimatedIconComponent {
   return props => AnimatedFontIcon({ ...props, IconComponent, name })
 }
 
-function makeFontIcon(IconComponent: typeof Icon, name: string): IconComponent {
+function makeFontIcon(IconComponent: FontIconSet, name: string): IconComponent {
   return props => ThemedFontIcon({ ...props, IconComponent, name })
 }
 

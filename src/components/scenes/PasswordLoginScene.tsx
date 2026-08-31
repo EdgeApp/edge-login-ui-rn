@@ -1,3 +1,4 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
 import {
   asMaybeNetworkError,
   asMaybeOtpError,
@@ -7,7 +8,7 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import { Keyboard, LayoutChangeEvent, View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import { cacheStyles } from 'react-native-patina'
 import Animated, {
   Easing,
@@ -19,7 +20,6 @@ import Animated, {
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { launchPasswordRecovery } from '../../actions/LoginAction'

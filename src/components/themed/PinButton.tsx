@@ -1,5 +1,4 @@
 import * as React from 'react'
-import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
@@ -10,6 +9,7 @@ import {
   sidesToPadding
 } from '../../util/sides'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
+import { LinearGradient } from '../common/LinearGradient'
 import { UnscaledText } from '../common/UnscaledText'
 import { Theme, useTheme } from '../services/ThemeContext'
 

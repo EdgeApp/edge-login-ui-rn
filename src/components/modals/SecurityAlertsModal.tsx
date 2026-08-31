@@ -1,9 +1,9 @@
+import Ionicons from '@expo/vector-icons/Ionicons'
 import { EdgeLoginMessage } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'

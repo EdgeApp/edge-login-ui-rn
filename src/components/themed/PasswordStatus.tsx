@@ -1,8 +1,8 @@
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons'
 import * as React from 'react'
 import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { lstrings } from '../../common/locales/strings'
 import { EdgeAnim } from '../common/EdgeAnim'

@@ -1,6 +1,7 @@
 import { asMaybeNetworkError, EdgeAccount } from 'edge-core-js'
+import { openURL } from 'expo-linking'
 import * as React from 'react'
-import { Linking, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
@@ -104,7 +105,7 @@ const TosComponent = (props: Props) => {
             style={styles.agreeText}
             numberOfLines={2}
             onPress={async () =>
-              await Linking.openURL(getAppConfig().termsOfServiceSite)
+              await openURL(getAppConfig().termsOfServiceSite)
             }
           >
             {lstrings.read_understood_1}

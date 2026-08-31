@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- changed: Use Expo modules for haptics, linear gradients, icons, localization, and outbound URLs, replacing react-native-haptic-feedback, react-native-linear-gradient, react-native-vector-icons, and react-native-localize.
+- changed: Use the KeyboardAwareScrollView from react-native-keyboard-controller instead of react-native-keyboard-aware-scroll-view.
+- removed: The unused react-native-mail dev dependency.
+
 ## 3.37.2 (2026-08-31)
 
 - fixed: Expose button spinner IDs on iOS

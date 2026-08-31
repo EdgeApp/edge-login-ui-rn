@@ -1,8 +1,8 @@
+import IonIcon from '@expo/vector-icons/Ionicons'
 import * as React from 'react'
 import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -22,10 +22,7 @@ export function QuestionListModal(props: Props) {
   const styles = getStyles(theme)
 
   function renderRow(item: string): JSX.Element {
-    const radio = {
-      icon: `radio-button-${selected === item ? 'on' : 'off'}`,
-      color: theme.iconTappable
-    }
+    const iconName = selected === item ? 'radio-button-on' : 'radio-button-off'
     return (
       <EdgeTouchableOpacity onPress={() => bridge.resolve(item)}>
         <View style={styles.row}>
@@ -36,8 +33,8 @@ export function QuestionListModal(props: Props) {
           </View>
           <IonIcon
             style={styles.radio}
-            name={radio.icon}
-            color={radio.color}
+            name={iconName}
+            color={theme.iconTappable}
             size={theme.rem(1.25)}
           />
         </View>

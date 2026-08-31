@@ -1,3 +1,4 @@
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import {
   asMaybeNetworkError,
   asMaybePasswordError,
@@ -7,11 +8,9 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, Keyboard, Platform, View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SvgXml } from 'react-native-svg'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { sprintf } from 'sprintf-js'
 
 import { completeLogin } from '../../actions/LoginCompleteActions'
@@ -30,6 +29,7 @@ import { UserListItem } from '../abSpecific/UserListItem'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
+import { LinearGradient } from '../common/LinearGradient'
 import { UnscaledText } from '../common/UnscaledText'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'

@@ -1,8 +1,13 @@
+import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
+
 export type HapticTriggerType = 'impactLight' | 'impactMedium' | 'impactHeavy'
 
-export const triggerHaptic = (type: HapticTriggerType) => {
-  try {
-    const ReactNativeHapticFeedback = require('react-native-haptic-feedback')
-    ReactNativeHapticFeedback.trigger(type)
-  } catch (_) {}
+const styles: Record<HapticTriggerType, ImpactFeedbackStyle> = {
+  impactLight: ImpactFeedbackStyle.Light,
+  impactMedium: ImpactFeedbackStyle.Medium,
+  impactHeavy: ImpactFeedbackStyle.Heavy
+}
+
+export const triggerHaptic = (type: HapticTriggerType): void => {
+  impactAsync(styles[type]).catch(() => {})
 }

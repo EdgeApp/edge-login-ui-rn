@@ -1,8 +1,8 @@
+import FontAwesomeIcon from '@expo/vector-icons/FontAwesome'
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { ChevronRightIcon } from '../icons/ThemedIcons'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'

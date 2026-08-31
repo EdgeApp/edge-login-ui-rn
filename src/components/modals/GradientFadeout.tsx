@@ -1,7 +1,7 @@
 import * as React from 'react'
-import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
+import { LinearGradient } from '../common/LinearGradient'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 const MARKS: number[] = [0, 0.2, 0.75, 1]

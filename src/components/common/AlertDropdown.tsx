@@ -1,9 +1,9 @@
+import AntDesignIcon from '@expo/vector-icons/AntDesign'
+import EntypoIcon from '@expo/vector-icons/Entypo'
 import * as React from 'react'
 import { View } from 'react-native'
 import { AirshipBridge, AirshipDropdown } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 import { lstrings } from '../../common/locales/strings'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'

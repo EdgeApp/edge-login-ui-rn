@@ -6,12 +6,12 @@
 import * as React from 'react'
 import type { TextStyle, ViewStyle } from 'react-native'
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { LinearGradient } from '../common/LinearGradient'
 import type { Theme } from '../services/ThemeContext'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
