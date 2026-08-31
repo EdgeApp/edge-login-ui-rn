@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { AirshipBridge, AirshipDropdown } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
@@ -21,10 +22,18 @@ function AlertDropdownComponent(props: Props & ThemeProps) {
   const { bridge, message, theme, warning } = props
   const styles = getStyles(theme)
 
+  // The Airship layer's own safe-area measurement only works on iOS, and
+  // edge-to-edge Android draws the window under the status bar, so push the
+  // content below it ourselves. iOS already gets this from the layer, so
+  // adding it here would double the gap:
+  const insets = useSafeAreaInsets()
+  const androidTopInset = Platform.OS === 'android' ? insets.top : 0
+
   return (
     <AirshipDropdown
       bridge={bridge}
       backgroundColor={warning ? theme.dropdownWarning : theme.dropdownError}
+      padding={[androidTopInset, 0, 0, 0]}
     >
       <View style={styles.container}>
         <EntypoIcon name="warning" size={theme.rem(1.25)} style={styles.icon} />
