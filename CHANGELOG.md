@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.37.2 (2026-08-31)
+
+- fixed: Expose button spinner IDs on iOS
+
 ## 3.37.1 (2026-08-28)
 
 - added: Maestro testIds for security alerts
