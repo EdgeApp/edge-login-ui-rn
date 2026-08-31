@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fixed: See-through modal sheets on Android under the new architecture. Modals blur the screen behind them again on Android 12 and above, via a new blur backend (expo-blur, which host apps must now provide alongside the other native modules), and use a solid background color below Android 12, where no blur implementation can render.
 - changed: Replace `react-native-keyboard-aware-scroll-view`, unmaintained since 2022, with the `KeyboardAwareScrollView` from `react-native-keyboard-controller`. The old component positions the keyboard with `findNodeHandle` and `UIManager.measureInWindow`, which the new architecture only serves through a compatibility shim. Host apps must now provide `react-native-keyboard-controller`.
 - changed: Upgrade react-native-airship to 0.3.0 and react-native-patina to 0.2.0, matching the versions edge-react-gui installs so the app no longer ends up with two copies of each.
 - fixed: Type the fifteen `Airship.show` calls that were relying on the modal to infer their result type, which airship 0.2.10 stopped doing.

@@ -118,6 +118,7 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
   modalBorderWidth: asOptional(asNumber),
   modalBorderRadiusRem: asOptional(asNumber),
   modalBackground: asOptional(asString),
+  modalBackgroundNoBlur: asOptional(asString),
   modalSceneOverlayColor: asOptional(asString),
   modalDragbarColor: asOptional(asString),
 
@@ -269,6 +270,8 @@ export interface Theme {
   modalBorderWidth: number
   modalBorderRadiusRem: number
   modalBackground: string
+  // Solid stand-in for blur where it cannot render (Android below 12):
+  modalBackgroundNoBlur: string
   modalSceneOverlayColor: string
   modalDragbarColor: string
 

@@ -238,12 +238,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   modal: {
     alignSelf: 'flex-end',
-    // Devices that cannot render the blur background get a solid color
-    // approximating the blurred glass look:
+    // Devices that cannot render the blur background (Android below 12) get
+    // a solid color approximating the blurred glass look:
     backgroundColor: isBlurDisabled
-      ? theme.isDark
-        ? '#2b2b2b'
-        : '#f2f2f2'
+      ? theme.modalBackgroundNoBlur
       : theme.modalBackground,
     borderTopLeftRadius: theme.rem(1),
     borderTopRightRadius: theme.rem(1),
