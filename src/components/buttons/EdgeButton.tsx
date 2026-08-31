@@ -91,6 +91,8 @@ export function EdgeButton(props: Props): React.ReactElement | null {
   )
 
   const opacity = disabled ? 0.3 : spinner || pending ? 0.7 : 1
+  const currentTestID =
+    testID == null || (!spinner && !pending) ? testID : `${testID}.spinner`
 
   // Layout behavior for parent containers:
   const layoutContainerStyle = React.useMemo<ViewStyle>(() => {
@@ -190,7 +192,6 @@ export function EdgeButton(props: Props): React.ReactElement | null {
       {!spinner && !pending ? null : (
         <View style={styles.spinnerOverlay} pointerEvents="none">
           <ActivityIndicator
-            testID={testID == null ? undefined : `${testID}.spinner`}
             color={
               type === 'primary'
                 ? theme.primaryButtonText
@@ -212,7 +213,7 @@ export function EdgeButton(props: Props): React.ReactElement | null {
         disabled={disabled || pending}
         onPress={handlePress}
         hitSlop={hitSlop}
-        testID={testID}
+        testID={currentTestID}
         activeOpacity={Platform.OS === 'ios' ? 0.6 : 0.7}
         style={[
           styles.pillBase,
