@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fixed: Text inputs mounted in the disabled state no longer flash their enabled look before dimming when a scene appears.
 - changed: Require react-native-haptic-feedback 3.x, matching the host app so npm installs one copy.
 - fixed: Error and warning dropdowns no longer slide in underneath the Android status bar on edge-to-edge devices.
 - fixed: See-through modal sheets on Android under the new architecture. Modals blur the screen behind them again on Android 12 and above, via a new blur backend (expo-blur, which host apps must now provide alongside the other native modules), and use a solid background color below Android 12, where no blur implementation can render.
