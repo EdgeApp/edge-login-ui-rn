@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react'
-import { BackHandler, Dimensions, View } from 'react-native'
+import { BackHandler, Dimensions, Keyboard, Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import {
   Gesture,
@@ -132,6 +132,31 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
     }
   }, [handleCancel])
 
+  // Track the keyboard on the JS thread. This file cannot use
+  // react-native-keyboard-controller like edge-react-gui's copy: the host
+  // app's KeyboardProvider mounts below this library's Airship layer, so
+  // listen to React Native's own keyboard events instead:
+  // Seed from the live state, since a modal can mount while the keyboard is
+  // already open. (Optional call: isVisible is missing on very old RN.)
+  const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(
+    () => Keyboard.isVisible?.() ?? false
+  )
+  React.useEffect(() => {
+    const isIos = Platform.OS === 'ios'
+    const showListener = Keyboard.addListener(
+      isIos ? 'keyboardWillShow' : 'keyboardDidShow',
+      () => setIsKeyboardOpen(true)
+    )
+    const hideListener = Keyboard.addListener(
+      isIos ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => setIsKeyboardOpen(false)
+    )
+    return () => {
+      showListener.remove()
+      hideListener.remove()
+    }
+  }, [])
+
   const gesture = Gesture.Pan()
     .onUpdate(e => {
       offset.value = e.translationY
@@ -156,7 +181,10 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
     transform: [{ translateY: Math.max(-dragSlop, offset.value) }]
   }))
 
-  const bottomGap = safeAreaGap + dragSlop
+  // The gap that lets the modal bleed past the bottom of the screen is
+  // rendered behind the keyboard, so drop it while the keyboard is open or
+  // it pushes the modal's own content underneath:
+  const bottomGap = (isKeyboardOpen ? 0 : safeAreaGap) + dragSlop
   const isHeaderless = title == null && onCancel == null
   const isCustomTitle = title != null && typeof title !== 'string'
 
