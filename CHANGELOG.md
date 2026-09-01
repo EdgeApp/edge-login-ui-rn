@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fixed: Long labels on Android no longer shrink themselves illegibly small under the new architecture; they truncate instead.
 - fixed: Text inputs mounted in the disabled state no longer flash their enabled look before dimming when a scene appears.
 - changed: Require react-native-haptic-feedback 3.x, matching the host app so npm installs one copy.
 - fixed: Error and warning dropdowns no longer slide in underneath the Android status bar on edge-to-edge devices.
