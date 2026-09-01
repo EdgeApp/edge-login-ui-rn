@@ -44,7 +44,7 @@
     "date-fns": "^2.23.0",
     "qrcode-generator": "^1.4.4",
     "react-native-airship": "^0.3.0",
-    "react-native-haptic-feedback": "^1.14.0",
+    "react-native-haptic-feedback": "^3.0.0",
     "react-native-patina": "^0.2.0",
     "react-redux": "^7.2.4",
     "redux": "~3.5.2",
