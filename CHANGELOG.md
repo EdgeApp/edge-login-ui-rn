@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- changed: Require react-native-haptic-feedback 3.x, matching the host app so npm installs one copy.
 - fixed: Error and warning dropdowns no longer slide in underneath the Android status bar on edge-to-edge devices.
 - fixed: See-through modal sheets on Android under the new architecture. Modals blur the screen behind them again on Android 12 and above, via a new blur backend (expo-blur, which host apps must now provide alongside the other native modules), and use a solid background color below Android 12, where no blur implementation can render.
 - changed: Replace `react-native-keyboard-aware-scroll-view`, unmaintained since 2022, with the `KeyboardAwareScrollView` from `react-native-keyboard-controller`. The old component positions the keyboard with `findNodeHandle` and `UIManager.measureInWindow`, which the new architecture only serves through a compatibility shim. Host apps must now provide `react-native-keyboard-controller`.
