@@ -14,6 +14,7 @@ const palette = {
   edgeMintDisabled: '#44bd95',
   darkAqua: '#1b2f3b',
   blueGray: '#A4C7DF',
+  skyBlue: '#3dd9f4',
   gray: '#87939E',
   lightGray: '#D9E3ED',
   mutedBlue: '#2F5E89',
@@ -95,6 +96,7 @@ export const edgeDark: Theme = {
   linkText: palette.edgeMint,
   positiveText: palette.accentGreen,
   deactivatedText: palette.gray,
+  selectableRowSubtitle: palette.skyBlue,
 
   // tile
   tileBackground: palette.edgeBlue,
