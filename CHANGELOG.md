@@ -4,6 +4,7 @@
 
 - changed: Merge the password and PIN login scenes into one scene with a login-method toggle and a sign-in help sheet.
 - changed: Show either the PIN dots or the biometric toggle on the login scene, never both.
+- changed: Show the same username field on both login flavors.
 
 ## 3.36.0 (2026-06-13)
 
