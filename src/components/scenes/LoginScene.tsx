@@ -748,70 +748,57 @@ export const LoginScene = (props: Props): React.ReactElement => {
   // ---------------------------------------------------------------------
 
   const renderUsername = (): React.ReactElement => {
-    const usernameLabel =
-      activeUsername !== '' ? activeUsername : getDisplayUsername(activeUser)
+    // Both flavors share one username control so the "Username" placeholder,
+    // sizing and dropdown all behave identically. The PIN flavor is bound to a
+    // saved account, so its username is a selection rather than an entry: the
+    // field is read-only and a tap anywhere on it opens the account list.
+    const isPinFlavor = flavor === 'pin'
+    const usernameValue = isPinFlavor
+      ? activeUsername !== ''
+        ? activeUsername
+        : getDisplayUsername(activeUser)
+      : activeUsername
 
-    if (flavor === 'pin') {
-      if (!hasMultipleUsers) {
-        return (
-          <View style={styles.inputWrapper} onLayout={handleUsernameLayout}>
-            <View style={styles.pinUsernamePlain}>
-              <UnscaledText
-                adjustsFontSizeToFit
-                minimumFontScale={0.75}
-                numberOfLines={1}
-                style={styles.pinUsernamePlainText}
-              >
-                {usernameLabel}
-              </UnscaledText>
-            </View>
-          </View>
-        )
-      }
-      return (
-        <View style={styles.inputWrapper} onLayout={handleUsernameLayout}>
-          <EdgeTouchableOpacity
-            testID="usernameDropdownButton"
-            style={styles.pinUsernameBox}
-            onPress={handleToggleUsernameList}
-          >
-            <UnscaledText
-              adjustsFontSizeToFit
-              minimumFontScale={0.75}
-              numberOfLines={1}
-              style={styles.pinUsernameBoxText}
-            >
-              {usernameLabel}
-            </UnscaledText>
-            {showUsernameList ? (
-              <ChevronUpIcon size={theme.rem(1.5)} style={styles.iconColor} />
-            ) : (
-              <ChevronDownIcon size={theme.rem(1.5)} style={styles.iconColor} />
-            )}
-          </EdgeTouchableOpacity>
-        </View>
-      )
-    }
+    const usernameField = (
+      <View
+        onLayout={handleUsernameLayout}
+        pointerEvents={isPinFlavor ? 'none' : 'auto'}
+      >
+        <FilledTextInput
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoFocus={false}
+          clearIcon={!isPinFlavor && !hasSavedUsers}
+          error={isPinFlavor ? undefined : usernameErrorMessage}
+          placeholder={lstrings.username}
+          returnKeyType="next"
+          testID="usernameFormField"
+          value={usernameValue}
+          onChangeText={handleChangeUsername}
+          onSubmitEditing={handleSubmitUsername}
+        />
+      </View>
+    )
 
     return (
       <View style={styles.inputWrapper}>
-        <View onLayout={handleUsernameLayout}>
-          <FilledTextInput
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoFocus={false}
-            clearIcon={!hasSavedUsers}
-            error={usernameErrorMessage}
-            placeholder={lstrings.username}
-            returnKeyType="next"
-            testID="usernameFormField"
-            value={activeUsername}
-            onChangeText={handleChangeUsername}
-            onSubmitEditing={handleSubmitUsername}
-          />
-        </View>
-        {hasSavedUsers ? (
+        {isPinFlavor ? (
           <EdgeTouchableOpacity
+            accessible
+            disabled={!hasMultipleUsers}
+            testID="usernameDropdownButton"
+            onPress={handleToggleUsernameList}
+          >
+            {usernameField}
+          </EdgeTouchableOpacity>
+        ) : (
+          usernameField
+        )}
+        {hasSavedUsers ? (
+          // A single saved account has nothing to expand to, so the chevron
+          // stays in place (the field keeps its shape) but is inert:
+          <EdgeTouchableOpacity
+            disabled={!hasMultipleUsers}
             testID="userDropdownIcon"
             style={[styles.dropdownButton, dropdownButtonPositionStyle]}
             onPress={handleToggleUsernameList}
@@ -819,7 +806,12 @@ export const LoginScene = (props: Props): React.ReactElement => {
             {showUsernameList ? (
               <ChevronUpIcon size={theme.rem(1.5)} style={styles.iconColor} />
             ) : (
-              <ChevronDownIcon size={theme.rem(1.5)} style={styles.iconColor} />
+              <ChevronDownIcon
+                size={theme.rem(1.5)}
+                style={
+                  hasMultipleUsers ? styles.iconColor : styles.iconColorDisabled
+                }
+              />
             )}
           </EdgeTouchableOpacity>
         ) : null}
@@ -1131,6 +1123,10 @@ function translateNetworkError(
 
 const getStyles = cacheStyles((theme: Theme) => {
   const spaceAroundInputs = theme.rem(1)
+  // The flavor toggle already carries a 0.5rem bottom margin, so this is the
+  // other half of the 1rem the design allows between the toggle and the
+  // username field. `inputContainer` adds nothing on top of it.
+  const spaceAboveInputs = theme.rem(0.5)
 
   return {
     container: {
@@ -1145,8 +1141,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       marginBottom: theme.rem(0.5)
     },
     inputContainer: {
-      marginHorizontal: theme.rem(0.5),
-      marginTop: theme.rem(1)
+      marginHorizontal: theme.rem(0.5)
     },
     buttonsBox: {
       alignItems: 'center',
@@ -1155,7 +1150,8 @@ const getStyles = cacheStyles((theme: Theme) => {
     inputWrapper: {
       position: 'relative',
       justifyContent: 'flex-start',
-      padding: spaceAroundInputs
+      padding: spaceAroundInputs,
+      paddingTop: spaceAboveInputs
     },
     dropContainer: {
       backgroundColor: theme.modal,
@@ -1168,7 +1164,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       left: 0,
       right: 0,
       margin: theme.rem(1),
-      marginTop: spaceAroundInputs + theme.rem(0.5),
+      marginTop: spaceAboveInputs + theme.rem(0.5),
       zIndex: 1
     },
     // TODO: Integrate dropdown into FilledTextInput
@@ -1180,37 +1176,14 @@ const getStyles = cacheStyles((theme: Theme) => {
       right: 0,
       width: theme.rem(2),
       height: theme.rem(2),
-      marginTop: spaceAroundInputs - theme.rem(1),
+      marginTop: spaceAboveInputs - theme.rem(1),
       marginRight: spaceAroundInputs + theme.rem(0.5)
     },
     iconColor: {
       color: theme.textInputIconColor
     },
-    pinUsernameBox: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      backgroundColor: theme.textInputBackgroundColor,
-      borderRadius: theme.rem(0.5),
-      paddingVertical: theme.rem(0.75),
-      paddingHorizontal: theme.rem(1)
-    },
-    pinUsernameBoxText: {
-      flex: 1,
-      color: theme.primaryText,
-      fontFamily: theme.fontFaceDefault,
-      fontSize: theme.rem(1),
-      marginRight: theme.rem(0.5)
-    },
-    pinUsernamePlain: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingVertical: theme.rem(0.5)
-    },
-    pinUsernamePlainText: {
-      color: theme.primaryText,
-      fontFamily: theme.fontFaceDefault,
-      fontSize: theme.rem(1.25)
+    iconColorDisabled: {
+      color: theme.deactivatedText
     },
     pinBody: {
       alignItems: 'center',

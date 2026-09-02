@@ -4,6 +4,7 @@
 
 - changed: Merge the password and PIN login scenes into a single login scene with a Password / Pin-Biometric toggle, an in-scene username dropdown, and a "Trouble Signing in?" help sheet for QR-code login and password recovery.
 - changed: Show either the PIN dots or the biometric toggle on the login scene, never both.
+- changed: Give the PIN login flavor the same username field as the password flavor, and keep the account dropdown in place with a disabled chevron when only one account is saved.
 
 ## 3.36.0 (2026-06-13)
 
