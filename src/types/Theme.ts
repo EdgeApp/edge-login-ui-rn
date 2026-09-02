@@ -130,6 +130,7 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
   linkText: asOptional(asString),
   positiveText: asOptional(asString),
   deactivatedText: asOptional(asString),
+  selectableRowSubtitle: asOptional(asString),
 
   // Tile:
   tileBackground: asOptional(asString),
@@ -287,6 +288,7 @@ export interface Theme {
   linkText: string
   positiveText: string
   deactivatedText: string
+  selectableRowSubtitle: string
 
   // Tile:
   tileBackground: string
