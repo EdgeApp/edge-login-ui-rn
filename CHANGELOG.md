@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fixed: Animated font sizes are clamped above zero everywhere, so a scale animation passing through zero cannot crash Android's new architecture.
 - fixed: Modals no longer hide their bottom content behind an open keyboard (the off-screen overhang is dropped while the keyboard is up).
 - fixed: Long labels on Android no longer shrink themselves illegibly small under the new architecture; they truncate instead.
 - fixed: Text inputs mounted in the disabled state no longer flash their enabled look before dimming when a scene appears.
