@@ -388,7 +388,8 @@ const PlaceholderText = styled(Animated.Text)<{
             focusAnimation,
             disableAnimation
           ),
-          fontSize: scale.value * rem
+          // Clamp in case an animated scale passes through 0:
+          fontSize: Math.max(scale.value * rem, 1)
         }
       })
     ]
@@ -418,7 +419,8 @@ const InputField = styledWithRef(AnimatedTextInput)<{
     },
     useAnimatedStyle(() => ({
       color: interpolateTextColor(focusAnimation, disableAnimation),
-      fontSize: scale.value * rem
+      // Clamp in case an animated scale passes through 0:
+      fontSize: Math.max(scale.value * rem, 1)
     }))
   ]
 })

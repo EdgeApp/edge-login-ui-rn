@@ -635,10 +635,10 @@ const PlaceholderText = styled(Animated.Text)<{
             focusAnimation,
             disableAnimation
           ),
-          fontSize: interpolate(
-            shift.value,
-            [0, 1],
-            [fontSizeBase, fontSizeScaled]
+          // Clamp in case an animated scale passes through 0:
+          fontSize: Math.max(
+            interpolate(shift.value, [0, 1], [fontSizeBase, fontSizeScaled]),
+            1
           )
         }
       })
@@ -676,7 +676,8 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
     },
     useAnimatedStyle(() => ({
       color: interpolateTextColor(focusAnimation, disableAnimation),
-      fontSize: scale.value * rem
+      // Clamp in case an animated scale passes through 0:
+      fontSize: Math.max(scale.value * rem, 1)
     }))
   ]
 })
@@ -711,7 +712,8 @@ const StyledNumericInput = styledWithRef(NumericInput)<{
     },
     useAnimatedStyle(() => ({
       color: interpolateTextColor(focusAnimation, disableAnimation),
-      fontSize: scale.value * rem
+      // Clamp in case an animated scale passes through 0:
+      fontSize: Math.max(scale.value * rem, 1)
     }))
   ]
 })
