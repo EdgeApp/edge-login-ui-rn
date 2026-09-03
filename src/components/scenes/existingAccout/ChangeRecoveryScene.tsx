@@ -191,7 +191,7 @@ export const ChangeRecoveryScene = (props: Props) => {
       } else {
         await sendRecoveryEmail(emailAddress, username, recoveryKey, branding)
       }
-      await Airship.show(bridge => (
+      await Airship.show<'ok' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
           title={lstrings.recovery_success_title}
@@ -228,7 +228,7 @@ export const ChangeRecoveryScene = (props: Props) => {
   }
 
   const saveRecoveryViaShare = async () => {
-    await Airship.show(bridge => (
+    await Airship.show<'cancel' | 'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={lstrings.save_recovery_token}
@@ -248,7 +248,7 @@ export const ChangeRecoveryScene = (props: Props) => {
   const changeRecovery = () => {
     Keyboard.dismiss()
     try {
-      Airship.show(bridge => (
+      Airship.show<'cancel' | 'ok' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
           title={lstrings.recovery_change_title}
@@ -276,7 +276,7 @@ export const ChangeRecoveryScene = (props: Props) => {
   const deleteRecovery = () => {
     Keyboard.dismiss()
     try {
-      Airship.show(bridge => (
+      Airship.show<'cancel' | 'confirm' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
           title={lstrings.recovery_reset_confirm_title}

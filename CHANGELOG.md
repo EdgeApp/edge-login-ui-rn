@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- fixed: Animated font sizes are clamped above zero everywhere, so a scale animation passing through zero cannot crash Android's new architecture.
+- fixed: Modals no longer hide their bottom content behind an open keyboard (the off-screen overhang is dropped while the keyboard is up).
+- fixed: Long labels on Android no longer shrink themselves illegibly small under the new architecture, where Fabric ignores the `minimumFontScale` floor and shrinks text as far as 4dp; they truncate instead. Auto-shrink is disabled on Android for old-architecture hosts too, so their long labels now truncate at full size rather than shrinking.
+- fixed: Text inputs mounted in the disabled state no longer flash their enabled look before dimming when a scene appears.
+- changed: Require react-native-haptic-feedback 3.x, matching the host app so npm installs one copy.
+- fixed: Error and warning dropdowns no longer slide in underneath the Android status bar on edge-to-edge devices.
+- fixed: See-through modal sheets on Android under the new architecture. Modals blur the screen behind them again on Android 12 and above, via a new blur backend (expo-blur 57 or later, which host apps must now provide alongside the other native modules — it requires the Expo modules system, and older expo-blur releases lack `BlurTargetView` and crash at `LoginUiProvider` mount), and use a solid background color below Android 12, where no blur implementation can render.
+- changed: Replace `react-native-keyboard-aware-scroll-view`, unmaintained since 2022, with the `KeyboardAwareScrollView` from `react-native-keyboard-controller`. The old component positions the keyboard with `findNodeHandle` and `UIManager.measureInWindow`, which the new architecture only serves through a compatibility shim. Host apps must now provide `react-native-keyboard-controller`, and its `KeyboardProvider` must wrap the host app for the keyboard-aware scenes to track the keyboard (they render, but do not scroll, without it).
+- changed: Upgrade react-native-airship to 0.3.0 and react-native-patina to 0.2.0, matching the versions edge-react-gui installs so the app no longer ends up with two copies of each.
+- fixed: Type the fifteen `Airship.show` calls that were relying on the modal to infer their result type, which airship 0.2.10 stopped doing.
+- changed: Draw gradients with `expo-linear-gradient` instead of `react-native-linear-gradient`, which has no codegen spec and so renders through the new architecture's legacy view-manager interop. Host apps must now provide `expo-linear-gradient`. **Breaking:** themes now declare gradient colors as a tuple of two or more colors, which `LinearGradient` requires — a plain `string[]` theme field no longer type-checks, and a one-color gradient throws at mount.
+- fixed: Dev-mode render error on the password login scene ("[Worklets] Cannot copy value of type `Date`") by capturing only the saved-user count in animation worklets.
+- fixed: Crash on Android when mounting text inputs under React Native's new architecture (Fabric rejects the fontSize of 0 that side icons animate to at rest).
+
 ## 3.37.2 (2026-08-31)
 
 - fixed: Expose button spinner IDs on iOS

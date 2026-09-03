@@ -71,6 +71,11 @@ export const EdgeText = (props: LabelProps) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  // Android's new architecture shrinks auto-sized text far below
+  // `minimumFontScale`, leaving labels illegibly small, so let text truncate
+  // there instead of shrinking:
+  const autoShrink = Platform.OS !== 'android' && !disableFontScaling
+
   let { numberOfLines = 1 } = props
   if (typeof children === 'string' && children.includes('\n')) {
     numberOfLines = numberOfLines + (children.match(/\n/g) ?? []).length
@@ -81,7 +86,7 @@ export const EdgeText = (props: LabelProps) => {
       allowFontScaling={false}
       style={[styles.common, style, androidAdjustTextStyle(theme)]}
       numberOfLines={numberOfLines}
-      adjustsFontSizeToFit={!disableFontScaling}
+      adjustsFontSizeToFit={autoShrink}
       minimumFontScale={0.65}
       {...rest}
     >

@@ -15,9 +15,13 @@ The login UI depends on some extra external native libraries, which you will hav
 - @react-native-community/datetimepicker v6
 - disklet v0.5
 - edge-core-js v1
+- expo-blur v57
+  - Requires the [Expo modules system](https://docs.expo.dev/bare/installing-expo-modules/); older expo-blur releases lack `BlurTargetView` and will not work.
+- expo-linear-gradient v57
 - react-native-email-link v1
 - react-native-gesture-handler v2
-- react-native-linear-gradient v2
+- react-native-keyboard-controller v1.22
+  - Mount its `KeyboardProvider` above your app so the login scenes can scroll around the keyboard.
 - react-native-localize v2
 - react-native-permissions v3
   - Activate the [notification permission for iOS](https://www.npmjs.com/package/react-native-permissions#iOS).
@@ -32,7 +36,7 @@ The login UI depends on some extra external native libraries, which you will hav
   - We use AntDesign, Entypo, MaterialIcons, FontAwesome, FontAwesome5, and SimpleLineIcons.
 - react-native-webview v13
 - rn-id-blurview v1
-- react-native-haptic-feedback v1 (optional)
+- react-native-haptic-feedback v3 (optional)
 
 To initialize the Edge core library, your application needs to mount the `MakeEdgeContext` component and keep it around for the lifetime of the app. The `MakeEdgeContext` component will create and manage an `EdgeContext` object.
 

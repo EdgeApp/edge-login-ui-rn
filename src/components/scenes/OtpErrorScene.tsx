@@ -152,7 +152,7 @@ export function OtpErrorScene(props: Props) {
       })
     }
 
-    Airship.show(bridge => (
+    Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         autoCapitalize="characters"

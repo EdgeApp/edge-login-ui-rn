@@ -3,10 +3,10 @@
  * edge-login-ui-rn!
  */
 
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import type { TextStyle, ViewStyle } from 'react-native'
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
