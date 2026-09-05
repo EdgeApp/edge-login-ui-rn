@@ -97,6 +97,11 @@ export interface FilledTextInputProps extends SpaceProps {
   // Unless 'autoFocus' is passed explicitly in the props, Search Bars 'autoFocus' and 'regular' text inputs don't.
   autoFocus?: boolean // Defaults to 'true'
 
+  /**
+   * autoSelect: If true, the text input will be selected when focused.
+   */
+  autoSelect?: boolean
+
   // Unless 'blurOnClear' is passed explicitly in the props, Search Bars calls 'blur' when cleared and text inputs don't call 'blur' when cleared.
   blurOnClear?: boolean // Defaults to 'false'
 
@@ -151,6 +156,7 @@ export const FilledTextInput = React.forwardRef<
     autoCapitalize = props.secureTextEntry === true ? 'none' : undefined,
     autoCorrect,
     autoFocus = false,
+    autoSelect = false,
     blurOnClear = false,
     blurOnSubmit,
     disabled = false,
@@ -344,6 +350,7 @@ export const FilledTextInput = React.forwardRef<
               returnKeyType={returnKeyType}
               accessibilityState={{ disabled }}
               autoFocus={autoFocus}
+              selectTextOnFocus={autoSelect}
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
               minDecimals={minDecimals}
