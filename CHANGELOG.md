@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Select the username text when the login field gains focus.
+
 ## 3.37.2 (2026-08-31)
 
 - fixed: Expose button spinner IDs on iOS
