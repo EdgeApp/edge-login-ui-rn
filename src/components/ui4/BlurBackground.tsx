@@ -9,6 +9,7 @@ import { cacheStyles } from 'react-native-patina'
 import { BlurView } from 'rn-id-blurview'
 
 import { Theme, useTheme } from '../services/ThemeContext'
+import { absoluteFill } from '../../util/absoluteFill'
 
 const isAndroid = Platform.OS === 'android'
 
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
 
 const getStyles = cacheStyles((theme: Theme) => ({
   blurView: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFill,
     // We need this backgroundColor because Android applies an overlay to the
     // entire screen for the BlurView by default. We change this default
     // behavior with the transparent overlayColor, so we add this background
