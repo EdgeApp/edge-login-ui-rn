@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { useHandler } from '../../hooks/useHandler'
+import { absoluteFill } from '../../util/absoluteFill'
 import { triggerHaptic } from '../../util/haptic'
 import {
   fixSides,
@@ -169,7 +170,7 @@ export const EdgeCard = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   backgroundFill: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFill,
     borderRadius: theme.cardBorderRadius,
     backgroundColor: theme.cardBaseColor,
     overflow: 'hidden'
@@ -185,7 +186,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'absolute'
   },
   overlayContainer: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFill,
     alignItems: 'center',
     backgroundColor: theme.cardOverlayDisabled,
     borderRadius: theme.cardBorderRadius,

@@ -1,11 +1,12 @@
 import { asMaybeChallengeError } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
 import { WebView, WebViewNavigation } from 'react-native-webview'
 
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
+import { absoluteFill } from '../../util/absoluteFill'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CloseIcon } from '../icons/ThemedIcons'
 import { Airship } from '../services/AirshipInstance'
@@ -129,7 +130,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
 
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFill,
     alignItems: 'center',
     justifyContent: 'center'
   },
