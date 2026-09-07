@@ -6,10 +6,9 @@ import { BlurTargetView, BlurView as ExpoBlurView } from 'expo-blur'
 import React from 'react'
 import { Platform, StyleSheet, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import { BlurView } from 'rn-id-blurview'
 
-import { Theme, useTheme } from '../services/ThemeContext'
 import { absoluteFill } from '../../util/absoluteFill'
+import { Theme, useTheme } from '../services/ThemeContext'
 
 const isAndroid = Platform.OS === 'android'
 
@@ -90,10 +89,10 @@ export const BlurBackground = (): React.ReactElement | null => {
   if (isBlurDisabled) return null
   if (isAndroid) return <AndroidBlur rounded />
   return (
-    <BlurView
-      blurType={theme.isDark ? 'dark' : 'light'}
+    <ExpoBlurView
+      tint={theme.isDark ? 'dark' : 'light'}
+      intensity={100}
       style={stylesLocal.blurView}
-      overlayColor="rgba(0, 0, 0, 0)"
     />
   )
 }
@@ -104,16 +103,7 @@ const styles = StyleSheet.create({
 
 const getStyles = cacheStyles((theme: Theme) => ({
   blurView: {
-    ...absoluteFill,
-    // We need this backgroundColor because Android applies an overlay to the
-    // entire screen for the BlurView by default. We change this default
-    // behavior with the transparent overlayColor, so we add this background
-    // color to compensate and to match iOS colors/shades.
-    backgroundColor: isAndroid
-      ? theme.isDark
-        ? '#161616aa'
-        : '#ffffff55'
-      : undefined
+    ...absoluteFill
   },
   clip: {
     overflow: 'hidden'

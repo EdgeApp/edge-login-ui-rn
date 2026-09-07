@@ -3,6 +3,7 @@
 ## Unreleased
 
 - fixed: Absolutely positioned backgrounds collapse to nothing on React Native 0.86, which removed `StyleSheet.absoluteFillObject` (spreading it silently yields an empty style). On iOS this left modal sheets with a flat tint and the content sharp behind them, and it also emptied the `EdgeButton`, `EdgeCard` and `ChallengeModal` background layers. These now use a spreadable absolute-fill style that works on every host React Native version.
+- changed: Blur on iOS now uses `expo-blur`, the same backend as Android 12+, so `rn-id-blurview` (an old-architecture view manager with no new-architecture support) is no longer a dependency.
 - fixed: Animated font sizes are clamped above zero everywhere, so a scale animation passing through zero cannot crash Android's new architecture.
 - fixed: Modals no longer hide their bottom content behind an open keyboard (the off-screen overhang is dropped while the keyboard is up).
 - fixed: Long labels on Android no longer shrink themselves illegibly small under the new architecture, where Fabric ignores the `minimumFontScale` floor and shrinks text as far as 4dp; they truncate instead. Auto-shrink is disabled on Android for old-architecture hosts too, so their long labels now truncate at full size rather than shrinking.
