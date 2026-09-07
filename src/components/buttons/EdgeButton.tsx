@@ -3,13 +3,14 @@
  * edge-login-ui-rn!
  */
 
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import type { TextStyle, ViewStyle } from 'react-native'
-import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import { ActivityIndicator, Platform, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
+import { absoluteFill } from '../../util/absoluteFill'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import type { Theme } from '../services/ThemeContext'
@@ -244,7 +245,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 
   const pillBackground: ViewStyle = {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFill,
     borderRadius: theme.rem(theme.buttonBorderRadiusRem)
   }
 
@@ -300,7 +301,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontSize: theme.rem(theme.escapeButtonFontSizeRem)
     },
     spinnerOverlay: {
-      ...StyleSheet.absoluteFillObject,
+      ...absoluteFill,
       alignItems: 'center',
       justifyContent: 'center'
     }

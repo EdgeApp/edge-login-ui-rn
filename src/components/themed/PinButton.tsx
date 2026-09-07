@@ -1,5 +1,5 @@
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
-import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'

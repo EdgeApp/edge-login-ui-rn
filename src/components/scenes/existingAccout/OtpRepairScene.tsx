@@ -78,7 +78,7 @@ export function OtpRepairScene(props: Props): JSX.Element {
         return false
       }
     }
-    await Airship.show(bridge => (
+    await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         autoCapitalize="characters"

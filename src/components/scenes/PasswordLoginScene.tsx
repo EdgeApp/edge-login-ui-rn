@@ -7,7 +7,7 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import { Keyboard, LayoutChangeEvent, View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import { cacheStyles } from 'react-native-patina'
 import Animated, {
   Easing,
@@ -107,12 +107,16 @@ export const PasswordLoginScene = (props: Props) => {
   const sAnimationMult = useSharedValue(0)
   const sScrollY = useSharedValue(0)
 
+  // Capture only the count in the worklets below: localUsers entries contain
+  // `lastLogin: Date`, and the worklets runtime cannot serialize Date objects
+  // (dev-mode "[Worklets] Cannot copy value of type `Date`" render error).
+  const localUserCount = localUsers.length
+
   const dFinalHeight = useDerivedValue(() => {
     return (
-      usernameItemHeight *
-      Math.min(localUsers.length, MAX_DISPLAYED_LOCAL_USERS)
+      usernameItemHeight * Math.min(localUserCount, MAX_DISPLAYED_LOCAL_USERS)
     )
-  }, [usernameItemHeight, localUsers])
+  }, [usernameItemHeight, localUserCount])
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (e: { contentOffset: { y: number } }) => {
@@ -125,13 +129,13 @@ export const PasswordLoginScene = (props: Props) => {
   const aGradientOpacity = useAnimatedStyle(() => {
     // Always hide the bottom ScrollView gradient if there's no entries below
     // the lower bound of the ScrollView
-    if (MAX_DISPLAYED_LOCAL_USERS > localUsers.length) return { opacity: 0 }
+    if (MAX_DISPLAYED_LOCAL_USERS > localUserCount) return { opacity: 0 }
 
     // Define the bounds at which the opacity should begin to change
     const minScroll =
-      usernameItemHeight * (localUsers.length - MAX_DISPLAYED_LOCAL_USERS - 1)
+      usernameItemHeight * (localUserCount - MAX_DISPLAYED_LOCAL_USERS - 1)
     const maxScroll =
-      usernameItemHeight * (localUsers.length - MAX_DISPLAYED_LOCAL_USERS)
+      usernameItemHeight * (localUserCount - MAX_DISPLAYED_LOCAL_USERS)
 
     return {
       opacity: interpolate(
@@ -256,7 +260,7 @@ export const PasswordLoginScene = (props: Props) => {
 
   const handleDelete = useHandler((userInfo: LoginUserInfo) => {
     Keyboard.dismiss()
-    Airship.show(bridge => (
+    Airship.show<'cancel' | 'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={lstrings.forget_account}
@@ -365,7 +369,7 @@ export const PasswordLoginScene = (props: Props) => {
   const handleForgotPassword = useHandler(async () => {
     Keyboard.dismiss()
     onLogEvent('Password_Login_Forgot_Password')
-    await Airship.show(bridge => (
+    await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         onSubmit={handleSubmitRecoveryKey}
