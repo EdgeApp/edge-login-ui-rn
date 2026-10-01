@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.37.3 (2026-10-01)
+
 - fixed: Select the username text when the login field gains focus.
 
 ## 3.37.2 (2026-08-31)
