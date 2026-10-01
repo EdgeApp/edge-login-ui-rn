@@ -452,6 +452,7 @@ export const PasswordLoginScene = (props: Props) => {
             autoCapitalize="none"
             autoCorrect={false}
             autoFocus={false}
+            selectTextOnFocus
             clearIcon={!hasSavedUsers}
             error={usernameErrorMessage}
             placeholder={lstrings.username}
