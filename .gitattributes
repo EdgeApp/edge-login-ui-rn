@@ -1,3 +1,4 @@
-# Cursor Bugbot skips files marked linguist-generated. This keeps the changelog
-# out of its reviews. GitHub also collapses the file in PR diffs.
+# Cursor Bugbot skips files marked linguist-generated. This keeps docs and the
+# changelog out of its reviews. GitHub also collapses these files in PR diffs.
+docs/** linguist-generated=true
 CHANGELOG.md linguist-generated=true
