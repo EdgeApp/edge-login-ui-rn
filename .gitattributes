@@ -1,0 +1,3 @@
+# Cursor Bugbot skips files marked linguist-generated. This keeps the changelog
+# out of its reviews. GitHub also collapses the file in PR diffs.
+CHANGELOG.md linguist-generated=true
