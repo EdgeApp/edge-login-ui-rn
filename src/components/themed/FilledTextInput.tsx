@@ -211,8 +211,9 @@ export const FilledTextInput = React.forwardRef<
     setNativeProps
   }))
 
-  // Animates between 0 and 1 based our disabled state:
-  const disableAnimation = useSharedValue(0)
+  // Animates between 0 and 1 based our disabled state, starting at the
+  // mounted state so the input doesn't flash its enabled look on entry:
+  const disableAnimation = useSharedValue(disabled ? 1 : 0)
   React.useEffect(() => {
     disableAnimation.value = withTiming(disabled ? 1 : 0)
   }, [disableAnimation, disabled])
@@ -634,10 +635,10 @@ const PlaceholderText = styled(Animated.Text)<{
             focusAnimation,
             disableAnimation
           ),
-          fontSize: interpolate(
-            shift.value,
-            [0, 1],
-            [fontSizeBase, fontSizeScaled]
+          // Clamp in case an animated scale passes through 0:
+          fontSize: Math.max(
+            interpolate(shift.value, [0, 1], [fontSizeBase, fontSizeScaled]),
+            1
           )
         }
       })
@@ -675,7 +676,8 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
     },
     useAnimatedStyle(() => ({
       color: interpolateTextColor(focusAnimation, disableAnimation),
-      fontSize: scale.value * rem
+      // Clamp in case an animated scale passes through 0:
+      fontSize: Math.max(scale.value * rem, 1)
     }))
   ]
 })
@@ -710,7 +712,8 @@ const StyledNumericInput = styledWithRef(NumericInput)<{
     },
     useAnimatedStyle(() => ({
       color: interpolateTextColor(focusAnimation, disableAnimation),
-      fontSize: scale.value * rem
+      // Clamp in case an animated scale passes through 0:
+      fontSize: Math.max(scale.value * rem, 1)
     }))
   ]
 })

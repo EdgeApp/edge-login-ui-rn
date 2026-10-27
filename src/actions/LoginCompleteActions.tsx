@@ -34,7 +34,7 @@ export const completeLogin = (account: EdgeAccount) => async (
 
   // Recovery logins:
   if (account.recoveryLogin) {
-    await Airship.show(bridge => (
+    await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         message={lstrings.recovery_successful}

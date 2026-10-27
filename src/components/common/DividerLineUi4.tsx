@@ -1,7 +1,8 @@
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
-import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
+import type { GradientColors } from '../../types/Theme'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
 
@@ -12,7 +13,7 @@ interface Props {
   marginRem?: number[] | number
 
   /** Unused by current Edge themes, but supported for third-party integrations. */
-  colors?: string[]
+  colors?: GradientColors
 }
 
 const DEFAULT_MARGIN_REM = 0.5
@@ -35,7 +36,10 @@ export const DividerLineUi4 = (props: Props): React.ReactElement => {
       ? styles.extendRight
       : styles.default
 
-  const dividerColors = colors ?? [theme.lineDivider, theme.lineDivider]
+  const dividerColors: GradientColors = colors ?? [
+    theme.lineDivider,
+    theme.lineDivider
+  ]
 
   return (
     <LinearGradient

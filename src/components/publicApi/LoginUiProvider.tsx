@@ -4,6 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { asOptionalTheme, Theme } from '../../types/Theme'
 import { Airship } from '../services/AirshipInstance'
 import { changeTheme, getTheme, ThemeProvider } from '../services/ThemeContext'
+import { BlurTarget, BlurTargetProvider } from '../ui4/BlurBackground'
 
 /**
  * We use this context to determine if `LoginUiProvider` is mounted, and whether
@@ -47,7 +48,11 @@ function LoginUiProviderComponent(props: Props): JSX.Element {
     >
       <SafeAreaProvider>
         <ThemeProvider>
-          <Airship>{props.children}</Airship>
+          <BlurTargetProvider>
+            <Airship>
+              <BlurTarget>{props.children}</BlurTarget>
+            </Airship>
+          </BlurTargetProvider>
         </ThemeProvider>
       </SafeAreaProvider>
     </loginUiContext.Provider>

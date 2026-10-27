@@ -54,7 +54,10 @@ const palette = {
   warningOuter: 'rgba(119, 43, 15, 0.44)',
   warningInner: 'rgba(130, 91, 33, 0.44)',
   errorOuter: 'rgba(148, 71, 46, 0.44)',
-  errorInner: 'rgba(150, 44, 49, 0.44)'
+  errorInner: 'rgba(150, 44, 49, 0.44)',
+
+  // Solid stand-in for blur where it cannot render (Android below 12):
+  noBlurModal: '#2b2b2b'
 }
 
 export const edgeDark: Theme = {
@@ -83,6 +86,7 @@ export const edgeDark: Theme = {
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
   modalBackground: palette.whiteOp37,
+  modalBackgroundNoBlur: palette.noBlurModal,
   modalSceneOverlayColor: palette.black,
   modalDragbarColor: palette.darkGreyOp30,
 

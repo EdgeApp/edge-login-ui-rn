@@ -20,8 +20,23 @@ const asGradientCoords = asObject({
 })
 type GradientCoords = ReturnType<typeof asGradientCoords>
 
+/**
+ * A gradient needs at least two stops to interpolate between, which
+ * `LinearGradient` enforces in its own prop types. A plain `string[]` says
+ * nothing about length, so themes declare the tuple instead.
+ */
+export type GradientColors = readonly [string, string, ...string[]]
+
+const asGradientColors: Cleaner<GradientColors> = raw => {
+  const [first, second, ...rest] = asArray(asString)(raw)
+  if (first == null || second == null) {
+    throw new TypeError('A gradient needs at least two colors')
+  }
+  return [first, second, ...rest]
+}
+
 const asThemeGradientParams = asObject({
-  colors: asArray(asString),
+  colors: asGradientColors,
   start: asGradientCoords,
   end: asGradientCoords
 })
@@ -103,6 +118,7 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
   modalBorderWidth: asOptional(asNumber),
   modalBorderRadiusRem: asOptional(asNumber),
   modalBackground: asOptional(asString),
+  modalBackgroundNoBlur: asOptional(asString),
   modalSceneOverlayColor: asOptional(asString),
   modalDragbarColor: asOptional(asString),
 
@@ -123,7 +139,7 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
 
   keypadButtonOutline: asOptional(asString),
   keypadButtonOutlineWidth: asOptional(asNumber),
-  keypadButton: asOptional(asArray(asString)),
+  keypadButton: asOptional(asGradientColors),
   keypadButtonColorStart: asOptional(asGradientCoords),
   keypadButtonColorEnd: asOptional(asGradientCoords),
   keypadButtonText: asOptional(asString),
@@ -135,7 +151,7 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
 
   primaryButtonOutline: asOptional(asString),
   primaryButtonOutlineWidth: asOptional(asNumber),
-  primaryButton: asOptional(asArray(asString)),
+  primaryButton: asOptional(asGradientColors),
   primaryButtonColorStart: asOptional(asGradientCoords),
   primaryButtonColorEnd: asOptional(asGradientCoords),
   primaryButtonText: asOptional(asString),
@@ -146,7 +162,7 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
 
   secondaryButtonOutline: asOptional(asString),
   secondaryButtonOutlineWidth: asOptional(asNumber),
-  secondaryButton: asOptional(asArray(asString)),
+  secondaryButton: asOptional(asGradientColors),
   secondaryButtonColorStart: asOptional(asGradientCoords),
   secondaryButtonColorEnd: asOptional(asGradientCoords),
   secondaryButtonText: asOptional(asString),
@@ -157,7 +173,7 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
 
   escapeButtonOutline: asOptional(asString),
   escapeButtonOutlineWidth: asOptional(asNumber),
-  escapeButton: asOptional(asArray(asString)),
+  escapeButton: asOptional(asGradientColors),
   escapeButtonColorStart: asOptional(asGradientCoords),
   escapeButtonColorEnd: asOptional(asGradientCoords),
   escapeButtonText: asOptional(asString),
@@ -168,7 +184,7 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
 
   pinUsernameButtonOutline: asOptional(asString),
   pinUsernameButtonOutlineWidth: asOptional(asNumber),
-  pinUsernameButton: asOptional(asArray(asString)),
+  pinUsernameButton: asOptional(asGradientColors),
   pinUsernameButtonColorStart: asOptional(asGradientCoords),
   pinUsernameButtonColorEnd: asOptional(asGradientCoords),
   pinUsernameButtonText: asOptional(asString),
@@ -254,6 +270,8 @@ export interface Theme {
   modalBorderWidth: number
   modalBorderRadiusRem: number
   modalBackground: string
+  // Solid stand-in for blur where it cannot render (Android below 12):
+  modalBackgroundNoBlur: string
   modalSceneOverlayColor: string
   modalDragbarColor: string
 
@@ -274,7 +292,7 @@ export interface Theme {
 
   keypadButtonOutline: string
   keypadButtonOutlineWidth: number
-  keypadButton: string[]
+  keypadButton: GradientColors
   keypadButtonColorStart: GradientCoords
   keypadButtonColorEnd: GradientCoords
   keypadButtonText: string
@@ -286,7 +304,7 @@ export interface Theme {
 
   primaryButtonOutline: string
   primaryButtonOutlineWidth: number
-  primaryButton: string[]
+  primaryButton: GradientColors
   primaryButtonColorStart: GradientCoords
   primaryButtonColorEnd: GradientCoords
   primaryButtonText: string
@@ -297,7 +315,7 @@ export interface Theme {
 
   secondaryButtonOutline: string
   secondaryButtonOutlineWidth: number
-  secondaryButton: string[]
+  secondaryButton: GradientColors
   secondaryButtonColorStart: GradientCoords
   secondaryButtonColorEnd: GradientCoords
   secondaryButtonText: string
@@ -308,7 +326,7 @@ export interface Theme {
 
   escapeButtonOutline: string
   escapeButtonOutlineWidth: number
-  escapeButton: string[]
+  escapeButton: GradientColors
   escapeButtonColorStart: GradientCoords
   escapeButtonColorEnd: GradientCoords
   escapeButtonText: string
@@ -319,7 +337,7 @@ export interface Theme {
 
   dangerButtonOutline: string
   dangerButtonOutlineWidth: number
-  dangerButton: string[]
+  dangerButton: GradientColors
   dangerButtonColorStart: GradientCoords
   dangerButtonColorEnd: GradientCoords
   dangerButtonText: string
@@ -330,7 +348,7 @@ export interface Theme {
 
   pinUsernameButtonOutline: string
   pinUsernameButtonOutlineWidth: number
-  pinUsernameButton: string[]
+  pinUsernameButton: GradientColors
   pinUsernameButtonColorStart: GradientCoords
   pinUsernameButtonColorEnd: GradientCoords
   pinUsernameButtonText: string
