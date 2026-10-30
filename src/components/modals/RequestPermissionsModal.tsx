@@ -15,43 +15,40 @@ interface Props {
   bridge: AirshipBridge<Required<PermissionsModalChoices> | undefined>
   choices: PermissionsModalChoices
   message: string
+  // Hides the enable button when only the Settings app can fix the problem:
+  settingsOnly?: boolean
 }
 
 type SwitchKey = 'optInPriceChanges' | 'optInMarketing'
 
 export interface PermissionsModalChoices {
-  enable?: boolean
+  goToSettings?: boolean
   optInPriceChanges: boolean
   optInMarketing: boolean
 }
 
 export function RequestPermissionsModal(props: Props) {
-  const { bridge, choices, message } = props
+  const { bridge, choices, message, settingsOnly = false } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const [selection, setSelection] = React.useState<
     Required<PermissionsModalChoices>
   >({
-    enable: false,
+    goToSettings: false,
     ...choices
   })
 
   const handleCancel = () => bridge.resolve(undefined)
+  const handleEnable = () => bridge.resolve(selection)
+  const handleGoToSettings = () =>
+    bridge.resolve({ ...selection, goToSettings: true })
 
-  const handlePress = (
-    choice: keyof PermissionsModalChoices,
-    value?: boolean
-  ) => {
-    const newSelection = {
-      ...selection,
-      [choice]: value ?? !selection[choice]
-    }
-    setSelection(newSelection)
+  const handleToggle = (key: SwitchKey) =>
+    setSelection({ ...selection, [key]: !selection[key] })
 
-    // A confirmation button was pressed:
-    if (choice === 'enable') {
-      bridge.resolve(newSelection)
-    }
+  const goToSettingsButton = {
+    label: lstrings.go_to_settings,
+    onPress: handleGoToSettings
   }
 
   const renderSwitchRow = (params: {
@@ -61,7 +58,7 @@ export function RequestPermissionsModal(props: Props) {
   }) => {
     const { key, label, disabled } = params
     const value = selection[key]
-    const handleRowPress = () => handlePress(key)
+    const handleRowPress = () => handleToggle(key)
     return (
       <EdgeTouchableOpacity
         style={styles.row}
@@ -128,14 +125,15 @@ export function RequestPermissionsModal(props: Props) {
         label: lstrings.notifications_opt_in_marketing
       })}
       <ButtonsView
-        primary={{
-          label: lstrings.enable,
-          onPress: () => handlePress('enable', true)
-        }}
-        tertiary={{
-          label: lstrings.cancel,
-          onPress: () => handlePress('enable', false)
-        }}
+        primary={
+          settingsOnly
+            ? goToSettingsButton
+            : {
+                label: lstrings.enable_notifications,
+                onPress: handleEnable
+              }
+        }
+        secondary={settingsOnly ? undefined : goToSettingsButton}
         parentType="modal"
       />
     </EdgeModal>

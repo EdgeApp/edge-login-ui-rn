@@ -123,6 +123,7 @@ export const showNotificationPermissionReminder = async (
       bridge={bridge}
       message={permissionMessage}
       choices={choiceMap}
+      settingsOnly={notifEnabled === 1 || isNotificationBlocked}
     />
   ))
 
@@ -131,7 +132,7 @@ export const showNotificationPermissionReminder = async (
   // Don't do anything if the user didn't make a choice (dismissed modal)
   if (choices == null) return true
   const newPermissionsInfo: NotificationPermissionsInfo = {
-    isNotificationBlocked: !choices?.enable,
+    isNotificationBlocked: false,
     notificationOptIns: {
       ignoreMarketing: !choices.optInMarketing,
       ignorePriceChanges: !choices.optInPriceChanges
@@ -143,21 +144,20 @@ export const showNotificationPermissionReminder = async (
     JSON.stringify(newPermissionsInfo)
   )
 
-  if (choices.enable) {
-    if (notificationStatus === RESULTS.DENIED) {
-      requestNotifications(
-        isIos ? ['alert', 'badge', 'sound'] : []
-      ).catch(error => console.log(error))
-    }
-    if (
-      notificationStatus === RESULTS.BLOCKED ||
-      statusAppRefresh === RESULTS.BLOCKED
-    ) {
-      openSettings().catch(error => console.log(error))
-    }
-    // Only log enable, not deny/block due to our privacy policy.
-    onLogEvent('Permission_Modal_Notification_Enable')
+  if (!choices.goToSettings && notificationStatus === RESULTS.DENIED) {
+    requestNotifications(
+      isIos ? ['alert', 'badge', 'sound'] : []
+    ).catch(error => console.log(error))
   }
+  if (
+    choices.goToSettings ||
+    notificationStatus === RESULTS.BLOCKED ||
+    statusAppRefresh === RESULTS.BLOCKED
+  ) {
+    openSettings().catch(error => console.log(error))
+  }
+  // Only log enable, not deny/block due to our privacy policy.
+  onLogEvent('Permission_Modal_Notification_Enable')
 
   if (onNotificationPermit != null) onNotificationPermit(newPermissionsInfo)
 
