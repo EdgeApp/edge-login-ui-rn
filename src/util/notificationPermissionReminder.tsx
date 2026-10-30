@@ -41,7 +41,7 @@ Logic for showing notification/app refresh request message:
          |  |  ┌ App Refresh Enabled
          |  |  |  */
 logicMap[0][0][0] = lstrings.notifications_and_refresh_permissions_branded_s
-logicMap[0][0][1] = lstrings.notifications_permissions_branded_s
+logicMap[0][0][1] = lstrings.notifications_permissions
 logicMap[0][1][0] = lstrings.refresh_permission_branded_s
 logicMap[0][1][1] = undefined
 logicMap[1][0][0] = lstrings.refresh_permission_branded_s

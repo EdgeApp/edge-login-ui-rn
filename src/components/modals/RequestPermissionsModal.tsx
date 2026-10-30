@@ -91,7 +91,6 @@ export function RequestPermissionsModal(props: Props) {
     <EdgeModal
       bridge={bridge}
       title={lstrings.security_is_our_priority_modal_title}
-      warning
       onCancel={handleCancel}
     >
       <ModalMessage>{message}</ModalMessage>
