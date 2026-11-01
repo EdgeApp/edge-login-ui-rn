@@ -5,6 +5,8 @@
 - changed: Merge the password and PIN login scenes into one scene with a login-method toggle and a sign-in help sheet.
 - changed: Show either the PIN dots or the biometric toggle on the login scene, never both.
 - changed: Show the same username field on both login flavors.
+- changed: Require a PIN, password, or QR login to restore biometric login after a biometric enrollment change.
+- fixed: Hide the biometric login action on Android once a newly added fingerprint has invalidated it.
 
 ## 4.0.0 (2026-10-27)
 
