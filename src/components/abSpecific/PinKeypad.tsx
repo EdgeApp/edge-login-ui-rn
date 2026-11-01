@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { lstrings } from '../../common/locales/strings'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
+import { BackspaceIcon } from '../icons/ThemedIcons'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { PinButton } from '../themed/PinButton'
 
@@ -92,11 +92,12 @@ export function PinKeypad(props: Props): JSX.Element {
             />
           </View>
           <EdgeTouchableWithoutFeedback
+            testID="pinKeypadBack"
             onPress={() => onPress('back')}
             disabled={disabled}
           >
             <View style={styles.keypadColumnBack}>
-              <MaterialIcon name="backspace" style={styles.keypadKeysBack} />
+              <BackspaceIcon style={styles.keypadKeysBack} />
             </View>
           </EdgeTouchableWithoutFeedback>
         </View>

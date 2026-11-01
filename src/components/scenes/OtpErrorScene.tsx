@@ -97,8 +97,8 @@ export function OtpErrorScene(props: Props) {
     dispatch({
       type: 'NAVIGATE',
       data: {
-        name: 'passwordLogin',
-        params: { username: otpAttempt.username }
+        name: 'login',
+        params: { username: otpAttempt.username, passwordOnly: true }
       }
     })
   })

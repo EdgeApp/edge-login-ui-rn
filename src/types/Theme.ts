@@ -130,6 +130,7 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
   linkText: asOptional(asString),
   positiveText: asOptional(asString),
   deactivatedText: asOptional(asString),
+  selectableRowSubtitle: asOptional(asString),
 
   // Tile:
   tileBackground: asOptional(asString),
@@ -202,6 +203,10 @@ export const asOptionalTheme = asObject<Partial<Theme>>({
   outlineTextInputBorderColorFocused: asOptional(asString),
   outlineTextInputLabelColor: asOptional(asString),
   outlineTextInputLabelColorFocused: asOptional(asString),
+
+  // Login flavor toggle (grey segmented control):
+  loginToggleBackground: asOptional(asString),
+  loginToggleSelected: asOptional(asString),
 
   // Dropdown colors:
   dropdownWarning: asOptional(asString),
@@ -283,6 +288,7 @@ export interface Theme {
   linkText: string
   positiveText: string
   deactivatedText: string
+  selectableRowSubtitle: string
 
   // Tile:
   tileBackground: string
@@ -388,6 +394,10 @@ export interface Theme {
   textInputPlaceholderColorDisabled: string
   textInputPlaceholderColorFocused: string
   textInputSelectionColor: string
+
+  // Login flavor toggle (grey segmented control):
+  loginToggleBackground: string
+  loginToggleSelected: string
 
   // Dropdown colors:
   dropdownWarning: string

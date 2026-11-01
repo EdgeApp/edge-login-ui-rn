@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- changed: Merge the password and PIN login scenes into one scene with a login-method toggle and a sign-in help sheet.
+- changed: Show either the PIN dots or the biometric toggle on the login scene, never both.
+- changed: Show the same username field on both login flavors.
+
 ## 4.0.0 (2026-10-27)
 
 - fixed: Absolutely positioned backgrounds collapse to nothing on React Native 0.86, which removed `StyleSheet.absoluteFillObject` (spreading it silently yields an empty style). On iOS this left modal sheets with a flat tint and the content sharp behind them, and it also emptied the `EdgeButton`, `EdgeCard` and `ChallengeModal` background layers. These now use a spreadable absolute-fill style that works on every host React Native version.
