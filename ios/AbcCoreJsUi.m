@@ -50,7 +50,9 @@ RCT_REMAP_METHOD(setKeychainString, setKeychainString:(NSString *) value
                  resolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [AbcKeychain setKeychainString:value key:key authenticated:YES];
+    if ([AbcKeychain setKeychainString:value key:key authenticated:YES]) {
+        [AbcKeychain saveBiometryStateForKey:key];
+    }
     resolve(nil);
 }
 
@@ -59,7 +61,15 @@ RCT_REMAP_METHOD(clearKeychain, clearKeychain:(NSString *)key
                  rejecter:(RCTPromiseRejectBlock)reject)
 {
     [AbcKeychain setKeychainData:nil key:key authenticated:YES];
+    [AbcKeychain clearBiometryStateForKey:key];
     resolve(nil);
+}
+
+RCT_REMAP_METHOD(hasValidKeychainString, hasValidKeychainString:(NSString *)key
+                 resolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+    resolve(@([AbcKeychain hasValidKeychainString:key]));
 }
 
 RCT_REMAP_METHOD(authenticateTouchID, authenticateTouchID:(NSString *) promptString
