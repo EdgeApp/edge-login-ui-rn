@@ -21,6 +21,7 @@
 
 #define kBiometryTypeTouchID @"TouchID"
 #define kBiometryTypeFaceID @"FaceID"
+#define kBiometryStateKey @"biometryState"
 
 #if TARGET_OS_IPHONE
 
@@ -229,6 +230,49 @@
     return kBiometryTypeTouchID;
   }
   return nil;
+}
+
+// Changes whenever the OS biometric enrollment changes, and is nil when
+// biometrics are unavailable. The OS can also change it across a major
+// version update, which costs the user one trusted login.
++ (NSData *) currentBiometryState;
+{
+  LAContext *context = [LAContext new];
+  if (![context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:nil]) {
+    return nil;
+  }
+  return context.evaluatedPolicyDomainState;
+}
+
++ (NSString *) biometryStateKey:(NSString *)key;
+{
+  return [AbcKeychain createKeyWithUsername:key key:kBiometryStateKey];
+}
+
++ (void) saveBiometryStateForKey:(NSString *)key;
+{
+  [AbcKeychain setKeychainData:[AbcKeychain currentBiometryState]
+                           key:[AbcKeychain biometryStateKey:key]
+                 authenticated:YES];
+}
+
++ (void) clearBiometryStateForKey:(NSString *)key;
+{
+  [AbcKeychain setKeychainData:nil key:[AbcKeychain biometryStateKey:key] authenticated:YES];
+}
+
+// A secret written before this check existed has no saved state. It stays
+// valid until its next write, so an app update does not turn off biometric
+// login for everyone.
++ (BOOL) hasValidKeychainString:(NSString *)key;
+{
+  if ([AbcKeychain getKeychainData:key error:nil] == nil) return NO;
+
+  NSData *savedState = [AbcKeychain getKeychainData:[AbcKeychain biometryStateKey:key] error:nil];
+  if (savedState == nil) return YES;
+
+  NSData *currentState = [AbcKeychain currentBiometryState];
+  return currentState != nil && [currentState isEqualToData:savedState];
 }
 #endif
 
