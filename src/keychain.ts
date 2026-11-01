@@ -143,7 +143,8 @@ export async function getSupportedBiometryType(): Promise<BiometryType> {
 
 /**
  * Looks up the stored biometric secret for a user.
- * Returns undefined if there is no secret, or if the user denies the request.
+ * Returns undefined if there is no secret, the biometric enrollment changed,
+ * or the user denies the request.
  */
 export async function getLoginKey(
   userInfo: EdgeUserInfo,
@@ -155,6 +156,12 @@ export async function getLoginKey(
   const status = getKeychainStatus(file, userInfo)
 
   if (!supported || typeof status !== 'string') {
+    return
+  }
+
+  // Redux can be stale, so a tap cannot rely on the icon having been hidden:
+  if (!(await isBiometricKeyValid(status))) {
+    console.log('Biometric enrollment changed since this login was saved')
     return
   }
 
