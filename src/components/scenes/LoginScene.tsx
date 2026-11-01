@@ -954,6 +954,7 @@ export const LoginScene = (props: Props): React.ReactElement => {
         <EdgeTouchableOpacity
           onPress={handleBiometricId}
           disabled={biometricBusy}
+          testID="biometricLogin"
         >
           <SvgXml
             xml={FaceIdXml}
@@ -969,6 +970,7 @@ export const LoginScene = (props: Props): React.ReactElement => {
         <EdgeTouchableOpacity
           onPress={handleBiometricId}
           disabled={biometricBusy}
+          testID="biometricLogin"
         >
           <FingerprintIcon size={theme.rem(3)} color={theme.iconTappable} />
         </EdgeTouchableOpacity>
