@@ -4,6 +4,7 @@ import { NativeModules, Platform } from 'react-native'
 import { BiometryType } from './components/publicApi/publicTypes'
 import {
   getKeychainStatus,
+  KeychainInfo,
   readKeychainFile,
   saveKeychainStatus
 } from './util/keychainFile'
@@ -46,6 +47,12 @@ interface NativeMethods {
     name: string,
     promptString: string
   ) => Promise<string | undefined>
+
+  /**
+   * True if a secret exists and the current biometric enrollment may read it.
+   * This never prompts and never changes the stored secret.
+   */
+  hasValidKeychainString: (name: string) => Promise<boolean>
 }
 
 const nativeMethods: NativeMethods = NativeModules.AbcCoreJsUi
@@ -174,6 +181,34 @@ export async function getLoginKey(
     } catch (error) {
       console.log(error) // showError?
     }
+  }
+}
+
+/**
+ * Lists the secrets in the keychain file that the current biometric enrollment
+ * can no longer read, per docs/biometric-login-policy.md.
+ */
+export async function getInvalidBiometricKeys(
+  file: KeychainInfo[]
+): Promise<string[]> {
+  const keys = file
+    .map(info => info.key)
+    .filter((key): key is string => typeof key === 'string')
+  const valid = await Promise.all(keys.map(isBiometricKeyValid))
+  return keys.filter((_, index) => !valid[index])
+}
+
+/**
+ * A native failure hides biometric login, since the read it guards would
+ * fail or could not be trusted. The list is rebuilt on every load, so a
+ * transient failure only lasts until the next one.
+ */
+async function isBiometricKeyValid(key: string): Promise<boolean> {
+  try {
+    return await nativeMethods.hasValidKeychainString(key)
+  } catch (error: unknown) {
+    console.log(error)
+    return false
   }
 }
 

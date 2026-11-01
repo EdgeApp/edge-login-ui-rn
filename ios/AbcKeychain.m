@@ -21,6 +21,7 @@
 
 #define kBiometryTypeTouchID @"TouchID"
 #define kBiometryTypeFaceID @"FaceID"
+#define kBiometryStateKey @"biometryState"
 
 #if TARGET_OS_IPHONE
 
@@ -229,6 +230,65 @@
     return kBiometryTypeTouchID;
   }
   return nil;
+}
+
+// Changes whenever the OS biometric enrollment changes, and is nil when
+// biometrics are unavailable. The OS can also change it across a major
+// version update, which costs the user one trusted login.
++ (NSData *) currentBiometryState;
+{
+  LAContext *context = [LAContext new];
+  if (![context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:nil]) {
+    return nil;
+  }
+  return context.evaluatedPolicyDomainState;
+}
+
++ (NSString *) biometryStateKey:(NSString *)key;
+{
+  return [AbcKeychain createKeyWithUsername:key key:kBiometryStateKey];
+}
+
++ (void) saveBiometryStateForKey:(NSString *)key;
+{
+  [AbcKeychain setKeychainData:[AbcKeychain currentBiometryState]
+                           key:[AbcKeychain biometryStateKey:key]
+                 authenticated:YES];
+}
+
++ (void) clearBiometryStateForKey:(NSString *)key;
+{
+  [AbcKeychain setKeychainData:nil key:[AbcKeychain biometryStateKey:key] authenticated:YES];
+}
+
++ (BOOL) hasKeychainItem:(NSString *)key error:(NSError **)error;
+{
+  NSDictionary *query = @{(__bridge id)kSecClass:(__bridge id)kSecClassGenericPassword,
+                          (__bridge id)kSecAttrService:SEC_ATTR_SERVICE,
+                          (__bridge id)kSecAttrAccount:key};
+  OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, NULL);
+
+  if (status == noErr) return YES;
+  if (status != errSecItemNotFound && error) {
+    *error = [NSError errorWithDomain:@"Airbitz" code:status
+                             userInfo:@{NSLocalizedDescriptionKey:@"SecItemCopyMatching error"}];
+  }
+  return NO;
+}
+
+// A secret with no saved state was written before this check existed, so it
+// needs a trusted login. Every login rewrites the secret and records the
+// current enrollment, and a biometric login only runs while the state
+// matches, so only a trusted login can record a changed enrollment.
++ (BOOL) hasValidKeychainString:(NSString *)key error:(NSError **)error;
+{
+  if (![AbcKeychain hasKeychainItem:key error:error]) return NO;
+
+  NSData *savedState = [AbcKeychain getKeychainData:[AbcKeychain biometryStateKey:key] error:error];
+  if (savedState == nil) return NO;
+
+  NSData *currentState = [AbcKeychain currentBiometryState];
+  return currentState != nil && [currentState isEqualToData:savedState];
 }
 #endif
 

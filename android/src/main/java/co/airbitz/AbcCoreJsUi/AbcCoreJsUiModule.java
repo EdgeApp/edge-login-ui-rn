@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Handler;
+import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,6 +38,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.security.Key;
+import java.security.KeyStore;
+import javax.crypto.Cipher;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import okio.ByteString;
@@ -45,6 +49,7 @@ public class AbcCoreJsUiModule extends ReactContextBaseJavaModule {
   private static final String TAG = AbcCoreJsUiModule.class.getSimpleName();
   private static final String ABC_CORE_JS_UI_MODULE = "AbcCoreJsUi";
   private static final String FINGERPRINT_SUPPORTED_NAME = "Fingerprint";
+  private static final String KEY_STORE_ALIAS = "AirbitzKeyStore";
   private Context AppContext;
   private Activity mActivity = null;
   private SharedPreferencesStorage mStorage;
@@ -140,6 +145,36 @@ public class AbcCoreJsUiModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void supportsTouchId(Promise promise) {
     promise.resolve(checkHardwareSupport());
+  }
+
+  /**
+   * Reports whether a stored secret can still be decrypted, without touching it. Once a biometric
+   * enrollment change invalidates the keystore key, any Whorlwind read or write deletes every
+   * stored secret and regenerates the key, so this check has to stay outside Whorlwind.
+   */
+  @ReactMethod
+  public void hasValidKeychainString(String key, Promise promise) {
+    if (!checkHardwareSupport() || mStorage.get(key) == null) {
+      promise.resolve(false);
+      return;
+    }
+
+    try {
+      KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+      keyStore.load(null);
+      Key decryptKey = keyStore.getKey(KEY_STORE_ALIAS, null);
+      // Whorlwind wipes every secret when either of these is missing.
+      if (decryptKey == null || keyStore.getCertificate(KEY_STORE_ALIAS) == null) {
+        promise.resolve(false);
+        return;
+      }
+      Cipher.getInstance("RSA/ECB/PKCS1Padding").init(Cipher.DECRYPT_MODE, decryptKey);
+      promise.resolve(true);
+    } catch (KeyPermanentlyInvalidatedException e) {
+      promise.resolve(false);
+    } catch (Exception e) {
+      promise.reject(e);
+    }
   }
 
   @ReactMethod
@@ -272,7 +307,7 @@ public class AbcCoreJsUiModule extends ReactContextBaseJavaModule {
       mStorage =
           new SharedPreferencesStorage(getReactApplicationContext(), "co.airbitz.airbitz.storage");
       mActivity = getCurrentActivity();
-      mWhorlwind = Whorlwind.create(mActivity, mStorage, "AirbitzKeyStore");
+      mWhorlwind = Whorlwind.create(mActivity, mStorage, KEY_STORE_ALIAS);
       if (mWhorlwind != null && mWhorlwind.canStoreSecurely()) {
         if (isFingerprintAvailable() && !RootChecker.isDeviceRooted()) {
           mHasSecureElement = true;
