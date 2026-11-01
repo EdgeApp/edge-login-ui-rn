@@ -8,7 +8,13 @@ import {
   NetworkError
 } from 'edge-core-js'
 import * as React from 'react'
-import { Keyboard, LayoutChangeEvent, Platform, View } from 'react-native'
+import {
+  AppState,
+  Keyboard,
+  LayoutChangeEvent,
+  Platform,
+  View
+} from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import Animated, {
   Easing,
@@ -25,6 +31,7 @@ import { sprintf } from 'sprintf-js'
 
 import { launchPasswordRecovery } from '../../actions/LoginAction'
 import { completeLogin } from '../../actions/LoginCompleteActions'
+import { loadTouchState } from '../../actions/TouchActions'
 import { FaceIdXml } from '../../assets/xml/FaceId'
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
@@ -618,7 +625,11 @@ export const LoginScene = (props: Props): React.ReactElement => {
           `Touch to login user: "${getDisplayUsername(userInfo)}"`,
           lstrings.login_with_password
         )
-        if (loginKey == null) return
+        if (loginKey == null) {
+          // The refusal may mean the enrollment changed, so drop a stale icon:
+          await dispatch(loadTouchState())
+          return
+        }
 
         const account = await context.loginWithKey(loginId, loginKey, {
           ...accountOptions,
@@ -716,6 +727,30 @@ export const LoginScene = (props: Props): React.ReactElement => {
 
     return () => clearTimeout(id)
   }, [pinErrorInfo])
+
+  // A biometric enrollment change happens in the OS settings app, so re-check
+  // on return from the background. A biometric prompt only makes the app
+  // `inactive`, which must not count as a return:
+  React.useEffect(() => {
+    let wasBackgrounded = false
+    const subscription = AppState.addEventListener('change', nextState => {
+      if (nextState === 'background') {
+        wasBackgrounded = true
+      } else if (nextState === 'active' && wasBackgrounded) {
+        wasBackgrounded = false
+        dispatch(loadTouchState()).catch(showError)
+      }
+    })
+    return () => subscription.remove()
+  }, [dispatch])
+
+  // Losing biometric login can leave an account with no PIN to enter:
+  React.useEffect(() => {
+    if (flavor === 'pin' && activeUser != null && !pinEnabled) {
+      setFlavor('password')
+      showToast(lstrings.pin_not_enabled_enter_password)
+    }
+  }, [activeUser, flavor, pinEnabled])
 
   // Re-seed the scene when a new NAVIGATE to `login` arrives, even one whose
   // params repeat the current values
