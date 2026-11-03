@@ -96,6 +96,7 @@ export function OtpRepairScene(props: Props): JSX.Element {
     const account = await Airship.show<EdgeAccount | undefined>(bridge => (
       <QrCodeModal
         bridge={bridge}
+        branding={branding}
         accountOptions={accountOptions}
         context={context}
       />

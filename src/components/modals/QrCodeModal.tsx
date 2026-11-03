@@ -12,6 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
+import { Branding } from '../../types/Branding'
 import { QrCode } from '../common/QrCode'
 import { showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -20,6 +21,7 @@ import { EdgeModal } from './EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<EdgeAccount | undefined>
+  branding: Branding
 
   // We cannot call `useImport` from an Airship component:
   accountOptions: EdgeAccountOptions
@@ -27,7 +29,7 @@ interface Props {
 }
 
 export function QrCodeModal(props: Props) {
-  const { accountOptions, bridge, context } = props
+  const { accountOptions, branding, bridge, context } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -101,6 +103,16 @@ export function QrCodeModal(props: Props) {
     }
   }, [accountOptions, bridge, context])
 
+  const steps = [
+    sprintf(
+      lstrings.qr_modal_step_open_1s,
+      branding.appName ?? lstrings.app_name_default
+    ),
+    lstrings.qr_modal_step_menu,
+    lstrings.qr_modal_step_scan,
+    lstrings.qr_modal_step_code
+  ]
+
   const handleCancel = useHandler(() => bridge.resolve(undefined))
 
   return (
@@ -110,11 +122,26 @@ export function QrCodeModal(props: Props) {
       title={lstrings.qr_modal_title}
       scroll
     >
-      <ModalMessage>
-        {username != null
-          ? sprintf(lstrings.qr_modal_started, username)
-          : lstrings.qr_modal_message}
-      </ModalMessage>
+      {username != null ? (
+        <ModalMessage>
+          {sprintf(lstrings.qr_modal_started, username)}
+        </ModalMessage>
+      ) : (
+        <>
+          <ModalMessage>{lstrings.qr_modal_instructions_header}</ModalMessage>
+          {steps.map((step, index) => (
+            <View key={step} style={styles.stepRow}>
+              <ModalMessage>{String(index + 1) + '.'}</ModalMessage>
+              <View style={styles.stepText}>
+                <ModalMessage>{step}</ModalMessage>
+              </View>
+            </View>
+          ))}
+          <ModalMessage paddingRem={[1, 0, 0, 0]}>
+            {lstrings.qr_modal_device_note}
+          </ModalMessage>
+        </>
+      )}
       <View style={styles.qrContainer}>
         {qrData == null ? (
           <ActivityIndicator color={theme.primaryText} />
@@ -132,5 +159,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     minHeight: theme.rem(16),
     padding: theme.rem(0.5)
+  },
+  stepRow: {
+    flexDirection: 'row',
+    paddingLeft: theme.rem(0.5)
+  },
+  stepText: {
+    flex: 1,
+    paddingLeft: theme.rem(0.25)
   }
 }))
