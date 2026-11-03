@@ -395,6 +395,7 @@ export const PasswordLoginScene = (props: Props) => {
     Airship.show<EdgeAccount | undefined>(bridge => (
       <QrCodeModal
         bridge={bridge}
+        branding={branding}
         accountOptions={accountOptions}
         context={context}
       />
