@@ -13,6 +13,7 @@ import {
   ExperimentConfig,
   InitialRouteName,
   OnComplete,
+  OnContactSupport,
   OnLogEvent,
   OnLogin,
   OnNotificationPermit,
@@ -109,6 +110,13 @@ interface Props {
    * Records events for analytics.
    */
   onLogEvent?: OnLogEvent
+
+  /**
+   * Opens the app's own support channel from the Authorize Device scene.
+   * Without it, the Contact Support button opens `appConfig.supportSite`,
+   * or the Authorize Device article when that is unset.
+   */
+  onContactSupport?: OnContactSupport
 
   // ---------------------------------------------------------------------
   // Deprecated
@@ -212,6 +220,7 @@ export function LoginScreen(props: Props): JSX.Element {
         initialUserInfo,
         initialRoute: props.initialRoute,
         onComplete: props.onComplete,
+        onContactSupport: props.onContactSupport,
         onLogin: props.onLogin,
         onPerfEvent: onPerfEvent,
         onLogEvent: props.onLogEvent,

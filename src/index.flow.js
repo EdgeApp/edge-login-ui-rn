@@ -149,6 +149,13 @@ declare export class LoginScreen
        */
       // onLogEvent?: OnLogEvent,
 
+      /**
+       * Opens the app's own support channel from the Authorize Device scene.
+       * Without it, the Contact Support button opens `appConfig.supportSite`,
+       * or the Authorize Device article when that is unset.
+       */
+      onContactSupport?: (info: { lockId?: string }) => void | Promise<void>,
+
       // ---------------------------------------------------------------------
       // Deprecated
       // ---------------------------------------------------------------------
