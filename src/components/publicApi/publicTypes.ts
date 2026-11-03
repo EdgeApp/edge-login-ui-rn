@@ -144,6 +144,18 @@ export interface TrackingValues {
 
 export type OnComplete = () => void
 
+export interface ContactSupportInfo {
+  /**
+   * The short device lock id shown on the Authorize Device scene,
+   * if the login attempt produced one.
+   */
+  readonly lockId?: string
+}
+
+export type OnContactSupport = (
+  info: ContactSupportInfo
+) => void | Promise<void>
+
 export type OnLogEvent = (
   event: TrackingEventName,
   values?: TrackingValues

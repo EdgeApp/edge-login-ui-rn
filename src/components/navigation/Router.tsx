@@ -78,7 +78,7 @@ export function Router(props: Props) {
       case 'loading':
         return <LoadingScene route={route} />
       case 'otpError':
-        return <OtpErrorScene route={route} />
+        return <OtpErrorScene branding={props.branding} route={route} />
       case 'otpRepair':
         return <OtpRepairScene branding={props.branding} route={route} />
       case 'passwordLogin':
