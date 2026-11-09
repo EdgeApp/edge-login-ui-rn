@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Modals no longer draw under the Android status bar or navigation bar on edge-to-edge devices (Android 15 and above). The Airship layer measures the safe area only on iOS, so the modal now adds the insets itself on Android.
+
 ## 4.0.0 (2026-10-27)
 
 - fixed: Absolutely positioned backgrounds collapse to nothing on React Native 0.86, which removed `StyleSheet.absoluteFillObject` (spreading it silently yields an empty style). On iOS this left modal sheets with a flat tint and the content sharp behind them, and it also emptied the `EdgeButton`, `EdgeCard` and `ChallengeModal` background layers. These now use a spreadable absolute-fill style that works on every host React Native version.
