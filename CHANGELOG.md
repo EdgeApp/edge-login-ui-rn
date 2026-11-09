@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.0.1 (2026-11-09)
+
 - fixed: Modals no longer draw under the Android status bar or navigation bar on edge-to-edge devices (Android 15 and above). The Airship layer measures the safe area only on iOS, so the modal now adds the insets itself on Android.
 
 ## 4.0.0 (2026-10-27)
