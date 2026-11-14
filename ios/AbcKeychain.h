@@ -30,5 +30,5 @@
 + (NSString *) getSupportedBiometryType;
 + (void) saveBiometryStateForKey:(NSString *)key;
 + (void) clearBiometryStateForKey:(NSString *)key;
-+ (BOOL) hasValidKeychainString:(NSString *)key;
++ (BOOL) hasValidKeychainString:(NSString *)key error:(NSError **)error;
 @end

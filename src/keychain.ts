@@ -199,15 +199,16 @@ export async function getInvalidBiometricKeys(
 }
 
 /**
- * A native failure says nothing about the enrollment, so it leaves biometric
- * login available. The read path still enforces the Android keystore state.
+ * A native failure hides biometric login, since the read it guards would
+ * fail or could not be trusted. The list is rebuilt on every load, so a
+ * transient failure only lasts until the next one.
  */
 async function isBiometricKeyValid(key: string): Promise<boolean> {
   try {
     return await nativeMethods.hasValidKeychainString(key)
   } catch (error: unknown) {
     console.log(error)
-    return true
+    return false
   }
 }
 

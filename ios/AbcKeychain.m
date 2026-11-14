@@ -261,15 +261,31 @@
   [AbcKeychain setKeychainData:nil key:[AbcKeychain biometryStateKey:key] authenticated:YES];
 }
 
-// A secret written before this check existed has no saved state. It stays
-// valid until its next write, so an app update does not turn off biometric
-// login for everyone.
-+ (BOOL) hasValidKeychainString:(NSString *)key;
++ (BOOL) hasKeychainItem:(NSString *)key error:(NSError **)error;
 {
-  if ([AbcKeychain getKeychainData:key error:nil] == nil) return NO;
+  NSDictionary *query = @{(__bridge id)kSecClass:(__bridge id)kSecClassGenericPassword,
+                          (__bridge id)kSecAttrService:SEC_ATTR_SERVICE,
+                          (__bridge id)kSecAttrAccount:key};
+  OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, NULL);
 
-  NSData *savedState = [AbcKeychain getKeychainData:[AbcKeychain biometryStateKey:key] error:nil];
-  if (savedState == nil) return YES;
+  if (status == noErr) return YES;
+  if (status != errSecItemNotFound && error) {
+    *error = [NSError errorWithDomain:@"Airbitz" code:status
+                             userInfo:@{NSLocalizedDescriptionKey:@"SecItemCopyMatching error"}];
+  }
+  return NO;
+}
+
+// A secret with no saved state was written before this check existed, so it
+// needs a trusted login. Every login rewrites the secret and records the
+// current enrollment, and a biometric login only runs while the state
+// matches, so only a trusted login can record a changed enrollment.
++ (BOOL) hasValidKeychainString:(NSString *)key error:(NSError **)error;
+{
+  if (![AbcKeychain hasKeychainItem:key error:error]) return NO;
+
+  NSData *savedState = [AbcKeychain getKeychainData:[AbcKeychain biometryStateKey:key] error:error];
+  if (savedState == nil) return NO;
 
   NSData *currentState = [AbcKeychain currentBiometryState];
   return currentState != nil && [currentState isEqualToData:savedState];

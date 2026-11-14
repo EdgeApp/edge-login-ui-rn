@@ -163,7 +163,8 @@ public class AbcCoreJsUiModule extends ReactContextBaseJavaModule {
       KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
       keyStore.load(null);
       Key decryptKey = keyStore.getKey(KEY_STORE_ALIAS, null);
-      if (decryptKey == null) {
+      // Whorlwind wipes every secret when either of these is missing.
+      if (decryptKey == null || keyStore.getCertificate(KEY_STORE_ALIAS) == null) {
         promise.resolve(false);
         return;
       }

@@ -69,7 +69,13 @@ RCT_REMAP_METHOD(hasValidKeychainString, hasValidKeychainString:(NSString *)key
                  resolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject)
 {
-    resolve(@([AbcKeychain hasValidKeychainString:key]));
+    NSError *error = nil;
+    BOOL valid = [AbcKeychain hasValidKeychainString:key error:&error];
+    if (error) {
+        reject(@"keychain_error", error.localizedDescription, error);
+        return;
+    }
+    resolve(@(valid));
 }
 
 RCT_REMAP_METHOD(authenticateTouchID, authenticateTouchID:(NSString *) promptString
