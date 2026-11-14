@@ -738,7 +738,7 @@ export const LoginScene = (props: Props): React.ReactElement => {
         wasBackgrounded = true
       } else if (nextState === 'active' && wasBackgrounded) {
         wasBackgrounded = false
-        dispatch(loadTouchState()).catch(showError)
+        dispatch(loadTouchState()).catch((error: unknown) => showError(error))
       }
     })
     return () => subscription.remove()
