@@ -1,4 +1,9 @@
-import { asMaybeOtpError, EdgeAccount, OtpError } from 'edge-core-js'
+import {
+  asMaybeOtpError,
+  asMaybePasswordError,
+  EdgeAccount,
+  OtpError
+} from 'edge-core-js'
 import * as React from 'react'
 import { Image, Linking, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
@@ -8,9 +13,11 @@ import { sprintf } from 'sprintf-js'
 
 import { completeLogin } from '../../actions/LoginCompleteActions'
 import { AUTHORIZE_LOGIN } from '../../assets'
+import { getAppConfig } from '../../common/appConfig'
 import { lstrings } from '../../common/locales/strings'
 import { useHandler } from '../../hooks/useHandler'
 import { useImports } from '../../hooks/useImports'
+import { formatNumber } from '../../locales/intl'
 import { Branding } from '../../types/Branding'
 import { useDispatch } from '../../types/ReduxTypes'
 import { SceneProps } from '../../types/routerTypes'
@@ -168,6 +175,21 @@ export function OtpErrorScene(props: Props): React.ReactElement {
         })
         setOtpResetDate(otpError.resetDate)
         setCodeError(lstrings.backup_key_incorrect)
+        return
+      }
+
+      // The login server throttles repeated bad codes:
+      const passwordError = asMaybePasswordError(error)
+      if (passwordError != null) {
+        const { wait } = passwordError
+        setCodeError(
+          wait != null && wait >= 0.1
+            ? sprintf(
+                lstrings.password_wait_1s,
+                formatNumber(wait, { maxDecimals: 1 })
+              )
+            : lstrings.backup_key_incorrect
+        )
       } else if (
         error instanceof Error &&
         error.message === 'Unexpected end of data'
@@ -227,8 +249,13 @@ export function OtpErrorScene(props: Props): React.ReactElement {
 
   const handleContactSupport = useHandler(async () => {
     try {
-      if (onContactSupport != null) await onContactSupport({ lockId })
-      else await Linking.openURL(SUPPORT_URL)
+      if (onContactSupport != null) {
+        await onContactSupport({ lockId })
+        return
+      }
+      // White-label apps send their users to their own support site:
+      const { supportSite = SUPPORT_URL } = getAppConfig()
+      await Linking.openURL(supportSite)
     } catch (error: unknown) {
       showError(error)
     }
@@ -349,9 +376,11 @@ export function OtpErrorScene(props: Props): React.ReactElement {
             onPress={handleContactSupport}
           />
           {lockId == null ? null : (
-            <Paragraph center>
-              <SmallText>{sprintf(lstrings.otp_lock_id, lockId)}</SmallText>
-            </Paragraph>
+            <View style={styles.lockId}>
+              <EdgeText selectable>
+                <SmallText>{sprintf(lstrings.otp_lock_id, lockId)}</SmallText>
+              </EdgeText>
+            </View>
           )}
         </View>
       </KeyboardAwareScrollView>
@@ -369,6 +398,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   footer: {
     marginTop: theme.rem(1),
     marginBottom: theme.rem(1)
+  },
+  lockId: {
+    alignItems: 'center',
+    margin: theme.rem(0.5)
   },
   heroImage: {
     alignSelf: 'center',

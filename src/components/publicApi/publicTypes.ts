@@ -34,7 +34,9 @@ export interface AppConfig {
   // referralServers?: string[]
   // supportsEdgeLogin: boolean
   supportEmail: string
-  // supportSite: string
+  /** Opened by the Authorize Device scene's support button when the app
+   * passes no `onContactSupport`. Defaults to Edge's Authorize Device article. */
+  supportSite?: string
   termsOfServiceSite: string
   // website: string
 }
