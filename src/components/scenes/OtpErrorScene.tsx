@@ -310,7 +310,8 @@ export function OtpErrorScene(props: Props): React.ReactElement {
               disabled={code === ''}
               label={lstrings.otp_approve_verify_button}
               layout="column"
-              marginRem={0.5}
+              // Clear the field's error message, which takes no layout space:
+              marginRem={[2, 0.5, 0.5]}
               spinner={isVerifying}
               type="primary"
               onPress={handleVerify}
