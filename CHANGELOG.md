@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- added: `onContactSupport` LoginScreen prop for opening the app's own support chat, with the Lock ID, from the Authorize Device scene
+- added: Optional `supportSite` `AppConfig` field for the Authorize Device support link in apps without `onContactSupport`
+- changed: Redesign the Authorize Device scene with inline 2FA entry and a support link
+- changed: Show numbered scanning steps in the QR code login modal
+
 ## 4.0.1 (2026-11-09)
 
 - fixed: Modals no longer draw under the Android status bar or navigation bar on edge-to-edge devices (Android 15 and above). The Airship layer measures the safe area only on iOS, so the modal now adds the insets itself on Android.

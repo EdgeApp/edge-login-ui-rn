@@ -4,6 +4,7 @@ import * as ReactRedux from 'react-redux'
 import type {
   ExperimentConfig,
   InitialRouteName,
+  OnContactSupport,
   OnLogEvent,
   OnLogin,
   OnNotificationPermit,
@@ -23,6 +24,7 @@ export interface Imports {
   readonly forceLightAccountCreate?: boolean
   readonly initialUserInfo?: EdgeUserInfo
   readonly initialRoute?: InitialRouteName
+  readonly onContactSupport?: OnContactSupport
   readonly onLogEvent?: OnLogEvent
   readonly onComplete?: () => void
   readonly onLogin?: OnLogin

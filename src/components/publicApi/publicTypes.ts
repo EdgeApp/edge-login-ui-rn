@@ -34,7 +34,9 @@ export interface AppConfig {
   // referralServers?: string[]
   // supportsEdgeLogin: boolean
   supportEmail: string
-  // supportSite: string
+  /** Opened by the Authorize Device scene's support button when the app
+   * passes no `onContactSupport`. Defaults to Edge's Authorize Device article. */
+  supportSite?: string
   termsOfServiceSite: string
   // website: string
 }
@@ -143,6 +145,18 @@ export interface TrackingValues {
 //
 
 export type OnComplete = () => void
+
+export interface ContactSupportInfo {
+  /**
+   * The short device lock id shown on the Authorize Device scene,
+   * if the login attempt produced one.
+   */
+  readonly lockId?: string
+}
+
+export type OnContactSupport = (
+  info: ContactSupportInfo
+) => void | Promise<void>
 
 export type OnLogEvent = (
   event: TrackingEventName,
