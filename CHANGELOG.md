@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.1.0 (2026-11-16)
+
 - added: `onContactSupport` LoginScreen prop for opening the app's own support chat, with the Lock ID, from the Authorize Device scene
 - added: Optional `supportSite` `AppConfig` field for the Authorize Device support link in apps without `onContactSupport`
 - changed: Redesign the Authorize Device scene with inline 2FA entry and a support link
