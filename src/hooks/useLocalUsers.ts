@@ -55,11 +55,13 @@ export function upgradeUser(
   touch: TouchState
 ): LoginUserInfo {
   const { keyLoginEnabled } = userInfo
+  const status = getKeychainStatus(touch.touchFile, userInfo)
   return {
     ...userInfo,
     touchLoginEnabled:
       keyLoginEnabled &&
       touch.biometryType !== false &&
-      typeof getKeychainStatus(touch.touchFile, userInfo) === 'string'
+      typeof status === 'string' &&
+      !touch.invalidKeys.includes(status)
   }
 }

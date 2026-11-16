@@ -1,4 +1,4 @@
-import { getSupportedBiometryType } from '../keychain'
+import { getInvalidBiometricKeys, getSupportedBiometryType } from '../keychain'
 import { TouchState } from '../reducers/TouchReducer'
 import { Dispatch } from '../types/ReduxTypes'
 import { readKeychainFile } from '../util/keychainFile'
@@ -18,7 +18,10 @@ export const loadTouchState = () => async (
   ])
   const [touchFile, biometryType] = values
 
-  const touchState: TouchState = { touchFile, biometryType }
+  const invalidKeys =
+    biometryType === false ? [] : await getInvalidBiometricKeys(touchFile)
+
+  const touchState: TouchState = { touchFile, biometryType, invalidKeys }
   dispatch({ type: 'SET_TOUCH', data: touchState })
   return touchState
 }
