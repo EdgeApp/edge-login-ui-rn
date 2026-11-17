@@ -37,6 +37,8 @@ The login UI depends on some extra external native libraries, which you will hav
 - react-native-webview v13
 - react-native-haptic-feedback v3 (optional)
 
+On React Native's new architecture, also add `minimumFontSize: true` to the `validAttributes` of `textViewConfig` in `react-native/Libraries/Text/TextNativeComponent.js`, for example with patch-package, as edge-react-gui does. The login UI passes that prop as the floor for text that shrinks to fit, because the new architecture ignores `minimumFontScale`. Without the patch, that text can shrink to an illegible 4pt on iOS and 4dp on Android. React Native 0.89 fixes `minimumFontScale`, after which the patch isn't needed.
+
 To initialize the Edge core library, your application needs to mount the `MakeEdgeContext` component and keep it around for the lifetime of the app. The `MakeEdgeContext` component will create and manage an `EdgeContext` object.
 
 You should also wrap your entire application in a `LoginUiProvider` component, which the login scene needs to display modals, error alerts, and similar floating UI:

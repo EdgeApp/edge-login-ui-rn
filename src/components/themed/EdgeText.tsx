@@ -3,7 +3,15 @@
  */
 
 import * as React from 'react'
-import { Platform, StyleProp, Text, TextProps, TextStyle } from 'react-native'
+import {
+  PixelRatio,
+  Platform,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextProps,
+  TextStyle
+} from 'react-native'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -65,16 +73,54 @@ interface LabelProps extends TextProps {
   style?: StyleProp<TextStyle>
 }
 
+/**
+ * The new architecture ignores `minimumFontScale` when it shrinks text to fit:
+ * both platforms floor at an absolute `minimumFontSize` (4pt on iOS and 4dp on
+ * Android when unset) and render long labels illegibly small. React Native's
+ * Text never forwards that prop, so the host app must patch it into the RCTText
+ * view config, as edge-react-gui's react-native patch does. This derives it
+ * from the style's font size, in points on iOS and in pixels on Android (its
+ * shrink loop compares against a pixel text size).
+ *
+ * The floor is an absolute size, and Android applies it to every nested text
+ * run, so nested text smaller than `fontSize × minimumFontScale` is enlarged
+ * to it, and nested text a little smaller than the outer text can shrink less
+ * than `minimumFontScale` allows.
+ *
+ * Remove this, and the host patch, once React Native forwards
+ * `minimumFontScale` on the new architecture (fixed upstream for 0.89).
+ */
+export function minimumFontSizeProps(
+  style: StyleProp<TextStyle>,
+  minimumFontScale: number,
+  fallbackFontSize: number
+): TextProps {
+  const fontSize = StyleSheet.flatten(style)?.fontSize ?? fallbackFontSize
+  const floor = fontSize * minimumFontScale
+  const props: { minimumFontSize: number } = {
+    minimumFontSize:
+      Platform.OS === 'android'
+        ? PixelRatio.getPixelSizeForLayoutSize(floor)
+        : floor
+  }
+  return props as TextProps
+}
+
+/** How far shrink-to-fit text may shrink when the caller doesn't say. */
+export const DEFAULT_MINIMUM_FONT_SCALE = 0.65
+
 // TODO: Rename to LabelText
 export const EdgeText = (props: LabelProps) => {
-  const { children, style, disableFontScaling = false, ...rest } = props
+  const {
+    children,
+    style,
+    disableFontScaling = false,
+    adjustsFontSizeToFit = !disableFontScaling,
+    minimumFontScale = DEFAULT_MINIMUM_FONT_SCALE,
+    ...rest
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-
-  // Android's new architecture shrinks auto-sized text far below
-  // `minimumFontScale`, leaving labels illegibly small, so let text truncate
-  // there instead of shrinking:
-  const autoShrink = Platform.OS !== 'android' && !disableFontScaling
 
   let { numberOfLines = 1 } = props
   if (typeof children === 'string' && children.includes('\n')) {
@@ -86,12 +132,16 @@ export const EdgeText = (props: LabelProps) => {
       allowFontScaling={false}
       style={[styles.common, style, androidAdjustTextStyle(theme)]}
       numberOfLines={numberOfLines}
-      adjustsFontSizeToFit={autoShrink}
-      minimumFontScale={0.65}
+      adjustsFontSizeToFit={adjustsFontSizeToFit}
+      minimumFontScale={minimumFontScale}
       {...rest}
-      // Callers that ask for shrink-to-fit explicitly must not re-enable it on
-      // Android, where Fabric would shrink them to the illegible 4dp floor:
-      {...(Platform.OS === 'android' ? { adjustsFontSizeToFit: false } : null)}
+      {...(adjustsFontSizeToFit
+        ? minimumFontSizeProps(
+            [styles.common, style],
+            minimumFontScale,
+            theme.rem(1)
+          )
+        : null)}
     >
       {children}
     </Text>
