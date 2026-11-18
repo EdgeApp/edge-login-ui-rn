@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.2.0 (2026-11-17)
+
 - changed: On React Native's new architecture, text that shrinks to fit needs the host app to forward `minimumFontSize` to React Native's Text, as edge-react-gui's react-native 0.86.0 patch does. Without it, that text can shrink to 4pt on iOS and 4dp on Android. See the README.
 - fixed: Long usernames no longer get cut off on Android. Text shrinks to fit again, floored at its `minimumFontScale` (65% by default).
 
