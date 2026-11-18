@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- changed: On React Native's new architecture, text that shrinks to fit needs the host app to forward `minimumFontSize` to React Native's Text, as edge-react-gui's react-native 0.86.0 patch does. Without it, that text can shrink to 4pt on iOS and 4dp on Android. See the README.
+- fixed: Long usernames no longer get cut off on Android. Text shrinks to fit again, floored at its `minimumFontScale` (65% by default).
+
 ## 4.1.0 (2026-11-16)
 
 - added: `onContactSupport` LoginScreen prop for opening the app's own support chat, with the Lock ID, from the Authorize Device scene

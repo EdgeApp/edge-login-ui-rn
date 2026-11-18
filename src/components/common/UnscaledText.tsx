@@ -1,15 +1,31 @@
 import * as React from 'react'
-import { Platform, Text, TextProps } from 'react-native'
+import { Text, TextProps } from 'react-native'
 
-export const UnscaledText: React.FC<TextProps> = props => {
+import {
+  DEFAULT_MINIMUM_FONT_SCALE,
+  minimumFontSizeProps
+} from '../themed/EdgeText'
+
+// React Native's default Text font size, for styles that set none:
+const RN_DEFAULT_FONT_SIZE = 14
+
+export const UnscaledText = (props: TextProps): React.ReactElement => {
+  const {
+    adjustsFontSizeToFit = false,
+    minimumFontScale = DEFAULT_MINIMUM_FONT_SCALE,
+    style
+  } = props
+  // Fabric ignores `minimumFontScale`, so also pass it as an absolute
+  // `minimumFontSize` floor (this needs the host app's RCTText patch):
+  const floorProps = adjustsFontSizeToFit
+    ? minimumFontSizeProps(style, minimumFontScale, RN_DEFAULT_FONT_SIZE)
+    : null
   return (
     <Text
       allowFontScaling={false}
       {...props}
-      // Android's new architecture ignores `minimumFontScale` when it shrinks
-      // text to fit and floors at an illegible 4dp, so let labels truncate
-      // there instead of shrinking, the same way `EdgeText` does:
-      {...(Platform.OS === 'android' ? { adjustsFontSizeToFit: false } : null)}
+      minimumFontScale={minimumFontScale}
+      {...floorProps}
     />
   )
 }
